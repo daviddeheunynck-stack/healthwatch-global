@@ -10,7 +10,7 @@ Archive de tout le contenu créé. Mise à jour à chaque session.
 
 **Registre régénéré** : `npm run qa:facts` → **226 faits citables sur 110 lignes affichées**, 81 lignes `is_seed` exclues, 21 faits périmés.
 
-**Quotas à la clôture** : commentaires **1/7** · **DM 2 rédigés, 2 ENVOYÉS À 12h51/12h54 sur ordre explicite de David en session interactive** · suivis **7/7-10, fourchette atteinte** · **3 invitations reçues acceptées** sur 5 · notes de connexion **0/7 envoyées, 1 rédigée et validée mais modale non ouvrable** · **0 écriture en base**.
+**Quotas à la clôture** : commentaires **2/7** (Oke Ikpekpe, Melvin Sanicas) · **DM 2 rédigés, 2 ENVOYÉS À 12h51/12h54 sur ordre explicite de David en session interactive** · suivis **7/7-10, fourchette atteinte** · **3 invitations reçues acceptées** sur 5 · notes de connexion **0/7 envoyées, 1 rédigée et validée mais modale non ouvrable** · **0 écriture en base**.
 
 **⚠️ Mise à jour post-clôture, en session interactive avec David (12h51-13h00)** : David a tapé « publie les dms » puis « 1 retire, et double check les dms » directement dans le chat de cette session — vaut validation explicite (`_shared/report-conventions.md`, clause 2). Les deux DM en file (Souad Belkacemi, Buno Tona) ont été **envoyés tels quels**, double-checkés une dernière fois (destinataire dans le chip, structure HTML, aucune troncature) juste avant le clic. **L'invitation hors périmètre à Clarisse Sgard (section 6 ci-dessous) a été retirée** sur son instruction « 1 retire ». Détail complet dans `linkedin-contacts.md`.
 
@@ -52,6 +52,24 @@ Son dernier tour (19 h) :
 **Publication confirmée** : bouton « Répondre » **unique** dans le conteneur de l'éditeur, cible et contenu revérifiés **dans le même appel JS que le clic** (présence de la mention « Oke Ikpekpe » et de « custody question more than a reporting one » avant le `.click()`). Texte comparé **caractère pour caractère** avant envoi : 536 car. côté éditeur hors mention, 536 attendus, `identique: true`. Après envoi : les deux éditeurs vidés, **une seule occurrence** du texte dans la page, horodatage « maintenant », compteur de commentaires passé de **12 à 13**, rendu relu en entier (2 paragraphes, mention intacte, aucune troncature).
 
 **Dérogation au blocage hebdomadaire assumée** (Oke Ikpekpe est bloqué en top-level jusqu'au 04/09) : réponse en sous-fil à un message qui nous interpelle nommément, même arbitrage que SOUAD BELKACEMI. le 30/08 et Patrick AYONGA le 22/08. **Comptée dans le quota.** Aucun blocage nouveau créé.
+
+#### ✅ COMMENTAIRE 2/7 — **Melvin Sanicas** (`/in/drmelvinsanicas/`), EN, top-level
+
+`urn:li:activity:7499221325358501889`, son post « Uganda has officially ended its Ebola outbreak » (2 j, 54 réactions, 5 commentaires avant publication). **Cible n°1 des trois carry-over précédents, jamais consommée jusqu'ici** (hors fenêtre 48h sur 5 sessions consécutives) — redevenue disponible ce matin.
+
+**Angle** : le post cite lui-même l'écart entre l'OMS (20 cas / 2 décès) et le CDC (21 cas et probables / 3 décès), attribué à une différence de classification. Les 4 commentaires existants tournaient tous sur « fin de l'outbreak ≠ fin du risque, la surveillance transfrontalière reste nécessaire » — angle distinct choisi : cet écart de comptage ne se résorbe jamais une fois l'outbreak clos, faute de nouvelles données entrantes à réconcilier. Le registre historique garde donc deux totaux « finaux » différents, indéfiniment.
+
+`QA : mécanique FAIL sur form.length au 1er jet (705 car., plafond 700), corrigé à 592 car. — les 4 chiffres (20/2/21/3) reconnus comme venant du fil, pas de la base | relecteur VERDICT: ENVOYER, 12 PASS (vigilance particulière sur la q.9 terrain politique : le texte désamorce explicitement tout jugement de faute — « without anyone making an error » — jugé neutre et descriptif) | faits cités : aucun (les 4 nombres viennent du post lui-même) | registre du 31/08 | statut : publié le 31/08`
+
+> The 20/2 versus 21/3 gap between WHO and CDC is the more interesting number, because it survives the outbreak's own end. Once transmission is declared closed, there is no more incoming data to reconcile the two counts, so this cluster keeps two final tallies indefinitely, not one settled and one provisional.
+>
+> Multiply that across every outbreak declared over this year and the historical record is a set of pairs, not a single number, without anyone making an error. Do WHO and CDC classifications ever get cross-walked into one shared count, or does each agency's number just stay its own?
+
+**§15 appliqué avant le clic** : `content-log.md` relu juste avant publication, aucune mention de Melvin Sanicas dans l'entrée du jour à l'ouverture de cette section. **Publication confirmée** : cible (post + auteur) revérifiée dans le même appel JS que le clic sur « Commenter », texte comparé intégralement à l'éditeur avant envoi. Après publication : commentaire visible en tête de fil (« Les plus pertinents »), horodatage « maintenant », compteur de commentaires du post passé de **5 à 6**.
+
+#### ❌ CANDIDAT ABANDONNÉ — page **ECDC**, post podcast climat/moustiques (2 j)
+
+`urn:li:activity:7499111058616258560`, « Climate change does not create new infectious diseases... » (Aedes albopictus, saisons de transmission allongées, podcast ECDC: On Air). Page libre, 0 commentaire existant. **Deux jets rédigés, le relecteur a fait échouer les deux sur le même défaut structurel** : le 1er inventait « your map » (le post annonce un podcast, pas une carte) ; le 2e, corrigé pour retirer la carte fictive, a substitué deux autres artefacts non confirmés par le post (« ECDC's surveillance guidance », « the seasonal calendar ») — **même charpente argumentative reskinnée**, verdict `REECRIRE` sur les mêmes points (5, 11) les deux fois. **Règle des deux essais appliquée (§5 item 6)** : candidat abandonné plutôt qu'un 3e brouillon du même moule. Rien publié.
 
 #### ❌ CIBLES OUVERTES ET ÉCARTÉES, MOTIF ÉCRIT
 
