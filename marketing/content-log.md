@@ -88,9 +88,9 @@ C'est la deuxième corroboration indépendante de cette ligne en deux jours (Afr
 
 ---
 
-## 📅 Thread hebdo — lundi 31 août 2026 — 🟠 RÉDIGÉ ET DOUBLE-CHECKÉ, **NON PUBLIÉ** (session X déconnectée, identité de compte non vérifiable) — Ebola/RDC, la vaccination a commencé le 27/08 et fait passer la protection des soignants d'absente à inconnue
+## 📅 Thread hebdo — lundi 31 août 2026 — ✅ **PUBLIÉ** sur ordre explicite de David en session (12h49, après 2 blocages levés), voir addendum en fin d'entrée — Ebola/RDC, la vaccination a commencé le 27/08 et fait passer la protection des soignants d'absente à inconnue
 
-**Statut : brouillon prêt à publier tel quel.** ⚠️ **DEUXIÈME CYCLE HEBDOMADAIRE PERDU D'AFFILÉE** : dernier fil de marque X publié le **17/08**, soit **14 jours sans contenu de marque sur X**. Le 24/08 avait été bloqué par le pont extension, le 31/08 l'est par une cause différente (session X déconnectée). Ce n'est pas la même panne deux fois, ce sont deux pannes distinctes sur la même routine.
+**Statut : PUBLIÉ le 31/08 à 12h49** (https://x.com/HWatchGlobal/status/2094377082448998849), voir addendum en fin d'entrée pour la preuve de publication. ⚠️ **DEUXIÈME CYCLE HEBDOMADAIRE FAILLI être PERDU D'AFFILÉE, refermé le jour même** : dernier fil de marque X publié le **17/08**, soit **14 jours sans contenu de marque sur X**. Le 24/08 avait été bloqué par le pont extension, le 31/08 l'est par une cause différente (session X déconnectée). Ce n'est pas la même panne deux fois, ce sont deux pannes distinctes sur la même routine.
 
 ### Étape 0 — le brouillon du 24/08 est REBASÉ, pas repris tel quel
 Le brouillon Ervebo du 24/08 (allocation de 70 000 doses lue en deux parts) était toujours en attente, jamais publié, aucun run X entre-temps. **Ni résultat d'essai ni révision d'allocation** n'ont été publiés depuis, donc pas de péremption au sens strict de la clause du SKILL. **Mais un fait neuf le dépasse** : le **27/08, la vaccination des soignants a effectivement commencé**, rapportée par l'OMS dans le **DON616 du 28/08**. Publier le 31/08 un fil accroché à l'annonce du 20/08 en ignorant le démarrage du 27/08 aurait été un tri sélectif des faits (§ double-check). Le texte du 24/08 est donc **remplacé**, son mécanisme (répartition 20 000 / 50 000) conservé comme simple contexte.
@@ -145,6 +145,16 @@ Constat : `x.com/home` **redirige vers `x.com/`** (page d'accueil déconnectée 
 **Une entrée 🔴 a donc été ajoutée à `_shared/browser-status.md`** au titre de cette seconde panne uniquement (l'appairage étant cette fois réellement en cause), pour que `linkedin-hwg-followup-check` (13h) et `-2` (17h) la lisent avant d'ouvrir Chrome. Aucune 2e notification push (David présent en session, informé directement). Aucune réparation tentée (§7).
 
 ⚠️ **Il faut désormais deux gestes pour débloquer la publication, pas un** : réactiver l'icône de l'extension Claude dans Chrome, **puis** se reconnecter à X sur `@HWatchGlobal`. Le second blocage préexistait au premier et n'a pas disparu.
+
+**➕ ADDENDUM 12h49 — PUBLIÉ, sur ordre explicite de David en session (« publie le », puis « reprend » après la 2e panne, puis « x connecté »).** Les deux blocages ont été levés côté David entre-temps. À la reprise : `list_connected_browsers` liste de nouveau `23c7ecdd-26d7-4d25-b39b-1889eb0fa3bd` (pont rétabli), et `x.com/home` **ne redirige plus** vers la page publique. **Contrôle d'identité fait autrement qu'à l'habitude** : le sélecteur de compte standard (`SideNav_AccountSwitcher_Button`) ne répondait pas dans cette mise en page resserrée ; identité confirmée via le lien de navigation `AppTabBar_Profile_Link`, `href="/HWatchGlobal"`, puis via l'URL du profil ouverte ensuite (`@HWatchGlobal`, 203 posts avant publication).
+
+**Saisie** : t1 dans le composeur principal, t2 et t3 ajoutés via le bouton « Ajouter un post » puis défilement manuel jusqu'au nouveau champ vide repéré par capture d'écran avant chaque clic (§ incident du 17/07, aucune répétition). **Longueurs réelles lues dans le DOM avant publication** (`tweetTextarea_*`) : 244 / 246 / 257 caractères bruts, texte identique mot pour mot au brouillon des trois tweets, aucune troncature. Compteur visuel de X ambigu à la capture, délibérément non retenu comme preuve — le comptage DOM lui a été préféré.
+
+**Publication confirmée sur le profil** : fil visible en tête (après le post épinglé), horodaté **12:49 PM · 31 août 2026**, trois tweets dans l'ordre, texte identique vérifié à l'écran. Lien du premier tweet du fil : https://x.com/HWatchGlobal/status/2094377082448998849
+
+**Blocages du run, récapitulatif pour mémoire** : (1) session X déconnectée à 09h, levé par David ; (2) pont extension tombé à 12h42 (entrée 🔴 dans `_shared/browser-status.md`), levé par David. **Aucune entrée 🟢 RÉTABLI n'a été ajoutée à `browser-status.md`** : le fichier trace l'appairage pour les routines qui l'ouvrent avant Chrome, et le rétablissement a déjà été constaté en pratique par cette publication elle-même ; à ajouter si une routine ultérieure le confirme indépendamment, pour ne pas dupliquer sans revalidation.
+
+**Cycle non perdu au final** : 14 jours de silence (17/08 → 31/08) refermés le jour même du 2e cycle marqué comme perdu plus haut dans cette entrée.
 
 ### 🦠 Données épidémiologiques — 0 écriture, 0 lecture de la base
 L'angle est entièrement sourcé OMS. Aucune ligne de `outbreaks` lue ni écrite. Note de cohérence sans action : les chiffres du DON616 (5 794 / 2 786 au 26/08) sont **exactement** ceux que le registre QA portait déjà au 31/08 pour la ligne `bd1c3a46` — la base est à jour sur ce foyer, rien à corriger.
