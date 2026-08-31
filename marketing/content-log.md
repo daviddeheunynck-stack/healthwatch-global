@@ -2,6 +2,56 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session linkedin-hwg-content-proposal — 31/08/2026 (lundi MWF, 8h35) — 🔴 **AUCUN POST PROPOSÉ, et le brouillon en attente du 28/08 est RETIRÉ**
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-content-proposal` datée du 31/08 dans ce fichier à l'ouverture → premier déclenchement du jour. Branche vérifiée avant écriture : **master**.
+
+**Registres régénérés en début de run** : `npm run qa:facts` → **226 faits citables sur 110 lignes affichées**, 81 lignes `is_seed` exclues, **21 faits périmés**. `npm run qa:claims` → 805 chaînes de copie publique sur 5 locales, couverture citable 110 foyers / 73 pays / 17 maladies / **32 hôtes source**, 2 claims manuelles.
+
+### 1️⃣ ÉTAPE 0 — un brouillon était en attente, il est retiré plutôt que publié
+
+Le brouillon du **28/08** (Dengue/Taïwan, « une colonne unique, deux natures de compteur ») était toujours au statut PRÊT, jamais publié, jamais mentionné par les sessions des 29 et 30/08. Repris ce run conformément à la règle Étape 0 : chiffres rafraîchis (146 → **153**, arrêté 2026-08-28 → **2026-08-31**), plage source mise à jour, un paragraphe recomposé, puis passage complet par la chaîne QA de `hwg-social-policy.md` §5.
+
+**Le relecteur indépendant a rendu `REECRIRE 4, 5, 6, 11`. Les quatre points sont réels, et deux sont disqualifiants.** Les trois plus lourds ont été revérifiés à la main plutôt que pris pour argent comptant :
+
+- 🔴🔴 **Q6 — l'inférence centrale du post est fausse, et elle l'était déjà le 28/08.** Le post présentait la plage `本次查詢的日期範圍為2024/12/29至2026/09/05` comme la fenêtre de comptage du 153. **C'est la fenêtre de _requête_ de la page**, qui couvre les deux années que la page affiche côte à côte : `2026年 (今年累計數) 153` **et** `2025年(去年總數) 293`. Une plage qui contient aussi le 293 ne peut pas répondre à « où commence le compte du 153 ». Les paragraphes 6 et 7 reposaient entièrement là-dessus. **Vérifié moi-même sur le verbatim relevé ce matin, le relecteur a raison.** C'est la même famille d'erreur que celle attrapée le 28/08 sur ce même brouillon (Q5/Q6 : attribuer à la source une convention qui n'est pas la sienne) — la correction du 28/08 l'avait déplacée, pas éliminée.
+- 🔴🔴 **Q11 — l'angle avait déjà été formellement écarté le 21/08, par cette routine.** Le relecteur a retrouvé dans ce fichier la ligne d'écart du 21/08 : « *Diphtérie Nigéria 65 759 cas suspects vs Diphtérie Australie 513 cas notifiés, même colonne : rejoue le mécanisme du post du 10/08 (le mot « cases » ne désigne pas la même chose selon la ligne). Écarté au titre de [[feedback_anti_template_check_structure_not_just_wording]]* ». Le brouillon du 28/08 est **cet angle-là avec un autre couple de lignes**, et le §6 du 28/08 le nommait lui-même sans en tirer la conséquence (« *Même famille de problème que le post du 10/08 sur le mot « cases »* »). S'y ajoute la charpente du 26/08 (« deux horloges »), déjà signalée par le relecteur du 28/08 comme « répétition de charpente sur trois posts en huit jours ». **Vérifié à la main, ligne 3075 de ce fichier.**
+- 🟠 **Q4 — deux affirmations produit non couvertes.** (a) « *the moment the source last refreshed its page* » contredit la claim manuelle en vigueur, qui décrit le champ `date` comme « *l'arrete de la source* ». (b) « *the line above it* » suppose un ordre d'affichage fixe : **il n'existe pas**, `components/OutbreakTable.tsx:234` initialise `sortKey` à `"risk"` et le lecteur peut retrier sur `risk`/`cases`/`deaths`/`cfr`/`date`. **Vérifié à la main dans le code.**
+- 🟠 **Q5 — attribution.** « *The window is bounded by epidemiological weeks, not by calendar dates* » prolonge sans rupture d'énonciation « *Taiwan's page states…* », alors que la page ne dit rien d'un bornage hebdomadaire : c'est une déduction sur les jours de la semaine, pas une lecture.
+
+**Points passés en PASS** : chiffres (Q1, les trois nombres sourcés), fraîcheur (Q2, `ageDays=0`), statut (Q3), langue et registre (Q8), terrain politique (Q9 — aucun mot sur le statut de Taïwan, sujet pourtant présent dans le dépôt), CTA (Q10, lien nu), apport (Q12, avec la même réserve « étroit » que le 28/08).
+
+**Décision : le brouillon du 28/08 est retiré, pas republié.** Un échec Q11 désigne l'angle et non des clauses, et la règle des deux essais (`hwg-social-policy.md` §5, item 6) interdit un 3e brouillon du même moule. L'en-tête et la ligne de statut de l'entrée du 28/08 ont été corrigés en conséquence ([[feedback_content_log_trust_header_status_not_midtext]]).
+
+### 2️⃣ AUCUN POST DE REMPLACEMENT RÉDIGÉ CE RUN
+
+Conformément à la clause de fin du SKILL (« *S'il n'y a aucun angle frais et solide ce jour-là, dis-le clairement à David plutôt que de forcer un post de faible qualité juste pour respecter le calendrier* »). La famille d'angles « notre colonne cache une distinction » est servie ou écartée quatre fois en trois semaines (10/08 publié, 21/08 écarté, 26/08 publié, 28/08 retiré) ; enchaîner un cinquième texte du même moule le jour même de ce constat serait exactement ce que la règle anti-gabarit interdit. Matière de remplacement disponible mais non rédigée, voir §4.
+
+### 3️⃣ CONTRÔLE MÉCANIQUE — verdict brut et faux positifs
+
+`FAIL`, 1342 caractères, 9 paragraphes, `draftLang: en`. **Deux blockers, tous deux faux positifs documentés :**
+- `form.non-ascii` sur les cinq idéogrammes 今 年 累 計 數, c'est-à-dire sur la citation verbatim de la source. Faux positif déjà tranché le 28/08 (le contrôle vise le mojibake, pas une citation délibérée).
+- `ngram.history`, 93 formules « déjà servies ». **Mesuré : 0 n-gramme du brouillon apparaît ailleurs que dans l'entrée archivée du 28/08 de ce fichier** (250 n-grammes du brouillon, 0 hit hors de cette entrée, 158 hits dedans). C'est une **auto-comparaison** : le corpus anti-gabarit inclut `content-log.md`, où le brouillon prédécesseur est archivé verbatim.
+  ⚠️ **Point de process, générique** : la règle « archiver avant de présenter » garantit que **toute reprise d'un brouillon en attente fera systématiquement échouer `ngram.history`**. Ce n'est pas un signal utile dans ce cas de figure, et il ne doit pas masquer un vrai gabarit — ici c'est le relecteur, pas le script, qui a vu la vraie répétition (Q11).
+
+Non bloquants : 3 × `claims.product-number` (12, 29, 09, fragments des dates lus comme des chiffres produit), 2 × `facts.value-no-context-match` (05 et 153).
+
+### 4️⃣ MATIÈRE VÉRIFIÉE, DISPONIBLE POUR LE PROCHAIN CRÉNEAU (mercredi 02/09)
+
+Rien de ceci n'est rédigé, et aucun de ces angles ne rejoue la famille « une colonne, deux sens ».
+
+1. ⭐ **Le doublon Ebola/RD Congo signalé les 26/08 et 28/08 est RÉSOLU.** Il ne reste qu'**une seule ligne active** : `bd1c3a46`, **5 794 cas / 2 786 décès arrêtés au 26/08**, source **WHO DON616**, `source_priority` 10, CFR 48,1 %. La ligne concurrente `6a5e9fc9` (africacdc, 4 120 / 1 887 au 07/08) est passée **inactive**. Signalé deux fois par cette routine, traité depuis.
+2. **Polio — rafraîchissement partiel, mécanisme distinct.** 2 lignes sur 13 sont passées à l'arrêté du **26/08** (RD Congo 37, Nigeria 43) ; les **11 autres restent au 18/08**. Une seule page source, un seul cron, des lignes de millésimes différents. Angle « une source qui se rafraîchit par morceaux », à ne pas confondre avec les deux horloges du 26/08 (qui opposait vérification et donnée sur *une même* ligne).
+3. 🔴 **Défaut produit du 28/08 toujours ouvert, à vérifier avant tout post citant une source polio** : les 13 lignes polio ont un `source` qui n'est pas une URL nue mais une URL suivie d'une annotation entre parenthèses, rendue en `href` brut — **le lien de source ne mène nulle part**. Hors périmètre d'une routine sociale, mais bloquant pour un post qui inviterait à ouvrir la source.
+4. 🟠 **`pricing.faq5_a` toujours non tranchée** : la FAQ dit « *WHO, PAHO, and ECDC* » alors que la couverture réelle compte **32 hôtes source** (31 le 28/08, 29 le 26/08), dont des médias. Tout post de marque sur la provenance reste bloqué tant que ce n'est pas arbitré ([[project_faq5_sources_claim_narrower_than_reality_2026_08_26]]).
+5. 🟠 **Grippe aviaire / États-Unis — trois lignes actives simultanées** (`#texas` 36 au 14/08, `#idaho` 176 au 24/07, `#utah` 29 au 31/07), toutes intitulées « United States ». Inchangé depuis le 28/08. **Attention : c'est précisément la famille d'angles sur-servie**, à ne pas reprendre sans changer de mécanisme.
+
+### 5️⃣ ARBRE DE TRAVAIL — fichiers modifiés non touchés par cette routine
+
+Conformément à `AGENTS.md`, cette routine ne stage que `marketing/content-log.md`. Laissés tels quels et signalés : `marketing/qa/product-claims.manual.json` (modifié, non commité — vient du run du 28/08), et les non suivis `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs`. Les `marketing/qa/*.json` régénérés par ce run appartiennent au dispositif QA, pas à cette routine.
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check-2 — 30/08/2026 (17h, 2e des 2 créneaux après-midi)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` datée du 30/08 dans `content-log.md` ni dans `linkedin-contacts.md` à l'ouverture (dernière en date : 29/08 17h). Les trois entrées du 30/08 appartiennent à une session interactive de David (~07h), au **rattrapage de `linkedin-hwg-monitoring`** et au **créneau de 13h**. → **premier déclenchement de cette routine aujourd'hui.**
@@ -918,7 +968,7 @@ Double-check refait à froid avant envoi sur les trois fils : chacun rouvert à 
 
 ---
 
-## 📅 Session linkedin-hwg-content-proposal — 28/08/2026 (vendredi MWF, 8h35) — 🟢 **PRÊT — en attente de publication**
+## 📅 Session linkedin-hwg-content-proposal — 28/08/2026 (vendredi MWF, 8h35) — 🔴 **RETIRÉ le 31/08, JAMAIS PUBLIÉ — inférence centrale fausse + angle déjà écarté le 21/08** (voir l'entrée du 31/08 en tête de fichier)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-content-proposal` datée du 28/08 dans ce fichier à l'ouverture → premier déclenchement du jour.
 
@@ -963,9 +1013,9 @@ Le post affirme des choses sur HWG lui-même. Une claim manuelle a donc été aj
 
 Autres remontées, toutes non bloquantes : 4 × `claims.product-number` sur « 12 », « 29 », « 08 » — le script lit des fragments des dates `2024/12/29` et `2026/08/29` comme des chiffres produit (29 € du plan Pro, etc.), faux positif de segmentation. 1 × `facts.value-no-context-match` sur le 146 du 7e paragraphe, dont la phrase ne renomme ni la maladie ni le pays (nommés deux paragraphes plus haut).
 
-### 5️⃣ TEXTE — statut : **PRÊT — en attente de publication**
+### 5️⃣ TEXTE — statut : 🔴 **RETIRÉ le 31/08, jamais publié** (statut antérieur : PRÊT — en attente de publication)
 
-Validation explicite de David requise avant qu'il publie lui-même (règle de non-publication autonome du contenu de marque LinkedIn, [[feedback_no_self_publishing]]). David non présent au moment du run (8h35).
+⚠️ **Ne pas publier ce texte.** Le run du 31/08 a repris ce brouillon (règle Étape 0), rafraîchi ses chiffres, et le relecteur indépendant a alors trouvé que **son inférence centrale est fausse** : la plage `2024/12/29 至 2026/09/05` est la fenêtre de *requête* de la page NIDSS, qui couvre les **deux** années affichées (`今年累計數 153` pour 2026 **et** `去年總數 293` pour 2025) — ce n'est donc pas la fenêtre de comptage du 153, et elle ne peut pas servir de réponse à « où commence le compte ». Les paragraphes 6 et 7 reposaient entièrement dessus. S'y ajoute un échec Q11 : l'angle « une seule colonne *cases*, deux natures de compteur » **avait déjà été formellement écarté le 21/08** (voir plus bas dans ce fichier, section des angles écartés : « *rejoue le mécanisme du post du 10/08* … *Écarté au titre de [[feedback_anti_template_check_structure_not_just_wording]]* »). Détail complet dans l'entrée du 31/08.
 
 Faits cités : Dengue/Taïwan `cases=146, asOf=2026-08-28, ageDays=0`, plus les trois libellés verbatim de la page NIDSS. Aucun chiffre Ebola cité (voir §6, la ligne est en écart avec sa source). Aucun tiret cadratin.
 
