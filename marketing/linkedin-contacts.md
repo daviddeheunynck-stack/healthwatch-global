@@ -43,25 +43,29 @@ Les deux destinataires ont été vérifiés absents des 10 conversations de la m
 
 🔴 **Le relecteur a fait échouer les deux premiers jets sur un défaut que le contrôle mécanique ne pouvait pas voir : les deux brouillons partageaient le même squelette en trois temps** — remerciement suivi de « votre post m'est resté », puis aveu de limite personnelle, puis question finale à alternatives fermées. Les deux passaient pourtant `PASS` en mécanique, parce qu'aucune séquence de mots n'était commune : c'est la **structure** qui se répétait, exactement le défaut visé par [[feedback_anti_template_check_structure_not_just_wording]]. **Les deux accroches et la question finale de Souad ont été refaites** pour casser le moule. Sur Buno, le relecteur a aussi refusé un **absolu invérifiable** (« *the notification is the only part of that sequence that ever reaches someone outside the country* ») : retiré et ramené à ce qui est vrai (« *what reaches me is mostly published notifications* »).
 
-#### 🔒 DM 1 — **SOUAD BELKACEMI.** (`/in/souad-belkacemi-a794ba9b/`), FR, vouvoiement
+#### ✅ DM 1 — **SOUAD BELKACEMI.** (`/in/souad-belkacemi-a794ba9b/`), FR, vouvoiement — **ENVOYÉ SUR ORDRE EXPLICITE DE DAVID**
 
 Ancré sur la question de clôture de son propre post Shuni (« *Ne devrions-nous pas aussi chercher quels virus disposent déjà des conditions écologiques pour arriver demain ?* »), qui est l'exact inverse de ce que fait HWG : partir du déclaré. ⚠️ **Prudence assumée** : son profil affiche « à l'écoute de nouvelles opportunités » — le message ne mentionne ni poste, ni employeur, ni BioSellal, pour qu'il ne puisse en aucun cas se lire comme une approche de recrutement (même précaution que pour Teketel T. T. le 30/08).
 
-`QA: mécanique PASS (426 car., 2 paragraphes, fr/fr, 0 chiffre, 0 lien, 0 CTA) | relecteur REECRIRE (11, moule partagé avec le DM Buno) au 1er jet, corrigé — 11 PASS sur 12 par ailleurs | faits cités: aucun | registre du 31/08 | statut: en file de validation`
+`QA: mécanique PASS (426 car., 2 paragraphes, fr/fr, 0 chiffre, 0 lien, 0 CTA) | relecteur REECRIRE (11, moule partagé avec le DM Buno) au 1er jet, corrigé — 11 PASS sur 12 par ailleurs | faits cités: aucun | registre du 31/08 | statut: envoyé le 31/08 à 12:51, sur ordre explicite de David en session interactive (« publie les dms »)`
 
 > Bonjour Souad, content que l'échange sorte du fil public.
 >
 > Votre post sur Shuni se termine sur une inversion que je n'arrive pas à opérationnaliser : chercher les virus qui réunissent déjà les conditions écologiques pour arriver, au lieu d'attendre qu'ils soient déclarés quelque part. Tout ce que je manipule est du déclaré, donc du passé. Si vous deviez construire une telle liste pour l'Europe, vous commenceriez par quoi ?
 
-#### 🔒 DM 2 — **Buno Tona** (`/in/buno-tona/`), EN
+**Envoi confirmé** : composeur ouvert via `messaging/thread/new/`, destinataire vérifié dans le chip (« SOUAD BELKACEMI. · 1er · Docteur en Biologie-Microbiologie... ») avant frappe. Structure HTML relue avant clic (`<p>`/`<p><br></p>`/`<p>`, un seul saut de paragraphe — l'écart de longueur `innerText` n'était qu'un artefact de rendu des balises bloc, pas un doublon). Après envoi : message visible dans le fil à 12:51, texte intégral conforme, aucune troncature.
+
+#### ✅ DM 2 — **Buno Tona** (`/in/buno-tona/`), EN — **ENVOYÉ SUR ORDRE EXPLICITE DE DAVID**
 
 Ancré sur son post personnel d'il y a une semaine sur l'application du principe **7-1-7** (détecter en 7 j, notifier en 1 j, répondre en 7 j). La question porte sur une zone grise réelle de la métrique : une suspicion qui se révèle négative consomme le même effort de détection sans produire d'événement confirmé auquel accrocher la chronologie.
 
-`QA: mécanique PASS (444 car., 2 paragraphes, en/en, chiffres « 7 » et « 1 » repris verbatim du principe cité dans son post, 0 lien, 0 CTA) | relecteur REECRIRE (4 absolu invérifiable, 11 moule partagé) au 1er jet, les deux corrigés — 10 PASS sur 12 par ailleurs | faits cités: aucun chiffre de flambée | registre du 31/08 | statut: en file de validation`
+`QA: mécanique PASS (444 car., 2 paragraphes, en/en, chiffres « 7 » et « 1 » repris verbatim du principe cité dans son post, 0 lien, 0 CTA) | relecteur REECRIRE (4 absolu invérifiable, 11 moule partagé) au 1er jet, les deux corrigés — 10 PASS sur 12 par ailleurs | faits cités: aucun chiffre de flambée | registre du 31/08 | statut: envoyé le 31/08 à 12:54, sur ordre explicite de David en session interactive (« publie les dms »)`
 
 > Hi Buno, glad to be connected. A question your 7-1-7 post left me with, since you are applying it rather than writing about it.
 >
 > A suspected outbreak that turns out to be nothing still consumes the detection effort, but there is no confirmed event to hang the timeline on. Does it get scored, or does it drop out of the count entirely? What reaches me is mostly published notifications, so I see outcomes and rarely the work that produced them.
+
+**Envoi confirmé** : destinataire vérifié dans le chip (« Buno Tona · 1er · Field Epidemiologist/surveillance/EWAR... ») avant frappe, structure HTML relue avant clic. Message visible dans le fil à 12:54, texte intégral conforme.
 
 #### ➡️ SUIVIS — 7/7-10, fourchette atteinte (détail en section 4)
 
@@ -102,7 +106,7 @@ Ancré sur son post personnel d'il y a une semaine sur l'application du principe
 
 ---
 
-### 6️⃣ 🔴 À SIGNALER — une invitation hors périmètre partie le 30/08, jamais archivée
+### 6️⃣ ✅ RETIRÉE SUR ORDRE DE DAVID — invitation hors périmètre partie le 30/08, jamais archivée
 
 En vérifiant l'onglet « Envoyées » pour confirmer que rien n'était parti chez Hossain, une ligne inattendue est apparue :
 
@@ -112,7 +116,7 @@ En vérifiant l'onglet « Envoyées » pour confirmer que rien n'était parti ch
 
 **Hypothèse la plus probable, et elle est documentée** : c'est le piège de la sidebar décrit en §7 des notes techniques — *« un bouton "Se connecter" affiché en sidebar ("Personnes que vous pourriez connaître", "Profils semblables à…") envoie l'invitation immédiatement, sans modale de note »*. Clarisse Sgard est précisément un de ces profils de suggestion : elle est réapparue **ce matin même** dans la sidebar « Explorer les profils Premium » du profil d'Alastair Donachie, aux côtés d'autres profils français sans rapport (dentiste, psychomotricienne, préparatrice en pharmacie).
 
-**Rien n'a été fait de mon côté** : le bouton « Retirer » est disponible et l'action est réversible, mais retirer une invitation est une action sortante vers une personne réelle et sort du périmètre de la routine (§10, même logique que pour le doublon Oke du 30/08). **Décision de David.** Recommandation : la retirer, elle n'a aucune chance d'aboutir utilement et brouille le signal du réseau.
+**David a tranché en session interactive (« 1 retire »)** : invitation retirée. Cible confirmée avant clic (ligne « Clarisse Sgard — Gestionnaire santé chez Groupe Henner » visible dans le même écran que le bouton « Retirer »), modale de confirmation générique LinkedIn passée. **Retrait confirmé** : compteur des invitations envoyées passé de **96 à 95**, sa ligne a disparu de la liste (Yakoza Nyirenda et Béatrice SERRA désormais adjacentes).
 
 ---
 

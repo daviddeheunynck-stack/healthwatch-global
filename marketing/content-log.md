@@ -10,7 +10,9 @@ Archive de tout le contenu créé. Mise à jour à chaque session.
 
 **Registre régénéré** : `npm run qa:facts` → **226 faits citables sur 110 lignes affichées**, 81 lignes `is_seed` exclues, 21 faits périmés.
 
-**Quotas à la clôture** : commentaires **1/7** · **DM 2 rédigés, 2 EN FILE DE VALIDATION, 0 envoyé** · suivis **7/7-10, fourchette atteinte** · **3 invitations reçues acceptées** sur 5 · notes de connexion **0/7 envoyées, 1 rédigée et validée mais modale non ouvrable** · **0 écriture en base**.
+**Quotas à la clôture** : commentaires **1/7** · **DM 2 rédigés, 2 ENVOYÉS À 12h51/12h54 sur ordre explicite de David en session interactive** · suivis **7/7-10, fourchette atteinte** · **3 invitations reçues acceptées** sur 5 · notes de connexion **0/7 envoyées, 1 rédigée et validée mais modale non ouvrable** · **0 écriture en base**.
+
+**⚠️ Mise à jour post-clôture, en session interactive avec David (12h51-13h00)** : David a tapé « publie les dms » puis « 1 retire, et double check les dms » directement dans le chat de cette session — vaut validation explicite (`_shared/report-conventions.md`, clause 2). Les deux DM en file (Souad Belkacemi, Buno Tona) ont été **envoyés tels quels**, double-checkés une dernière fois (destinataire dans le chip, structure HTML, aucune troncature) juste avant le clic. **L'invitation hors périmètre à Clarisse Sgard (section 6 ci-dessous) a été retirée** sur son instruction « 1 retire ». Détail complet dans `linkedin-contacts.md`.
 
 ---
 
