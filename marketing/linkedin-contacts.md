@@ -1,6 +1,97 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
+## 📅 Session linkedin-hwg-followup-check — 31/08/2026 (13h, 1er des 2 créneaux après-midi)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` datée du 31/08 dans ce fichier ni dans `content-log.md` à l'ouverture (dernière en date : 30/08 13h). Les entrées du 31/08 déjà présentes appartiennent à `linkedin-hwg-content-proposal` (8h35), `linkedin-hwg-monitoring` (9h), au thread hebdo X et à une **session interactive de David vers 12h49-13h00** (publication du thread X, envoi des 2 DM, retrait de l'invitation Sgard) — runs intentionnellement distincts → **premier déclenchement de cette routine aujourd'hui**. Horloge machine à l'heure (`Mon Aug 31 13:02 2026`).
+
+**🖥️ Navigateur** : `_shared/browser-status.md` lu avant ouverture. **Dernière entrée du jour `🔴 EN PANNE` (~12:42, pont extension tombé pendant `x-hwg-content-proposal`)** → revérification **unique** prévue par §7, sans relancer la séquence de diagnostic complète. **Pont rétabli** : `list_connected_browsers` liste de nouveau `23c7ecdd-…`, sélectionné directement sans confirmation (§7, session planifiée). Ligne `🟢 RÉTABLI` ajoutée au journal. Aucune notification push due à ce titre (panne du jour déjà notifiée, et résolue).
+
+**Détail intégral du commentaire publié, du DM en file et des blocages : `content-log.md`, entrée du jour.**
+
+---
+
+### 1️⃣ MESSAGERIE — AUCUN MESSAGE ENTRANT DEPUIS 9h, FILE DE VALIDATION VIDE À L'OUVERTURE
+
+**Liste des 10 conversations lue en entier, triée par récence.** Les deux plus récentes sont **nos propres envois de 12h51 et 12h54** (SOUAD BELKACEMI., Buno Tona, expédiés en session interactive sur ordre de David) ; la suivante remonte au **29 août**. **Aucun message reçu depuis le créneau de 9h**, donc aucun brouillon de réponse dû à ce titre.
+
+- **SOUAD BELKACEMI.** et **Buno Tona** : DM partis ce midi, **aucune réponse encore**. Les deux fils n'ont qu'un message, le nôtre.
+- **John Omari Baso** : inchangé, son « *Merci beaucoup pour votre message! On garde contact pour la suite* » du 29/08 reste le dernier — politesse de clôture sans substance (§3), rien de dû, constat identique aux quatre créneaux précédents.
+- **Inchangés, rien n'est dû** : Abou A. SOUMAH · **Dr. Siaka Condé** (« *Let me look at this for a moment* », 29/08 12:29, toujours pas revenu) · Alain BASHIZI · Rodrigo Olave Hurtado · **Summer Galloway** et **Bobossam Cissoko** (DM du 29/08, toujours sans réponse).
+- ⭐ **Harvey Basivikidi** : **sa réponse du 28/08 à 14:46 est toujours le dernier message du fil, 3 jours après.** C'est le carry-over du 28/08 (« *reprendre la conséquence en aval d'un format sans propriétaire, dans quelques jours, autre charpente, sans CTA* ») qui arrive à échéance — traité en section 2.
+
+---
+
+### 2️⃣ 🔒 DM — 1 RÉDIGÉ, EN FILE DE VALIDATION, AUCUN ENVOYÉ
+
+**Règle du 23/07 appliquée : ce texte n'est pas envoyé par la routine.** Quota DM du jour : 2 envoyés sur 8 (les deux de midi, sur ordre de David) ; un DM en file ne consomme rien tant qu'il n'est pas envoyé.
+
+#### 🔒 DM 1 — **Harvey Basivikidi** (`/in/harvey-basivikidi-9b6343a7/`), EN — **EN ATTENTE DE VALIDATION**
+
+*MD | Éco-épidémiologiste | Master 2 Écologie et Gouvernance des maladies (INOHA) | Recherche One Health & Santé Numérique | Fondateur Corridor4Health*, Mbanza-Ngungu (RDC), 1er degré.
+
+**Fil relu intégralement avant rédaction (§4)** : il ne contient que **2 messages**, recopiés verbatim dans `tmp/thread-harvey-31.txt` — notre DM de bienvenue du 28/08 à 12:44 (délibérément **sans lien**) et sa réponse du 28/08 à 14:46. *langue du fil = en ; langue du brouillon = en.*
+
+**Carry-over du 28/08 honoré et daté.** Le brouillon de ce jour-là avait été **abandonné** sur 4 findings du relecteur, avec une consigne explicite : le point sur la **conséquence en aval** d'un format sans propriétaire n'avait jamais été dit à Harvey, le relecteur l'avait validé comme un apport réel, et il fallait le reprendre « *dans quelques jours, dans une autre charpente, et sans CTA* ». Trois jours ont passé, le fil est au repos, sa réponse reste le dernier message : c'est le moment prévu. Charpente entièrement différente (le 28/08 partait d'un compliment sur sa réponse puis d'une question ; celui-ci part de la conséquence subie, côté aval, sans compliment d'ouverture).
+
+**Arbitrage CTA, explicite.** L'anti-répétition (§2 du SKILL) a été vérifié sur l'intégralité du fil : **le nom HealthWatch Global, le lien et l'essai Pro n'y ont jamais été envoyés**, le DM de bienvenue du 28/08 les omettait tous les trois. Un aller-retour de fond a bien eu lieu (sa réponse est substantielle), donc la règle CTA de la politique commune §3 s'applique. **Elle a été appliquée à moitié, délibérément** : le nom HWG est présent parce que le point ne tient pas sans lui (David est le lecteur en aval qui casse, c'est lui le sujet de la phrase), **mais ni lien ni essai Pro** — c'est exactement l'option médiane prévue par le SKILL (« *ne reprendre que le nom sans re-proposer le lien/l'essai* »), et elle respecte le « sans CTA » du carry-over sur ce qu'il visait réellement, à savoir l'argumentaire commercial.
+
+`QA: mécanique PASS (825 car., limite 1300, 3 paragraphes, en/en, 0 chiffre, 0 tiret cadratin, 0 lien, 1 review hwg.claim) | relecteur VERDICT: ENVOYER, 12 PASS au 1er jet, 2 réserves consignées sans échec dont un démonstratif plus large que la couverture prouvable (« those bulletins ») — corrigé en « published agency bulletins » avant archivage | faits cités: aucun, le texte ne contient pas un seul nombre | registre du 31/08 (11:53) | statut: 🔒 EN FILE DE VALIDATION`
+
+> Harvey, there is a downstream half to what you described, and I only notice it because I sit at that end.
+>
+> If the format travels with whichever team compiles the bulletin rather than with a named owner, then it changes when that team changes, and nothing announces it. I read published agency bulletins for HealthWatch Global. A reworded header or a column that moves does not raise an error, it just stops producing a number, and I have found that out weeks later from the gap rather than from any notice.
+>
+> Which makes your caveat the interesting part rather than a limitation. If ownership of the format was never investigated, its stability across a change of team was not measured either. Could a study like yours recover that after the fact from archived bulletins, or does it have to be asked while the team is still there to ask?
+
+**Note de véracité** : la phrase « *I have found that out weeks later from the gap rather than from any notice* » n'est pas une figure de style, elle décrit un incident réel et documenté du dépôt (cron PAHO muet 16 jours sur le sitrep rougeole, un `skip` silencieux au lieu d'une erreur). Elle est au passé et ne prétend pas décrire une habitude.
+
+---
+
+### 3️⃣ ✅ INVITATION REÇUE — 1 ACCEPTÉE, 2 LAISSÉES (déjà écartées ce matin)
+
+Gestionnaire d'invitations ouvert : **3 en attente**, dont 2 déjà écartées par le run de 9h et non rejugées (**Zachariah G. Houdari**, services financiers ; **OLAOLUWA PHILIP**, géospatial/climat sans santé publique).
+
+⭐ **Alexandre APPROUTSADI YOKSOU** (`/in/alexandre-approutsadi-yoksou-8a814b1a2/`) — *Epidemiologist & Health Data Analyst | Nutrition in Emergencies | Project Management & Agile*, comté de Nairobi (Kenya), Université de Douala, 829 abonnés, **24 relations en commun dont Marie Roseline Darnycka BELIZAIRE**. Épidémiologiste et analyste de données de santé, cœur de cible. **Il a envoyé l'invitation lui-même.** Identité vérifiée (`href` + intitulé) **dans le même appel JS que le clic** (§7). ✅ Compteur passé de **3 à 2**, sa carte ne porte plus que « Message ». Aucun échange préalable en messagerie.
+
+#### ❌ AUCUN DM DE BIENVENUE POUR LUI — pas de hook honnête
+
+Activité publique parcourue en entier (11 éléments) : elle est **intégralement composée d'annonces de certification** (BSAFE/UNDSS il y a 11 h, formation Agile et MOOC One Health il y a 1 semaine, Google Project Management à 7 mois, VNU/UNFPA à 8 mois, IBM Data Analytics à 9 mois) **et de repartages d'offres d'emploi** (CARE Tchad, MSF France, OIM). **Rien sur une flambée, une surveillance, une donnée de terrain.** Écrire un DM ancré sur une attestation de formation fabriquerait un lien avec HWG qui n'existe pas (§10). S'y ajoute un signal net de recherche de poste (« *Ready to step up where impact matters most* », « *En route vers de nouveaux défis* ») : un message d'un fondateur risquerait de se lire comme une approche de recrutement, même précaution que pour SOUAD BELKACEMI. et Teketel T. T. **Exactement le même traitement que Kipchirchir Kigen ce matin et Evouna Armel le 30/08. À reprendre dès qu'il publie dans le périmètre.**
+
+---
+
+### 4️⃣ ➖ ABONNÉS — AUCUN NOUVEAU À TRAITER, QUOTA SUIVIS DÉJÀ DANS LA FOURCHETTE
+
+Liste `/mynetwork/network-manager/people-follow/followers/` ouverte, triée par récence : **397 personnes** (395 le 30/08 ; les deux de plus sont **Buno Tona** et **Kipchirchir Kigen**, devenus abonnés en devenant relations ce matin). Les 8 abonnés les plus récents sont **tous déjà traités** : Buno Tona, Kipchirchir Kigen, Adrian Cocian, SOUAD BELKACEMI., Awa Sangaré, Evouna Armel, Bobossam Cissoko tous à « Suivi » ; **Haider Durrani** reste à « Suivre », décision d'écart du 30/08 non rejugée (*Sales & Marketing Executive*, aucun rattachement santé publique, §10). **Aucun follow-back dû.**
+
+⚠️ **Notification « Adrian Cocian vous suit » (3 h) : recyclée, pas un nouvel abonné.** Identifié **par son lien** (`/in/adrian-cocian-13b41b1a5/`, §12) et non par son nom : c'est bien le profil déjà suivi en retour le 30/08. Aucune action.
+
+**Quota suivis : 7/7-10, fourchette atteinte ce matin, aucun suivi supplémentaire ce run.** Le run de 9h a documenté que la verticale « outbreak surveillance epidemiologist » est largement épuisée (5 profils déjà suivis et 2 relations de 1er degré sur 12 ouverts). La fourchette étant remplie, l'effort restant a été mis sur les commentaires, où le quota était le plus utile. ⚠️ **Le compte a bougé pendant le run** : 1/7 à l'ouverture, **3/7** au moment de publier, le créneau de 9h ayant publié deux commentaires de plus entre-temps (Melvin Sanicas, Dossa Paul YAOÏTCHA) — vu par la relecture §15, voir `content-log.md`.
+
+---
+
+### 5️⃣ 🔴 NOTE DE CONNEXION — **Mohammad Ilias Hossain, 3e et 4e tentatives échouées, RIEN ENVOYÉ**
+
+Carry-over n°3 du run de 9h : note **déjà rédigée et QA-validée ce matin**, consigne « ne pas re-rechercher ni réécrire, juste retenter l'envoi ». Honorée à la lettre, le texte n'a pas été retouché.
+
+**Deux chemins distincts testés ce run, les deux en échec** (la prémisse a donc été retestée, pas recopiée) :
+1. **Menu « Plus » du profil, clic JS sur l'item « Se connecter »** — le menu s'ouvre et contient bien l'item, mais le clic ne fait pas monter la modale d'invitation ; c'est le déroulant de recherche qui a pris le focus.
+2. **Menu « Plus », clic en coordonnées après capture d'écran** — cible vérifiée visuellement avant le clic (profil « Mohammad Ilias Hossain · He/Him · 2e » lisible dans la même capture) : le menu se ferme, **aucune modale**.
+
+🔎 **Chemin alternatif exploré, et il donne l'information la plus utile du lot** : sur la page de résultats de recherche `people`, sa carte (identifiée par `href`, §12) n'offre **que « Message »**, pas « Se connecter » — alors que la carte d'un homonyme de 3e degré, elle, affiche bien « Se connecter ». LinkedIn ne propose donc pas l'action de connexion pour ce profil sur cette surface non plus. **L'hypothèse « bug de modale » est affaiblie** : ça ressemble davantage à une indisponibilité côté LinkedIn (paramètre du destinataire, ou plafond lié aux **95 invitations en attente**) qu'à un problème de clic. À vérifier, non tranché.
+
+✅ **Vérification de sûreté après les tentatives** : compteur des invitations envoyées **toujours à 95**, dernière ligne **Yakoza Nyirenda (« il y a 23 heures »)**, et son profil affiche toujours « Se connecter » et non « En attente ». **Aucune invitation n'est partie, ni chez lui ni chez un profil de sidebar** — vérification faite parce qu'un des clics a atterri sur un `<a>` non identifié et que la page portait 4 boutons « Se connecter » de suggestions (piège documenté §7, cas Clarisse Sgard).
+
+➡️ **Reste en carry-over avec sa note intacte.** Il est déjà **suivi**, ce qui garde le lien ouvert sans l'invitation.
+
+---
+
+### 6️⃣ 💬 COMMENTAIRE
+
+Détail intégral, texte, rapports QA et confirmation de publication : `content-log.md`, entrée du jour.
+
+---
+
 ## 📅 Session linkedin-hwg-monitoring — 31/08/2026 (9h)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` du 31/08 dans ce fichier ni dans `content-log.md` à l'ouverture → premier déclenchement du jour. Horloge machine à l'heure (`Mon Aug 31 09:03 2026`). **Détail intégral du commentaire publié et de la veille : `content-log.md`, entrée du jour.**

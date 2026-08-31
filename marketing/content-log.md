@@ -2,6 +2,113 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session linkedin-hwg-followup-check — 31/08/2026 (13h, 1er des 2 créneaux après-midi)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` datée du 31/08 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture (dernière en date : 30/08 13h) → **premier déclenchement de cette routine aujourd'hui**. Les entrées du 31/08 déjà présentes appartiennent à `linkedin-hwg-content-proposal` (8h35, 0 post proposé), `linkedin-hwg-monitoring` (9h), au thread hebdo X et à une session interactive de David (12h49-13h00). Horloge machine à l'heure : `date` renvoie **Mon Aug 31 13:02 2026**, le créneau est à l'heure.
+
+**🖥️ Navigateur** : `_shared/browser-status.md` lu avant ouverture. Dernière entrée du jour **🔴 EN PANNE (~12:42, pont extension tombé pendant `x-hwg-content-proposal`)** → **revérification unique** prévue par §7, sans relancer la séquence de diagnostic complète. **Pont rétabli** : les deux navigateurs sont listés, `23c7ecdd-…` sélectionné directement sans confirmation, session complète sans incident. Ligne **🟢 RÉTABLI** ajoutée au journal, en précisant qu'elle ne couvre **pas** le second blocage de l'entrée précédente (session X déconnectée sur `@HWatchGlobal`), que cette routine ne touche pas. Aucune 2e notification push pour la même panne le même jour.
+
+**Registre de faits** : celui du run de 9h, régénéré à **11:53** (226 faits citables, 110 lignes affichées), soit **1 h 10 à l'ouverture** — bien en deçà du plafond de 12 h, pas de régénération nécessaire.
+
+**Quotas à la clôture** : commentaires **4/7 toutes sessions confondues** (Oke Ikpekpe, Melvin Sanicas et Dossa Paul YAOÏTCHA par le créneau de 9h, **+1 ce créneau**) · **DM 2 envoyés / 8 ce midi sur ordre de David, +1 rédigé et 🔒 EN FILE DE VALIDATION ce créneau** · suivis **7/7-10, fourchette déjà atteinte, 0 ce créneau** · **1 invitation reçue acceptée** (3 → 2 en attente) · notes de connexion **0/7 envoyées, 1 toujours bloquée techniquement** · **0 écriture en base**.
+
+---
+
+### 1️⃣ SUIVI DES FILS ACTIFS ET VEILLE (§14)
+
+**Les trois fils de commentaire encore actifs ont été rouverts un par un, sur le post et pas sur la notification.** Résultat homogène : **notre message est le dernier dans les trois, personne n'a répondu depuis, rien n'est dû.**
+
+- **Oke Ikpekpe** (`urn:li:activity:7499051354368331776`) — notre **7e tour**, publié ce matin il y a 3 h, est bien le dernier message du sous-fil. 6 impressions. Fil relu en entier (14 commentaires) pour le confirmer. Aucune réponse, aucune réaction nouvelle.
+- **SOUAD BELKACEMI.** (`urn:li:activity:7499735785110192129`) — notre commentaire de 6 h (créneau de 17h du 30/08) reste le dernier, 11 impressions. Notre question sur le couplage surveillance animale / dépistage humain est **toujours ouverte de notre côté**. Elle a par ailleurs reçu notre DM à 12h51, sans réponse encore.
+- **Harvey Basivikidi** (`urn:li:activity:7498314547779444737`) — sous-fil rouvert et déplié : notre question de 3 j est le dernier message, **0 réponse**, 5 impressions. Le post lui-même a 4 j, hors fenêtre pour un commentaire top-level. **Carry-over clos côté commentaire** ; côté DM, voir `linkedin-contacts.md` section 2.
+
+**Notifications parcourues intégralement : 10 cartes, fin de liste atteinte** (`scrollY + innerHeight >= scrollHeight`, aucun chargement supplémentaire sur 4 tentatives à délai croissant). **Quatre nouveautés depuis le run de 9h**, aucune ne demandait d'action :
+
+- ⭐ **Newsletter OMS « Health For All » (1 h)** — titre : « *Nepal flash flood, **Ebola ends in Uganda**, Mozambique strengthens regulation of medicines & imported vaccines, new WHO collaborating centre* ». **Seule nouveauté épidémiologique du lot**, traitée en section 3 et exploitée en section 2.
+- **Clarisse Sgard et 5 autres personnes ont consulté votre profil (1 h)** — sans objet, mais à noter par cohérence avec le retrait d'invitation de ce matin : elle a consulté le profil après le retrait. **Aucune action, aucune reprise de contact.**
+- **Adrian Cocian vous suit (3 h)** — ⚠️ **notification recyclée, pas un nouvel abonné.** Identifié **par son lien** (`/in/adrian-cocian-13b41b1a5/`, §12) : c'est le profil déjà suivi en retour le 30/08. Aucune action.
+- **Charles Cazanave (3 h)** — rentrée au CHU de Bordeaux, registre personnel, hors périmètre analytique. Son second post (conseil de lecture) était déjà écarté ce matin.
+
+**Vus et sans action neuve** : Banda Khalifa (soutenance de thèse), Lori Peterson (écartée ce matin, terrain politique), Dr. Malachie MANAOUDA (post institutionnel de déplacement), Haider Durrani (décision d'écart du 30/08 non rejugée), Mohammad Ilias Hossain (traité en section 2).
+
+---
+
+### 2️⃣ 💬 COMMENTAIRE PUBLIÉ — 1
+
+#### ✅ COMMENTAIRE 4/7 — **Mohammad Ilias Hossain** (`/in/mohammad-ilias-hossain-72083368/`), EN, commentaire top-level
+
+`urn:li:activity:7499900718590595072`, post de **16 h** (fenêtre 48 h ✅), **1 réaction, 0 commentaire** au repérage → **nous sommes le premier commentateur**, donc rien à lire avant de rédiger au titre de §5. Post recopié verbatim dans `tmp/thread-hossain-31.txt`. *langue du fil = en ; langue du brouillon = en.*
+
+**Blocage hebdomadaire purgé** : dernier commentaire sous ses posts le **17/08**, libre depuis le 24/08. ⚠️ **Vérification d'angle contre ce commentaire du 17/08** : il portait sur la décomposition du « 40 jours contre 235 jours » (deux vitesses fusionnées dans un même délai). **L'angle d'aujourd'hui est entièrement distinct** (statut des lignes contre total cumulé), aucun recouvrement de moule.
+
+**Pourquoi cette cible maintenant, alors que le run de 9h l'avait écartée.** Il l'avait écartée pour deux motifs : « tableau d'indicateurs sans thèse propre », et surtout **redondance** parce qu'il était retenu comme cible de connexion le jour même. **Le second motif est tombé** : l'invitation est techniquement impossible à envoyer (4 tentatives, 2 surfaces, détail dans `linkedin-contacts.md` section 5). Et le premier a été réexaminé : le post porte bien une thèse implicite, celle du **total combiné**, qui est précisément ce à quoi le commentaire répond.
+
+**L'angle publié.** Il additionne RDC, Ouganda et France en un « *Combined reported total* » unique. Or les trois lignes ne sont pas dans le même état : **l'Ouganda a déclaré sa flambée terminée**. Un cumul de cas et de décès ne peut que monter, alors que le statut, lui, va dans l'autre sens : une somme entre pays n'a nulle part où loger cette information, et garde indéfiniment une flambée close dans un total qui se lit comme courant. La question finale porte sur son propre choix éditorial, que sa seule mise en garde méthodologique (limitée à la létalité) ne couvre pas.
+
+**Source primaire vérifiée avant rédaction (§8), pas seulement la notification** : [WHO AFRO, « Uganda ends Ebola outbreak following completion of 42-day countdown »](https://www.afro.who.int/countries/uganda/news/uganda-ends-ebola-outbreak-following-completion-42-day-countdown). La notification de la newsletter OMS et le post du **Prof. Mohamed Janabi** (Directeur régional OMS pour l'Afrique) allaient dans le même sens, mais aucun des deux n'a servi de source : c'est la page AFRO qui a tranché.
+
+🔴 **Le relecteur a fait échouer le 1er jet sur deux points réels, dont un contresens de lecture que le contrôle mécanique ne pouvait pas voir.**
+- **(5) Attribution — le défaut sérieux.** Le brouillon écrivait que sa phrase de clôture « *carries Uganda forward as a live source of cross border risk* ». **C'est l'inverse de ce qu'elle dit** : « *population movement increasing the potential for transmission **to** Uganda, South Sudan, Rwanda* » range l'Ouganda parmi les **destinations** d'un risque venu de RDC, pas parmi ses sources. Corriger un épidémiologiste sur un point que son texte ne dit pas, en premier commentaire public, aurait été l'erreur du run.
+- **(3) Statut.** Deux sous-points : la datation « *since the figures were assembled* » n'était **pas prouvable** (la déclaration AFRO date du 27 août, soit la date d'arrêt même des chiffres ougandais du post), et l'autorité déclarante était mal attribuée — le titre de la source dit « **Uganda** ends Ebola outbreak », l'Ouganda déclare et WHO AFRO publie, là où le brouillon écrivait « WHO has announced ».
+
+**Les deux ont été corrigés par suppression, pas par réargumentation** : la caractérisation fautive de sa phrase de clôture a été **retirée en entier**, et la première phrase réécrite sans repère temporel et avec l'autorité correcte. L'angle de fond (statut contre cumul) ne dépendait ni de l'un ni de l'autre, il survit intact. **Une seule passe de correction**, conformément à la règle des deux essais.
+
+`QA: mécanique PASS aux deux passages (427 car., limite 700, 2 paragraphes, en/en, 0 tiret cadratin, 0 lien, 0 CTA, 0 chiffre hors « three » repris du post) | relecteur VERDICT: REECRIRE 3, 5 au 1er jet, les deux corrigés par suppression — 10 PASS sur 12 par ailleurs | faits cités: aucun chiffre de flambée ; le statut Ouganda vient de WHO AFRO, la ligne Ebola/Ouganda du registre porte déjà active: false | registre du 31/08 (11:53) | statut: publié le 31/08`
+
+> On the combined total: Uganda has declared its Ebola outbreak over, an announcement carried by WHO AFRO. The three rows being summed are therefore not in the same state, one closed and one still moving.
+>
+> Cases and deaths accumulate and stay put, but status moves the other way, and a sum across countries has nowhere to hold it. Do you rebuild that combined line when a country closes, or does it stand as the historical total?
+
+⚠️ **§15 appliqué avant le clic, et il a servi.** `content-log.md` et `linkedin-contacts.md` relus juste avant publication, pas seulement à l'ouverture : **le `git log` avait bougé de deux commits pendant le run** (`ff4f423` → `835654b7` → `ef3ab031`), le créneau de 9h ayant publié **deux commentaires supplémentaires** entre-temps. **L'un d'eux porte sur Dossa Paul YAOÏTCHA, que j'étais en train d'évaluer comme candidat** : sans cette relecture, le doublon du 30/08 se rejouait à l'identique. Cible Hossain revérifiée dans la même relecture : aucune entrée du 31/08 ne la mentionne comme commentée.
+
+**Publication confirmée** : bouton « Commenter » **unique et actif** dans le conteneur de l'éditeur, cible (URL du post) et contenu revérifiés **dans le même appel JS que le clic** (présence de « a sum across countries has nowhere to hold it » et longueur exacte avant le `.click()`). Texte comparé **caractère pour caractère** avant envoi : 427 attendus, 427 côté éditeur, `identique: true`. Après envoi : éditeur vidé, **une seule occurrence** du texte, horodatage « maintenant », **compteur de commentaires passé de 0 à 1**, rendu relu en entier après rechargement de la page (2 paragraphes, aucune troncature).
+
+**Blocage hebdomadaire créé** : Mohammad Ilias Hossain jusqu'au **07/09**.
+
+#### ❌ CIBLES OUVERTES ET ÉCARTÉES, MOTIF ÉCRIT
+
+- **Dossa Paul YAOÏTCHA** (post de 1 j, « Août, mois One Health, Jour 29 : Religion et Pratiques Sanitaires ») — **candidat sérieux, écarté deux fois pour deux raisons indépendantes.** D'abord sur le fond : le seul angle honnête disponible depuis notre position (l'engagement communautaire ne laisse aucune trace dans les bulletins publiés, donc on ne peut pas savoir de l'extérieur s'il tient ou s'il a cessé) est **le moule exact du fil Oke Ikpekpe**, tenu sur 7 tours cette semaine, et c'est le défaut pour lequel le candidat page Africa CDC avait été abandonné le 30/08 ([[feedback_anti_template_check_structure_not_just_wording]]). Ensuite, et c'est décisif : **la relecture §15 a montré que le créneau de 9h venait de le commenter**. Doublon évité.
+- **Page Africa CDC** (post de 42 min, annonce d'un press briefing le 3 septembre sur la riposte Ebola en RDC) — écartée : **annonce d'événement**, aucune donnée ni thèse offrant prise à un commentaire analytique. Même motif que l'annonce du RDHUB écartée le 30/08. **La page reste libre et prioritaire dès qu'elle publie du contenu substantiel.**
+- 🛑 **Prof. Mohamed Janabi** (Directeur régional OMS pour l'Afrique, post sur la fin de la flambée en Ouganda) — **hors fenêtre 48 h, le post a 3 j.** C'est la cible la plus forte du fil et elle est perdue pour ce sujet. Son profil était pourtant **libre** de tout blocage hebdomadaire. À retenir : la fin de flambée ougandaise a été annoncée le 28/08 sur LinkedIn et aucune des sessions du 29 ni du 30/08 ne l'a saisie.
+- **Recherche active de contenu** : requête « outbreak surveillance bulletin », filtre « dernières 24 heures », tri par date → **aucun résultat**. Recherche menée, documentée, sans candidat.
+
+---
+
+### 3️⃣ 📊 DONNÉES ÉPIDÉMIOLOGIQUES (§8) — 1 confirmation de statut, AUCUNE écriture en base
+
+**Fin de la flambée d'Ebola (Bundibugyo) en Ouganda**, source primaire lue : [WHO AFRO](https://www.afro.who.int/countries/uganda/news/uganda-ends-ebola-outbreak-following-completion-42-day-countdown), 42 jours consécutifs sans nouveau cas confirmé après la sortie du dernier patient, un cas importé. Bilan final : **20 cas confirmés, 2 décès**, 15 cas importés de RDC et 5 acquis localement.
+
+**Contre-vérification sur le registre régénéré ce matin** : la ligne **Ebola / Ouganda** (`63ba952c-…`) porte déjà **`active: false`**, avec **20 cas et 2 décès**, `asOf: 2026-07-28`, source ECDC. **Les chiffres correspondent exactement au bilan final de l'OMS, et le statut était déjà le bon.** **Aucune écriture en base, rien à corriger** : HWG n'avait aucun retard sur ce foyer.
+
+À noter tout de même pour `morning-don-check` : la ligne porte `asOf: 2026-07-28` alors qu'une **déclaration officielle de fin d'épidémie** existe désormais, datée du 27 août. La valeur ne change pas, mais la date d'arrêt et la source pourraient être remises à jour vers la page AFRO si la fin de flambée mérite d'être datée dans la base. **Signalé, non exécuté** (§8 : une routine sociale ne fait pas l'écriture elle-même).
+
+**Le post de Hossain ne contient aucune donnée que la base n'ait déjà** : ses chiffres RDC (5 794 / 2 786 / 48,1 % au 26/08) sont ceux de la ligne `bd1c3a46-…`, déjà corroborés ce matin, et ses lignes Ouganda et France existent toutes les deux, inactives.
+
+---
+
+### 4️⃣ 🔁 CARRY-OVER POUR LE CRÉNEAU DE 17h
+
+1. 🔒 **UN DM ATTEND DAVID — Harvey Basivikidi** (EN, relance de fond à 3 jours), texte complet et rapports QA dans `linkedin-contacts.md` section 2. **Notification push envoyée.** ⚠️ Point à trancher par David s'il le souhaite : le carry-over du 28/08 disait « sans CTA », le message nomme HealthWatch Global mais ne propose **ni lien ni essai** — arbitrage motivé dans l'entrée, à retirer d'un mot s'il préfère.
+2. 🔴 **Mohammad Ilias Hossain, note de connexion : 4 tentatives échouées au total (2 ce matin, 2 ce run), sur 2 surfaces distinctes.** La note reste rédigée et QA-validée, **ne pas la réécrire**. **Information neuve de ce run** : sur la page de résultats de recherche, sa carte n'offre **que « Message »**, jamais « Se connecter » — l'hypothèse d'un bug de modale s'affaiblit au profit d'une indisponibilité côté LinkedIn (paramètre du destinataire, ou plafond lié aux **95 invitations en attente**). **Suggestion pour le 17h : ne pas retenter une 5e fois par le même chemin.** Soit purger quelques invitations anciennes en attente et réessayer, soit considérer que le lien est déjà ouvert autrement (il est **suivi**, et un commentaire a été publié chez lui ce run).
+3. ⭐ **Alexandre APPROUTSADI YOKSOU** (`/in/alexandre-approutsadi-yoksou-8a814b1a2/`) — **nouvelle relation acceptée ce run**, épidémiologiste et analyste de données, 24 mutuels dont Belizaire. **Pas de welcome DM, faute de hook honnête** (activité 100 % annonces de certification + repartages d'offres d'emploi). **Reprendre dès qu'il publie dans le périmètre**, ne pas re-évaluer sa pertinence.
+4. ⭐ **Oke Ikpekpe** — notre 7e tour reste sans réponse depuis 3 h. Il répond sous 24 h depuis 3 jours, donc **une réponse est probable dans la journée** : à revérifier en priorité à 17h. Bloqué en top-level jusqu'au **04/09**, sous-fil ouvert.
+5. ⭐ **SOUAD BELKACEMI.** — deux fils ouverts de notre côté et **aucun ne bouge** : notre question publique du 30/08 (11 impressions) et notre DM de 12h51. Ne rien relancer à 17h, laisser reposer.
+6. ⭐⭐ **Dr. Malachie MANAOUDA** — Ministre de la Santé Publique du Cameroun, déjà suivi, **connexion prioritaire dès qu'un hook frais se présente**. Porté « à basculer en connexion » depuis le 22/08, toujours pas exécuté.
+7. ➖ **Yakoza Nyirenda** — invitation sans note du 30/08, **toujours en attente** (« il y a 23 heures » dans l'onglet Envoyées). Si acceptée : welcome DM, en file de validation.
+8. ⭐ **Page Africa CDC et Prof. Mohamed Janabi : deux cibles fortes et libres, toutes deux perdues aujourd'hui pour des raisons de fenêtre.** Africa CDC n'a qu'une annonce d'événement (briefing du 3 septembre) ; Janabi a le bon sujet mais son post a 3 j. **À surveiller de près à 17h et demain matin** : le briefing du 3 septembre produira du contenu substantiel.
+9. ❌ **Ne pas reproposer sans élément neuf** : Zachariah G. Houdari, OLAOLUWA PHILIP (invitations laissées, motifs au tracker), Haider Durrani (abonné hors périmètre), Kipchirchir Kigen (connecté, pas de DM tant qu'il ne publie pas dans le périmètre).
+10. **Blocages hebdomadaires au 31/08 après ce run** : Martin Yakum (01/09) ; Ifedayo Adetifa, Julien Harneis (02/09) ; Harvey Basivikidi (03/09, top-level) ; Oke Ikpekpe, Jason Kindrachuk, Dr Jeeven Kumar (04/09) ; Global Health EDCTP3, French Healthcare Association, Health Policy Watch, Tambe Elvis Akem, SOUAD BELKACEMI (05/09) ; **nouveaux ce jour : Melvin Sanicas, Dossa Paul YAOÏTCHA (07/09) et Mohammad Ilias Hossain (07/09, ce run)**. **Libres** : Robert Herriman, Patrick AYONGA, page ECDC (ce post écarté, page libre), Oliver Morgan, Dr Fabrice KHADDY, page Africa CDC, Vital Strategies, Tedros, **Prof. Mohamed Janabi**, INRB, Miriam Mbueshi, Apoorva Wasnik, Johan Verheyden, Dr. Jean Kaseya, Gaelle Gonzalez, Lori Peterson, Dr. Malachie MANAOUDA.
+
+---
+
+### 5️⃣ 🔧 POINTS DE DISPOSITIF RELEVÉS CE RUN
+
+1. ⚠️ **Deux commentaires publiés le même jour, par deux sessions différentes, sur le même fait épidémiologique.** Le créneau de 9h a commenté chez **Melvin Sanicas** sur « *Uganda has officially ended its Ebola outbreak* » (angle : écart de comptage OMS 20/2 contre CDC 21/3 après clôture) ; ce créneau a commenté chez **Hossain** sur la même fin de flambée (angle : statut contre total cumulé). **Cibles, posts et arguments distincts, donc pas un doublon au sens de §15** — mais deux commentaires HWG le même jour sur le même événement, sous deux posts que des lecteurs communs peuvent voir. §15 verrouille par **cible** ; il ne voit pas une collision par **sujet**. À considérer si le cas se répète.
+2. 🔧 **La page de résultats de recherche `people` est un test de diagnostic utile, pas seulement un chemin de repli.** Quand « Se connecter » échoue depuis un profil, vérifier ce que la carte de recherche propose pour ce même profil départage un bug d'interface d'une indisponibilité réelle de l'action : ici, elle n'offrait que « Message » pour la cible alors qu'elle offrait bien « Se connecter » pour un homonyme. Trois runs avaient conclu « modale non ouvrable » sans cette information.
+3. **Fichiers de l'arbre n'appartenant pas à cette routine, laissés tels quels** (`AGENTS.md`) : `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis, inchangés depuis le 29/08). **Branche vérifiée avant commit : `master`.** ⚠️ Le `git log` a bougé deux fois pendant le run (créneau de 9h encore actif) : arbre partagé, rien de cette routine n'a été touché, et seuls `content-log.md`, `linkedin-contacts.md` et `linkedin-candidates-tracker.md` sont stagés.
+
+---
+
 ## 📅 Session linkedin-hwg-monitoring — 31/08/2026 (9h)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` datée du 31/08 dans `content-log.md` ni dans `linkedin-contacts.md` à l'ouverture. Les deux entrées du 31/08 déjà présentes appartiennent à `linkedin-hwg-content-proposal` (8h35, 0 post proposé) et au thread hebdo X (non publié) → **premier déclenchement de cette routine aujourd'hui**. Horloge machine cohérente cette fois : `date` renvoie **Mon Aug 31 09:03 2026**, le créneau est à l'heure, contrairement au run de 17h du 30/08 qui avait tourné ~13 h en retard.
