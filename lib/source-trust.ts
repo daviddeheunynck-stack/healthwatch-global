@@ -103,6 +103,17 @@ const AUTHORITATIVE_SOURCE_DOMAINS: ReadonlySet<string> = new Set([
   "africacdc.org",
   "ecdc.europa.eu",
   "efsa.europa.eu",
+  // The Pacific Community (SPC) — the Pacific region's intergovernmental scientific and
+  // technical organisation (27 members), whose Public Health Division runs the Pacific
+  // Public Health Surveillance Network (PPHSN), PacNet and the Pacific Syndromic
+  // Surveillance System. Added 2026-08-31 when four Oceania dengue rows were re-sourced
+  // onto its Pacific epidemic alerts map (www.spc.int/phd/epidemics), the map being fed by
+  // national reports shared with the PPHSN Coordinating Body focal point. Same regional-
+  // agency shape as paho.org / africacdc.org above, and SPC is the co-author of the
+  // WHO-branded "Dengue in the Pacific: Multicountry Situation" series — so this is going
+  // UPSTREAM to the publisher, not sideways to an aggregator: reliefweb.int, which merely
+  // hosted that same series, is forbidden above and stays forbidden.
+  "spc.int",
   // National public-health agencies and health ministries
   "polioeradication.org", // GPEI — WHO-led polio eradication partnership
   // National public-health agencies and health ministries
@@ -277,6 +288,7 @@ export function sourceName(source: string | null | undefined): string {
   if (src.includes("ecdc.europa.eu"))    return "ECDC";
   if (src.includes("efsa.europa.eu"))    return "EFSA";
   if (src.includes("paho.org"))          return "PAHO";
+  if (src.includes("spc.int"))           return "Pacific Community (SPC)"; // incl. www.spc.int/phd/epidemics, phd./php.spc.int
   if (src.includes("santepubliquefrance.fr")) return "Santé publique France";
   if (src.includes("gov.uk"))            return "UKHSA";
   if (src.includes("aphis.usda.gov"))    return "USDA APHIS";
