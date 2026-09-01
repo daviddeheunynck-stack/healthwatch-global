@@ -532,7 +532,6 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
    */
   const DASHBOARD_SOURCES: { pattern: string; verifiedOn: string | null; recheckAfterDays: number }[] = [
     { pattern: "shinyapps.io", verifiedOn: null, recheckAfterDays: 180 },                        // WHO xmart-backed dashboards — updated in place, no editions
-    { pattern: "ecdc.europa.eu/en/mpox/surveillance", verifiedOn: null, recheckAfterDays: 180 }, // ECDC mpox surveillance page — updated in place
     { pattern: "publications/m/item", verifiedOn: "2026-08-08", recheckAfterDays: 60 },          // WHO monthly situation reports (Mpox, dengue, etc.) — monthly cadence, 28d staleness expected. Domain-only, no "who.int/" prefix: regional sub-portals (e.g. who.int/westernpacific/publications/m/item/...) use the same series under a different path and were falling through to the standard 21-day threshold — confirmed 2026-08-08, 4 dengue rows (Cambodia/Vietnam/French Polynesia/New Caledonia) all cite the identical westernpacific dengue-situation-update page.
     { pattern: "ecdc.europa.eu/en/news-events", verifiedOn: null, recheckAfterDays: 180 },       // ECDC epidemiological updates — quarterly cadence, 90d+ staleness expected
     { pattern: "aphis.usda.gov/hpai-h5n1", verifiedOn: null, recheckAfterDays: 180 },            // USDA APHIS per-state HPAI livestock — date = last confirmed detection in that state, not a sync timestamp; many states legitimately go months/years without a new one
@@ -544,9 +543,9 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
     { pattern: "ecdc.europa.eu/en/all-topics-z/cholera/surveillance-and-disease-data", verifiedOn: "2026-07-30", recheckAfterDays: 60 }, // ECDC cholera-monthly page — confirmed 2026-07-30 live page matches DB exactly, monthly cadence
     { pattern: "health-topics---meningitis/meningitis_bulletin", verifiedOn: null, recheckAfterDays: 180 },            // WHO AFRO meningitis bulletin — surveillance season ended at week 26/2026, no bulletin published again until the next season (see meningitis_season_end_week26_2026)
     { pattern: "ecdc.europa.eu/en/middle-east-respiratory-syndrome-coronavirus-mers-cov-situation-update", verifiedOn: "2026-07-30", recheckAfterDays: 180 }, // ECDC MERS-CoV dashboard — updated in place, not republished; confirmed 2026-07-30 live page identical to DB (case detection at its lowest since 2014)
-    { pattern: "dge.gob.pe/sala-situacional-dengue", verifiedOn: "2026-08-08", recheckAfterDays: 14 },                 // Peru MoH (CDC Peru) dengue dashboard — redirects to a pure JS/Shiny map (app7.dge.gob.pe/maps/sala_metaxenica/) with no dated articles to scrape; confirmed 2026-08-08 our stored week-26 figure (34,820 cases/36 deaths) matches the last publicly-cited MINSA bulletin, no newer week found in press — updates in place on its own WEEKLY cadence, hence the short recheck: this one goes false fastest of the sixteen.
+    { pattern: "dge.gob.pe/sala-situacional-dengue", verifiedOn: "2026-08-08", recheckAfterDays: 14 },                 // Peru MoH (CDC Peru) dengue dashboard — now a double redirect, to app7.dge.gob.pe/maps/sala_metaxenica/ then to /maps2/shiny_metaxenicas_web/, with no dated articles or PDF links to scrape (the bulletins listing is JS-driven too). Weekly cadence, hence the short recheck: this one goes false fastest of the sixteen. DELIBERATELY LEFT UNVERIFIED at 2026-08-08 so this keeps firing — opened the Shiny app in a browser on 2026-09-01 and the row IS behind: the app reads "DENGUE PERÚ, Situación 2026, hasta la SE 33 — 46 669 casos acumulados, 57 defunciones acumuladas", against 42 440/48 stored at date 2026-08-08. Stamping verifiedOn today would silence a gap that is real. Note before correcting the row by hand: the app's death count carries a "(**) Se incluyen defunciones por la enfermedad y en investigación" footnote, so 57 includes deaths still under investigation and is not necessarily the same measure as the stored 48 — the case count has no such caveat.
     { pattern: "disease-outbreak-news/item/2026-DON610", verifiedOn: "2026-08-08", recheckAfterDays: 180 },            // WHO yellow fever Global surveillance summary — confirmed 2026-08-08 no successor DON exists (prior yellow-fever DON is 2025-DON570, Americas-only, ~1yr gap); this aggregate series is irregular, not fixed-cadence. Specific URL only, NOT a blanket disease-outbreak-news exemption — most DON-sourced rows (e.g. active Ebola/DRC) really do get renumbered every few weeks and must keep the strict 21-day check.
-    { pattern: "weekly-epidemiological-record", verifiedOn: "2026-08-12", recheckAfterDays: 14 },                      // WHO WER — general bulletin (many diseases, not cholera-specific), cited per-issue (e.g. wer101-31) with no ingestion cron in this repo that advances the citation as newer issues publish, unlike sync-who-regional's live fetchers. Confirmed 2026-08-12: issue 31 (27 Jul-2 Aug 2026) was then the latest published issue; Somalia/Tanzania cholera rows citing it (233/0, 113/2 cases/deaths) matched it exactly, both explicitly "no cases in the last 28 days". A row's `date` here reflects the last real case activity in the cited table, not the issue's publish date — re-verify against whatever the current latest wer101-NN issue is before assuming a gap, don't just trust the day-count. NO LONGER TRUE as of 2026-09-01: wer101-32/33/34 have published. Kept unmodified rather than re-dated, because re-dating it without opening the new issues would be inventing the verification this section exists to demand.
+    { pattern: "weekly-epidemiological-record", verifiedOn: "2026-09-01", recheckAfterDays: 35 },                      // WHO WER — general weekly bulletin, cited per-issue (e.g. wer101-31), with no ingestion cron in this repo that advances the citation. The exemption's real claim is NOT "no newer WER issue exists" (one publishes every Friday, so that phrasing goes false within days and is useless) but "no newer MULTI-COUNTRY CHOLERA UPDATE exists" — that update is the continuation of the numbered series that stopped at #38, and it runs MONTHLY inside the WER, not weekly. Verified 2026-09-01 by downloading the full-edition PDFs of issues 31-34 from iris.who.int: the cholera country update appears in issue 31 ONLY ("Multi-country outbreak of cholera — Data as of 28 June 2026", June = epi weeks 23-26, "a 60% increase from the previous month"); issues 32 (3-9 Aug), 33 (10-16 Aug) and 34 (17-23 Aug) mention cholera only in the weekly signals list, with no country figures at all. Our six rows match issue 31 to the digit — DRC 32 193/908, South Sudan 10 526/111, Sudan …/117 — and their `date` 2026-06-28 is the issue's own "data as of" cut-off, not a sync timestamp. So the citation is current, and recheckAfterDays is one month plus slack: a July-data update was due in early September, and its continued absence past ~6 October is the thing worth asking about. Corrected the same day it was mis-stated: the entry previously claimed "issue 31 is still the latest published issue", which was about the journal rather than the update and was false by 12 August without anything actually being stale.
   ];
   // A dashboard/tracker source is skipped by the tight 7/21-day rule above because
   // it doesn't publish per-article dates — but an unconditional skip left rows
@@ -627,12 +626,34 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
   // Audite la liste DASHBOARD_SOURCES elle-même, pas les lignes : chaque entrée
   // est une vérification humaine datée dans un commentaire, et rien ne la
   // relisait. Signalement seul — aucune ligne ne change de seuil ici.
+  //
+  // La péremption ne suffit PAS à déclencher : mesuré le 2026-09-01, la première
+  // version sortait 9 motifs sur 16, dont 7 dont aucune ligne ne dépendait. Une
+  // exemption dont les lignes portent toutes un `source_confirmed_at` frais est
+  // re-vérifiée tous les jours par le cron qui les alimente ; l'âge du
+  // commentaire n'a alors aucune portée — le tampon a déjà répondu à sa place.
+  // Ne restent que les deux cas où un humain est réellement le seul recours :
+  //   (a) l'exemption tient des lignes hors du filet à elle seule — personne ne
+  //       relit cette source, sa validité repose entièrement sur le commentaire ;
+  //   (b) elle ne correspond plus à aucune ligne — motif mort, à supprimer.
+  // Ce resserrement fait passer le rapport de 9 entrées à 2 le jour même, toutes
+  // deux réelles : le motif WER (faux depuis le 12/08) et le tableau de bord
+  // dengue du Pérou (source hebdomadaire, ligne figée à 24 jours).
+  //
+  // Attention à ne pas lire le tampon comme une preuve trop forte dans l'autre
+  // sens : un cron peut tamponner sincèrement pendant qu'un volet de son travail
+  // échoue en silence (sync-paho-alerts, 16 jours sur le sitrep rougeole, réparé
+  // le 30/08). Le tampon dit « quelqu'un a relu cette source », pas « tout ce que
+  // cette source publie a été ingéré » — c'est la section 4j, et non celle-ci,
+  // qui pose la seconde question.
   const staleExemptions = DASHBOARD_SOURCES.map((d) => ({
     ...d,
     ageDays: d.verifiedOn ? Math.round((Date.now() - new Date(d.verifiedOn).getTime()) / 86_400_000) : null,
     matched: matchedByExemption.get(d.pattern) ?? 0,
     silenced: silencedByExemption.get(d.pattern) ?? [],
-  })).filter((d) => d.ageDays === null || d.ageDays > d.recheckAfterDays);
+  }))
+    .filter((d) => d.ageDays === null || d.ageDays > d.recheckAfterDays)
+    .filter((d) => d.silenced.length > 0 || d.matched === 0);
 
   if (staleExemptions.length > 0) {
     // Une seule entrée agrégée : seize motifs au maximum, et les lister un par un
@@ -645,9 +666,7 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
           : `vérifiée le ${d.verifiedOn} (${d.ageDays}j, à revoir tous les ${d.recheckAfterDays}j)`;
         const holds = d.matched === 0
           ? "ne correspond à aucune ligne active — motif mort, à supprimer plutôt qu'à re-vérifier"
-          : d.silenced.length === 0
-            ? `couvre ${d.matched} ligne(s), dont aucune ne dépend d'elle aujourd'hui (toutes exemptées par ailleurs via source_confirmed_at) — priorité basse`
-            : `couvre ${d.matched} ligne(s), dont ${d.silenced.length} qu'elle SEULE tient hors du filet : ${d.silenced.join(", ")}`;
+          : `couvre ${d.matched} ligne(s), dont ${d.silenced.length} qu'elle SEULE tient hors du filet (aucun cron ne relit leur source) : ${d.silenced.join(", ")}`;
         return `« ${d.pattern} » — ${when} ; ${holds}`;
       });
     needsReview.push({
