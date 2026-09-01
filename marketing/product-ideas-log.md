@@ -2336,3 +2336,44 @@ Les deux lignes Mpox de RDC sont `active=false` **et `source_priority=0`**, donc
 3. **Dengue / Kiribati** — URL ReliefWeb dans une ligne non affichée. Cosmétique.
 
 **Statut du reliquat : 4 points sur 6 clos** (déclenchement resserré, motif mort supprimé, ReliefWeb, Mpox/RDC), **1 corrigé sur le fond** (WER — rien n'était périmé), **1 vrai défaut trouvé et documenté sans être écrit en base** (Dengue / Pérou).
+
+#### 7. ✅ Dengue / Pérou corrigé en prod, et l'exemption qui masquait le retard retirée (commit `073ca94d`)
+
+**La question de définition des décès est tranchée par la source, pas par nous.** Le tableau « indicadores » du tableau de bord MINSA porte la note « *Casos confirmados y probables. Defunción relacionada a dengue y en investigación.* », et cette note s'applique à **toute la série 2021-2026** — y compris aux 49 décès de 2025 qui servent de comparaison. Ce n'est donc pas une réserve ponctuelle sur 2026 : c'est la définition permanente du compteur. La réserve que j'avais posée plus haut tombe.
+
+Mieux : la `description` de la ligne disait noir sur blanc « *The death count is not readable on the national dashboard itself and is taken from the MINSA figures relayed on 18 August 2026* ». Les cas venaient du tableau de bord, les décès d'un autre canal — provenance mixte, donc incomparable d'une mise à jour à l'autre. Prendre les deux au même endroit n'est pas seulement un chiffre plus récent, c'est **une meilleure provenance**.
+
+**Chiffres relevés le 01/09 dans l'application (onglets « Tendencias » et « Tablas ») :**
+
+```
+cas cumulés 2026        46 669   (2025 même période : 30 587)   +52,6 %
+décès cumulés 2026          57   (2025 même période :      49)   +16 %
+létalité                  0,12 %
+composition           confirmés 38 723 (82,97 %) · probables 7 946 (17,03 %)
+gravité               dengue grave 224 · avec signes d'alarme 7 324
+SE 33 seule            2 548 cas · 5 décès
+départements          Piura 8 958 · San Martín 7 000 · La Libertad 6 355 ·
+                      Lima 4 793 · Lambayeque 4 389 · Ucayali 2 967
+```
+
+**La date a failli être fausse de six jours.** La SE 33 de l'OMS court du 10 au 16 août (c'est ce que dit le WER lu plus haut ce soir), mais le Pérou a son propre calendrier épidémiologique. Vérifié sur le `CALENDARIO-EPIDEMIOLOGICO-PARED-2026.pdf` du CDC Perú : en août, **SE 31 = 2-8, SE 32 = 9-15, SE 33 = 16-22**, semaines dimanche-samedi. Recoupé par la ligne elle-même, qui datait sa SE 31 au 8 août. La ligne est donc datée du **2026-08-22**, pas du 16.
+
+**Écrit en prod** par un script one-off (`scripts/fix-dengue-peru-se33-2026-09-01.mjs`), **non commité** conformément au `.gitignore` (l. 65-71 : ces scripts sont jetables et supprimés une fois le correctif confirmé). Descriptions réécrites en 5 langues. `source`, `source_priority` (6) et `risk_level` (élevé) inchangés. Relu après écriture : `46 669 cas · 57 décès · date 2026-08-22`.
+
+**L'exemption est retirée, et c'est la vraie leçon.** `dge.gob.pe/sala-situacional-dengue` avait été inscrit dans `DASHBOARD_SOURCES` parce que la source n'est pas extractible — double redirection vers une application Shiny, index des bulletins en JavaScript. Mais **« difficile à extraire » n'est pas « lent à publier »** : ce tableau de bord est hebdomadaire. C'est cette confusion, et non un oubli, qui a garé une ligne tenue à la main sous un plafond de 180 jours où elle a dérivé 25 jours sans que rien ne la signale. La règle est maintenant écrite dans le commentaire de la liste pour les prochains motifs : n'y inscrire qu'une source dont **la cadence de publication** est réellement plus lente que 21 jours. La ligne relève désormais du filet standard, qui est le bon seuil pour elle.
+
+**État final des deux sections, rejoué contre la prod après écriture :**
+
+```
+motifs dans DASHBOARD_SOURCES : 14   (16 au départ — 1 mort supprimé, 1 mal classé retiré)
+section 4b   — signalements   :  2   Dengue / Nicaragua · Diphtérie / Australie   (inchangé)
+section 4b bis — entrées      :  0   le seul signalement du soir est traité
+Dengue / Pérou                : plus d'exemption, filet standard 21 j, date à 10 j
+```
+
+#### Reliquat après cette seconde passe
+
+1. **L'ingestion de la mise à jour choléra du WER** — seul point encore ouvert, toujours **gros effort** et non construit (garde-fou 1). L'inconnue technique est levée : mise à jour **mensuelle**, PDF récupérable via le lien « Download full edition » de la page de l'édition (`iris.who.int/server/api/core/bitstreams/…/content`), texte extractible par `pdf-parse` — c'est ainsi que les chiffres des six lignes choléra ont été recoupés ce soir. Chantier chiffrable, en attente d'une décision de périmètre.
+2. **Dengue / Kiribati** — URL ReliefWeb dans une ligne inactive à `source_priority` 0, donc hors du site public et hors de l'audit 4m. Cosmétique.
+
+Le point « Dengue / Pérou » et le point « exemptions à re-vérifier » sont clos.
