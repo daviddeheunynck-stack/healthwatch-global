@@ -1,5 +1,8 @@
-// Africa CDC News scraper — runs Wed + Sat at 09:10 UTC.
-// Schedule: 10 9 * * *  (fires daily via Vercel; the handler below no-ops except Wed/Sat)
+// Africa CDC News scraper — runs daily at 09:10 UTC (vercel.json: "10 9 * * *").
+// The header used to claim "runs Wed + Sat … the handler below no-ops except
+// Wed/Sat"; no such day check has ever existed in this file, and reading it as
+// true makes four runs out of six look like days the cron never fired —
+// exactly backwards when diagnosing a long rows=0 streak (2026-09-01).
 // Fetches recent news posts from africacdc.org/news-item/ (previously /disease-outbreak-news/),
 // extracts disease / country / cases, and upserts to outbreaks. Covers sub-Saharan
 // African outbreaks (Guinea, Sierra Leone, Burkina Faso, etc.) that may not
@@ -24,7 +27,7 @@ import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
 import { extractAdmin1, geocodeAdmin1 } from "@/lib/geo-extract";
 import { errorMessage } from "@/lib/error";
 import { truncateAtSentence } from "@/lib/truncate-text";
-import { dateFloorGuard, spikeGuard, collapseGuard, zeroCaseGuard, zeroDeathGuard, lockedRowRegressionGuard, lockedRowIsFreezing } from "@/lib/outbreak-guards";
+import { dateFloorGuard, spikeGuard, collapseGuard, zeroCaseGuard, zeroDeathGuard, implausibleDeathsGuard, lockedRowRegressionGuard, lockedRowIsFreezing } from "@/lib/outbreak-guards";
 import { stampSourceConfirmed } from "@/lib/source-confirmed";
 
 export const dynamic     = "force-dynamic";
@@ -65,7 +68,12 @@ function htmlToText(html: string): string {
 // elementor-widget-theme-post-content, WordPress's own post-content widget
 // class, immediately after which real content (with real case/death figures)
 // begins.
-function extractAfricaCdcBody(html: string): string {
+interface ParseStats {
+  articlesFetched: number;  // article pages actually retrieved (HTTP ok)
+  bodySelectorMisses: number;  // …of which the post-content selector did not match
+}
+
+function extractAfricaCdcBody(html: string, stats: ParseStats): string {
   const idx = html.indexOf("elementor-widget-theme-post-content");
   // If Africa CDC changes their template, this selector stops matching — returning
   // the full page (nav/mega-menu/related-posts chrome) instead of "" would feed
@@ -74,6 +82,7 @@ function extractAfricaCdcBody(html: string): string {
   // already handle as a visible skip. Found 2026-07-16.
   if (idx < 0) {
     console.warn("[africa-cdc] body selector no longer matches — skipping article");
+    stats.bodySelectorMisses++;
     return "";
   }
   const tagEnd = html.indexOf(">", idx) + 1;
@@ -212,7 +221,7 @@ interface PostData {
   admin1_lng:  number | null;
 }
 
-async function extractItemData(item: RSSItem): Promise<PostData[]> {
+async function extractItemData(item: RSSItem, stats: ParseStats): Promise<PostData[]> {
   // Disease detection: try title first, then RSS <category> tags as fallback.
   // Africa CDC often uses institutional titles ("Africa CDC Launches...") with
   // disease names only in the <category> tags.
@@ -234,7 +243,10 @@ async function extractItemData(item: RSSItem): Promise<PostData[]> {
   let articleText = "";
   try {
     const res = await fetch(item.url, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(12_000) });
-    if (res.ok) articleText = htmlToText(extractAfricaCdcBody(await res.text()));
+    if (res.ok) {
+      stats.articlesFetched++;
+      articleText = htmlToText(extractAfricaCdcBody(await res.text(), stats));
+    }
   } catch (e) {
     console.warn("[africa-cdc] fetch post:", errorMessage(e));
   }
@@ -411,11 +423,20 @@ async function runAfricaCdc(_req: NextRequest, supabase: SupabaseClient) {
   // Rows this run re-read from the source and found unchanged — stamped as
   // verified in one batched write after the loop (see lib/source-confirmed.ts).
   const sourceConfirmed: string[] = [];
+  // Article-parsing health, separate from the write counters. Africa CDC
+  // publishes long stretches of institutional news (task forces, conferences,
+  // vaccine-allocation statements) carrying no case figures, so rows=0 is a
+  // normal week here — which is precisely why a broken parser looks identical
+  // to a quiet source and can sit unnoticed for weeks (same shape as the PAHO
+  // sitrep outage of 2026-08-30, and as this cron's own 21-day rows=0 streak
+  // that prompted the check, 2026-09-01 — that one turned out to be a genuinely
+  // quiet source). These two counters are what tells the cases apart.
+  const parseStats: ParseStats = { articlesFetched: 0, bodySelectorMisses: 0 };
 
   for (const item of items) {
     let extracted: PostData[] = [];
     try {
-      extracted = await extractItemData(item);
+      extracted = await extractItemData(item, parseStats);
     } catch (e) {
       log.push({ label: item.title, status: "error", detail: errorMessage(e) });
       Sentry.captureException(e, { tags: { cron: "sync-africa-cdc" } });
@@ -443,6 +464,22 @@ async function runAfricaCdc(_req: NextRequest, supabase: SupabaseClient) {
       // Skip 0/0 entries — they are institutional/funding articles parsed as outbreaks
       if (item.cases === 0 && item.deaths === 0) {
         log.push({ label, status: "skip", detail: "0 cases and 0 deaths — likely non-surveillance article" });
+        results.skipped++;
+        continue;
+      }
+
+      // Deaths above cases is never real — it is a mis-parse (a contact-tracing
+      // figure, a funding amount, a table column read out of order). Every other
+      // guard in this file compares against an existing row, so an item this
+      // wrong reached the write layer and was stopped only when a row happened
+      // to exist for that disease/country and some *other* guard fired on it;
+      // with no existing row it was inserted as-is. Live feed on 2026-09-01:
+      // "Three Months into the Bundibugyo Ebola Outbreak" parsed as 8 cases /
+      // 2 320 deaths for Uganda — blocked here now, blocked only by luck before.
+      // Same placement and wording as sync-ecdc-threats and sync-outbreaks.
+      const implausibleReason = implausibleDeathsGuard(item);
+      if (implausibleReason) {
+        log.push({ label, status: "skip", detail: implausibleReason });
         results.skipped++;
         continue;
       }
@@ -598,7 +635,21 @@ async function runAfricaCdc(_req: NextRequest, supabase: SupabaseClient) {
   const confirmed = await stampSourceConfirmed(supabase, sourceConfirmed);
   if (confirmed.error) console.error("[africa-cdc] source_confirmed_at stamp failed:", confirmed.error);
 
-  console.log("[africa-cdc] Done:", results, log, `confirmed=${confirmed.stamped}`);
+  console.log("[africa-cdc] Done:", results, log, `confirmed=${confirmed.stamped}`, parseStats);
+
+  // Every article fetched, not one of them parseable: that is the template
+  // change extractAfricaCdcBody() warns about, and on its own it produces a
+  // textbook clean run — 0 errors, 0 writes, status ok — because an empty body
+  // makes extractNumbers return 0/0 and every item exits through the
+  // "0 cases and 0 deaths" skip. Nothing downstream would ever notice.
+  const selectorBroken = parseStats.articlesFetched > 0 &&
+                         parseStats.bodySelectorMisses === parseStats.articlesFetched;
+  if (selectorBroken) {
+    Sentry.captureMessage(
+      `[africa-cdc] post-content selector matched 0 of ${parseStats.articlesFetched} article(s) — Africa CDC template likely changed`,
+      "error",
+    );
+  }
   // A locked-row refusal must not pass as a clean run: nothing else will
   // ever retry this row, so a silently-blocked write freezes it on stale
   // figures with nothing to show for it. Surface it as an erroring cron (so
@@ -617,10 +668,16 @@ async function runAfricaCdc(_req: NextRequest, supabase: SupabaseClient) {
   // added to catch (see sync-who-afro, which already sums both). Fixed
   // 2026-08-19 alongside the guard-visibility fix above.
   await logCronRun(supabase, "sync-africa-cdc",
-    results.errors > 0 || lockedGuardBlocked.length > 0 ? "error" : "ok",
+    results.errors > 0 || lockedGuardBlocked.length > 0 || selectorBroken ? "error" : "ok",
     (results.inserted ?? 0) + (results.updated ?? 0),
     lockedGuardBlocked.length > 0
       ? `écriture bloquée par le garde anti-régression : ${lockedGuardBlocked.join(" | ")}`
-      : results.errors > 0 ? `${results.errors} écriture(s) en échec` : undefined);
-  return NextResponse.json({ success: true, timestamp: new Date().toISOString(), guardBlocked: lockedGuardBlocked.length > 0 ? lockedGuardBlocked : undefined, ...results, log });
+      : selectorBroken
+        ? `sélecteur de corps d'article sans correspondance sur ${parseStats.bodySelectorMisses}/${parseStats.articlesFetched} article(s) — template Africa CDC probablement modifié`
+        : results.errors > 0 ? `${results.errors} écriture(s) en échec` : undefined,
+    // Stamped on every run: without it, "the source published nothing with
+    // figures again today" and "this cron stopped running" both read as a
+    // rows=0 entry with a stale ts. Same remedy as disease-alerts (2026-08-23).
+    new Date().toISOString());
+  return NextResponse.json({ success: true, timestamp: new Date().toISOString(), guardBlocked: lockedGuardBlocked.length > 0 ? lockedGuardBlocked : undefined, parseStats, ...results, log });
 }
