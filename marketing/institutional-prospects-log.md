@@ -3467,3 +3467,39 @@ Exécuté en **chemin absolu** sur les 3403 lignes du journal (un premier passag
 **⚠️ Arbitrage de volume à venir, signalé sans être tranché ici** : le run de relance de ce matin a laissé **30 contacts éligibles** (lots des 20, 21 et 22/08). Ces 10 brouillons de prospection s'ajouteront à ce que la relance produira. La file repassera au-dessus du seuil dès qu'une part significative de ces 30 relances sera rédigée — c'est un arbitrage pour David, aucune des deux routines ne peut le trancher seule.
 
 **⚠️ Fichiers modifiés non touchés par cette routine, laissés tels quels** (règle `AGENTS.md`) : `marketing/qa/product-claims.manual.json` (modifié), `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis).
+
+### ✉️ Lot du 20/08 rédigé — 10 relances créées le 2026-09-01 à 06:45 UTC, sur arbitrage de David
+
+Frein de file levé (file à 0 après l'envoi de ce matin). **David a arbitré le volume en session : le lot du 20/08 seul, 10 relances**, plutôt que les 30 éligibles — rédiger les trois lots d'un coup aurait immédiatement replacé la file au-dessus du seuil de ~25. Les lots du 21/08 (J+11) et du 22/08 (J+10, jamais encore vérifié) restent en attente.
+
+**Réutilisation des originaux** : les 10 messages d'origine ont été relus un par un via `get_message` pour reprendre salutation, langue et question de clôture. Répartition : **7 EN, 1 FR** (INH Togo), **2 ES** (Farmamundi, Anesvad). Salutations reprises à l'identique : « Hi team, » ×7, « Bonjour, » ×1, « Hola, » ×2.
+
+**🔵 Trois relances conservent la demande de redirection de leur original**, conformément à la règle du « cas particulier » (précédents AKDN 20/08, Kuwait University et Univalle 21/08) :
+- **Botswana MoH** — l'original demandait de transmettre au *Botswana Public Health Institute* ; la relance rouvre la même demande au lieu du gabarit générique.
+- **UQ School of Public Health** — l'original demandait à atteindre les personnes travaillant sur l'épidémiologie des maladies infectieuses ; la relance rappelle explicitement que le premier envoi était parti sur la boîte d'accueil générale.
+- **UEM Mozambique (FAMED)** — l'original demandait un transfert aux enseignants de santé publique ; la relance dit ne pas savoir si le message a suivi ce chemin.
+
+**🔵 Nha Trang conserve la question de sortie de son original** (« of any use, or redundant with what you already follow? »), qui offrait déjà une porte de sortie explicite au destinataire. Reprise telle quelle plutôt que remplacée par une formule plus fermée.
+
+**Contrôle anti-gabarit fait sur la structure, pas seulement sur le vocabulaire** : 4 relances ouvrent sur le rappel (Vanuatu, Timor-Leste, Togo, Farmamundi), 3 ouvrent sur l'offre toujours valable (PNG, Nha Trang, Anesvad), 3 ouvrent sur la demande de redirection (Botswana, UQ, UEM). Aucune des dix formules d'accroche ne réutilise celles des 19 relances du 30/08. Timor-Leste assume la relance unique en toutes lettres (« one short follow-up, then I will leave it there »), ce qui est exact au regard de la règle « une seule relance, jamais deux ».
+
+**Format** : réponses dans le fil d'origine (`replyToMessageId`), objet « Re: … » automatique. **Aucun `htmlBody` passé, aucune balise `<a>`, aucun domaine avec un `.` littéral dans le texte neuf.** Aucun tiret cadratin hors signature. Le corps cité automatiquement par Gmail sous chaque relance contient l'ancien lien de l'original — normal et sans impact.
+
+| Contact | Adresse | Langue | Brouillon | Fil |
+|---|---|---|---|---|
+| OMS — Bureau pays Vanuatu | `wpvutclo@who.int` | EN | `r-8663074517782781980` | `1a01ea13dfd62ade` |
+| OMS — Bureau pays Papouasie-Nouvelle-Guinée | `wppngwr@who.int` | EN | `r-4327105925328971128` | `1a01ea147cc897f0` |
+| OMS — Bureau pays Timor-Leste | `wcotimorleste@who.int` | EN | `r1528549710747801271` | `1a01ea155c70b610` |
+| Botswana MoH (→ BPHI, redirection reprise) | `health@gov.bw` | EN | `r5836056370473931146` | `1a01ea15f6b8e650` |
+| INH Togo | `inhtogo@yahoo.fr` | FR | `r-110942603023356568` | `1a01ea17ee6affc8` |
+| Institut Pasteur de Nha Trang | `info@ipn.org.vn` | EN | `r2291729904272759593` | `1a01ea18a9a3c33b` |
+| UQ School of Public Health (redirection reprise) | `sph.reception@uq.edu.au` | EN | `r1716447366000430216` | `1a01ea19a819fd35` |
+| UEM Mozambique — FAMED (redirection reprise) | `info.med@uem.mz` | EN | `r-4951254749272706775` | `1a01ea1a6b6cbc8c` |
+| Farmamundi | `info@farmamundi.org` | ES | `r1712234197835614814` | `1a01ea1c998fc8ee` |
+| Fundación Anesvad | `anesvad@anesvad.org` | ES | `r-6588160017480620034` | `1a01ea1d450b90a7` |
+
+**Vérifié via `list_drafts` immédiatement après création : 10/10 présents, horodatés 06:45:21–06:45:43 UTC, `threadId` de chacun correspondant au fil d'envoi du 20/08, tous en `labelIds: ["DRAFT"]`, aucun passé en `SENT`** (contrôle du bug d'envoi instantané du connecteur, incident du 15/08 : négatif). **Contrôle de mise en forme réellement rendue** fait sur deux brouillons (Botswana en anglais, Anesvad en espagnol) via `get_draft` : texte neuf sans balise `<a>` ni domaine littéral, accents espagnols corrects, objet « Re: … » bien formé.
+
+**⚠️ File remontée à 20, pas à 10 : la prospection a produit en parallèle.** `daily-institutional-prospecting-healthwatch` a créé **10 brouillons de prospection à 06:24 UTC** ce matin, une fois la file vidée (medico.de, humedica, ZOA, UPM Malaisie, Jimma, Gondar, RMI MoH, Antigua-et-Barbuda, Saint-Vincent, Rép. dominicaine). Additionnés à ces 10 relances, **la file est à 20** — sous le seuil de ~25, mais l'arbitrage « 10 plutôt que 30 » de David est ce qui l'y maintient : les 30 auraient donné 40.
+
+**État pour le prochain run** : file à **20**. Restent éligibles **le lot du 21/08 (10, J+11, déjà vérifié en direct le 01/09, prêt à rédiger)** et **le lot du 22/08 (10, J+10, jamais vérifié — contrôle en direct à faire avant toute rédaction)**. Marge sous le seuil : environ 5 brouillons, donc un seul de ces deux lots ne passera pas en entier sans dépassement. **Relances créées depuis le début : 211** (201 envoyées + 10 en attente d'envoi).
