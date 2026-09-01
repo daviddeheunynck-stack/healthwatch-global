@@ -86,7 +86,7 @@ Le carry-over n°2 du créneau de 13h disait explicitement : **« ne pas retente
 
 **Règle du 23/07 appliquée : ce texte n'est pas envoyé par la routine.** Quota DM du jour : 2 envoyés sur 8 (les deux de midi, sur ordre de David) ; un DM en file ne consomme rien tant qu'il n'est pas envoyé.
 
-#### 🔒 DM 1 — **Harvey Basivikidi** (`/in/harvey-basivikidi-9b6343a7/`), EN — **EN ATTENTE DE VALIDATION**
+#### ✅ DM 1 — **Harvey Basivikidi** (`/in/harvey-basivikidi-9b6343a7/`), EN — **ENVOYÉ**
 
 *MD | Éco-épidémiologiste | Master 2 Écologie et Gouvernance des maladies (INOHA) | Recherche One Health & Santé Numérique | Fondateur Corridor4Health*, Mbanza-Ngungu (RDC), 1er degré.
 
@@ -96,7 +96,7 @@ Le carry-over n°2 du créneau de 13h disait explicitement : **« ne pas retente
 
 **Arbitrage CTA, explicite.** L'anti-répétition (§2 du SKILL) a été vérifié sur l'intégralité du fil : **le nom HealthWatch Global, le lien et l'essai Pro n'y ont jamais été envoyés**, le DM de bienvenue du 28/08 les omettait tous les trois. Un aller-retour de fond a bien eu lieu (sa réponse est substantielle), donc la règle CTA de la politique commune §3 s'applique. **Elle a été appliquée à moitié, délibérément** : le nom HWG est présent parce que le point ne tient pas sans lui (David est le lecteur en aval qui casse, c'est lui le sujet de la phrase), **mais ni lien ni essai Pro** — c'est exactement l'option médiane prévue par le SKILL (« *ne reprendre que le nom sans re-proposer le lien/l'essai* »), et elle respecte le « sans CTA » du carry-over sur ce qu'il visait réellement, à savoir l'argumentaire commercial.
 
-`QA: mécanique PASS (825 car., limite 1300, 3 paragraphes, en/en, 0 chiffre, 0 tiret cadratin, 0 lien, 1 review hwg.claim) | relecteur VERDICT: ENVOYER, 12 PASS au 1er jet, 2 réserves consignées sans échec dont un démonstratif plus large que la couverture prouvable (« those bulletins ») — corrigé en « published agency bulletins » avant archivage | faits cités: aucun, le texte ne contient pas un seul nombre | registre du 31/08 (11:53) | statut: 🔒 EN FILE DE VALIDATION`
+`QA: mécanique PASS (825 car., limite 1300, 3 paragraphes, en/en, 0 chiffre, 0 tiret cadratin, 0 lien, 1 review hwg.claim) | relecteur VERDICT: ENVOYER, 12 PASS au 1er jet, 2 réserves consignées sans échec dont un démonstratif plus large que la couverture prouvable (« those bulletins ») — corrigé en « published agency bulletins » avant archivage | faits cités: aucun, le texte ne contient pas un seul nombre | registre du 31/08 (11:53) | statut: envoyé le 01/09 à 05:50, sur ordre explicite de David en session interactive (« envoie »), après double-check demandé et effectué en session (registre de faits regénéré, ngram.history vérifié comme faux positif d'auto-citation, hwg.claim confirmé couvert, véracité de l'incident PAHO reconfirmée)`
 
 > Harvey, there is a downstream half to what you described, and I only notice it because I sit at that end.
 >
