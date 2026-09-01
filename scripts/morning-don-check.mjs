@@ -1229,7 +1229,13 @@ const STALE_CRON_ROW_CHECKED = {
   // 01/06 et le 03/08. Seules la `date` et les 5 descriptions ont été alignées sur le 03/08 ;
   // chiffres et source inchangés, ligne laissée à sp=5 (le cron fait bien son travail sur les
   // chiffres, rien à verrouiller).
-  "3dc50804-7718-43c7-b0ce-7cdd95165b2b": "2026-08-20",
+  // Revérifié le 01/09 sur la même page : arrêté toujours au 03/08/2026, toujours 2 649 / 960.
+  // ⚠️ Cette ligne (sp=5, is_seed=false) n'est PAS le seed Arabie saoudite du cluster MERS-CoV,
+  // même si les deux se lisent sur la même page ECDC le même jour. Sa vérification se note ICI,
+  // par ligne — CLUSTER_EDITION_CHECKED ne couvre que le seed et n'est pas reporté dans
+  // `source_confirmed_at` (section 8). Ne noter le 01/09 que dans la map du cluster laissait la
+  // ligne Global sortir « périmée » de qa:facts le jour même où elle venait d'être vérifiée.
+  "3dc50804-7718-43c7-b0ce-7cdd95165b2b": "2026-09-01",
   // Shigellosis/EU-EEE : vérifié le 20/08, rien à faire. Contrairement à MERS-CoV, la source
   // n'est pas une série périodique mais une « epidemiological update » ECDC ponctuelle et datée
   // (mai 2026) sur les clusters MDR/XDR de Shigella circulant depuis 2023. Il n'y a pas d'édition
@@ -1388,3 +1394,104 @@ console.log(
   `(âge brut de updated_at, NE PAS CITER : ${rawStale(10)} lignes > 10j, ${rawStale(30)} > 30j — ` +
   `updated_at est un horodatage d'écriture ; une ligne relue et confirmée inchangée n'écrit rien.)`
 );
+
+// --- 8. Report des vérifications manuelles dans `source_confirmed_at` -------------------------
+//
+// Ajouté le 2026-09-01. Trou trouvé en traitant l'alerte de fraîcheur de `qa:facts`
+// (SKILL.md section 6 bis) : les 5 lignes ACTIVES qu'elle comptait périmées ce matin
+// (Choléra/Cameroun, Choléra/Tchad, Diphtérie/Australie, Dengue/Viêt Nam, MERS-CoV/Global)
+// avaient toutes `source_confirmed_at = NULL`, alors que les trois maps de cadence de ce
+// script disaient qu'elles avaient été relues contre leur source primaire dans les 6 jours.
+//
+// Deux registres tenaient donc la même information sans se parler :
+//   · les crons tamponnent `source_confirmed_at` sur chaque `skip: "unchanged"`
+//     (lib/source-confirmed.ts, depuis le 24/08) — 79 des 131 lignes actives en portent un ;
+//   · cette routine, elle, écrivait sa vérification dans une map JS locale et rien d'autre.
+// Or cette routine possède exactement les lignes qu'AUCUN cron ne couvre (sp=10, manuelles) :
+// les 52 lignes sans tampon sont précisément les siennes. `lib/source-confirmed.ts` le dit
+// mot pour mot — « rows locked at source_priority=10 are precisely the ones that most need
+// it, since they are the ones a human elevated and then watched go quiet ».
+//
+// Conséquence côté client : ces lignes étaient signalées « périmées » aux trois routines
+// LinkedIn par un compteur qu'aucune d'elles ne pouvait faire baisser, alors que la donnée
+// avait bien été vérifiée. Ce n'est pas le registre qui était faux, c'est son entrée qui
+// manquait.
+//
+// Règles respectées, toutes reprises de lib/source-confirmed.ts :
+//   · on tamponne à la DATE DE LA MAP, jamais à `now()` — la vérification a eu lieu ce
+//     jour-là, antidater serait une confirmation qu'on n'a pas faite ;
+//   · on ne tamponne que si `dateMap >= row.date`, seule condition sous laquelle le tampon
+//     compte (auto-invalidation) — sinon c'est une écriture qui ne dira jamais rien ;
+//   · on ne tamponne que vers l'avant (colonne nulle ou plus ancienne) ;
+//   · PATCH sur la seule colonne `source_confirmed_at` : le trigger de la migration
+//     20260824030000 préserve alors `updated_at`, sans quoi ce report ferait taire le signal
+//     de péremption au lieu de le qualifier.
+//
+// ⚠️ Volontairement HORS PÉRIMÈTRE : CLUSTER_EDITION_CHECKED. Cette map est par cluster, pas
+// par ligne, et surtout un cluster peut avoir une entrée ouverte dans CLUSTER_EDITION_PENDING
+// — c'est le cas du chikungunya au 01/09. Une édition plus récente EXISTE alors : ces lignes
+// ne sont pas « confirmées à jour », elles sont en attente d'arbitrage, ce qui est exactement
+// la 3e exclusion de lib/source-confirmed.ts (« a guard refused an incoming figure […] that
+// row is not confirmed current, it is contested »). Les lignes de cluster sont de toute façon
+// `is_seed=true`, donc jamais citables dans le registre de faits.
+console.log("\n=== Report des vérifications manuelles dans `source_confirmed_at` ===");
+const checkedByRow = new Map();
+for (const map of [MANUAL_ROW_CHECKED, FROZEN_ROW_CHECKED, STALE_CRON_ROW_CHECKED]) {
+  for (const [id, day] of Object.entries(map)) {
+    if (typeof day !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(day)) continue;
+    const prev = checkedByRow.get(id);
+    if (!prev || day > prev) checkedByRow.set(id, day); // la plus récente des trois maps
+  }
+}
+
+const toStamp = [];
+const stampSkipped = [];
+for (const [id, day] of checkedByRow) {
+  const row = active.find((o) => o.id === id);
+  if (!row) continue; // ligne close depuis, ou hors périmètre actif
+  const label = `${row.disease_en || row.disease}/${row.country_en || row.country}`;
+  if (row.date && day < row.date) {
+    stampSkipped.push(
+      `${label} : vérif ${day} antérieure à la date d'arrêté ${row.date} — tampon sans effet, non écrit`
+    );
+    continue;
+  }
+  const current = row.source_confirmed_at ? row.source_confirmed_at.slice(0, 10) : null;
+  if (current && current >= day) continue; // déjà tamponné aussi loin ou plus loin
+  toStamp.push({ id, day, label, current, updatedAt: (row.updated_at || "").slice(0, 10) });
+}
+
+if (!toStamp.length) {
+  console.log(
+    `Rien à reporter (${checkedByRow.size} ligne(s) suivie(s) par les maps de cadence, tampons déjà à jour).`
+  );
+} else {
+  // Une écriture par date : PATCH groupé sur `id=in.(...)`, comme le fait stampSourceConfirmed.
+  const byDay = new Map();
+  for (const s of toStamp) byDay.set(s.day, [...(byDay.get(s.day) ?? []), s]);
+  for (const [day, group] of byDay) {
+    const url =
+      `${SUPABASE_URL}/rest/v1/outbreaks?id=in.(${group.map((s) => s.id).join(",")})` +
+      `&select=id,updated_at,source_confirmed_at`;
+    const written = await fetchJson(url, {
+      method: "PATCH",
+      headers: {
+        apikey: SERVICE_KEY,
+        Authorization: `Bearer ${SERVICE_KEY}`,
+        "Content-Type": "application/json",
+        Prefer: "return=representation",
+      },
+      body: JSON.stringify({ source_confirmed_at: `${day}T00:00:00Z` }),
+    });
+    for (const s of group) {
+      const back = written.find((r) => r.id === s.id);
+      const kept = back && (back.updated_at || "").slice(0, 10) === s.updatedAt;
+      console.log(
+        `  ✓ ${s.label} : source_confirmed_at ${s.current ?? "NULL"} → ${day}` +
+          (kept ? "" : " ⚠️ updated_at a bougé — vérifier le trigger 20260824030000")
+      );
+    }
+  }
+  console.log(`${toStamp.length} ligne(s) tamponnée(s). Relancer \`npm run qa:facts\` pour en voir l'effet.`);
+}
+stampSkipped.forEach((s) => console.log(`  – ${s}`));
