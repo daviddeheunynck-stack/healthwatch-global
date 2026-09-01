@@ -3286,9 +3286,13 @@ Mais la levée du blocage ne rend aucun contact exploitable :
 
 ---
 
-## 🔁 RELANCE J+10 — 2026-08-31, run automatique `daily-relance-check-healthwatch`
+## 🔁 RELANCE J+10 — 2026-09-01, run automatique `daily-relance-check-healthwatch`
 
-**Résultat : ZÉRO relance créée, 3e jour consécutif. Frein de file appliqué strictement.** **20 contacts sont éligibles et vérifiés en direct ce run — 10 du lot du 20/08 (J+11), 10 du lot du 21/08 (J+10). Aucun n'est traité : la file n'a pas bougé d'un brouillon en 24 h.**
+> **⚠️ DEUX CORRECTIONS APPORTÉES APRÈS COUP — lire l'addendum en fin d'entrée avant de se fier à ce qui suit.**
+> 1. **Cette entrée a d'abord été datée du 2026-08-31 par erreur ; le run a eu lieu le 2026-09-01 au matin.** Les âges de lots ci-dessous ont été recalculés (le lot du 20/08 est à J+12, celui du 21/08 à J+11), mais toute mention résiduelle de « 31/08 » dans le corps de l'entrée doit se lire « 01/09 ».
+> 2. **Le constat central de cette entrée — file bloquée à 26, frein de file — a cessé d'être vrai environ 20 minutes après la mesure** : David a envoyé toute la file le 01/09 entre 04:45:56 et 04:48:29 UTC. Voir l'addendum.
+
+**Résultat : ZÉRO relance créée, 3e jour consécutif. Frein de file appliqué strictement.** **20 contacts sont éligibles et vérifiés en direct ce run — 10 du lot du 20/08 (J+12), 10 du lot du 21/08 (J+11). Aucun n'est traité : la file n'a pas bougé d'un brouillon en 24 h.**
 
 ### 🚦 Frein de file — la file est figée, pas encombrée par cette routine
 
@@ -3302,13 +3306,13 @@ Composition des 26, identique à celle mesurée hier soir et ce matin par la pro
 
 **✅ Le 3e sous-agent orphelin redouté par le run du 30/08 n'a rien produit.** Le run d'hier signalait qu'un 3e sous-agent de la 1re tentative pouvait encore créer les 10 relances du lot du 20/08 après la clôture, et demandait explicitement une revérification de `list_drafts` avant de supposer que ces 10 restaient à créer. **Vérification faite en tête de ce run, sur les deux appels : aucun brouillon adressé aux 10 contacts du lot du 20/08, aucun brouillon postérieur au 30/08 11:26 UTC dans toute la file.** Risque de doublon écarté ; les 10 restent authentiquement à créer.
 
-### Lot du 20/08 (10 envoyés le 20/08 à 15:20:31–15:22:39 UTC) — 10 éligibles, 0 créée
+### Lot du 20/08 (10 envoyés le 20/08 à 15:20:31–15:22:39 UTC) — J+12, 10 éligibles, 0 créée
 
 Revérifiés en direct ce run (`to:` groupé sur les 10, `includeTrash: true`) : **les 10 fils portent toujours exactement 1 message chacun, `SENT`** — aucune réponse arrivée depuis la vérification d'hier, aucun bounce. Adresses inchangées, éligibilité confirmée pour le 2e jour : `wpvutclo@who.int`, `wppngwr@who.int`, `wcotimorleste@who.int`, `health@gov.bw`, `inhtogo@yahoo.fr`, `info@ipn.org.vn`, `sph.reception@uq.edu.au`, `info.med@uem.mz`, `info@farmamundi.org`, `anesvad@anesvad.org`.
 
-### Lot du 21/08 (10 envoyés le 21/08 à 16:45:04–16:47:13 UTC) — 10 éligibles vérifiés ce run, 0 créée
+### Lot du 21/08 (10 envoyés le 21/08 à 16:45:04–16:47:13 UTC) — J+11, 10 éligibles vérifiés ce run, 0 créée
 
-Premier passage de ce lot à J+10. Double contrôle appliqué (`to:` groupé sur les 10 **et** requête `from:<domaine>` distincte sur les 8 domaines, `includeTrash: true` dans les deux cas — consigne du 25/08, incident THL Finlande) : **les 10 fils ne portent qu'un seul message, celui de David, `labelIds: ["SENT"]`. La requête `from:` groupée ne renvoie rien du tout** — aucune réponse humaine, aucun accusé automatique hors fil, aucun bounce.
+Premier passage de ce lot par cette routine. Double contrôle appliqué (`to:` groupé sur les 10 **et** requête `from:<domaine>` distincte sur les 8 domaines, `includeTrash: true` dans les deux cas — consigne du 25/08, incident THL Finlande) : **les 10 fils ne portent qu'un seul message, celui de David, `labelIds: ["SENT"]`. La requête `from:` groupée ne renvoie rien du tout** — aucune réponse humaine, aucun accusé automatique hors fil, aucun bounce.
 
 | Contact | Adresse | Fil d'origine |
 |---|---|---|
@@ -3333,7 +3337,7 @@ Premier passage de ce lot à J+10. Double contrôle appliqué (`to:` groupé sur
 
 **Bilan bounces cumulés depuis le 02/08 : inchangé à 20** — liste nominative identique à celle du 29/08 (l. 3034-3053 de ce journal), non reproduite ici. Aucune entrée ajoutée, aucune retirée.
 
-**Totaux au 2026-08-31 :**
+**Totaux au 2026-09-01, à l'instant de la mesure (~04:25 UTC), avant l'envoi de la file par David :**
 - **Prospectés : 307** — inchangé depuis le 30/08 (la prospection tourne à vide, frein de file, 2e jour).
 - **Envoyés : 300** — inchangé : les 26 brouillons en file n'ont pas été envoyés.
 - **Délivrés : 280** = 300 envoyés − 20 (taille de la liste nominative), recompté dans le même mouvement.
@@ -3353,3 +3357,47 @@ Premier passage de ce lot à J+10. Double contrôle appliqué (`to:` groupé sur
 - **EUPHA** → fenêtre ouverte depuis le 31/08 (retour de bureau), **arbitrage David toujours en attente**.
 
 **⚠️ Fichiers modifiés non touchés par cette routine, laissés tels quels** (règle `AGENTS.md`) : `marketing/qa/product-claims.manual.json` (modifié), `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis).
+
+### 🔄 ADDENDUM 2026-09-01 (~05:20 UTC) — la file a été vidée, et un refus explicite est arrivé
+
+Signalé par David en session, capture d'écran à l'appui, moins d'une heure après la clôture du run ci-dessus. Trois faits vérifiés en direct, qui invalident ou complètent l'entrée.
+
+**1. Erreur de date de ma part.** L'entrée avait été rédigée et datée du **2026-08-31** alors que le run tournait le **2026-09-01** (`date -u` : 2026-09-01 05:16 UTC ; dernier commit du dépôt au démarrage : `docs(product-ideas): run 01/09`). Corrigé en tête d'entrée et sur les âges de lots. Aucune conséquence sur les vérifications Gmail elles-mêmes — elles portaient sur des fils datés, pas sur « aujourd'hui ».
+
+**2. La file est passée de 26 à 0 — le frein de file est levé.** David a envoyé **l'intégralité de la file le 2026-09-01 entre 04:45:56 et 04:48:29 UTC**, soit environ 20 minutes après ma mesure. Vérifié par balayage `in:sent after:2026/08/31` (corbeille incluse) : **27 envois**, et `list_drafts` renvoie désormais **`{}` — zéro brouillon**.
+
+- **19 relances** (lots 18/08 et 19/08) parties entre 04:46:01 et 04:47:00, chaque fil d'origine portant désormais 2 messages sortants.
+- **7 brouillons de prospection** du 30/08 partis entre 04:47:26 et 04:48:29.
+- **1 relance EUPHA** (`office@eupha.org`) partie à 04:45:56, dans le fil du 17/08.
+
+**Écart création → envoi : environ 17 h 20**, tout le lot en ordre de relecture continu. Profil « relecture humaine » du tableau de discrimination du 16/08, pas le bug d'envoi instantané du connecteur. Aucun incident.
+
+➡️ **Le raisonnement « arriéré qui grossit, seul levier = relecture de David » de l'entrée ci-dessus était juste, et il a été actionné.** Les 20 contacts vérifiés (lots 20/08 et 21/08) ne sont plus bloqués par le frein de file : la file est à 0.
+
+**3. ❌ REFUS EXPLICITE — Christine Neumann (HIGH Heidelberg), à écarter définitivement.**
+
+`christine.neumann@uni-heidelberg.de`, fil `1a0196ff04c452c6`, réponse reçue le **2026-09-01 à 05:11:28 UTC**, soit **25 minutes après la réception de sa relance** (envoyée à 04:46:21) :
+
+> *« Dear David, thanks for your email. Unfortunately, we are currently not interested in your offer. Thanks for your understanding. Kind regards. Christine Neumann »*
+
+**Aucune action à empêcher : sa relance était déjà partie avant le refus**, et la règle « une seule relance, jamais deux » lui interdisait de toute façon tout contact ultérieur. **Elle est désormais écartée définitivement** — ne plus la reprendre dans aucun lot, quelle qu'en soit la raison, sauf ordre explicite de David. Le fil a été mis à la corbeille par David.
+
+**Le refus est poli, net et sans contre-proposition** — pas de demande de redirection, pas de « recontactez-nous plus tard » exploitable. Le « currently » ne vaut pas invitation à revenir : rien dans ce dispositif ne prévoit de relance à échéance sur un refus.
+
+**⚠️ Question ouverte — Fiona Walsh (`fiona.walsh@uni-heidelberg.de`), même institut, statut à trancher par David.** Les deux contacts venaient de la **même redirection** : la réponse automatique de Napawan Schulze du 19/08 renvoyait nommément vers Neumann **et** Walsh. Neumann écrit « **we** are currently not interested », un pluriel qui se lit naturellement comme parlant pour l'institut, pas seulement pour elle.
+
+- **Sa relance est partie** (04:46:18, fil `1a0196ff93673e1f`) et **elle n'a pas répondu** — vérifié par `from:uni-heidelberg.de`, corbeille incluse : seuls deux fils remontent, celui de Neumann et l'auto-réponse de Schulze.
+- **Opérationnellement, rien ne l'attend de toute façon** : elle a consommé son unique relance, donc aucun contact futur n'est prévu pour elle, refus institutionnel ou non.
+- **La seule question est comptable** : faut-il la marquer « écartée définitivement » (refus institutionnel étendu) ou la laisser en « sans réponse » ? **Laissée en « sans réponse » par défaut**, faute de refus signé de sa part — un refus attribué à quelqu'un qui ne l'a pas écrit serait une inexactitude du journal. À corriger si David estime que le « we » de Neumann engage l'institut.
+
+**Bounces : aucun.** Balayage `after:2026/08/31` (6 motifs, corbeille incluse) sur les 27 envois de ce matin : **zéro fil**. **Bilan cumulé inchangé à 20.**
+
+**Totaux réels au 2026-09-01, après l'envoi de la file :**
+- **Prospectés : 307** — inchangé.
+- **Envoyés : 307** = 300 + les 7 brouillons de prospection du 30/08 partis ce matin.
+- **Délivrés : 287** = 307 envoyés − 20 (taille de la liste nominative), recompté dans le même mouvement.
+- **Taux de délivrabilité : 93,5 % (287/307)**.
+- **Relances : 201 envoyées** = 182 + les 19 parties ce matin (la relance EUPHA suit son propre décompte, hors gabarit J+10). **0 en attente d'envoi. Total cumulé de relances créées : 201, toutes envoyées.**
+- **Réponses institutionnelles : 1 nouvelle, négative** (Neumann). Premier refus explicite depuis l'ouverture du canal à être arrivé **en réponse à une relance** et non à un premier contact.
+
+**État réel pour le prochain run :** file à **0**, frein de file **levé**. **30 contacts éligibles** — lots du 20/08 (J+12), 21/08 (J+11) et 22/08 (J+10, 10 contacts envoyés le 22/08 à 06:33:46–06:35:24 UTC, à vérifier en direct, jamais encore contrôlés). Les 20 des lots 20/08 et 21/08 sont vérifiés et prêts à rédiger sans revérification, sous réserve d'un balayage de bounces à jour. **Rédiger les 30 d'un coup replacerait immédiatement la file au-dessus du seuil de ~25** : arbitrage du volume laissé à David, la routine ne l'a pas tranché seule.
