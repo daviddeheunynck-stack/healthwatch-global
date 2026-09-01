@@ -3503,3 +3503,89 @@ Frein de file levé (file à 0 après l'envoi de ce matin). **David a arbitré l
 **⚠️ File remontée à 20, pas à 10 : la prospection a produit en parallèle.** `daily-institutional-prospecting-healthwatch` a créé **10 brouillons de prospection à 06:24 UTC** ce matin, une fois la file vidée (medico.de, humedica, ZOA, UPM Malaisie, Jimma, Gondar, RMI MoH, Antigua-et-Barbuda, Saint-Vincent, Rép. dominicaine). Additionnés à ces 10 relances, **la file est à 20** — sous le seuil de ~25, mais l'arbitrage « 10 plutôt que 30 » de David est ce qui l'y maintient : les 30 auraient donné 40.
 
 **État pour le prochain run** : file à **20**. Restent éligibles **le lot du 21/08 (10, J+11, déjà vérifié en direct le 01/09, prêt à rédiger)** et **le lot du 22/08 (10, J+10, jamais vérifié — contrôle en direct à faire avant toute rédaction)**. Marge sous le seuil : environ 5 brouillons, donc un seul de ces deux lots ne passera pas en entier sans dépassement. **Relances créées depuis le début : 211** (201 envoyées + 10 en attente d'envoi).
+
+---
+
+## 🔁 RELANCE J+10 — 2026-09-01, 2e run `daily-relance-check-healthwatch` (06:48 UTC)
+
+**Résultat : 0 relance créée — décision assumée, motivée par un arbitrage de David vieux de 3 minutes.** Ce run s'est déclenché à **06:48:17 UTC**, soit **3 minutes après la clôture du run précédent de la même routine** (10 relances du lot du 20/08 créées à 06:45:21–06:45:43 UTC, entrée ci-dessus). Le run n'a donc pas été perdu : il a servi à la **première vérification en direct du lot du 22/08**, jamais contrôlé jusqu'ici, et à un balayage de bounces à jour.
+
+### ⛔ Pourquoi aucune écriture — l'arbitrage de volume appartient à David, et il vient de le rendre
+
+L'entrée précédente consigne mot pour mot : « **David a arbitré le volume en session : le lot du 20/08 seul, 10 relances**, plutôt que les 30 éligibles ». Cet arbitrage a été rendu **ce matin, en session interactive, moins d'une heure avant ce run**, et son motif était explicite — rédiger les trois lots d'un coup aurait porté la file à 40, très au-delà du seuil de ~25.
+
+Produire davantage maintenant reviendrait à **défaire une décision humaine explicite prise il y a quelques minutes**, en s'appuyant sur le seul fait qu'un second déclenchement de la routine a eu lieu. La marge sous le seuil (~5 brouillons) n'est pas une autorisation de la consommer : c'est précisément ce que l'arbitrage de David laissait volontairement libre. **Le frein de file n'est pas ce qui bloque ici — la file est à 20, sous le seuil. C'est l'arbitrage qui bloque, et il n'appartient pas à la routine de le rouvrir le même jour.**
+
+➡️ **Si David souhaite que le lot du 21/08 et/ou celui du 22/08 partent aujourd'hui, un mot en session suffit : les contacts sont vérifiés et prêts à rédiger sans revérification** (voir ci-dessous). Aucun travail de contrôle ne reste à faire.
+
+### ✅ Frein de file — mesure de contrôle
+
+`list_drafts` (vue métadonnées, `pageSize: 50`) : **20 brouillons exactement**, cohérent au brouillon près avec l'état annoncé par le run précédent.
+
+- **10 relances** du lot du 20/08, horodatées 06:45:21–06:45:43 UTC, chacune sur le `threadId` de son fil d'origine.
+- **10 brouillons de prospection**, horodatés 06:24:17–06:24:51 UTC.
+- **Les 20 portent `labelIds: ["DRAFT"]`, aucun n'est passé en `SENT`** — contrôle du bug d'envoi instantané du connecteur (incident du 15/08) : **négatif**, sur les deux lots.
+
+*(Un seul appel a suffi, le résultat étant exactement conforme à l'attendu documenté ; la consigne de réessai du 15/08 vise les conclusions négatives — « ce brouillon n'existe pas » — qui ne sont pas en jeu ici.)*
+
+### 🔎 Lot du 22/08 — première vérification en direct, 6 éligibles sur 10
+
+Lot de 10 contacts **envoyés le 22/08 entre 06:33:46 et 06:35:24 UTC** → **J+10 atteint aujourd'hui**. Jamais vérifié en direct jusqu'à ce run. Méthode : requête `to:` groupée sur les 10 adresses (`includeTrash: true`), **plus** un balayage `from:<domaine>` sur les 8 domaines du lot depuis le 21/08, `includeTrash: true` — double contrôle exigé depuis l'incident THL Finlande du 25/08, une réponse automatique pouvant atterrir dans un fil séparé sans en-tête `In-Reply-To`.
+
+**Balayage `from:` : résultat vide.** Aucune réponse, aucun accusé automatique, aucun refus, sur aucun des 8 domaines. **Les 10 fils du 22/08 portent exactement 1 message sortant en `SENT`, sans réponse.**
+
+**✅ 6 éligibles, prêts à rédiger sans revérification :**
+
+| Contact | Adresse | Fil du 22/08 | Langue de l'original |
+|---|---|---|---|
+| EMPHNET — Eastern Mediterranean Public Health Network | `comm@emphnet.net` | `1a0281de2286f12c` | EN |
+| SPKC — Centre de prévention et de contrôle des maladies (Lettonie) | `pasts@spkc.gov.lv` | `1a0281e411d7bf26` | EN |
+| OPS/PAHO — Bureau pays Paraguay | `prycorresp@paho.org` | `1a0281e662f372ba` | **ES** |
+| OMS — Bureau pays Mongolie | `wpmngwr@who.int` | `1a0281e72b2d4cc9` | EN |
+| UPCH — Facultad de Salud Pública y Administración (Pérou) | `faspa@oficinas-upch.pe` | `1a0281e9b90f0670` | **ES** |
+| Universiti Malaya — Dept. of Social and Preventive Medicine | `contact@spm.um.edu.my` | `1a0281ea5520e6f8` | EN |
+
+**❌ 4 exclus — les 4 doublons de l'incident du 22/08, exclusion désormais confirmée en direct et plus seulement sur la foi du journal :**
+
+| Contact | Adresse | Constat en direct | Motif |
+|---|---|---|---|
+| **AUB — Faculty of Health Sciences** | `fhs@aub.edu.lb` | Fil d'origine `19fdbbe5a20d1973` : **2 sortants** (07/08 + relance 17/08) | **Relance unique déjà consommée.** Relancer le fil du 22/08 ferait une 3e sollicitation. Verrou du 23/08 (l. 1783) — **vérifié exact**. |
+| **ISHP — Institut de santé publique d'Albanie** | `ishp@shendetesia.gov.al` | Fil d'origine `19fe0e6405ad14bb` : **2 sortants** (08/08 + relance 18/08) | Idem. Verrou du 23/08 (l. 1783) — **vérifié exact**. |
+| **IEA — International Epidemiological Association** | `secretariat@ieaweb.org` | Fil `19fff194917e1499` (15/08) : 1 sortant, **relance jamais envoyée** (retirée du lot du 14/08 le 25/08) | **2 sollicitations à froid déjà reçues**, sur deux fils distincts. Une relance ferait un 3e message. Verrou l. 1962 maintenu. |
+| **HZJZ — Institut croate de santé publique** | `ravnateljstvo@hzjz.hr` | Fil `1a00e774af1012c6` (`epidemiologija@`, 17/08) : 1 sortant, relance jamais envoyée | **Même institut approché sur 2 boîtes** (17/08 et 22/08), 0 relance. Une relance ferait 3 messages en dix jours. Verrou l. 2587 maintenu. |
+
+**⚠️ Nuance à retenir pour les runs futurs : les motifs d'exclusion d'IEA et de HZJZ ne sont PAS « relance déjà consommée ».** Ces deux-là ont encore leur relance disponible au sens strict de la règle. Ils sont exclus parce qu'ils ont reçu **deux premiers contacts** au lieu d'un, du fait de l'incident de doublons du 22/08 — un 3e message resterait un 3e message. La distinction compte : si David voulait un jour rouvrir l'un des deux, ce serait un arbitrage possible, alors que pour AUB et ISHP la règle « une seule relance, jamais deux » l'interdit sèchement.
+
+### 📋 État des lots éligibles
+
+| Lot | Contacts | Âge | Vérification en direct | Prêt à rédiger |
+|---|---|---|---|---|
+| **21/08** | 10 | J+11 | ✅ faite le 01/09 (run précédent) | Oui, sans revérification |
+| **22/08** | **6** (sur 10) | J+10 | ✅ **faite ce run, première fois** | Oui, sans revérification |
+
+**16 contacts éligibles au total**, contre 20 annoncés par le run précédent : les 4 doublons du 22/08 retirent 4 unités à l'estimation. Les rédiger tous porterait la file à **36**. En rédiger 5 la porterait à **25**, soit exactement le seuil.
+
+**Aucune revérification ne sera nécessaire au prochain run**, sous la seule réserve d'un balayage de bounces à jour — les réponses, elles, sont contrôlées jusqu'à ce matin sur les deux lots.
+
+### 📊 Bilan cumulé
+
+**Balayage des bounces** (`from:mailer-daemon`, `from:postmaster`, `subject:"Delivery Status Notification"`, `subject:"Undelivered Mail"`, `subject:Undeliverable`, `subject:"Mail delivery failed"`, `after:2026/08/28`, corbeille incluse) : **zéro fil**. Couvre notamment les **27 envois de David de ce matin** (04:45:56–04:48:29 UTC) : **aucune des 19 relances, des 7 prospections et de la relance EUPHA n'a rebondi.**
+
+**Bilan bounces cumulés depuis le 02/08 : 20, inchangé** — liste nominative identique à celle du 29/08 (l. 3034-3053), non reproduite ici. Aucune entrée ajoutée, aucune retirée.
+
+**Totaux au 2026-09-01, 06:48 UTC :**
+- **Prospectés : 317** — inchangé depuis le run de prospection de 06:24.
+- **Envoyés : 307** — inchangé : les 20 brouillons en file ne sont pas partis.
+- **Délivrés : 287** = 307 envoyés − 20 (taille de la liste nominative), recompté dans le même mouvement.
+- **Taux de délivrabilité : 93,5 % (287/307)**, inchangé.
+- **Relances : 201 envoyées**, **10 en attente d'envoi** (lot du 20/08) — **total cumulé de relances créées depuis le début : 211, inchangé, ce run n'en ayant créé aucune.**
+- **Réponses institutionnelles : aucune nouvelle** depuis le refus Neumann de 05:11:28 UTC.
+
+**Profondeur de file en fin de run : 20 brouillons, inchangée — aucun brouillon créé, modifié ni supprimé par ce run.**
+
+### ⚠️ Signalements
+
+- **Deux runs de cette routine le même jour, à 3 minutes d'écart.** Le SKILL.md ne prévoit qu'un déclenchement quotidien. Ce doublement n'a causé aucun dégât ici — le 2e run a lu l'entrée du 1er avant d'agir et s'est abstenu d'écrire — mais **c'est exactement le profil qui a produit l'incident du 15/08** (deux runs à 21 s d'écart écrivant deux totaux cumulés contradictoires). **À vérifier côté planification par David** : si le déclenchement est bien dupliqué, l'un des deux est à supprimer.
+- **Fiona Walsh (`fiona.walsh@uni-heidelberg.de`) : arbitrage toujours en attente**, laissée en « sans réponse » par défaut (voir addendum de ce matin). Sans effet opérationnel — sa relance unique est consommée.
+- **EUPHA** : fenêtre ouverte depuis le 31/08, **arbitrage David toujours en attente**.
+- **⚠️ Fichiers modifiés non touchés par cette routine, laissés tels quels** (règle `AGENTS.md`) : `marketing/qa/product-claims.manual.json` et `app/api/cron/sync-africa-cdc/route.ts` (modifiés par une autre session pendant ce run), `.tmp-acdc-probe.ts`, `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis).
