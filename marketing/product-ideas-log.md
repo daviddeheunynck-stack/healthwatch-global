@@ -2134,3 +2134,81 @@ Zéro des deux côtés, et c'est structurel plutôt qu'une coïncidence de calen
 5. **Fichiers d'autres sessions laissés intacts, comme le veut `AGENTS.md`** : `marketing/content-log.md` et `marketing/qa/product-claims.manual.json` (modifiés), `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis). Rien n'a été stagé ni annulé les concernant. Un commit d'une autre session (`78a6da4`, pseudo-pays agrégés sur le chemin des alertes PAHO) a traversé l'arbre pendant ce run et n'a pas été touché.
 
 **Statut : 2 idées PROPOSÉES ET CONSTRUITES** (`fed16d0`, `f7a9e53`). Aucune idée écartée par un garde-fou ce soir — aucune des deux ne touche à un schéma, à un e-mail client, à Stripe ni à un envoi externe.
+
+---
+
+## 2026-09-01 — Proposition du jour
+
+**Aucun signal terrain neuf** : `product-feedback.md` n'a pas bougé depuis l'entrée Coulibaly du 22/08. Les deux idées sortent de l'état réel de la prod et de la page publique, relevé ce soir.
+
+**Point commun des deux, et il change d'axe par rapport aux quatre derniers soirs.** Les runs du 28 au 31/08 ont tous porté sur ce que le produit *sait* de ses données. Ce soir : ce que le produit *affirme* — d'un côté une vérification humaine gelée dans un commentaire que personne ne relit, de l'autre deux comptages contradictoires du même chiffre sur la page d'accueil.
+
+### 1. 🔴 Le correctif du 31/08 a borné la confirmation stockée en base ; son jumeau écrit en dur dans le code n'a jamais eu d'horloge — et l'un des seize est faux depuis vingt jours
+
+**Le mécanisme.** `data-quality` (`app/api/cron/data-quality/route.ts`, l. 508-540) porte `DASHBOARD_SOURCES` : seize motifs d'URL qui font passer une ligne du seuil strict (21 j, 7 j sur une ligne PHEIC) au seuil large de 180 j. Chaque motif est justifié par un commentaire de la forme « confirmed 2026-07-30 no v.3 exists », « confirmed 2026-08-08 live page matches DB exactly ». **Ce sont des vérifications humaines, datées, qu'aucune ligne de code ne lit.** Le tableau, mesuré ce soir contre la vraie table :
+
+```
+motif                                          vérifié le    âge     lignes qu'il fait taire
+weekly-epidemiological-record                  2026-08-12     20 j    2   (la plus vieille : 65 j)
+publications/m/item                            2026-08-08     24 j    2   (32 j)
+ecdc…mers-cov-situation-update                 2026-07-30     33 j    1   (29 j)
+dge.gob.pe/sala-situacional-dengue             2026-08-08     24 j    1   (24 j)
++ 8 motifs sur 16 sans aucune date écrite       —              —      (jamais re-vérifiables)
+```
+
+**Le motif WER est faux aujourd'hui, et c'est vérifié, pas supposé.** Son commentaire dit : « Confirmed 2026-08-12: issue 31 (27 Jul-2 Aug 2026) is still the latest published issue », et se termine par une consigne — « re-verify against whatever the current latest wer101-NN issue is before assuming a gap ». Consigne adressée à un humain, exécutée par personne. Relevé ce soir sur la page de listing de l'OMS :
+
+```
+$ curl -s https://www.who.int/publications/journals/weekly-epidemiological-record | grep -o "wer101-[0-9]*" | sort -u
+wer101-31   <- l'édition citée par nos 6 lignes choléra
+wer101-32
+wer101-33   <- « Epidemiological Week 33 (10 August - 16 August 2026) »
+wer101-34
+```
+
+Trois éditions ont paru depuis la vérification. Les six lignes choléra qui citent le n° 31 — **RD Congo, Soudan, Soudan du Sud, Congo, Somalie, Tanzanie**, aucune ne portant de `source_confirmed_at` — sont figées au 2026-06-28, soit 65 jours, et le motif les fait passer sous un plafond de 180 j au lieu de 21. Le produit n'a aucun moyen de poser la question.
+
+**Pourquoi c'est exactement le défaut réparé hier, du mauvais côté du mur.** Le commit `f7a9e53` du 31/08 a borné `source_confirmed_at` par `CONFIRMATION_MAX_AGE_DAYS`, au motif qu'« une confirmation ne périme jamais — elle est annulée par le seul événement qu'elle devrait signaler ». `DASHBOARD_SOURCES` est la même confirmation, écrite en commentaire au lieu d'une colonne, et elle n'a reçu aucune borne. Six lignes actives sur 131 ne sont aujourd'hui tenues hors du filet que par elle.
+
+**Effort : petit.** Un fichier. Le tableau de chaînes devient un tableau d'objets `{ pattern, verifiedOn, recheckAfterDays }` ; la correspondance ne change pas d'un caractère ; une section de rapport en plus.
+
+**Risque/inconnue : ressusciter le bruit que ces exemptions suppriment.** Traité par construction — **la nouvelle section ne reclasse aucune ligne**. Une exemption périmée continue de s'appliquer ; elle est seulement signalée comme à re-vérifier, en **une** entrée agrégée et non une par motif. Le classement des lignes est identique avant/après, rejoué contre la vraie table (voir la construction). Reste un vrai coût : la première exécution sortira un arriéré d'une dizaine de motifs, dont huit qui n'ont jamais été datés. C'est du travail réel pour David, une fois, pas du bruit récurrent.
+
+### 2. 🔴 La page d'accueil affiche deux fois le nombre de foyers actifs, et les deux chiffres diffèrent — dont un qui compte quatre foyers clos, ceux-là mêmes pour lesquels le correctif du 02/08 avait été écrit
+
+**Symptôme, relevé sur la page réelle il y a quelques minutes** (`https://healthwatch-global.com/fr`, un seul document HTML) :
+
+```
+🟢 129 foyers épidémiques actifs suivis en ce moment      <- bandeau du héros
+   129 foyers actifs   87 pays touchés   46 alertes…      <- bloc de statistiques
+   131 active                                             <- pastille au-dessus de la carte
+```
+
+Trois affirmations, deux chiffres, sur la surface d'acquisition principale d'un produit dont l'argument de vente est l'exactitude des chiffres.
+
+**Cause, et elle a un historique.** `components/LandingPage.tsx` calcule `activeOutbreaks = outbreaks.filter(o => o.active)` (l. 534) parce que `getOutbreaks()` renvoie aussi les lignes récemment fermées, gardées 60 jours pour le tableau de bord. Le commentaire qui précède cette ligne date du 02/08 et nomme les coupables : « Ebola/Germany et Ebola/Uganda, toutes deux fermées, s'affichaient encore comme lignes vives, comme entrées "nouveau cette semaine", ET gonflaient le compte actif du héros ». Le héros, le tableau « ce que vos équipes verront » et « nouveau cette semaine » ont tous été branchés sur `activeOutbreaks`. **La carte, elle, reçoit toujours `outbreaks`** (l. 688) — la liste non filtrée. Un mois plus tard, les lignes que le correctif visait sont toujours sur la carte :
+
+```
+lignes tracées comme vives alors qu'elles sont fermées : 4
+  Ebola virus disease / Germany   date 2026-07-28
+  Ebola virus disease / Uganda    date 2026-07-28
+  Ebola virus disease / France    date 2026-07-04
+  Nipah virus        / India      date 2026-07-22
+```
+
+**Second défaut dans les trois mêmes lignes, et il retranche là où le premier ajoute.** Le filtre de coordonnées s'écrit `outbreaks.filter(o => o.lat && o.lng)` (`LandingMapSection.tsx:58`, répliqué en `LandingMapLeaflet.tsx:83`). En JavaScript, `0` est faux : **toute ligne à la longitude 0 ou à la latitude 0 est écartée sans trace.** Deux lignes actives sont dans ce cas aujourd'hui, toutes deux au centroïde générique `lat=20, lng=0` :
+
+```
+MERS-CoV / Mondial   (lat=20 lng=0)   date 2026-08-03
+Mpox     / Mondial   (lat=20 lng=0)   date 2026-06-30
+```
+
+Mpox est l'une des deux urgences de santé publique de portée internationale du produit, et c'est la ligne réparée hier soir. `components/WorldMap.tsx` — la carte du tableau de bord, celle des clients — utilise pourtant déjà la bonne convention deux fichiers plus loin : `if (pinLat == null || pinLng == null) return`. C'est la carte publique, et elle seule, qui teste la vérité au lieu de la nullité.
+
+**Troisième point, mineur mais sur la même pastille :** le mot `active` y est écrit en dur en anglais, juste sous un objet `MAP_COPY` qui traduit le titre et la légende en cinq langues. La page `/fr` affiche « 131 active », la page `/ar` aussi, en pleine mise en page RTL.
+
+**Effort : petit.** Trois fichiers de composants, aucune requête, aucun schéma.
+
+**Risque/inconnue : le chiffre de la pastille ne peut pas coïncider parfaitement avec celui du héros, et il ne faut pas le forcer.** Après correction, 129 foyers sont actifs et 129 sont traçables (les deux lignes « Mondial » rejoignent la carte au centroïde générique une fois le test de nullité corrigé). Si demain une ligne active arrive sans coordonnées du tout, la pastille dira moins que le héros — et ce sera vrai. Aligner les deux chiffres de force, en faisant compter à la pastille des lignes qu'elle n'affiche pas, reproduirait le défaut d'aujourd'hui dans l'autre sens.
+
+**Statut initial : 2 idées PROPOSÉES.** Construction dans la foulée — voir la mise à jour ci-dessous.
