@@ -3401,3 +3401,69 @@ Signalé par David en session, capture d'écran à l'appui, moins d'une heure ap
 - **Réponses institutionnelles : 1 nouvelle, négative** (Neumann). Premier refus explicite depuis l'ouverture du canal à être arrivé **en réponse à une relance** et non à un premier contact.
 
 **État réel pour le prochain run :** file à **0**, frein de file **levé**. **30 contacts éligibles** — lots du 20/08 (J+12), 21/08 (J+11) et 22/08 (J+10, 10 contacts envoyés le 22/08 à 06:33:46–06:35:24 UTC, à vérifier en direct, jamais encore contrôlés). Les 20 des lots 20/08 et 21/08 sont vérifiés et prêts à rédiger sans revérification, sous réserve d'un balayage de bounces à jour. **Rédiger les 30 d'un coup replacerait immédiatement la file au-dessus du seuil de ~25** : arbitrage du volume laissé à David, la routine ne l'a pas tranché seule.
+
+---
+
+## 📇 NOUVEAUX CONTACTS TROUVÉS — 2026-09-01, run `daily-institutional-prospecting-healthwatch`
+
+**10 contacts neufs, 10 brouillons créés, 0 envoyé.** Frein de file **levé** : `list_drafts` appelé deux fois en tête de run (vue métadonnées puis vue complète, consigne du 16/08) → **`{}` les deux fois, file à 0 brouillon**. Cohérent avec l'addendum du run de relance de ce matin (David a vidé la file entre 04:45:56 et 04:48:29 UTC). Premier lot produit depuis le 30/08 : la prospection tournait à vide depuis 2 jours.
+
+### Tableau du jour
+
+| Institution | Pays/Région | Segment | Contact | Email | Source | Vérifié | Brouillon Gmail |
+|---|---|---|---|---|---|---|---|
+| Ministerio de Salud Pública (→ Dir. Gral. de Epidemiología demandé) | Rép. dominicaine / AMRO | Gouvernement | boîte institutionnelle | `info@ministeriodesalud.gob.do` | `ministeriodesalud.gob.do` (accueil officiel, HTTP 200) | ✅ lecture directe | oui — `r8298304551172820313` |
+| Ministry of Health, Wellness and the Environment | St-Vincent-et-Grenadines / AMRO | Gouvernement | boîte institutionnelle | `mohesvg@gov.vc` | `health.gov.vc` (accueil + page « Contact Us », HTTP 200) | ✅ lecture directe, 2 pages | oui — `r-8068645684956281769` |
+| Ministry of Health, Wellness and the Environment | Antigua-et-Barbuda / AMRO | Gouvernement | boîte institutionnelle | `contact@health.gov.ag` | `health.gov.ag/index.php/contact-us/` (HTTP 200) | ✅ lecture directe | oui — `r7010544632388780741` |
+| Ministry of Health & Human Services (MOHHS) | Îles Marshall / WPRO | Gouvernement | boîte « Contacts to remember » | `rmimohreports@rmihealth.org` | `rmihealth.org` (accueil officiel, HTTP 200) | ✅ lecture directe | oui — `r-5479697087802127003` |
+| Institute of Public Health, University of Gondar | Éthiopie / AFRO | Académique | boîte institutionnelle | `info@uog.edu.et` | `uog.edu.et/institute-of-public-health/` (HTTP 200) | ✅ lecture directe, sur la page de l'unité | oui — `r2033945243293535524` |
+| Jimma University — External Relations Office | Éthiopie / AFRO | Académique | boîte du bureau | `ero@ju.edu.et` | `ju.edu.et/contact-us` (HTTP 200) | ✅ lecture directe | oui — `r-6779195102446379823` |
+| Faculty of Medicine and Health Sciences, Universiti Putra Malaysia | Malaisie / WPRO | Académique | boîte de la faculté | `pspk@upm.edu.my` | `upm.edu.my/faculty/faculty_of_medicine_and_health_sciences-1601` (HTTP 200) | ✅ lecture directe | oui — `r2291843883968162495` |
+| ZOA International | Pays-Bas / terrain multi-régions | ONG | boîte institutionnelle | `info@zoa.ngo` | `zoa-international.com/contact/` (HTTP 200) | ✅ lecture directe | oui — `r-6382421093459570183` |
+| humedica e.V. | Allemagne / terrain multi-régions | ONG | boîte institutionnelle | `info@humedica.org` | `humedica.org/en/` (HTTP 200) | ✅ lecture directe | oui — `r3026725492477633920` |
+| medico international | Allemagne / partenaires multi-régions | ONG | boîte institutionnelle | `info@medico.de` | `medico.de/en/` (HTTP 200) | ✅ lecture directe | oui — `r6495304631909611335` |
+
+### Anti-doublon — grep domaine ET organisation, contact par contact (consigne du 23/08)
+
+Exécuté en **chemin absolu** sur les 3403 lignes du journal (un premier passage en chemin relatif avait échoué silencieusement sur un `cd` raté — refait, seuls les résultats ci-dessous sont valides) :
+
+| Contact | grep domaine | grep organisation |
+|---|---|---|
+| MSP Rép. dominicaine | `ministeriodesalud.gob.do` → **0** | `Dominican` / `Dominicana` → **0** |
+| MoH St-Vincent | `gov.vc` → **0** | `Vincent` / `Grenadines` → **0** |
+| MoH Antigua-et-Barbuda | `health.gov.ag` → **0** | `Antigua` / `Barbuda` → **0** |
+| MOHHS Îles Marshall | `rmihealth.org` → **0** | `Marshall` → **0** |
+| IPH Univ. de Gondar | `uog.edu.et` → **0** | `Gondar` → **0** |
+| Jimma University | `ju.edu.et` → **0** | `Jimma` → **0** |
+| FMHS Universiti Putra Malaysia | `upm.edu.my` → **0** | `Putra Malaysia` → **0** |
+| ZOA International | `zoa.ngo` → **0** | `ZOA` → **0** |
+| humedica | `humedica.org` → **0** | `humedica` → **0** |
+| medico international | `medico.de` → **0** | `medico international` → **0** |
+
+**Contrôle `linkedin-contacts.md` : une adjacence, non bloquante.** Un profil **suivi** le 2026-07-10 (Teketel T. T., *Senior Public Health Specialist*, l. 439) travaille à **Jimma University**. Ce n'est pas un fil de conversation actif — suivi seul, explicitement sans note — et la cible de ce lot est la boîte institutionnelle du bureau des relations extérieures, pas cette personne. **Retenu**, adjacence signalée pour que David puisse trancher autrement s'il le souhaite.
+
+### Décisions et écarts documentés
+
+- **Plafond de concentration respecté** : 10 organisations faîtières distinctes, aucune à 2 contacts. Les deux universités éthiopiennes (Gondar, Jimma) sont deux établissements publics indépendants, pas deux facultés d'une même université.
+- **Répartition par segment** : 4 gouvernement / 3 académique / 3 ONG.
+- **Écartés pour adresse non vérifiable en lecture directe** (règle du 18/08, l'index de recherche ne vaut pas vérification) : **EODY Grèce** (403 Access Denied, y compris avec User-Agent navigateur), **NVSC Lituanie** (challenge Cloudflare), **NCDC Géorgie** (site en reconstruction, aucune adresse publiée), **MHMS Kiribati** (`info@mhms.gov.ki` connu du seul snippet moteur, `contact.php` en 404 sur le site officiel), **INRSP Mauritanie** et **ISP Niger** (pages accessibles mais aucune adresse publiée), **HIPH Alexandrie**, **NPHI Mongolie**, **IPH Albanie**, **MoH Timor-Leste**, **MoH Namibie**, **MoH Îles Salomon** (tous injoignables ou sans adresse en clair).
+- **Écartés pour profil d'adresse inadéquat** : **INLASA Bolivie** (`inlasalapazbolivia@gmail.com` — boîte grand public ; condition (a) du critère du 25/08 remplie, mais (b) non vérifiable faute de page contact accessible), **MoH Guyana** (plusieurs adresses Gmail sur le domaine officiel → condition (b) échouée), **Université d'Alexandrie** (`president@alexu.edu.eg` — boîte de direction générale alors qu'aucune unité opérationnelle n'était joignable), **IESC/UFRJ** et **HUPH Vietnam** (pages accessibles, aucune adresse en clair).
+- **Antigua** : la page d'accueil ne publiait que `ehealth2015@gmail.com` (boîte grand public) ; la page « Contact Us » du même domaine publie `contact@health.gov.ag`, adresse fonctionnelle du domaine propre — **c'est celle-ci qui est retenue**, conformément au point (b) du critère du 25/08 (préférer l'adresse fonctionnelle quand elle existe à côté d'une boîte grand public).
+- **Aucune adresse OMS dans ce lot** — la règle `@who.int` n'a pas eu à s'appliquer.
+
+### Conformité des brouillons
+
+**10 brouillons, 0 envoi.** Vérification post-création par `list_drafts` : les 10 portent `labelIds: ["DRAFT"]`, **aucun n'est passé en `SENT`** — contrôle du bug d'envoi instantané du connecteur (incident du 15/08) : **négatif**. Aucun `htmlBody`, **aucune balise `<a>`, aucun lien cliquable, aucune URL avec un `.` littéral** : le domaine est écrit « healthwatch-global dot com » (9 messages) et « healthwatch-global punto com » (message dominicain, en espagnol). Objets tous ≤ 60 caractères. Chaque message se termine par une question explicite, puis la signature.
+
+**Langues** : espagnol pour la Rép. dominicaine (précédent Honduras du 21/08), anglais pour les 9 autres.
+
+### Totaux au 2026-09-01, après ce run
+
+- **Prospectés : 317** = 307 + 10 de ce lot.
+- **Envoyés : 307** — inchangé, ce run n'envoie rien.
+- **Profondeur de file en fin de run : 10 brouillons** (les 10 de ce lot), contre 0 à l'ouverture. **Sous le seuil de ~25.**
+- **Bounces du jour : aucun** — aucun envoi n'a eu lieu depuis ce lot, donc aucun bounce possible sur ces 10 adresses. *(Bilan cumulé non retotalisé ici : porteur unique `daily-relance-check-healthwatch`, consigne du 16/08.)*
+
+**⚠️ Arbitrage de volume à venir, signalé sans être tranché ici** : le run de relance de ce matin a laissé **30 contacts éligibles** (lots des 20, 21 et 22/08). Ces 10 brouillons de prospection s'ajouteront à ce que la relance produira. La file repassera au-dessus du seuil dès qu'une part significative de ces 30 relances sera rédigée — c'est un arbitrage pour David, aucune des deux routines ne peut le trancher seule.
+
+**⚠️ Fichiers modifiés non touchés par cette routine, laissés tels quels** (règle `AGENTS.md`) : `marketing/qa/product-claims.manual.json` (modifié), `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis).
