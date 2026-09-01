@@ -313,10 +313,24 @@ const CLUSTER_EDITION_PENDING = {
   // Choléra : (vide) — WER 101-31 appliqué le 10/08 sur ordre de David, voir
   // scripts/fix-cholera-don579-cluster-wer101-31-2026-08-10.mjs.
   //
-  // Chikungunya : (vide) — édition du 13/08 appliquée le 17/08 sur ordre de David, voir
+  // Chikungunya : édition du 13/08 appliquée le 17/08 sur ordre de David, voir
   // scripts/fix-chikungunya-cluster-nydoh-0813-2026-08-17.mjs (Brésil 110569/50→116095/47,
   // Argentine 11986/2→12114/2 ; Bolivie/Cuba/Suriname inchangés, Guyane française
   // délibérément non touchée — sourcée SPF, pas PAHO, cf. le script pour le détail).
+  // ⏳ NOUVELLE ÉDITION TROUVÉE LE 01/09, EN ATTENTE D'ARBITRAGE DE DAVID — ne pas appliquer
+  // en autonomie (le 13/08 avait été appliqué sur ordre explicite, pas de plein droit).
+  Chikungunya:
+    "NY DOH Global Health Update du 27/08/2026 (données PAHO extraites le 27/08) + SPF Guyane " +
+    "du 28/08 (SE34). Écarts avec la base : Brésil 116095/47 → 121265/48 ; Cuba 1457/2 → 2716/6 " +
+    "(deaths ×3, plus gros écart du cluster) ; Argentine 12114/2 → 12226/2 ; Maurice 6675/0 → " +
+    "6868/0 (Africa CDC au 24/08, cadrage « Maurice 6769 + Rodrigues 99 » — vérifier que le 6675 " +
+    "en base était bien le combiné avant d'écrire) ; Guyane française 1222/0 → 1693/0 (SPF, SE34 " +
+    "17-23/08, 317 hospitalisations depuis janvier — source SPF conservée, pas PAHO, cf. 17/08). " +
+    "Bolivie (41944/27) et Suriname (7484/0) : chiffres IDENTIQUES, seule la date d'arrêté " +
+    "avancerait au 27/08. ⚠️ Mayotte (1396/0, arrêté 24/07) : le chikungunya a DISPARU du bulletin " +
+    "SPF Mayotte — le bulletin du 07/08 (SE31) ne contient plus que Paludisme, Mpox et le réseau " +
+    "sentinelle, plus aucune section arbovirose. Pas de chiffre plus récent à écrire ; à trancher " +
+    "séparément (clôture/monitoring ?) plutôt qu'un rafraîchissement.",
 };
 
 const CLUSTER_EDITION_CHECKED = {
@@ -337,7 +351,11 @@ const CLUSTER_EDITION_CHECKED = {
   // récit de cas détaillé (homme de 50-55 ans, Région de l'Est, testé positif le 4 septembre,
   // voyage au Pakistan le 2 septembre) et un « 5 cas / 4 décès depuis le début de l'année » —
   // aucun des deux ne concerne 2026. Vérifier l'arrêté ECDC avant de conclure à une hausse.
-  "MERS-CoV": "2026-08-17",
+  // Revérifié le 01/09 sur la même page ECDC : l'arrêté n'a pas bougé du 03/08/2026, toujours
+  // 2 649 cas / 960 décès dans le monde depuis avril 2012 et toujours 2 cas / 1 décès en Arabie
+  // saoudite en 2026. Le seed Arabie saoudite (DON591) et la ligne Global sont donc l'un et
+  // l'autre alignés sur l'édition courante — rien à écrire.
+  "MERS-CoV": "2026-09-01",
   // Cereulide / lait infantile (DON596) : entrée manquante depuis la création du
   // cluster — le bloc 4d-bis sortait donc « cluster absent de CLUSTER_EDITION_CHECKED »
   // à chaque run sans que personne n'aille chercher d'édition, et les 8 lignes actives
@@ -359,7 +377,12 @@ const CLUSTER_EDITION_CHECKED = {
   // compressés) : WebFetch l'enregistre malgré tout en local et le chemin est retourné dans le
   // résultat — c'est ce fichier qu'il faut passer à Read, qui gère les PDF nativement.
   // Édition plus récente que celle en base → entrée ouverte dans CLUSTER_EDITION_PENDING.
-  Chikungunya: "2026-08-17",
+  // Recherche refaite le 01/09 : l'édition courante du listing NY DOH est celle du 27/08/2026
+  // (cadence hebdomadaire nette : 6.25, 7.2, 7.9, 7.16, 7.23, 7.30, 8.6, 8.13, 8.20, 8.27), donc
+  // deux éditions plus récentes que le 13/08 appliqué. Côté SPF : Guyane a un bulletin au 28/08
+  // (1 693 cas, SE34) ; Mayotte a cessé de publier une section chikungunya. Détail des écarts
+  // pays par pays dans CLUSTER_EDITION_PENDING ci-dessus — en attente d'arbitrage.
+  Chikungunya: "2026-09-01",
 };
 // Les clés de CLUSTER_EDITION_CHECKED étaient comparées à `disease_en` en égalité
 // stricte. Ça marche tant que la clé est exactement le libellé en base ("Cholera",
@@ -1075,7 +1098,7 @@ const MARBURG_CLOSURE_WATCH_FROM = "2026-08-11";
 // Le résumé de recherche l'accompagnait d'un « 20 confirmed cases and 2 deaths » qui ne correspond
 // à AUCUNE épidémie ougandaise réelle (2017 : 3 cas ; 2025 : 14 confirmés / 2 décès ; 2026 : 1 cas).
 // Toujours vérifier la date de publication de cet article avant de conclure à une clôture.
-const MARBURG_CLOSURE_LAST_CHECK = "2026-08-28"; // gov.uk (page mise à jour le 27/08, relue le 28/08) : le cas du 30/06 à Kyegegwa est toujours listé sous « Current incidents and outbreaks » 2026, aucune déclaration de fin d'épidémie. WebSearch « Marburg Uganda outbreak declared over August 2026 » : rien non plus, la couverture s'arrête au silence des autorités ougandaises constaté par STAT le 16/07. Les trois faux positifs documentés plus haut tiennent, ne pas les alléger.
+const MARBURG_CLOSURE_LAST_CHECK = "2026-09-01"; // relu le 01/09 : la page gov.uk (toujours datée du 27/08) liste encore le cas de Kyegegwa notifié le 30/06 sous « Current incidents and outbreaks » 2026, sans aucune mention de fin d'épidémie, alors qu'elle en porte explicitement une pour d'autres événements 2025-2026. WebSearch « Marburg Uganda outbreak declared over 2026 » : rien non plus — les seules clôtures qui remontent sont l'Éthiopie (26/01/2026) et le Rwanda, deux faux positifs voisins de ceux déjà documentés. Ligne laissée active à 1 cas / 1 décès. Historique du 28/08 : // gov.uk (page mise à jour le 27/08, relue le 28/08) : le cas du 30/06 à Kyegegwa est toujours listé sous « Current incidents and outbreaks » 2026, aucune déclaration de fin d'épidémie. WebSearch « Marburg Uganda outbreak declared over August 2026 » : rien non plus, la couverture s'arrête au silence des autorités ougandaises constaté par STAT le 16/07. Les trois faux positifs documentés plus haut tiennent, ne pas les alléger.
 // ⚠️ TROISIÈME FAUX POSITIF DE CLÔTURE, rencontré le 22/08 — distinct des deux ci-dessus : la guidance
 // gov.uk ET le DON615 mentionnent tous deux une « fenêtre de 42 jours » ougandaise qui « cesse le
 // 27/08 ». C'est celle de l'EBOLA Bundibugyo (dernier cas importé de RDC sorti de soins le 16/07),
@@ -1118,6 +1141,30 @@ if (!marburgRow) {
 // Même garde-fou que les autres maps : ne bumper une date qu'après avoir réellement consulté
 // l'édition courante de la source, jamais pour faire taire une ligne.
 const STALE_CRON_ROW_CHECKED = {
+  // Diphtérie/Tchad, /Mali, /Niger, /Afrique du Sud : vérifiées le 01/09. Les quatre lignes
+  // partagent la MÊME source, le « WHO Rapid Risk Assessment — Diphtheria, African Region v.2 »
+  // (publié le 20/03/2026, données arrêtées au 01/03/2026). Ce n'est pas une série périodique :
+  // v.1 = 03/11/2025, v.2 = 20/03/2026, et aucune v.3 n'existe au 01/09 (page who.int de la v.2
+  // relue ce jour, aucune mention de version suivante ni de prochaine mise à jour). Même famille
+  // que Shigellosis/EU-EEA en section 4 sexies — l'ancienneté est structurelle, pas une panne de
+  // cron. Rien à écrire : ni chiffres, ni date d'arrêté.
+  // ⚠️ Faux positif à NE PAS appliquer, rencontré le 01/09 : le NY DOH Global Health Update du
+  // 27/08 porte un tableau « Diphtheria Cases and Deaths by Country, Africa, 2026 » (Africa CDC,
+  // arrêté au 24/08) donnant Mali 111/4, Niger 78/6, Afrique du Sud 43/8 — et PAS de ligne Tchad
+  // du tout. Ce sont des comptes **2026 seuls**, alors que le RRA compte le cumul **2025+2026**
+  // (« entre le début de 2025 et le 01/03/2026, plus de 29 000 cas suspects et 1 420 décès sur
+  // huit pays »). Écrire les chiffres Africa CDC ferait chuter Tchad 5227→absent, Mali 636→111,
+  // Niger 2456→78, Afrique du Sud 404→43 : ce serait un changement de cadrage déguisé en mise à
+  // jour, pas une correction. Même famille de piège que le « 209 cas » tchadien (sous-total) et
+  // que le « 53 cas » mauritanien ci-dessous.
+  // 🔎 Au prochain passage : la seule édition à guetter est une v.3 du RRA. Si le cadrage
+  // 2025+2026 du RRA devient définitivement orphelin, c'est un arbitrage de cadrage à poser à
+  // David (garder un cumul figé au 01/03 vs basculer les 4 lignes sur le suivi 2026 d'Africa CDC),
+  // pas une écriture à faire en autonomie.
+  "4d51097f-05e2-458d-a61b-a2f67be82bf2": "2026-09-01",
+  "d2a504ac-84bc-4c21-bcb3-88f09654efea": "2026-09-01",
+  "fb90624d-9d33-436b-977e-08695135bd78": "2026-09-01",
+  "fcd9ac15-fe6e-4a2a-82ea-2677019cf0a7": "2026-09-01",
   // Diphterie/Perou et Diphterie/Bresil : verifies le 31/08. La source des deux lignes est
   // l'« Epidemiological Alert: Diphtheria in the Americas Region » de l'OPS du 11/06/2026, et
   // c'est TOUJOURS la derniere parue (recherche ciblee site:paho.org le 31/08 : la page
