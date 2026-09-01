@@ -2430,3 +2430,45 @@ section 4b bis — entrées      :  0
 **Un seul point, cosmétique :** Dengue / Kiribati porte encore une URL ReliefWeb, dans une ligne inactive à `source_priority` 0 — hors du site public et hors du jeu que lit la section 4m. Aucune exposition légale, aucun impact utilisateur.
 
 Tout le reste du reliquat du 26/08 et du 31/08 est clos.
+
+#### 9. ✅ Vérification en production des correctifs de la soirée — la seule qui manquait
+
+L'idée 2 avait été livrée avec la mention « vérification en navigateur impossible ce soir ». Elle est faite maintenant, contre la prod déployée, et elle passe.
+
+```
+/fr   pastille de la carte : « 126 sur la carte »   (avant : « 131 active »)
+/fr   bandeau du héros     : « 🟢 129 foyers épidémiques actifs »
+/ar   pastille             : « 126 على الخريطة »   — traduite, plus d'anglais en dur
+```
+
+**Les quatre lignes fermées ne sont plus envoyées à la carte.** Le payload de la page contient 120 paires maladie/pays exploitables par la sonde (les 6 manquantes portent le libellé d'événement de sécurité alimentaire, trop long pour le motif de lecture — limite de ma sonde, pas de la page), et **la seule entrée Ebola est « Maladie à virus Ebola / RD Congo »**, le foyer réellement actif. Ebola/Allemagne, Ebola/Ouganda, Ebola/France et Nipah/Inde ont disparu ; les occurrences résiduelles d'« Allemagne » et « Ouganda » dans le HTML sont, vérifié une par une, la répartition par pays dans une description West Nile de l'ECDC et une ligne **Marburg/Ouganda active**, sans rapport.
+
+**Le chiffre du Pérou s'est propagé à l'accueil** (46 669), le cache de 300 s ayant tourné.
+
+#### 10. ⏹️ Kiribati : ne rien faire, et la raison compte
+
+Dernier point du reliquat, et après examen la bonne action est **l'inaction**. La ligne est inactive à `source_priority` 0, donc hors de la fenêtre d'affichage de 60 jours et invisible partout. Blanchir son URL ReliefWeb la retirerait aussi de `data-quality` section 4m et de `check-source-trust.mjs`, qui lisent la colonne `source` précisément pour dénoncer les éditeurs interdits — c'est le même arbitrage que le 29/08, où `sourceName()` avait été laissée intacte pour ne pas aveugler l'audit. Le risque de publication est déjà nul par deux verrous indépendants (`publishableSourceUrl/Name` rendent `null` pour un éditeur interdit, et la ligne n'est de toute façon pas affichée). **Effacer l'URL n'améliorerait rien et supprimerait la trace.** Point clos, sans écriture.
+
+#### 11. ⚠️ 51 crons dans `vercel.json` — à confirmer côté Vercel, pas déductible du dépôt
+
+`check-wer-cholera` porte le total à 51. Les 50 précédents tournent tous (relevé de `cron:run:*` à l'appui), donc le plafond du plan est au moins de 50 — mais **le dépôt ne documente nulle part le plafond réel**, et je ne l'invente pas. À vérifier dans le tableau de bord Vercel avant d'en ajouter beaucoup d'autres. Aucun signe de problème aujourd'hui.
+
+#### Mémoire
+
+Une entrée ajoutée : `reference_wer_cholera_update_is_monthly_not_weekly` — le piège qui m'a fait conclure à tort à une péremption ce soir, avec la marche à suivre pour lire une édition (lien « Download full edition » → bitstream `iris.who.int` → `pdf-parse`, marqueurs `Multi-country outbreak of cholera` **et** `Data as of`). Écrite parce qu'elle porte sur une source externe et se re-déduirait faussement sinon.
+
+---
+
+### Bilan de la soirée du 2026-09-01
+
+| | |
+|---|---|
+| Idées proposées | 2 |
+| Idées construites | 2 (`a499bbe4`, `554b239d`) |
+| Correctifs supplémentaires en traitant le reliquat | 4 (`f9dac5e3`, `073ca94d`, `c2050dd6`, `c6b4c969`) |
+| Écritures en prod | 2 — Dengue/Pérou rafraîchi, tampon amorcé sur 6 lignes choléra |
+| Nouveau cron | `check-wer-cholera` (hebdo, lundi 08h30) |
+| `DASHBOARD_SOURCES` | 16 → 13 motifs |
+| Section 4b bis | 9 entrées → 0 |
+| Un constat corrigé | le WER n'était pas périmé — voir le point 2 |
+| Reliquat restant | aucun point actionnable |
