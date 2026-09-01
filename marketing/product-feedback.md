@@ -329,3 +329,23 @@ Verbatim d'introduction du document : « *This is actually an underdeveloped res
 
 **Signal transversal, au-delà de la polio :** c'est le **deuxième cas en 24 h** d'une source correctement intégrée dont une partie du contenu n'est jamais extraite (l'autre : `sync-spf` et le bulletin vectoriel hebdomadaire, voir `product-ideas-log.md` du 21/08). Aucun contrôle du produit ne regardait, jusqu'à ce soir, ce qu'une source publie et que la base ne contient pas — tous les contrôles portent sur les lignes qui existent.
 
+
+---
+
+## 31 août 2026 — `lepapapericles5@gmail.com` (essai actif, Afrique) — 📶 ACCESSIBILITÉ : le tableau de bord est inatteignable, pas inintéressant
+
+**Contexte :** relance personnelle d'essai envoyée le 31/08 à 07h09 UTC (essai expirant le 03/09). **Réponse 6 minutes plus tard** — la première réponse jamais obtenue à une relance d'essai HealthWatch.
+
+**Retour — verbatim intégral**
+> « Bonjour Mr David
+> Je vous remercie pour votre message, Actuellement je suis dans une zone avec une faible couverture de connexion, raison pour la quelle j'ai du mail à revenir sur le tableau. »
+
+**Lecture.** Ce n'est pas un désintérêt produit et ce n'est pas un défaut de valeur : c'est une **contrainte d'accès**, et elle porte uniquement sur le **tableau de bord**. Les e-mails d'alerte, eux, lui parviennent sans qu'il ait rien à ouvrir. Pour un utilisateur dans ces conditions, **le produit c'est l'e-mail** ; le dashboard est un supplément qu'il ne peut pas s'offrir. Tous les indicateurs d'engagement de HWG (retour après signup, `dashboard_view`, `account_view`) mesurent la seule partie du produit que cet utilisateur ne peut pas atteindre — il compte comme inactif alors qu'il est servi.
+
+**Vérifié en base avant d'écrire ces chiffres** (`outbreak_alert_log`, `user_alert_regions`, `product_events`) : 1 seule région suivie (`africa`, seuil medium, choix self-service), **49 lignes d'alerte** correspondant à **5 e-mails réellement envoyés** — `regional-alerts` groupe chaque lot en un digest unique (`buildOutbreakDigestEmail`, une ligne de log par foyer) : digest d'inscription du 20/08, puis 21, 23, 24 et 27/08. ⚠️ Ne pas confondre lignes de log et envois : « 49 alertes » aurait été faux dans un e-mail sortant.
+
+**Suites (31/08, sur ordre explicite de David en session) :** essai prolongé de 14 jours (`trial_ends_at` 03/09 → **17/09**) et réponse envoyée dans le fil, volontairement courte vu sa connexion — elle lui explique qu'il n'a pas besoin du tableau, annonce la prolongation, et pose une seule question : les e-mails d'alerte passent-ils, sont-ils trop lourds ? **Pas encore de réponse au 01/09.**
+
+**Piste produit ouverte, à confirmer par sa réponse :** une **version allégée du digest d'alerte** pour connexions faibles (texte d'abord, images et CSS lourd en option, seuil de taille), et plus largement l'idée que l'e-mail est un canal de livraison à part entière et pas seulement une notification renvoyant vers le site.
+
+**Signal transversal :** c'est le 2e retour produit d'un utilisateur réel après Etienne Guenou (20/08), et le premier qui porte sur l'**accessibilité** plutôt que sur la qualité des données. Les deux viennent d'Afrique subsaharienne, la zone que HWG couvre le mieux et prospecte le plus.
