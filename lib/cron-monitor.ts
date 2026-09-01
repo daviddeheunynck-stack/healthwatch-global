@@ -652,6 +652,12 @@ export const CRON_WINDOWS: Record<string, number> = {
   // health-check's unmonitored-crons diff correctly caught it 2026-08-14.
   // Weekly Mon 08:25, same 1.5x-interval rationale as the two entries above.
   "sync-samoa-dengue":         200,
+  // Weekly Mon 08:30, same 1.5x-interval rationale. Registered in the same
+  // commit that creates the route rather than days later, which is the whole
+  // point of the three comments above: sync-pacific-surveillance,
+  // sync-wpro-dengue-update and sync-samoa-dengue each ran unmonitored until
+  // health-check's own unmonitored-crons diff caught them.
+  "check-wer-cholera":         200,  // Schedule: 30 8 * * 1
   // ── Enterprise & infra crons ──────────────────────────────────────────────────
   "trigger-webhooks":          2,    // every 30min — enterprise webhook delivery
   // ── Trigger & coverage crons ──────────────────────────────────────────────────

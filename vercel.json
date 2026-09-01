@@ -193,6 +193,10 @@
       "schedule": "25 8 * * 1"
     },
     {
+      "path": "/api/cron/check-wer-cholera",
+      "schedule": "30 8 * * 1"
+    },
+    {
       "path": "/api/cron/sync-taiwan-cdc",
       "schedule": "0 5 * * *"
     },
