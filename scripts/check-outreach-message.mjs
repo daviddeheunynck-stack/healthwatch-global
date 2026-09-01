@@ -140,11 +140,20 @@ const ONGOING_WORDS = uwb("\\b(en cours|actif|active|ongoing|toujours|encore)\\b
 
 // ── 1. Forme : ponctuation, caractères, longueur ─────────────────────────────
 const ALLOWED_NON_ASCII = /[àâäçéèêëîïôöùûüÿœæÀÂÄÇÉÈÊËÎÏÔÖÙÛÜŸŒÆ]/;
+// Une citation verbatim d'une source (chinoise, russe, arabe...) encadrée par des
+// guillemets n'est pas du mojibake — exempter ces segments, jamais le reste du
+// texte. Voir routine-improvement-log.md, 27/08 §4 p1 et 28/08 §5 p1 (post Taïwan
+// bloqué sur « 今年累計數 »).
+const QUOTED_SEGMENT = /«[^»]*»|"[^"]*"/g;
+const quotedRanges = [...draft.matchAll(QUOTED_SEGMENT)].map((m) => [m.index, m.index + m[0].length]);
+const inQuotedSegment = (i) => quotedRanges.some(([s, e]) => i >= s && i < e);
 const strays = new Map();
+let charIdx = 0;
 for (const ch of draft) {
-  if (ch.charCodeAt(0) > 127 && !ALLOWED_NON_ASCII.test(ch)) {
+  if (ch.charCodeAt(0) > 127 && !ALLOWED_NON_ASCII.test(ch) && !inQuotedSegment(charIdx)) {
     strays.set(ch, (strays.get(ch) ?? 0) + 1);
   }
+  charIdx += ch.length;
 }
 if (strays.size > 0) {
   add(
@@ -223,8 +232,13 @@ const threadNumbers = new Set(
 );
 
 const ISO_DATE = uwb("\\b\\d{4}-\\d{2}-\\d{2}\\b", "g");
+// 2024/12/29, 2026/09/05 : fragments de date au format source (ex. NIDSS Taïwan) —
+// jamais des chiffres produit. 28/08 §5 p2 : "12"/"29"/"08" lus à tort comme des
+// prix (29 €). Exclus du scan de nombres au même titre qu'ISO_DATE, sans compter
+// comme datation explicite (draftDates reste réservé à ISO_DATE).
+const SLASH_DATE = uwb("\\b\\d{4}/\\d{2}/\\d{2}\\b", "g");
 const draftDates = [...draft.matchAll(ISO_DATE)].map((m) => m[0]);
-const draftText = draft.replace(ISO_DATE, " ");
+const draftText = draft.replace(ISO_DATE, " ").replace(SLASH_DATE, " ");
 
 for (const m of draftText.matchAll(/\d[\d\s  .,]*\d|\d+/g)) {
   const value = normalizeNumber(m[0]);
