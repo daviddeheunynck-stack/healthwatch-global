@@ -2274,3 +2274,65 @@ Il reste donc un écart de 3 entre le héros (129) et la pastille (126), et il e
 5. **Fichiers d'autres sessions laissés intacts, comme le veut `AGENTS.md`** : `marketing/qa/product-claims.manual.json` (modifié), `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis). Rien n'a été stagé ni annulé les concernant. Le premier push de ce run a été refusé (`non-fast-forward`) : `git pull --rebase` était impossible sans toucher au fichier modifié d'une autre session, donc l'intégration s'est faite par une fusion (`ffe273e4`) qui ne touche qu'`instrumentation-client.ts`, venu du distant. Deux commits d'autres sessions (`18c4d048`, `d6ad25e8`) présents en local ont été poussés par la même occasion — ils n'ont pas été modifiés.
 
 **Statut : 2 idées PROPOSÉES ET CONSTRUITES** (`554b239d`, `a499bbe4`). Une idée écartée par le garde-fou 1 (gros effort) et laissée à David : l'ingestion du tableau choléra du WER, point 2 ci-dessus. Aucune des deux idées construites ne touche à un schéma, à un e-mail client, à Stripe ni à un envoi externe.
+
+### Suite du même soir (01/09) — reliquat traité sur demande de David, et une correction de fond
+
+David a demandé de traiter le reliquat plutôt que de le laisser en liste. Les six points ci-dessous remplacent celui d'au-dessus.
+
+#### 1. 🔧 Le déclenchement de 4b bis était trop large — 9 entrées, dont 7 sans portée (commit `f9dac5e3`)
+
+En allant vérifier les 9 exemptions une par une, le vrai discriminant est apparu, et ce n'est pas la date : **7 d'entre elles couvrent des lignes qui portent toutes un `source_confirmed_at` frais**, c'est-à-dire qu'un cron relit leur source tous les jours. L'âge du commentaire n'a alors aucune portée — le tampon a déjà répondu à sa place. `shinyapps.io` couvre 19 lignes, le tableau de bord choléra de l'OMS 10, le bulletin méningite 4 : aucune ne dépend de l'exemption.
+
+Le déclenchement se limite désormais aux deux cas où un humain est le seul recours : **(a)** l'exemption tient des lignes hors du filet à elle seule — personne ne relit cette source ; **(b)** elle ne correspond plus à aucune ligne. **9 entrées → 1.**
+
+Garde-fou dans l'autre sens, écrit dans le code : un tampon frais dit « quelqu'un a relu cette source », pas « tout ce que cette source publie a été ingéré ». C'est exactement la distinction que la panne PAHO du 30/08 a coûté 16 jours. La seconde question est celle de la section 4j, pas de celle-ci.
+
+#### 2. ⚠️ Correction : mon constat sur le WER était vrai à la lettre et faux sur le fond
+
+J'ai écrit ce soir « le motif WER est faux aujourd'hui, et c'est vérifié ». La phrase du commentaire — « issue 31 is still the latest published issue » — était bien fausse. Mais elle parlait **du journal**, qui paraît tous les vendredis, alors que ce qui compte est **la mise à jour choléra multi-pays**, qui est **mensuelle**. J'ai conclu d'une phrase mal formulée que les données étaient périmées, sans ouvrir les éditions. Vérifié depuis, en téléchargeant les PDF des éditions 31 à 34 depuis `iris.who.int` :
+
+```
+wer101-31  07 août  (sem. 31)  → « Multi-country outbreak of cholera — Data as of 28 June 2026 »
+                                  tableau pays complet, « a 60% increase from the previous month »
+wer101-32  14 août  (sem. 32)  → choléra cité dans la liste de signaux uniquement, aucun chiffre pays
+wer101-33  21 août  (sem. 33)  → idem (dossier Bundibugyo/RDC)
+wer101-34  28 août  (sem. 34)  → idem
+```
+
+**Nos six lignes correspondent à la source au chiffre près** : RD Congo 32 193 cas / 908 décès, Soudan du Sud 10 526 / 111, Soudan 117 décès — tous relevés dans le texte de l'édition 31. Et leur `date = 2026-06-28` est la date d'arrêt revendiquée par l'édition elle-même (« Data as of 28 June 2026 »), pas un horodatage de synchronisation.
+
+**Rien n'était périmé.** L'entrée porte maintenant `verifiedOn: 2026-09-01` et `recheckAfterDays: 35` — un mois plus une marge : la mise à jour de juillet était attendue début septembre, et c'est son absence après le ~6 octobre qui méritera une question. Le commentaire dit désormais ce que l'exemption affirme réellement, au lieu d'une phrase sur le journal qui redevient fausse tous les vendredis.
+
+#### 3. 🔴 Le Pérou, lui, cachait un vrai retard — et c'est la sonde qui l'a sorti
+
+L'exemption `dge.gob.pe/sala-situacional-dengue` tient une ligne à elle seule. La source n'est effectivement pas scrapable : la page cité redirige vers `app7.dge.gob.pe/maps/sala_metaxenica/`, qui redirige à son tour vers `/maps2/shiny_metaxenicas_web/`, et la liste des bulletins est elle aussi en JavaScript. Ouverte dans le navigateur :
+
+```
+app Shiny (MINSA / CDC Perú), 01/09 :  DENGUE PERÚ — Situación 2026, hasta la SE 33
+                                        46 669 casos acumulados · 57 defunciones acumuladas
+en base                              :  42 440 cas · 48 décès, date 2026-08-08
+```
+
+**Retard réel de 4 229 cas et 9 décès**, la semaine épidémiologique 33 s'étant terminée le 16 août. `verifiedOn` est **délibérément laissé au 08/08** pour que le rapport continue de le signaler tant que la ligne n'est pas corrigée — stamper aujourd'hui aurait fait taire un écart avéré.
+
+**Non corrigé en base, et volontairement.** Le compteur de décès de l'app porte la note « *(**) Se incluyen defunciones por la enfermedad y en investigación* » : les 57 incluent des décès encore en investigation, ce qui n'est pas nécessairement la même mesure que les 48 stockés. Le compteur de cas n'a pas cette réserve. Écrire les deux d'un coup reviendrait à changer la définition d'une colonne sans le dire. À trancher par David.
+
+#### 4. ✅ Motif mort supprimé
+
+`ecdc.europa.eu/en/mpox/surveillance` : **0 ligne sur les 294 de la table**, actives ou non. Le motif visait une forme d'URL absente des données — la ligne ECDC mpox qui existe cite `/en/mpox`, sans `/surveillance`, et n'a donc jamais été couverte. Supprimé.
+
+#### 5. ✅ Le reliquat ReliefWeb du 26/08 est clos
+
+Vérifié en base ce soir : trois des quatre lignes ont été **re-sourcées vers la Communauté du Pacifique** (`spc.int/phd/epidemics`, reconnue éditeur officiel par le commit `47330fa6` du 30/08) et sont actives avec des chiffres plus frais — Samoa américaines 1 044 cas (11/08), Wallis-et-Futuna 70 (21/08), Vanuatu 91 (16/08). La quatrième, **Dengue / Kiribati**, cite toujours ReliefWeb mais est `active=false` et `source_priority=0` : la fenêtre d'affichage de 60 jours exige `source_priority >= 3`, donc **elle n'est ni sur le site public ni dans le jeu que lit la section 4m**. L'URL interdite ne subsiste que dans une ligne que personne ne voit. Reste à David s'il veut la blanchir par principe — aucune urgence légale, aucune exposition.
+
+#### 6. ✅ Mpox / RDC : aucun impact utilisateur, sort du reliquat
+
+Les deux lignes Mpox de RDC sont `active=false` **et `source_priority=0`**, donc hors de la fenêtre d'affichage : la citation du sitrep n° 67 alors que le n° 68 existe est un vrai retard d'ingestion, mais **invisible pour un utilisateur**. Ce point était surévalué dans le reliquat d'hier et de ce soir ; il redescend au rang de dette d'ingestion, pas de défaut affiché.
+
+#### Ce qui reste réellement chez David après cette passe
+
+1. **La ligne Dengue / Pérou** — 4 229 cas de retard, chiffre vivant relevé ci-dessus, à corriger à la main une fois tranchée la question « décès confirmés seuls ou y compris en investigation ». C'est le seul point avec un impact utilisateur.
+2. **L'ingestion de la mise à jour choléra du WER** — toujours **gros effort**, toujours non construit (garde-fou 1), mais l'estimation est désormais plus précise : la mise à jour est **mensuelle** et vit dans le PDF de l'édition, téléchargeable via `iris.who.int/server/api/core/bitstreams/…/content` (lien « Download full edition » de la page de l'édition), et `pdf-parse` en sort le texte proprement — c'est ainsi que les chiffres ci-dessus ont été relevés. Un cron mensuel qui détecte l'édition portant « Multi-country outbreak of cholera » et en extrait les pays est faisable ; ce n'est plus une inconnue, c'est un chantier chiffrable.
+3. **Dengue / Kiribati** — URL ReliefWeb dans une ligne non affichée. Cosmétique.
+
+**Statut du reliquat : 4 points sur 6 clos** (déclenchement resserré, motif mort supprimé, ReliefWeb, Mpox/RDC), **1 corrigé sur le fond** (WER — rien n'était périmé), **1 vrai défaut trouvé et documenté sans être écrit en base** (Dengue / Pérou).
