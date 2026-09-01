@@ -1,6 +1,120 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
+## 📅 Session linkedin-hwg-monitoring — 01/09/2026 (9h)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` du 01/09 dans ce fichier ni dans `content-log.md` à l'ouverture. La seule entrée du 01/09 déjà présente appartient à la **session interactive de David de ~05h50-06h16** → **premier déclenchement de cette routine aujourd'hui**. Horloge machine à l'heure (`Tue Sep 1 09:04 2026`). Navigateur : dernière entrée d'appairage de `_shared/browser-status.md` **🟢 RÉTABLI (31/08 ~13:05)**, aucun bridage, `23c7ecdd-…` sélectionné directement (§7).
+
+**Détail intégral des 3 commentaires publiés, de leurs rapports QA et des carry-over : `content-log.md`, entrée du jour.**
+
+---
+
+### 1️⃣ MESSAGERIE — 2 MESSAGES ENTRANTS DEPUIS 6h, LES DEUX TRAITÉS
+
+**Liste des 10 conversations lue en entier, triée par récence.** Les deux plus récentes sont **entrantes et postérieures à la session interactive de David** ; la troisième est son propre envoi de 05h50.
+
+- ⭐ **Dossa Paul YAOÏTCHA — 06h34, entrant.** Répond au DM que David lui a envoyé à 06h16. Réaction 🙏 sur notre message, puis un message qui **communique spontanément son e-mail et son numéro WhatsApp** et se présente (« Vétérinaires de base, actuellement en Master One Health et Analyse des Risques Sanitaires », Bénin). Traité en section 2.
+- ⭐⭐ **Isaias Fernandes Co — 06h07, entrant.** *AI & Technologies Officer, OMS AFRO, pilote **PDX** (Preparedness Data Exchange, 47 États membres)*. **Il accepte le principe de l'appel** proposé le 29/08 : « *That's great. This week and the next (i will be at an event) will be busy. Could we do after next week?* ». ⚠️ **Ce fil n'était pas dans les 10 conversations listées les 31/08** (son message précédent datait du 29/08 et le fil était descendu sous le rang 10) — il remonte aujourd'hui parce qu'il vient de répondre. Traité en section 2.
+- **Harvey Basivikidi** : notre relance, longtemps en file, a été **envoyée par David à 05h50**. Aucune réponse encore, notre message est le dernier du fil.
+- **Inchangés, rien n'est dû** : SOUAD BELKACEMI. · Buno Tona · John Omari Baso · Bobossam Cissoko · Summer Galloway, Ph.D. · Abou A. SOUMAH · **Dr. Siaka Condé** (« *Let me look at this for a moment* », 29/08, toujours pas revenu) · Alain BASHIZI · Rodrigo Olave Hurtado.
+
+---
+
+### 2️⃣ 🔒 DM — 3 RÉDIGÉS, TOUS EN FILE DE VALIDATION, AUCUN ENVOYÉ
+
+**Règle du 23/07 appliquée : aucun de ces textes n'est envoyé par la routine.** Quota DM du jour : **2 envoyés sur 8** (ceux de 05h50 et 06h16, sur ordre de David) ; un DM en file ne consomme rien tant qu'il n'est pas envoyé. **Notification push envoyée en fin de run.**
+
+#### 🔒 DM 1 — **Dossa Paul YAOÏTCHA** (`/in/dossa-paul-yaoïtcha-41202b2b7/`), FR, vouvoiement — **EN FILE**
+
+Fil relu intégralement (§4) : 3 messages, recopiés verbatim dans `tmp/thread-dossa-dm-0109.txt`. *langue du fil = fr ; langue du brouillon = fr.*
+
+⚠️ **Demande de contact hors plateforme — signalée explicitement, comme la politique commune l'exige.** Il donne son e-mail et son WhatsApp de sa propre initiative. Le brouillon **ne partage aucune coordonnée de David, ne s'engage sur aucun autre canal**, et ne décline pas frontalement : il constate qu'on reste sur LinkedIn et repart sur le fond (§3). Ses coordonnées ne sont recopiées nulle part hors du fil verbatim.
+
+**Arbitrage CTA, explicite.** Anti-répétition vérifié sur l'intégralité du fil : ni le nom HealthWatch Global, ni le lien, ni l'essai Pro n'y ont jamais été envoyés. Un aller-retour de fond a bien eu lieu avec cette personne, mais **dans le fil public de commentaires, pas ici**, et son dernier message est une politesse doublée d'un échange de coordonnées. **Décision : aucun CTA, aucun lien, et après correction du relecteur le nom HWG lui-même a disparu du texte.** Répondre à un geste personnel par un argumentaire produit aurait été le mauvais registre.
+
+🔴 **Le relecteur a fait échouer le 1er jet sur la question 4, et il avait raison.** Le brouillon écrivait « *les bulletins publics que compile HealthWatch Global* » — formulation **non couverte par le registre produit** : ce qu'il couvre, c'est la ligne publique de foyer (maladie, pays, cas, décès, une date, la source), pas une description de HWG comme compilateur de bulletins. Corrigé en remplaçant par l'objet réellement couvert, la ligne de foyer et ses champs. Deux blockers `ngram.history` avaient par ailleurs été corrigés avant le relecteur (« les bulletins que j'agrège », « une fois la riposte close », formules déjà servies).
+
+`QA : mécanique PASS après correction (554 car., limite 1300, 2 paragraphes, fr/fr, 0 chiffre, 0 lien, 0 CTA, 0 tiret cadratin) — 2 passages FAIL antérieurs sur ngram.history, corrigés | relecteur VERDICT: REECRIRE 4 au 1er jet (affirmation produit non couverte), corrigé par remplacement — 11 PASS sur 12 par ailleurs | faits cités : aucun | registre du 01/09 (09:04) | statut : en file de validation`
+
+> Bonjour Paul, enchanté également. Merci pour vos coordonnées, je reste plutôt sur LinkedIn pour ce type d'échange, c'est là que je suis le plus régulier.
+>
+> Il me reste d'ailleurs une question de notre fil public, celle à laquelle vous n'avez pas encore eu l'occasion de répondre : ces fiches de suivi de contacts, quand la riposte s'arrête, sont-elles archivées quelque part, ou s'éteignent-elles avec l'équipe qui les a remplies ? De mon côté, une ligne de foyer porte la maladie, le pays, les cas, les décès, une date et sa source. Rien de cette couche.
+
+#### 🔒 DM 2 — **Isaias Fernandes Co** (`/in/isaiasco/`), EN — **EN FILE** ⭐⭐
+
+Fil relu intégralement (§4) : 8 messages depuis le 18/08, recopiés verbatim dans `tmp/thread-isaias-0109.txt`. *langue du fil = en ; langue du brouillon = en.*
+
+**Ce que le message fait, et ce qu'il ne fait pas.** Il accepte le créneau qu'Isaias propose et lui laisse fixer l'heure, ce que David lui avait déjà explicitement offert le 29/08 (« *I will let you propose a time that works on your side* »). **Aucune date calculée** n'y figure : la formulation relative du destinataire est reprise telle quelle, conformément à §5 item 2. Les deux questions de fond encore ouvertes (versionnement des ancrages, dénominateur des 8-10 %) sont **explicitement mises en attente** plutôt que reposées une troisième fois.
+
+**Arbitrage CTA.** Le lien healthwatch-global.com et l'essai Pro **ont déjà été envoyés dans ce fil**, le 18/08 à 20h26. Anti-répétition appliquée : **rien n'est resservi**, le brouillon ne contient ni lien, ni nom de produit, ni offre.
+
+`QA : mécanique PASS au 1er passage (154 car., limite 1300, 2 paragraphes, en/en, 0 blocker, 0 warn, 0 review) | relecteur VERDICT: ENVOYER, 12 PASS au 1er jet, aucune réserve — vérifie nommément l'absence de date calculée et la non-répétition du CTA du 18/08 | faits cités : aucun | registre du 01/09 (09:04) | statut : en file de validation`
+
+> After next week is fine, and good luck with the event.
+>
+> Send a slot once you are back and I will work around it. Nothing here needs answering before then.
+
+#### 🔒 DM 3 — **Julien Tuba** (`/in/julien-tuba-a31abb143/`), FR, vouvoiement, **message de bienvenue** — **EN FILE**
+
+*Medical Doctor | Epidemiologist & Immunization Expert | Public Health & Humanitarian Emergencies Specialist | M&E & Health Systems Strengthening | **AVoHC at Africa CDC** | PVAC | Senior Laboratory and Surveillance Officer*, RDC, IQVIA, 1 117 abonnés, **29 relations en commun**. **Aucun fil : premier message.** Invitation partie **sans note** le 16/08 (blocage plateforme sur les notes ce jour-là), **acceptée le 31/08** — non traitée par les runs de la veille.
+
+Langue : **FR**, choisi sur la géographie (RDC) et sur ses republications francophones, malgré un intitulé en anglais. Premier contact à froid : **aucun lien**, règle inchangée.
+
+🔴 **Le relecteur a fait échouer le 1er jet sur deux points réels, dont un qui aurait été coûteux.**
+- **(6) Déduction présentée comme un fait.** Le brouillon écrivait « *vous croisez la donnée là où elle se fabrique, en amont de la ligne de bulletin* » et parlait d'« *une équipe déployée* ». Rien dans son intitulé ni dans son activité publique n'établit ni l'un ni l'autre. Retiré au profit de ce qui est lisible au verbatim.
+- **(9) Terrain politique.** La question posée était « *qu'est-ce qui se perd en route* » entre remontée de terrain et bulletin — elle **présuppose une perte** et demande, dès le premier message, à un agent en poste de commenter la chaîne de remontée de sa propre institution. Remplacée par une question sans présupposé, qui porte sur **notre** côté : ce qu'un lecteur de bulletin ne voit pas et que lui voit.
+- Un blocker `ngram.history` a été corrigé au passage sur « senior laboratory and surveillance officer » — **faux positif de citation obligatoire** (c'est son intitulé, archivé dans nos fichiers), contourné en ne le recopiant pas mot pour mot.
+
+`QA : mécanique PASS après correction (605 car., limite 1300, 3 paragraphes, fr, 0 chiffre, 0 lien, 0 CTA) — threadLang null (aucun fil, premier contact), 1 review hwg.claim couverte par coverage.sourceHosts (africacdc.org, afro.who.int) et la copie publique du site | relecteur VERDICT: REECRIRE 6, 9 au 1er jet, corrigés — 10 PASS sur 12 par ailleurs | faits cités : aucun | registre du 01/09 (09:04) | statut : en file de validation`
+
+> Bonjour Julien, merci d'avoir accepté l'invitation. Elle était partie sans un mot, je répare.
+>
+> Ce qui m'avait décidé, c'est votre intitulé : AVoHC à Africa CDC, et à côté le laboratoire et la surveillance. Moi je suis du côté aval, je lis les bulletins publiés d'Africa CDC et de l'OMS AFRO pour tenir une base à jour chez HealthWatch Global, et la RDC est ce que je suis de plus près.
+>
+> D'où ma question, qui porte sur mon côté à moi : quand vous lisez un bulletin hebdomadaire sur un pays que vous connaissez de près, qu'est-ce que vous y voyez que quelqu'un qui n'y a jamais mis les pieds ne verra pas ?
+
+---
+
+### 3️⃣ ✅ INVITATION REÇUE — 1 ACCEPTÉE
+
+⭐ **Abubakar Sadiq Tahir** (`/in/abubakar-sadiq-tahir-626085166/`) — *Public Health Specialist | Epidemiologist | Health Systems Strengthening | **Disease Surveillance & Outbreak Response** | Digital Health & Data Management | **WHO & Malaria Consortium** Experience*, Kano (Nigéria), **1 relation en commun (Horace DEGNONVI)**. **Déjà suivi par nous le 31/08** ; il envoie l'invitation à son tour. Cœur de cible, aucune ambiguïté. Identité vérifiée **dans le même appel JS que le clic** (slug comparé, absence des deux profils déjà écartés contrôlée dans la même carte). ✅ Compteur passé de **3 à 2**, sa carte a disparu de la liste.
+
+**Pas de welcome DM.** Son activité publique se réduit à des republications de contenu carrière (offres d'emploi, coup de gueule sur les entretiens), rien dans le périmètre épidémiologique. **Aucun hook honnête disponible : §10 s'applique, ne pas inventer.** Reprendre dès qu'il publie dans le périmètre.
+
+**Les 2 autres invitations en attente restent laissées**, décisions du 31/08 non rejugées : **Zachariah G. Houdari** (services financiers), **OLAOLUWA PHILIP** (géospatial/climat sans santé publique).
+
+---
+
+### 4️⃣ ➖ ABONNÉS ET RELATIONS — 1 FOLLOW-BACK EXÉCUTÉ
+
+Liste `/mynetwork/network-manager/people-follow/followers/` ouverte, triée par récence : **402 personnes** (399 au créneau de 17h la veille). Les trois de plus sont **Abubakar Sadiq Tahir** et **Julien Tuba** (déjà « Suivi »), plus un profil neuf.
+
+✅ **Follow-back exécuté — Jean-Baptiste Ferrand** (`/in/jean-baptiste-ferrand-2077188b/`), *Directeur Général Associé de LIHOPE*, Lihope SAS, Dijon, 444 abonnés, 3e degré. Nous suit depuis août 2026. **Pertinence périphérique mais réelle** : il republie le **LaNSA** (Laboratoire National de Sécurité sanitaire et phytosanitaire des Aliments, Togo) sur la sécurité sanitaire des aliments et son partenariat avec l'INH — champ adjacent One Health, géographie couverte par HWG. **Suivre plutôt que connecter**, conformément à l'arbitrage du SKILL pour un profil périphérique sans hook spécifique. Bouton principal du profil cliqué en coordonnées (3 boutons « Suivre » sur la page, les autres appartenant à des contenus republiés) ; état vérifié après coup : **« Suivre » → « Suivi »**. **Quota suivis : 1/7-10** au moment de ce clic, **3/7-10** à la clôture (voir ci-dessous).
+
+**Relations : 287** (286 avant l'acceptation d'Abubakar Sadiq Tahir). Liste `/mynetwork/invite-connect/connections/` triée « Ajouts récents » relue : **Julien Tuba, connexion le 31 août**, jamais archivée par les runs de 13h et 17h de la veille — rattrapée ce run, welcome DM rédigé (section 2). Les autres ajouts récents (Dossa Paul YAOÏTCHA, Alexandre APPROUTSADI YOKSOU, Buno Tona) sont déjà traités.
+
+✅ **Recherche active menée en fin de run — 2 suivis de plus.** Requête `people` sur *field epidemiologist outbreak surveillance* : 14 profils remontés, **12 déjà présents** dans le tracker ou les archives (Habtamu Bogale, Alastair Donachie, Seedia S Jawneh, Nagla A. Ahmed, Nicholas Laramee, Barnabas Bessing, Didier Koumavi EKOUEVI, Baba Ceesay, Lorenzo Pezzoli, Kassim Kamara, N'Da Konan Michel Yao, Buno Tona), donc **non ré-évalués** — exactement ce à quoi sert le tracker. Deux profils neufs, tous deux suivis :
+
+✅ **Mamoudou Kindy K. Diallo** (`/in/mamoudou-kindy-k-diallo-3678011a1/`) — *Field Epidemiologist | Disease Surveillance • Outbreak Response • Research Coordination | M2 Santé Publique*, **Ministère de la Santé et de l'Action sociale** + Institut de santé et de développement, Dakar, 2e degré, 546 abonnés, **4 mutuels dont Didier Koumavi EKOUEVI et N'Da Konan Michel Yao**. Fonction et employeur vérifiés sur pièce. **Suivre plutôt que connecter** : activité publique quasi nulle (deux commentaires, 2 et 9 mois), **aucun hook honnête disponible pour une note**, §10. Bouton « Suivre » de la section Activité ciblé par son conteneur (2 boutons « Suivre » sur la page), état vérifié : **« Suivi »**. **Quota suivis : 2/7-10.**
+
+✅ **Jacob Banda** (`/in/jacob-banda-8598781b3/`) — *Surveillance Officer | Field Epidemiologist | Data Analyst*, **Zambia National Public Health Institute (ZNPHI)** + Levy Mwanawasa Medical University, Zambie, 2e degré, 114 abonnés, mutuel **Buno Tona**. **Il publie, et dans le périmètre** : post de 10 h sur le lancement de la formation SIG de la cohorte 8 du FETP avancé. Suivi exécuté (« Suivre » → **« Suivi »**), puis **commentaire 3/7 publié sous ce post** (détail dans `content-log.md`). **Quota suivis : 3/7-10.** ⭐ Bon candidat connexion dès qu'un hook frais se présente : il est le seul des deux à avoir une activité publique réelle.
+
+Le quota de suivis reste sous la fourchette basse : l'essentiel de l'effort du run est passé sur les trois commentaires de fond et les trois DM. À reprendre au créneau de 13h, la file du tracker est fournie (Mosoka Fallah, Alieu Sowe, Flore Estelle BALANA ESIENE, BANZA Freddy Mutoka, Brice EDZOA ESSOMBA, Baraka Kweli Birindwa, les cosignataires de l'article Harvey Basivikidi).
+
+---
+
+### 5️⃣ ➖ NOTES DE CONNEXION — AUCUNE
+
+**0/7.** Aucune invitation envoyée ce run. **Mohammad Ilias Hossain** : rien retenté, conformément au carry-over du 31/08 (« ne pas retenter par le même chemin » après 4 échecs sur 2 surfaces) ; la note reste rédigée et QA-validée, **non réécrite**. **Yakoza Nyirenda** : invitation du 30/08 toujours en attente.
+
+---
+
+### 6️⃣ 💬 COMMENTAIRES
+
+3 publiés ce run (**1/7 Dr. Jean Kaseya**, **2/7 page ECDC**, **3/7 Jacob Banda**), tous trois en top-level sur des posts sans aucun commentaire préalable. Texte intégral, rapports QA, verdicts du relecteur, corrections appliquées et confirmations de publication : `content-log.md`, entrée du jour.
+
+---
+
 ## 📅 Session interactive — 01/09/2026 (~06h), sur demande explicite de David (« gérons les fils ouverts maintenant »)
 
 **Contexte** : suite directe de la session du 31/08 17h. David a demandé de vérifier les trois fils de commentaire laissés en carry-over (James Schlitt, Melvin Sanicas, Dossa Paul YAOÏTCHA) avant de clore la session.

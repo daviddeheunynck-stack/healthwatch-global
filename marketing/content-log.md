@@ -2,6 +2,146 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session linkedin-hwg-monitoring — 01/09/2026 (9h)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` datée du 01/09 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture (dernière en date : 31/08, 9h). La seule entrée du 01/09 déjà présente appartient à une **session interactive de David vers 05h50-06h16** (envoi des DM Harvey Basivikidi et Dossa Paul YAOÏTCHA sur ordre explicite) — run intentionnellement distinct → **premier déclenchement de cette routine aujourd'hui**. Horloge machine à l'heure : `date` renvoie **Tue Sep 1 09:04 2026**.
+
+**🖥️ Navigateur** : `_shared/browser-status.md` lu avant ouverture. Dernière entrée d'appairage **🟢 RÉTABLI (31/08 ~13:05)**, aucune entrée `🔴` du jour → aucun bridage. `23c7ecdd-…` sélectionné directement sans confirmation (§7, session planifiée), malgré l'invite de l'outil à faire choisir entre deux navigateurs. Session sans incident, hors deux timeouts CDP isolés (`Runtime.evaluate` sur un scroll de fil, `Page.captureScreenshot`), contournés par relance immédiate — sans effet sur les actions.
+
+**Registre de faits et registre produit régénérés ce run** (`build-claimable-facts.mjs` → **226 faits citables sur 110 lignes affichées**, 81 lignes `is_seed` exclues, 5 faits périmés ; `build-product-claims.mjs` → 5 claims manuelles en vigueur, **aucune ajoutée ce run**).
+
+**Quotas à la clôture** : commentaires **3/7 publiés** (Dr. Jean Kaseya, page ECDC, Jacob Banda) · **DM 3 rédigés et 🔒 EN FILE DE VALIDATION** (Dossa Paul YAOÏTCHA, Isaias Fernandes Co, Julien Tuba), 2 envoyés sur 8 ce matin par David en session interactive · suivis **3/7-10** · **1 invitation reçue acceptée** (3 → 2 en attente) · notes de connexion **0/7** · **0 écriture en base**.
+
+---
+
+### 1️⃣ SUIVI DES FILS ACTIFS (§14) — AUCUNE RETOMBÉE NEUVE, LES 5 FILS ROUVERTS UN PAR UN
+
+Les fils encore actifs ont été rouverts **sur le post, pas sur la notification**. Le carry-over de 17h en désignait trois comme prioritaires ; aucun n'a bougé, et la session interactive de 6h avait déjà fait le même constat trois heures plus tôt.
+
+- **James Schlitt, PhD, MPH** (`urn:li:activity:7500143469085057027`, post de David) — notre réponse de 15 h reste le dernier message, **9 impressions**, 0 réponse. Post à 82 impressions. Le carry-over le donnait « prioritaire sur tout le reste s'il répond » : il n'a pas répondu, seulement **réagi au post**.
+- **Melvin Sanicas** (`urn:li:activity:7499221325358501889`) — notre 2e tour de 15 h est le dernier de la liste des commentaires ; les deux entrées plus récentes du post (Sinan Almukhtar, Global Health Press) sont des **commentaires de premier niveau vieux de 2 jours**, pas des réponses à notre sous-fil. Rien de dû.
+- **Dossa Paul YAOÏTCHA** (`urn:li:activity:7499435689214758912`) — notre commentaire de 15 h reste le dernier. Il l'a **aimé** (notification à 15 h), sans contre-réponse textuelle. La conversation publique a trouvé sa fin ; **elle s'est déplacée en messagerie**, voir section 3.
+- **Oke Ikpekpe** (`urn:li:activity:7499051354368331776`) — notre 7e tour (23 h) est toujours le dernier. Consigne du carry-over honorée : **rien relancé**.
+- **Mohammad Ilias Hossain** (`urn:li:activity:7499900718590595072`) — notre commentaire de 19 h est toujours le seul du post.
+
+**Notifications parcourues : 10 cartes distinctes** (l'affichage les duplique, dédoublonnées avant lecture). Aucune n'est postérieure à 10 h, donc toutes couvertes par les créneaux de 13h/17h de la veille ou par la session de 6h. Sans action : une consultation de profil anonyme (16 h) et le relevé d'impressions du post de David (82 impressions, 1 vue de profil).
+
+---
+
+### 2️⃣ 💬 COMMENTAIRES PUBLIÉS — 3
+
+#### ✅ COMMENTAIRE 1/7 — **Dr. Jean Kaseya** (`/in/jean-kaseya/`), EN, top-level
+
+`urn:li:activity:7500220920481873920`, 15 h. *Director General @AfricaCDC | Public Health | Humanitarian*. **62 réactions, 10 republications, aucun commentaire** — nous sommes le premier. Profil **libre de tout blocage**. *langue du fil = en ; langue du brouillon = en.*
+
+**Pourquoi ce post et pas l'autre.** Kaseya a publié deux fois dans les 15 dernières heures. Le post de 12 h (représentation d'Africa CDC au *Joint Task Force on Global Health Architecture Reform*, « equity and sustainable financing », « health security and sovereignty ») est du **terrain politique pur**, §10 — écarté, comme les trois fois précédentes, et pour la même raison. Celui-ci est opérationnel : *« Ebola is moving. Our response must move faster »*, sur la riposte en RDC. Il touche la ligne que HWG suit le plus.
+
+**L'angle publié.** La vitesse d'une riposte n'est pas observable de l'extérieur ; ce qui parvient à un lecteur en aval, c'est une **date**. La ligne Ebola/RDC porte 5 794 cas et 2 786 décès arrêtés au **26 août** (WHO DON616, registre du jour, `ageDays 3`). Le compteur est ce que tout le monde cite ; la date est ce qui dit **quelle part de la flambée est visible**.
+
+🔴 **Le relecteur a fait échouer le 1er jet sur deux points réels, et les deux tenaient dans le même paragraphe.**
+- **(4) Affirmation produit non couverte.** Le brouillon écrivait « *The gap between the cutoff and the publication is the only part of the speed that is visible from outside* ». Or une ligne de foyer HWG ne porte **qu'une seule date**, celle de l'arrêté de la source : aucun champ n'enregistre la date de publication du bulletin. L'écart que la phrase prétend mesurer **n'est mesurable nulle part chez nous**.
+- **(9) Terrain politique, par lecture possible.** Sous un post du DG d'Africa CDC affirmant que la riposte doit accélérer, ce même paragraphe posait publiquement l'hypothèse d'une riposte « *that has not* » accéléré et redéfinissait « speed » comme le délai de publication des données de son institution. Lisible comme un reproche, ce que §9 interdit dans les deux sens.
+- **Correction appliquée : suppression complète du 2e paragraphe**, comme le relecteur le demandait. Il notait que le 1er paragraphe passe les 12 contrôles tel quel.
+
+⚠️ **Faux positif mécanique documenté, ignoré sur pièce** : `facts.unsourced` sur le **chiffre 26**, qui est le **quantième de « dated 26 August »**, lu comme un chiffre épidémiologique parce que le mot « deaths » est à moins de 40 caractères. La date est exactement ce que la règle de fraîcheur exige. Le relecteur a revérifié 5 794, 2 786 et le 26 août contre la ligne `bd1c3a46-…` du registre.
+
+`QA : mécanique FAIL sur le seul faux positif « 26 » (268 car., 1 paragraphe, en/en, 0 tiret cadratin, 0 lien, 0 CTA) — 2 blockers antérieurs corrigés avant le relecteur : ngram.history sur « 5 794 cases and 2 786 deaths », formule reprise mot pour mot du post de David de la veille (auto-citation, reformulée quand même), puis « ebola line for dr congo » | relecteur VERDICT: REECRIRE 4, 9 au 1er jet, corrigé par suppression du 2e paragraphe — 10 PASS sur 12 par ailleurs | faits cités : Ebola/RD Congo `bd1c3a46-…`, 5 794 cas et 2 786 décès au 26/08, source WHO DON616 | registre du 01/09 (09:04) | statut : publié le 01/09`
+
+> Speed reaches someone outside the response as a date, not as a number. The Ebola row I keep for DR Congo stands at 5,794 cases with 2,786 deaths, dated 26 August, and the count is what gets quoted. The date is what tells me how much of the outbreak I can actually see.
+
+**Publication confirmée** : texte comparé **caractère pour caractère dans le même appel JS que le clic** (268 attendus, 268 côté éditeur, `identique: true`, URL du post revérifiée dans le même appel). Après rechargement : **une seule occurrence**, horodatage « maintenant ».
+
+#### ✅ COMMENTAIRE 2/7 — **page ECDC** (`/company/ecdc/`), EN, top-level
+
+`urn:li:activity:7500168211833909249`, 19 h. **15 réactions, aucun commentaire** — nous sommes le premier. Page **libre** (le post écarté le 31/08 n'avait pas créé de blocage). *langue du fil = en ; langue du brouillon = en.*
+
+**Le post** annonce le **CDTR** (Communicable Disease Threats Report) du **22-28 août**, 25 pages, couvrant diphtérie, Ebola, grippe porcine A(H1N2), virus respiratoires, FHCC, dengue, chikungunya, Vibrio, West Nile, choléra, poliovirus et les déploiements d'experts. C'est **une de nos sources amont**, pas un post de commentaire d'actualité.
+
+**L'angle publié.** Un rapport hebdomadaire a **une** fenêtre ; les lignes qu'il contient n'en ont pas qu'une. Sous le seul intitulé « Ebola », HWG porte des lignes dont les dates d'arrêt n'ont rien à voir : **RDC arrêtée au 26 août**, dans la fenêtre du numéro, et **Ouganda toujours au 28 juillet**, où la flambée est close (`active: false`) et le compteur s'est arrêté. En aval, tout cela arrive sous le même cadre hebdomadaire, et c'est ce cadre que le lecteur prend pour l'âge de la donnée.
+
+🔴 **Le relecteur a fait échouer le 1er jet sur un point factuel réel (questions 1 et 4, même défaut).** Le brouillon écrivait « *on my side that heading is two rows* ». **C'est faux** : le registre porte **quatre** lignes Ebola, dont deux que le texte ignorait — **France au 04/07** et **Allemagne au 28/07**. Un décompte affirmé et contredit par notre propre registre, sous le post de l'agence qui en est la source. Corrigé en retirant toute affirmation de décompte (« *that one heading covers rows that do not share a date* »), et « *Both arrive downstream* » corrigé en « *They all arrive* » en cohérence.
+
+⚠️ Même faux positif « 26 » que ci-dessus, en `warn` cette fois.
+
+`QA : mécanique WARN (540 car., 2 paragraphes, en/en, 0 chiffre de traction, 0 lien, 0 CTA, aucun blocker) — seul warn : le faux positif « 26 » | relecteur VERDICT: REECRIRE 1, 4 au 1er jet (décompte « two rows » contredit par le registre), corrigé par retrait du décompte — 10 PASS sur 12 par ailleurs | faits cités : Ebola/RD Congo `asOf 2026-08-26`, Ebola/Ouganda `asOf 2026-07-28` `active: false` | registre du 01/09 (09:04) | statut : publié le 01/09`
+
+> The heading is one disease, but the dates underneath it are not one date. Ebola is in this issue, and on my side that one heading covers rows that do not share a date: DR Congo dated 26 August, inside your window, and Uganda still dated 28 July, where the outbreak closed and the count stopped moving.
+>
+> They all arrive downstream under the same weekly frame, and the frame is what a reader takes for the age of what is in it. The cutoff each row carries is what decides whether a number is current, and it is the first thing to disappear.
+
+**Publication confirmée** : 538 attendus, 538 côté éditeur, `identique: true`, URL revérifiée dans le même appel JS que le clic. Après rechargement : une seule occurrence, **2 paragraphes intacts**.
+
+#### ✅ COMMENTAIRE 3/7 — **Jacob Banda** (`/in/jacob-banda-8598781b3/`), EN, top-level
+
+`urn:li:activity:7500293159126761472`, 10 h. *Surveillance Officer | Field Epidemiologist | Data Analyst*, **Zambia National Public Health Institute (ZNPHI)**, Zambie, 2e degré, 114 abonnés, mutuel **Buno Tona**. **Aucun commentaire sur le post, nous sommes le premier.** Profil découvert en **recherche active ce run** (voir section 4 de `linkedin-contacts.md`), suivi dans le même passage. *langue du fil = en ; langue du brouillon = en.*
+
+**Le post** annonce le lancement de la **formation SIG de la cohorte 8 du FETP avancé** à ZNPHI, sur QGIS : cartographie des maladies, analyse spatiale, production de cartes de risque.
+
+**L'angle publié.** Une carte de risque **hérite de la maille géographique dans laquelle sa source a publié**, et cette maille se décide en amont, pas chez celui qui dessine la carte. D'où la question posée à la cohorte : quand la même flambée arrive au niveau district dans un bulletin et en total national dans le suivant, que devient la carte déjà construite sur le premier ?
+
+**Choix éditorial assumé.** Le post est en grande partie une annonce de formation avec une morale générale sur la montée en compétences — le genre de matière écartée les jours précédents (Baraka Kweli Birindwa le 28/08) faute de prise analytique. Il a été retenu parce qu'il porte quand même **un objet technique précis** (la carte de risque) sur lequel une vraie question d'arbitrage opérationnel existe. Le texte ne contient **aucun chiffre, aucune affirmation sur HWG** : c'est délibéré, l'angle tient sans en avoir besoin.
+
+`QA : mécanique PASS au 1er passage (384 car., 2 paragraphes, en/en, 0 blocker, 0 warn — seul info : le « 8 » de « Cohort 8 » vient du post) | relecteur VERDICT: PUBLIER, **12 PASS au 1er jet**, aucune réserve — relève nommément que la limite est attribuée à l'outil et à la chaîne de données, pas à la formation ni à l'auteur | faits cités : aucun | registre du 01/09 (09:04) | statut : publié le 01/09`
+
+> There is a piece of this that QGIS cannot solve, and it is the one I would put to Cohort 8. A risk map inherits the geographic unit its source reported in, and that unit is decided upstream, not by whoever is drawing the map.
+>
+> So: when the same outbreak arrives at district level in one bulletin and as a national total in the next, what happens to the map already built on the first?
+
+**Publication confirmée** : 384 attendus, 384 côté éditeur, `identique: true`, URL revérifiée dans le même appel JS que le clic. Après rechargement : une seule occurrence, 2 paragraphes.
+
+#### ❌ CIBLES EXAMINÉES ET ÉCARTÉES
+
+- **Dr. Jean Kaseya, post de 12 h** et **page Africa CDC, post de 12 h** — même annonce (Joint Task Force on Global Health Architecture Reform), **terrain politique**, §10. 4e écart consécutif sur ce motif pour ce profil.
+- **Page Africa CDC, 2 posts d'1 h** — appels à candidature pour la Youth Pre-Conference #YPC2026 (21-22 novembre, Addis-Abeba). Aucune matière analytique, même motif que Baraka Kweli Birindwa le 28/08.
+- **Prof. Mohamed Janabi** — son post le plus récent (bilan #RC76AFRO) a **3 jours**, hors fenêtre 48 h. Libre, à reprendre dès qu'il republie.
+- **Page WHO AFRO** — les deux slugs essayés (`who-african-region`, `who-afro`) renvoient `/company/unavailable/`. Confirme le carry-over : cette page reste techniquement inatteignable, **ne pas en faire un support unique**.
+- **« What's up Doc »** — virus West Nile en France, 30 cas autochtones : post à **3 jours**, hors fenêtre.
+- Recherche de contenu triée par date sur `outbreak surveillance` et `Ebola` : 6 résultats seulement, tous des billets généralistes de préparation ou des reprises de presse, aucun ne portant une donnée à discuter.
+
+⚠️ **§15 et §16 appliqués avant chaque clic** : `content-log.md` et `linkedin-contacts.md` relus juste avant chaque publication (md5 `de6c135f…` / `7a208d97…`, inchangés entre les deux), `git log` vérifié (`4aafe90c`, commit d'une routine de prospection, aucune écriture LinkedIn), branche **master**. Aucune entrée du 01/09 ne mentionnait Kaseya ni la page ECDC comme déjà traités.
+
+**§16, densité du jour sur le même événement.** Les deux commentaires touchent Ebola, mais **les arguments sont distincts et le sujet ne l'est qu'en partie** : Kaseya = *la vitesse d'une riposte parvient en aval sous forme de date, pas de compteur* ; ECDC = *un intitulé de maladie recouvre des lignes qui ne partagent pas leur date d'arrêt*. Le second ne porte pas sur la flambée RDC mais sur la **structure d'un rapport multi-maladies**. Aucun recyclage d'argument.
+
+---
+
+### 3️⃣ 📊 DONNÉES ÉPIDÉMIOLOGIQUES (§8) — AUCUNE ÉCRITURE, 1 SIGNALEMENT
+
+**Contre-vérification favorable, non sollicitée.** L'aperçu du PDF joint au post ECDC est lisible en capture : « *As of 27 August 2026, the Democratic Republic of the Congo (DRC) reported a total of 5 794 confirmed cases, including 2 786 confirmed deaths (…) on data until 26 August* ». **Nos deux chiffres et notre date d'arrêt correspondent exactement à la source amont.** Rien à corriger.
+
+🏷️HORS-ROUTINE : **un agrégateur allemand annonce des chiffres plus hauts, non vérifiables depuis une session sociale.** En recherche de contenu triée par date, un compte tiers relaie « *Ebola-Krise im Osten des Kongo: 6.000 Fälle, 2.911 Todesfälle* » via `it-boltwise.de`. C'est une **reprise secondaire d'une reprise**, exactement le cas que §8 interdit d'utiliser (précédent du 19/08, chiffre « 4 945 » republié par un ancien ADG de l'OMS et faux). **Aucune écriture, aucune tentative de correction.** Mais l'écart avec notre 5 794 / 2 786 au 26/08 est assez large pour qu'une **source primaire plus fraîche existe probablement** — à vérifier par `morning-don-check` contre le PDF AFRO ou le prochain DON, pas ici. Garde-fou anti-régression rappelé : ne jamais écrire un cumul qui baisse.
+
+---
+
+### 4️⃣ 🔁 CARRY-OVER POUR LE CRÉNEAU DE 13h (01/09)
+
+1. 🔒 **TROIS DM ATTENDENT DAVID** — Dossa Paul YAOÏTCHA (FR), Isaias Fernandes Co (EN), Julien Tuba (FR). Textes complets et rapports QA dans `linkedin-contacts.md`, entrée du jour. **Notification push envoyée ce run.** La file était vide à l'ouverture (David a vidé celle de la veille à 05h50 et 06h16).
+2. ⭐⭐ **Isaias Fernandes Co accepte le principe d'un appel** — *AI & Technologies Officer, OMS AFRO, pilote PDX sur 47 États membres*. Il propose « after next week », donc à partir de la **semaine du 14 septembre**. C'est le signal de traction le plus fort du dossier ; la réponse en file ne fait que confirmer et lui laisser proposer un créneau. **À rappeler à David s'il ne l'a pas traité d'ici là.**
+3. ⚠️ **Dossa Paul YAOÏTCHA a communiqué son e-mail et son WhatsApp** dans le DM de 06h34, spontanément. Conformément à §3, le brouillon en file **ne partage aucune coordonnée de David et ne s'engage sur aucun autre canal** : il reste sur LinkedIn et relance sur le fond. **Signalé explicitement ici comme la politique commune l'exige.**
+4. ⭐ **Julien Tuba, relation acceptée le 31/08** (*AVoHC at Africa CDC*, RDC), jamais traitée par les runs de la veille. Welcome DM rédigé et en file. Il n'a **aucun post original**, uniquement des republications : pas de cible de commentaire pour l'instant.
+5. ➖ **Abubakar Sadiq Tahir, invitation reçue acceptée ce run** (*Public Health Specialist | Epidemiologist | WHO & Malaria Consortium*, Kano, Nigéria). **Aucun welcome DM rédigé** : son activité publique se limite à des republications de contenu carrière sans lien avec le périmètre, **aucun hook honnête disponible**, §10 s'applique. Reprendre dès qu'il publie dans le périmètre.
+6bis. ⭐ **Deux suivis de découverte active ce run, tous deux à recontacter** : **Mamoudou Kindy K. Diallo** (`/in/mamoudou-kindy-k-diallo-3678011a1/`, *Field Epidemiologist | Disease Surveillance*, **Ministère de la Santé et de l'Action sociale**, Dakar, 4 mutuels) — activité publique quasi nulle, donc **suivi et pas connexion**, aucun hook honnête ; **Jacob Banda** (ZNPHI, Zambie) — commentaire 3/7 publié sous son post du jour, **bon candidat connexion dès qu'un hook frais se présente**.
+6. ➖ **Jean-Baptiste Ferrand** (`/in/jean-baptiste-ferrand-2077188b/`, *Directeur Général Associé de LIHOPE*, Dijon) — nouvel abonné, **suivi en retour ce run**. Pertinence périphérique mais réelle (republie le laboratoire **LaNSA** sur la sécurité sanitaire des aliments au Togo). Pas de connexion à ce stade.
+7. ⭐ **Prof. Mohamed Janabi** — Directeur régional OMS pour l'Afrique, **libre**, mais son dernier post a 3 jours. **Rouvrir à chaque créneau** : c'est la cible perdue du 28-31/08, §16.
+8. ⭐⭐ **Dr. Malachie MANAOUDA** — Ministre de la Santé Publique du Cameroun, suivi, **connexion prioritaire dès qu'un hook frais se présente**. Porté depuis le 22/08, toujours pas exécuté.
+9. 🔴 **Mohammad Ilias Hossain, note de connexion : non retentée**, conformément au carry-over du 31/08 (« ne pas retenter par le même chemin »). Note toujours rédigée et QA-validée, **ne pas la réécrire**.
+10. ⭐ **Alexandre APPROUTSADI YOKSOU** — relation depuis le 31/08, toujours **pas de welcome DM faute de hook honnête**. Même situation qu'Abubakar Sadiq Tahir.
+11. ➖ **Yakoza Nyirenda** — invitation sans note du 30/08, **toujours en attente**. Si acceptée : welcome DM, en file de validation.
+12. ❌ **Ne pas reproposer sans élément neuf** : Zachariah G. Houdari (services financiers) et OLAOLUWA PHILIP (géospatial/climat sans santé publique), les 2 invitations reçues encore en attente, décisions du 31/08 non rejugées ; Haider Durrani, Kipchirchir Kigen, Victoria Kanana.
+13. **Blocages hebdomadaires au 01/09 après ce run** : **nouveaux ce run — Dr. Jean Kaseya, page ECDC et Jacob Banda (08/09)** ; Ifedayo Adetifa, Julien Harneis (02/09) ; Harvey Basivikidi (03/09, top-level) ; Oke Ikpekpe, Jason Kindrachuk, Dr Jeeven Kumar (04/09) ; Global Health EDCTP3, French Healthcare Association, Health Policy Watch, Tambe Elvis Akem, SOUAD BELKACEMI (05/09) ; Melvin Sanicas, Dossa Paul YAOÏTCHA, Mohammad Ilias Hossain (07/09, top-level seulement, sous-fils ouverts). **Martin Yakum est libre depuis aujourd'hui.** Également **libres** : Robert Herriman, Patrick AYONGA, Oliver Morgan, Dr Fabrice KHADDY, page Africa CDC, Vital Strategies, Tedros, Prof. Mohamed Janabi, INRB, Miriam Mbueshi, Apoorva Wasnik, Johan Verheyden, Gaelle Gonzalez, Lori Peterson, Dr. Malachie MANAOUDA, James Schlitt.
+
+14. 🗓️ **LIGNE D'ÉVÉNEMENT (§16).**
+    - 🔵 **Riposte Ebola en RDC — ÉVÉNEMENT OUVERT, un support consommé ce run.** Le post de Kaseya du 01/09 a été commenté (1/7). Le **press briefing Africa CDC du 3 septembre** reste à venir : porteurs à surveiller **une fois le briefing tenu**, dans l'ordre — page **Africa CDC** (libre), **Prof. Mohamed Janabi** (libre), **Dr. Jean Kaseya** (désormais **bloqué jusqu'au 08/09**, donc plus disponible pour ce briefing). ⚠️ La page **WHO AFRO** est confirmée inatteignable ce run encore (deux slugs, deux `unavailable`) : **ne pas en faire un support**.
+    - 🔵 **Écart de cumul Ebola/RDC signalé par un agrégateur tiers (6 000 / 2 911 contre nos 5 794 / 2 786 au 26/08)** — voir section 3. Événement de **données**, pas de communication : il appartient à `morning-don-check`, pas à une routine sociale. À ne pas laisser tomber pour autant.
+    - ✅ **Fin de la flambée d'Ebola en Ouganda — CLOS**, confirmé clos depuis le 31/08 (3 commentaires, 3 angles). Le commentaire ECDC de ce run **cite** la ligne Ouganda comme exemple de date figée, ce qui n'est pas une réouverture de l'événement.
+
+---
+
+### 5️⃣ 🔧 ARBRE DE TRAVAIL
+
+`marketing/qa/product-claims.manual.json` **modifié avant ce run** (2 claims ajoutées le 31/08 à 17h) et **toujours non commité** : il appartient au dispositif QA, pas à cette routine — même traitement qu'aux trois runs précédents. `marketing/qa/*.json` régénérés, non suivis. **Fichiers de l'arbre n'appartenant pas à cette routine, laissés tels quels** (`AGENTS.md`) : `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis, inchangés depuis le 29/08). **Branche vérifiée avant commit : `master`.** `git log` a bougé pendant le run (`4aafe90c`, addendum de `daily-institutional-prospecting-healthwatch`), sans toucher aucun fichier LinkedIn.
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check-2 — 31/08/2026 (17h, 2e des 2 créneaux après-midi)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` datée du 31/08 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture (dernière en date : 30/08, run décalé) → **premier déclenchement de cette routine aujourd'hui**. Les entrées du 31/08 déjà présentes appartiennent à `linkedin-hwg-content-proposal` (8h35), `linkedin-hwg-monitoring` (9h), au thread hebdo X, à une session interactive de David (12h49-13h00 puis ~13h) et au créneau 13h — runs intentionnellement distincts. Horloge machine à l'heure : `date` renvoie **Mon Aug 31 17:08 2026**.
