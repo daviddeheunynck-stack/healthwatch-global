@@ -540,6 +540,18 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
    * Only a source whose PUBLICATION CADENCE is genuinely slower than 21 days
    * belongs here; extraction difficulty is a separate problem, and the standard
    * net is the right one for a row a human refreshes by hand.
+   *
+   * A second entry left the same day, for the better reason: `weekly-
+   * epidemiological-record` is now covered by a real cron. check-wer-cholera
+   * (weekly, Monday 08:30) reads WHO's edition listing, opens each new edition's
+   * PDF, and stamps `source_confirmed_at` on the six African cholera rows while
+   * no newer "Multi-country outbreak of cholera" update exists. Once a cron
+   * answers the question, a prose exemption answering it worse is not just
+   * redundant but harmful: it would grant those rows a 180-day confirmation
+   * window when the honest one is 21 days. If that cron ever stops stamping,
+   * the rows must go back to being flagged within three weeks — which is
+   * exactly what removing this entry restores. The general rule: an exemption
+   * is for a source NOTHING re-reads; the moment something does, delete it.
    */
   const DASHBOARD_SOURCES: { pattern: string; verifiedOn: string | null; recheckAfterDays: number }[] = [
     { pattern: "shinyapps.io", verifiedOn: null, recheckAfterDays: 180 },                        // WHO xmart-backed dashboards — updated in place, no editions
@@ -555,7 +567,6 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
     { pattern: "health-topics---meningitis/meningitis_bulletin", verifiedOn: null, recheckAfterDays: 180 },            // WHO AFRO meningitis bulletin — surveillance season ended at week 26/2026, no bulletin published again until the next season (see meningitis_season_end_week26_2026)
     { pattern: "ecdc.europa.eu/en/middle-east-respiratory-syndrome-coronavirus-mers-cov-situation-update", verifiedOn: "2026-07-30", recheckAfterDays: 180 }, // ECDC MERS-CoV dashboard — updated in place, not republished; confirmed 2026-07-30 live page identical to DB (case detection at its lowest since 2014)
     { pattern: "disease-outbreak-news/item/2026-DON610", verifiedOn: "2026-08-08", recheckAfterDays: 180 },            // WHO yellow fever Global surveillance summary — confirmed 2026-08-08 no successor DON exists (prior yellow-fever DON is 2025-DON570, Americas-only, ~1yr gap); this aggregate series is irregular, not fixed-cadence. Specific URL only, NOT a blanket disease-outbreak-news exemption — most DON-sourced rows (e.g. active Ebola/DRC) really do get renumbered every few weeks and must keep the strict 21-day check.
-    { pattern: "weekly-epidemiological-record", verifiedOn: "2026-09-01", recheckAfterDays: 35 },                      // WHO WER — general weekly bulletin, cited per-issue (e.g. wer101-31), with no ingestion cron in this repo that advances the citation. The exemption's real claim is NOT "no newer WER issue exists" (one publishes every Friday, so that phrasing goes false within days and is useless) but "no newer MULTI-COUNTRY CHOLERA UPDATE exists" — that update is the continuation of the numbered series that stopped at #38, and it runs MONTHLY inside the WER, not weekly. Verified 2026-09-01 by downloading the full-edition PDFs of issues 31-34 from iris.who.int: the cholera country update appears in issue 31 ONLY ("Multi-country outbreak of cholera — Data as of 28 June 2026", June = epi weeks 23-26, "a 60% increase from the previous month"); issues 32 (3-9 Aug), 33 (10-16 Aug) and 34 (17-23 Aug) mention cholera only in the weekly signals list, with no country figures at all. Our six rows match issue 31 to the digit — DRC 32 193/908, South Sudan 10 526/111, Sudan …/117 — and their `date` 2026-06-28 is the issue's own "data as of" cut-off, not a sync timestamp. So the citation is current, and recheckAfterDays is one month plus slack: a July-data update was due in early September, and its continued absence past ~6 October is the thing worth asking about. Corrected the same day it was mis-stated: the entry previously claimed "issue 31 is still the latest published issue", which was about the journal rather than the update and was false by 12 August without anything actually being stale.
   ];
   // A dashboard/tracker source is skipped by the tight 7/21-day rule above because
   // it doesn't publish per-article dates — but an unconditional skip left rows
