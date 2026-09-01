@@ -2212,3 +2212,65 @@ Mpox est l'une des deux urgences de santé publique de portée internationale du
 **Risque/inconnue : le chiffre de la pastille ne peut pas coïncider parfaitement avec celui du héros, et il ne faut pas le forcer.** Après correction, 129 foyers sont actifs et 129 sont traçables (les deux lignes « Mondial » rejoignent la carte au centroïde générique une fois le test de nullité corrigé). Si demain une ligne active arrive sans coordonnées du tout, la pastille dira moins que le héros — et ce sera vrai. Aligner les deux chiffres de force, en faisant compter à la pastille des lignes qu'elle n'affiche pas, reproduirait le défaut d'aujourd'hui dans l'autre sens.
 
 **Statut initial : 2 idées PROPOSÉES.** Construction dans la foulée — voir la mise à jour ci-dessous.
+
+### Construction — les deux idées sont livrées
+
+**Idée 1 — ✅ CONSTRUITE, commit `554b239d`**, `app/api/cron/data-quality/route.ts`, un seul fichier.
+
+`DASHBOARD_SOURCES` passe de seize chaînes à seize objets `{ pattern, verifiedOn, recheckAfterDays }`. La correspondance est inchangée au caractère près (`(row.source ?? "").includes(pattern)`), et une section **4b bis** signale les exemptions dont la vérification a expiré.
+
+- **`verifiedOn` est la date que le commentaire revendique, pas une date inventée.** Huit entrées sur seize n'en portaient aucune : elles restent à `null`, ce qui est le constat lui-même (une exemption non datée ne peut pas être re-vérifiée, seulement crue). **Le motif WER n'a pas été re-daté non plus**, alors que je viens de constater que son affirmation est fausse : le re-dater sans avoir ouvert les éditions 32, 33 et 34 aurait fabriqué exactement la vérification que cette section existe pour exiger. Son commentaire porte à la place la mention « NO LONGER TRUE as of 2026-09-01 », et la section le sort en tête du rapport.
+- **`recheckAfterDays` vaut environ deux cycles de publication de la source** : 14 j pour un hebdomadaire (WER, tableau de bord dengue du Pérou), 60 j pour un mensuel, 180 j pour une série événementielle ou une page mise à jour sur place. Pas un nombre unique : la question « existe-t-il une édition plus récente ? » se périme au rythme de la source, pas au rythme du produit.
+- **Aucune ligne ne change de seuil.** Une exemption périmée s'applique toujours ; elle est seulement signalée. C'était la seule façon d'éviter de ressusciter le bruit que ces exemptions suppriment.
+- **Le rapport distingue deux questions** que la première version confondait, et je l'ai corrigé après mesure : « combien de lignes ce motif couvre-t-il » et « combien n'échappent au filet que grâce à lui ». `shinyapps.io` couvre 19 lignes mais aucune n'en dépend (toutes portent un `source_confirmed_at` frais) — l'annoncer « candidate à la suppression » aurait été faux. Un motif qui ne correspond à **aucune** ligne, lui, est mort et à supprimer.
+
+**Rejoué en lecture seule contre la vraie table, les deux versions du code côte à côte :**
+
+```
+section 4b — classement des lignes
+  avant : 2 signalements — Dengue / Nicaragua | Diphtérie / Australie
+  après : 2 signalements — Dengue / Nicaragua | Diphtérie / Australie   identique : true
+
+section 4b bis — 9 exemptions sur 16 à re-vérifier
+  « weekly-epidemiological-record »  vérifiée le 2026-08-12 (20 j / 14) — 2 lignes qu'elle SEULE
+        tient hors du filet : Choléra / Somalie (65 j), Choléra / Tanzanie (65 j)
+  « dge.gob.pe/sala-situacional-dengue » vérifiée le 2026-08-08 (24 j / 14) — 1 ligne : Dengue / Pérou (24 j)
+  7 motifs jamais datés : shinyapps.io (19 lignes, aucune n'en dépend), cholera-cases-and-deaths (10),
+        meningitis_bulletin (4), aphis hpai (3), ecdc news-events (1), afro.who.int/countries (1),
+        ecdc mpox surveillance (0 ligne — motif mort)
+```
+
+Deux des six lignes choléra citant le WER n° 31 seulement, et non les six : les quatre autres (RDC, Soudan, Soudan du Sud, Congo) sont `is_seed=true` et relèvent de la section 4f, pas de 4b. Elles restent couvertes par le même motif périmé — la re-vérification vaut pour les six.
+
+**Idée 2 — ✅ CONSTRUITE, commit `a499bbe4`**, `components/LandingPage.tsx` + `LandingMapSection.tsx` + `LandingMapLeaflet.tsx`.
+
+- **La carte reçoit `activeOutbreaks`**, comme le héros, le tableau et « nouveau cette semaine » depuis le 02/08. Les quatre lignes fermées (Ebola/Allemagne, Ebola/Ouganda, Ebola/France, Nipah/Inde) ne sont plus tracées comme vives.
+- **Le test de coordonnées devient `== null`**, la convention déjà utilisée par `WorldMap.tsx` sur le tableau de bord client. Une ligne à la longitude 0 ne disparaît plus en silence.
+- **L'exclusion des agrégats sans pin remonte d'un cran**, de `LandingMapLeaflet` vers `LandingMapSection`. C'était nécessaire pour que la pastille compte exactement les points tracés : la règle vivait dans l'enfant, la pastille dans le parent, donc elle annonçait des lignes qui n'ont jamais été dessinées. Une seule règle décide désormais ; l'enfant ne garde qu'un filet de typage (`lat`/`lng` sont typés non-nuls mais la colonne est nullable).
+- **La pastille dit ce qu'elle compte**, en cinq langues : « 126 sur la carte » plutôt que « 131 active ».
+
+**Correction de la proposition ci-dessus, mesurée pendant la construction.** J'y écrivais que les deux lignes « Mondial » rejoindraient la carte une fois le test de nullité corrigé, et donc que 129 lignes seraient traçables. C'est faux : `LandingMapLeaflet` écarte délibérément les agrégats mondiaux et multi-pays, qui n'ont pas de point géographique qui veuille dire quelque chose. Les vrais chiffres :
+
+```
+héros « foyers actifs »                          : 129   (inchangé)
+AVANT — pastille annoncée / points réellement tracés : 131 / 130
+AVANT — points tracés pour une ligne fermée          :   4
+APRÈS — pastille annoncée = points tracés            : 126 / 126
+APRÈS — lignes fermées tracées                       :   0
+```
+
+Il reste donc un écart de 3 entre le héros (129) et la pastille (126), et il est voulu : MERS-CoV/Mondial, Mpox/Mondial et Shigellose/UE-EEE sont actifs et sans pin possible. La pastille ne prétend plus être un second comptage des foyers actifs — c'est ce qui rendait l'écart mensonger, pas l'écart lui-même.
+
+**Vérification en navigateur impossible ce soir, et c'est dit plutôt que contourné.** `preview_start` refuse explicitement de démarrer un serveur de développement en session non supervisée (« nobody is present to approve the command »), et le projet Supabase de dev ne contient ni les 129 lignes actives ni les 4 lignes fermées de la prod. Le contrôle a donc porté sur les prédicats réels rejoués contre la vraie table, pas sur le rendu. `npx tsc --noEmit` propre sur tout le projet, `npx eslint` propre sur les 4 fichiers touchés.
+
+**À contrôler d'un coup d'œil après déploiement :** sur `https://healthwatch-global.com/fr`, la pastille au-dessus de la carte doit lire « 126 sur la carte » et non « 131 active », et la carte ne doit plus porter de point sur l'Allemagne, l'Ouganda, la France (Ebola) ni l'Inde (Nipah). Sur `/ar`, la même pastille doit être en arabe.
+
+### Ce qui reste chez David — aucune écriture en prod n'a été faite ce soir
+
+1. **Neuf exemptions de cadence attendent une décision, et c'est un arriéré ponctuel, pas du bruit récurrent.** Deux sont périmées et couvrent des lignes qui ne tiennent que par elles (WER, tableau de bord dengue du Pérou) ; sept n'ont jamais été datées. Pour chacune : ouvrir la source, puis renseigner `verifiedOn`, ou supprimer le motif s'il ne couvre plus rien (`ecdc.europa.eu/en/mpox/surveillance` est dans ce cas, zéro ligne). Le rapport de demain matin les listera en une seule entrée `[EXEMPTION]`.
+2. **Le vrai sujet derrière le motif WER n'est pas réglé par ce correctif.** Six lignes choléra africaines — RD Congo, Soudan, Soudan du Sud, Congo, Somalie, Tanzanie — citent l'édition n° 31 du WER et sont figées au 2026-06-28. Trois éditions ont paru depuis, et aucun cron de ce dépôt ne fait avancer cette citation : le tableau choléra du WER n'existe que dans le PDF de l'édition, pas dans sa page HTML. Construire un ingesteur pour ce PDF est un **gros effort**, donc délibérément non construit ce soir conformément au garde-fou 1 — c'est une décision de périmètre, pas une question technique. En attendant, ces six lignes se re-vérifient à la main.
+3. **Reliquat inchangé du 26/08 :** les 4 lignes dengue Pacifique citant ReliefWeb (Samoa américaines 1 036 cas, Wallis-et-Futuna 50, Kiribati 44, Vanuatu 76) attendent toujours un re-sourcing ou un retrait, sans attribution nulle part depuis le 29/08.
+4. **La ligne `Mpox / RDC` cite toujours le sitrep n° 67** alors que le n° 68 est publié depuis le 31/07 — inchangé depuis hier, elle est inactive. Côté `Mpox / Mondial`, le correctif d'hier a fonctionné : le tampon a bien été posé au passage de 08h10 UTC (`source_confirmed_at = 2026-08-31T08:10`), la page publique doit donc afficher « ✓ SOURCE CONFIRMÉE ».
+5. **Fichiers d'autres sessions laissés intacts, comme le veut `AGENTS.md`** : `marketing/qa/product-claims.manual.json` (modifié), `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis). Rien n'a été stagé ni annulé les concernant. Le premier push de ce run a été refusé (`non-fast-forward`) : `git pull --rebase` était impossible sans toucher au fichier modifié d'une autre session, donc l'intégration s'est faite par une fusion (`ffe273e4`) qui ne touche qu'`instrumentation-client.ts`, venu du distant. Deux commits d'autres sessions (`18c4d048`, `d6ad25e8`) présents en local ont été poussés par la même occasion — ils n'ont pas été modifiés.
+
+**Statut : 2 idées PROPOSÉES ET CONSTRUITES** (`554b239d`, `a499bbe4`). Une idée écartée par le garde-fou 1 (gros effort) et laissée à David : l'ingestion du tableau choléra du WER, point 2 ci-dessus. Aucune des deux idées construites ne touche à un schéma, à un e-mail client, à Stripe ni à un envoi externe.
