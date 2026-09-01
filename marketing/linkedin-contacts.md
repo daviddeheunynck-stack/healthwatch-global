@@ -1,6 +1,30 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
+## 📅 Session interactive — 01/09/2026 (~06h), sur demande explicite de David (« gérons les fils ouverts maintenant »)
+
+**Contexte** : suite directe de la session du 31/08 17h. David a demandé de vérifier les trois fils de commentaire laissés en carry-over (James Schlitt, Melvin Sanicas, Dossa Paul YAOÏTCHA) avant de clore la session.
+
+**Trois fils rouverts, aucune réponse neuve** : James Schlitt (post de David, `urn:li:activity:7500143469085057027`) — notre commentaire de 12h reste le dernier message, 8 impressions. Melvin Sanicas (`urn:li:activity:7499221325358501889`) — notre 2e tour de 12h reste le dernier, 2 impressions. Dossa Paul YAOÏTCHA (`urn:li:activity:7499435689214758912`) — notre commentaire de 12h reste le dernier, 1 réaction, 11 impressions, aucune contre-réponse textuelle. **Rien n'est dû sur les trois fils publics.**
+
+**Une retombée hors des trois fils surveillés, trouvée en vérifiant la messagerie** : **Dossa Paul YAOÏTCHA a envoyé un DM lundi 31/08 à 17:59** (« Bonsoir Monsieur. J'espère que vous allez! J'ai vraiment apprécié vos différents commentaires, distinction à mon post concernant le rôle des rites funéraires dans la transmission de Ebola. J'ai beaucoup appris de vos réactions. Merci infiniment »), jamais traité par aucune session. Politesse de clôture pure, sans question ouverte, mais la règle DM du SKILL range « remerciement à accuser réception » parmi les messages méritant une réponse.
+
+#### 🔒 DM — **Dossa Paul YAOÏTCHA**, FR, vouvoiement — **EN ATTENTE DE VALIDATION**
+
+Fil relu intégralement (§4) : un seul message, recopié verbatim dans `tmp/thread-dossa-dm-01.txt`. *langue du fil = fr ; langue du brouillon = fr.* Premier DM jamais échangé avec ce contact (le fil de commentaires publics existe séparément).
+
+⚠️ **1er jet REECRIRE par le relecteur, sur un point réel.** Le brouillon initial empruntait au fil public de commentaires (« votre réponse sur le suivi des contacts en disait plus que je n'en attendais », « une vraie question méthodologique ») — contenu absent du DM reçu, qui ne parle que de son post et de nos commentaires en général. Le relecteur a établi que c'était (5) une attribution non vérifiable depuis la seule source livrée, (7) un mélange de fils, et (12) un accusé de réception qui allait au-delà de ce qu'une politesse de clôture appelle. **Corrigé par suppression complète** de ces deux phrases, remplacées par un accusé de réception simple et proportionné.
+
+**CTA** : aucun — politesse pure, aucun CTA ne s'applique (politique commune §3). Aucun lien, aucune mention HWG.
+
+`QA : mécanique PASS au 2e passage (107 car., limite 1300, 1 paragraphe, fr/fr, 0 chiffre, 0 lien, 0 CTA) — 1er passage FAIL sur context.too-soon (erreur de ma part : un lastOutboundDate avait été renseigné à tort, alors qu'aucun DM sortant n'a jamais existé vers ce contact avant celui-ci — corrigé en retirant ce champ, aucun vrai problème de délai) | relecteur VERDICT: REECRIRE 5, 7, 12 au 1er jet (mélange avec le fil public de commentaires), corrigé par suppression complète des deux phrases empruntées | faits cités : aucun | registre du 01/09 | statut : 🔒 EN FILE DE VALIDATION`
+
+> Bonsoir, merci à vous, ça a été un plaisir d'échanger sous votre post. Belle continuation dans vos travaux.
+
+**Ne jamais cliquer sur Envoyer sans validation explicite de David** — conforme à la règle DM (23/07). En attente.
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check-2 — 31/08/2026 (17h, 2e des 2 créneaux après-midi)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` du 31/08 dans ce fichier ni dans `content-log.md` à l'ouverture → **premier déclenchement de cette routine aujourd'hui**. Horloge machine à l'heure (`Mon Aug 31 17:08 2026`). Navigateur : dernière entrée de `_shared/browser-status.md` **🟢 RÉTABLI (~13:05)**, aucun bridage, `23c7ecdd-…` sélectionné directement (§7).
