@@ -12,34 +12,39 @@ const LandingMapLeaflet = dynamic(() => import("./LandingMapLeaflet"), {
   ),
 });
 
-const MAP_COPY: Record<string, { title: string; sub: string; legend: { h: string; m: string; l: string }; cta: string }> = {
+const MAP_COPY: Record<string, { title: string; sub: string; badge: (n: number) => string; legend: { h: string; m: string; l: string }; cta: string }> = {
   en: {
     title: "Active outbreaks, mapped in real time",
     sub: "Every dot is a confirmed outbreak from WHO, ECDC, PAHO or Africa CDC.",
+    badge: (n) => `${n} on the map`,
     legend: { h: "High risk", m: "Medium", l: "Low" },
     cta: "Explore the dashboard →",
   },
   fr: {
     title: "Foyers actifs, cartographiés en temps réel",
     sub: "Chaque point est un foyer confirmé par l'OMS, l'ECDC, l'OPAS ou l'Africa CDC.",
+    badge: (n) => `${n} sur la carte`,
     legend: { h: "Risque élevé", m: "Modéré", l: "Faible" },
     cta: "Explorer le tableau de bord →",
   },
   es: {
     title: "Brotes activos, cartografiados en tiempo real",
     sub: "Cada punto es un brote confirmado por la OMS, ECDC, PAHO o Africa CDC.",
+    badge: (n) => `${n} en el mapa`,
     legend: { h: "Riesgo alto", m: "Moderado", l: "Bajo" },
     cta: "Explorar el panel →",
   },
   ar: {
     title: "التفشيات النشطة على الخريطة في الوقت الفعلي",
     sub: "كل نقطة تمثل تفشياً مؤكداً من WHO أو ECDC أو PAHO أو Africa CDC.",
+    badge: (n) => `${n} على الخريطة`,
     legend: { h: "خطر عالٍ", m: "متوسط", l: "منخفض" },
     cta: "← استكشف لوحة التحكم",
   },
   id: {
     title: "Wabah aktif, dipetakan secara real-time",
     sub: "Setiap titik adalah wabah yang dikonfirmasi oleh WHO, ECDC, PAHO atau Africa CDC.",
+    badge: (n) => `${n} di peta`,
     legend: { h: "Risiko tinggi", m: "Sedang", l: "Rendah" },
     cta: "Jelajahi dasbor →",
   },
@@ -54,15 +59,30 @@ export default function LandingMapSection({ outbreaks, locale }: Props) {
   const copy = MAP_COPY[locale] ?? MAP_COPY.en;
   const isRtl = locale === "ar";
 
-  // Only outbreaks that have coordinates
-  const mappable = outbreaks.filter((o) => o.lat && o.lng);
+  // The single place that decides what this section shows. The badge must count
+  // exactly the dots <LandingMapLeaflet> draws, so both rules live here and the
+  // child only receives what survives them.
+  //
+  // 1. Worldwide/multi-country aggregates have no meaningful pin — this rule used
+  //    to live only in the child, so the badge counted rows that were never drawn.
+  // 2. `o.lat && o.lng` (until 2026-09-01) dropped any row on the prime meridian
+  //    or the equator, `0` being falsy: measured that day, MERS-CoV/Global and
+  //    Mpox/Global both sit at the generic centroid lat=20, lng=0. They are
+  //    aggregates and excluded by rule 1 anyway, but a real country row at lng=0
+  //    would have vanished with no trace. `== null` is the convention already used
+  //    by the dashboard map (components/WorldMap.tsx).
+  const mappable = outbreaks.filter((o) => {
+    const cen = (o.country_en ?? "").toLowerCase();
+    if (cen === "multiple countries" || cen === "global" || cen === "eu/eea") return false;
+    return (o.lat as number | null | undefined) != null && (o.lng as number | null | undefined) != null;
+  });
 
   return (
     <section className="space-y-5" dir={isRtl ? "rtl" : undefined}>
       <div className="text-center space-y-2">
         <div className="inline-flex items-center gap-2 bg-red-500/10 border border-red-500/20 rounded-full px-3 py-1 text-xs text-red-400 font-medium">
           <Activity className="w-3.5 h-3.5" />
-          <span>{mappable.length} active</span>
+          <span>{copy.badge(mappable.length)}</span>
         </div>
         <h2 className="text-2xl md:text-3xl font-bold text-white">{copy.title}</h2>
         <p className="text-gray-400 text-sm max-w-xl mx-auto">{copy.sub}</p>

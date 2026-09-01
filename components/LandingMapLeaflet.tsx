@@ -77,10 +77,11 @@ export default function LandingMapLeaflet({ outbreaks, locale }: Props) {
       }
 
       outbreaks.forEach((ob) => {
-        // Skip worldwide/multi-country aggregates — no meaningful geographic pin
-        const cen = (ob.country_en ?? "").toLowerCase();
-        if (cen === "multiple countries" || cen === "global" || cen === "eu/eea") return;
-        if (!ob.lat || !ob.lng) return;
+        // What is drawable is decided once, by <LandingMapSection> (aggregates
+        // excluded, coordinates present) — it has to be, since its badge counts
+        // these dots. Kept here only as a runtime narrowing: `lat`/`lng` are typed
+        // non-nullable but the column is nullable in the DB.
+        if ((ob.lat as number | null | undefined) == null || (ob.lng as number | null | undefined) == null) return;
         const color  = RISK_COLOR[ob.risk_level] || "#6b7280";
         const dName  = getLocalizedDisease(ob, locale);
         const cName  = getLocalizedCountry(ob, locale);

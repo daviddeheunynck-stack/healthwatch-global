@@ -685,7 +685,13 @@ export default async function LandingPage({ locale }: { locale: string }) {
       </section>
 
       {/* ── World map ────────────────────────────────────────────────────── */}
-      <LandingMapSection outbreaks={outbreaks} locale={locale} />
+      {/* activeOutbreaks, not outbreaks: the 02/08 fix above rewired the hero, the
+          "what your teams will see" table and "new this week", but this map kept
+          receiving the unfiltered list. Measured 2026-09-01 — it was still plotting
+          the very rows that fix was written for (Ebola/Germany, Ebola/Uganda, plus
+          Ebola/France and Nipah/India) as live dots, and its badge read "131 active"
+          two screens under a hero saying 129. */}
+      <LandingMapSection outbreaks={activeOutbreaks} locale={locale} />
 
       {/* ── New this week ────────────────────────────────────────────────── */}
       {(() => {
