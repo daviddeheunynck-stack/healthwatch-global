@@ -3589,3 +3589,53 @@ Lot de 10 contacts **envoyés le 22/08 entre 06:33:46 et 06:35:24 UTC** → **J+
 - **Fiona Walsh (`fiona.walsh@uni-heidelberg.de`) : arbitrage toujours en attente**, laissée en « sans réponse » par défaut (voir addendum de ce matin). Sans effet opérationnel — sa relance unique est consommée.
 - **EUPHA** : fenêtre ouverte depuis le 31/08, **arbitrage David toujours en attente**.
 - **⚠️ Fichiers modifiés non touchés par cette routine, laissés tels quels** (règle `AGENTS.md`) : `marketing/qa/product-claims.manual.json` et `app/api/cron/sync-africa-cdc/route.ts` (modifiés par une autre session pendant ce run), `.tmp-acdc-probe.ts`, `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis).
+
+### 🔄 ADDENDUM 2026-09-01 (~07:15 UTC) — bounce Antigua le jour même, remplacement créé
+
+Signalé par David en session, capture d'écran à l'appui, peu après l'envoi du lot.
+
+**1. Le lot a été envoyé par David.** Les 10 brouillons créés à 06:24 UTC sont partis ; l'envoi Antigua est horodaté **07:09:52 UTC**, soit ~45 min après création. Profil « relecture humaine » du tableau de discrimination du 16/08, pas le bug d'envoi instantané du connecteur. Aucun incident.
+
+**2. ❌ BOUNCE — `contact@health.gov.ag` (MoH Antigua-et-Barbuda), 550 No Such User.** Fil `1a05ba3e933337fd`, notification `mailer-daemon@googlemail.com` reçue à **07:10:06 UTC, 14 secondes après l'envoi**. Fil mis à la corbeille par David.
+
+**Cause trouvée, et elle est structurelle : `health.gov.ag` n'a aucun enregistrement MX.** Vérifié par `nslookup -type=mx` — le domaine ne renvoie qu'un SOA, aucun serveur de messagerie. Le domaine ne peut recevoir aucun courrier, quelle que soit l'adresse locale. L'adresse était pourtant publiée en clair sur la page « Contact Us » du site officiel (`e-mail: contact@health.gov.ag`), lue directement en HTTP 200 pendant le run — la vérification exigée par le SKILL avait bien été faite, et elle a été insuffisante.
+
+**⚠️ Leçon à retenir, nouvelle : lire l'adresse sur la page officielle ne prouve pas qu'elle est délivrable.** Les deux critères d'écart existants (adresse issue du seul index de recherche, 18/08 ; boîte nominative d'un titulaire de poste, 19/08) ne couvrent pas ce cas : ici la page était accessible, l'adresse fonctionnelle, le domaine officiel. Ce qui manquait est un contrôle **DNS**, pas un contrôle de source. **Un `nslookup -type=mx` sur le domaine coûte une seconde et aurait écarté ce contact avant rédaction.** À intégrer comme contrôle systématique avant création de brouillon.
+
+**Contrôle MX rétroactif sur les 9 autres domaines du lot — tous valides :**
+
+| Domaine | MX |
+|---|---|
+| `ministeriodesalud.gob.do` | ✅ Microsoft 365 |
+| `gov.vc` | ✅ `mail.gov.vc` |
+| `rmihealth.org` | ✅ Google Workspace |
+| `uog.edu.et` | ✅ Microsoft 365 |
+| `ju.edu.et` | ✅ Google Workspace |
+| `upm.edu.my` | ✅ Google Workspace + `mailgw1.upm.edu.my` |
+| `zoa.ngo` | ✅ Microsoft 365 |
+| `humedica.org` | ✅ Microsoft 365 |
+| `medico.de` | ✅ IONOS |
+
+**Balayage des bounces du jour** (`from:mailer-daemon`, `from:postmaster`, `subject:"Delivery Status Notification"`, `subject:Undeliverable`, `subject:"Undelivered Mail"`, `subject:"Adresse introuvable"`, `after:2026/08/31`, corbeille incluse) : **un seul fil, celui d'Antigua**. Aucun autre contact du lot n'a bouncé. *(Bilan cumulé non retotalisé ici : porteur unique `daily-relance-check-healthwatch`, consigne du 16/08.)*
+
+**3. Remplacement créé dans le temps du run (règle du 19/08).**
+
+Cibles examinées et écartées avant de trancher :
+- `helpdesk@ab.gov.ag` (portail gouvernemental d'Antigua, MX valide) — **boîte d'assistance informatique**, mauvaise unité pour une proposition de veille épidémiologique.
+- MoH Grenade, Dominique, Vanuatu, PNG, Tonga — sites injoignables ou sans adresse en clair.
+- `federacion@medicusmundi.es` — **déjà présent dans ce journal** (`medicusmundi.es`), écarté par l'anti-doublon.
+
+**Retenu : `ehealth2015@gmail.com`, même ministère** — brouillon `r-936228195664858120`, objet « HealthWatch Global — outbreak alerts, Antigua and Barbuda ».
+
+**Motif explicite, car il s'agit d'une boîte grand public.** Le critère du 25/08 admet une boîte `@gmail` si (a) elle est publiée sur le domaine officiel de l'institution — vérifié, elle apparaît sur l'accueil **et** sur la page « Contact Us » de `health.gov.ag` — et (b) c'est la **seule** adresse que l'institution y publie pour elle-même, « pas une alternative à côté d'une adresse fonctionnelle du domaine propre, auquel cas préférer cette dernière ». La condition (b) échouait ce matin parce que `contact@health.gov.ag` existait ; **cette adresse étant désormais prouvée non délivrable (aucun MX, 550), le ministère ne publie plus qu'une seule adresse utilisable pour lui-même.** Le cas rejoint donc littéralement le précédent INH Togo du 20/08.
+
+Le message est rédigé sur le modèle « cas particulier » : il **demande explicitement une redirection vers l'unité de surveillance épidémiologique** (la boîte porte un intitulé de projet e-santé, pas de surveillance) et signale au passage que l'autre adresse publiée n'accepte pas le courrier. Aucun lien cliquable, « healthwatch-global dot com », objet à 56 caractères, question explicite en clôture.
+
+**4. Compteurs corrigés.**
+
+- **Lot du jour : 9 délivrés / 10 préparés** — Antigua n'a pas été délivré. Le compteur cumulé du canal ne doit pas compter ce contact comme atteint.
+- **Prospectés : 317** — inchangé (le contact Antigua a bien été prospecté, la recherche a eu lieu).
+- **Envoyés : 317** = 307 + les 10 de ce lot partis à 07:09 UTC.
+- **Délivrés : 9 sur les 10 de ce lot.** Le total de délivrabilité du canal est recalculé par `daily-relance-check-healthwatch`, porteur unique du bilan cumulé.
+- **Profondeur de file en fin d'addendum : 1 brouillon** — le remplacement Antigua, non envoyé.
+- **Relance J+10** : le lot du 01/09 devient éligible le **11/09**, sur **9 contacts** ; `contact@health.gov.ag` est **écarté définitivement** (domaine sans MX, aucune relance possible).
