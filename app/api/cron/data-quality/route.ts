@@ -503,23 +503,50 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
   const STALE_DAYS       = 21;
   const pheicThreshold = new Date(Date.now() - STALE_DAYS_PHEIC * 86_400_000).toISOString().split("T")[0];
   const staleThreshold = new Date(Date.now() - STALE_DAYS       * 86_400_000).toISOString().split("T")[0];
-  const DASHBOARD_SOURCES = [
-    "shinyapps.io",
-    "ecdc.europa.eu/en/mpox/surveillance",
-    "publications/m/item",                  // WHO monthly situation reports (Mpox, dengue, etc.) — monthly cadence, 28d staleness expected. Domain-only, no "who.int/" prefix: regional sub-portals (e.g. who.int/westernpacific/publications/m/item/...) use the same series under a different path and were falling through to the standard 21-day threshold — confirmed 2026-08-08, 4 dengue rows (Cambodia/Vietnam/French Polynesia/New Caledonia) all cite the identical westernpacific dengue-situation-update page.
-    "ecdc.europa.eu/en/news-events",        // ECDC epidemiological updates — quarterly cadence, 90d+ staleness expected
-    "aphis.usda.gov/hpai-h5n1",             // USDA APHIS per-state HPAI livestock — date = last confirmed detection in that state, not a sync timestamp; many states legitimately go months/years without a new one
-    "who.int/emergencies/surveillance/cholera-cases-and-deaths", // WHO cholera dashboard — explicitly annual reporting by member states, not operational (see reference_who_cholera_operational_source)
-    "cdn.who.int/media/docs/default-source/_sage-2026",          // WHO SAGE-hosted versioned risk assessments (e.g. diphtheria African region v.1/v.2) — new version, not periodic refresh; confirmed 2026-07-30 no v.3 exists beyond the currently-cited v.2
-    "paho.org/en/documents/epidemiological-alert",               // PAHO epidemiological alerts — event-driven, not on a fixed schedule; confirmed 2026-07-30 no newer alert supersedes the 11 June 2026 diphtheria one
-    "afro.who.int/countries",                                    // WHO AFRO country-specific news posts — one-off articles, not a periodic series
-    "multi-country_outbreak-of-cholera_epidemiological_update",  // WHO's numbered cholera epi-update series stopped at #38 (30 June 2026); no #39 exists and the announced WER migration hadn't appeared as of 2026-07-30 (see reference_who_cholera_epi_update_moves_to_wer_2026_07_30)
-    "ecdc.europa.eu/en/all-topics-z/cholera/surveillance-and-disease-data", // ECDC cholera-monthly page — confirmed 2026-07-30 live page matches DB exactly, monthly cadence
-    "health-topics---meningitis/meningitis_bulletin",            // WHO AFRO meningitis bulletin — surveillance season ended at week 26/2026, no bulletin published again until the next season (see meningitis_season_end_week26_2026)
-    "ecdc.europa.eu/en/middle-east-respiratory-syndrome-coronavirus-mers-cov-situation-update", // ECDC MERS-CoV dashboard — updated in place, not republished; confirmed 2026-07-30 live page identical to DB (case detection at its lowest since 2014)
-    "dge.gob.pe/sala-situacional-dengue",                         // Peru MoH (CDC Peru) dengue dashboard — redirects to a pure JS/Shiny map (app7.dge.gob.pe/maps/sala_metaxenica/) with no dated articles to scrape; confirmed 2026-08-08 our stored week-26 figure (34,820 cases/36 deaths) matches the last publicly-cited MINSA bulletin, no newer week found in press — updates in place on its own weekly cadence, not stale.
-    "disease-outbreak-news/item/2026-DON610",                     // WHO yellow fever Global surveillance summary — confirmed 2026-08-08 no successor DON exists (prior yellow-fever DON is 2025-DON570, Americas-only, ~1yr gap); this aggregate series is irregular, not fixed-cadence. Specific URL only, NOT a blanket disease-outbreak-news exemption — most DON-sourced rows (e.g. active Ebola/DRC) really do get renumbered every few weeks and must keep the strict 21-day check.
-    "weekly-epidemiological-record",                              // WHO WER — general bulletin (many diseases, not cholera-specific), cited per-issue (e.g. wer101-31) with no ingestion cron in this repo that advances the citation as newer issues publish, unlike sync-who-regional's live fetchers. Confirmed 2026-08-12: issue 31 (27 Jul-2 Aug 2026) is still the latest published issue; Somalia/Tanzania cholera rows citing it (233/0, 113/2 cases/deaths) match it exactly, both explicitly "no cases in the last 28 days". A row's `date` here reflects the last real case activity in the cited table, not the issue's publish date — re-verify against whatever the current latest wer101-NN issue is before assuming a gap, don't just trust the day-count.
+  /**
+   * Sources whose own publication cadence is slower than the 7/21-day rule
+   * assumes. A match moves the row to STALE_DAYS_DASHBOARD (180) instead.
+   *
+   * Every entry is a HUMAN VERIFICATION — "I opened the live page on this date
+   * and no newer edition exists" — and until 2026-09-01 that verification was
+   * written in prose and read by nobody. It is the same object as the
+   * `source_confirmed_at` column, stored in a comment instead of a row, and it
+   * had the same defect: it never expired. The column was bounded the day
+   * before (f7a9e53, CONFIRMATION_MAX_AGE_DAYS); this is its sibling.
+   *
+   * It had already gone false. The WER entry stated "issue 31 is still the
+   * latest published issue", verified 2026-08-12 and ending with an instruction
+   * to a human — "re-verify against whatever the current latest wer101-NN issue
+   * is". Checked 2026-09-01: issues 32, 33 and 34 have published since, while
+   * six active cholera rows (DRC, Sudan, South Sudan, Congo, Somalia, Tanzania)
+   * still cite #31 at 65 days old with no source_confirmed_at, held under the
+   * 180-day ceiling by this entry alone.
+   *
+   * `verifiedOn` is the date the comment actually claims a live check happened;
+   * null where none was ever written, which is not a formality — an undated
+   * exemption can never be re-verified, only trusted. `recheckAfterDays` is
+   * roughly two publication cycles of the source itself: a weekly bulletin's
+   * "nothing newer" is worth a fortnight, an event-driven series' is worth
+   * months. Section 4b bis reports the expired ones; NOTHING here reclassifies
+   * a row, so a lapsed verification still exempts exactly as before.
+   */
+  const DASHBOARD_SOURCES: { pattern: string; verifiedOn: string | null; recheckAfterDays: number }[] = [
+    { pattern: "shinyapps.io", verifiedOn: null, recheckAfterDays: 180 },                        // WHO xmart-backed dashboards — updated in place, no editions
+    { pattern: "ecdc.europa.eu/en/mpox/surveillance", verifiedOn: null, recheckAfterDays: 180 }, // ECDC mpox surveillance page — updated in place
+    { pattern: "publications/m/item", verifiedOn: "2026-08-08", recheckAfterDays: 60 },          // WHO monthly situation reports (Mpox, dengue, etc.) — monthly cadence, 28d staleness expected. Domain-only, no "who.int/" prefix: regional sub-portals (e.g. who.int/westernpacific/publications/m/item/...) use the same series under a different path and were falling through to the standard 21-day threshold — confirmed 2026-08-08, 4 dengue rows (Cambodia/Vietnam/French Polynesia/New Caledonia) all cite the identical westernpacific dengue-situation-update page.
+    { pattern: "ecdc.europa.eu/en/news-events", verifiedOn: null, recheckAfterDays: 180 },       // ECDC epidemiological updates — quarterly cadence, 90d+ staleness expected
+    { pattern: "aphis.usda.gov/hpai-h5n1", verifiedOn: null, recheckAfterDays: 180 },            // USDA APHIS per-state HPAI livestock — date = last confirmed detection in that state, not a sync timestamp; many states legitimately go months/years without a new one
+    { pattern: "who.int/emergencies/surveillance/cholera-cases-and-deaths", verifiedOn: null, recheckAfterDays: 180 }, // WHO cholera dashboard — explicitly annual reporting by member states, not operational (see reference_who_cholera_operational_source)
+    { pattern: "cdn.who.int/media/docs/default-source/_sage-2026", verifiedOn: "2026-07-30", recheckAfterDays: 180 },  // WHO SAGE-hosted versioned risk assessments (e.g. diphtheria African region v.1/v.2) — new version, not periodic refresh; confirmed 2026-07-30 no v.3 exists beyond the currently-cited v.2
+    { pattern: "paho.org/en/documents/epidemiological-alert", verifiedOn: "2026-07-30", recheckAfterDays: 180 },       // PAHO epidemiological alerts — event-driven, not on a fixed schedule; confirmed 2026-07-30 no newer alert supersedes the 11 June 2026 diphtheria one
+    { pattern: "afro.who.int/countries", verifiedOn: null, recheckAfterDays: 180 },              // WHO AFRO country-specific news posts — one-off articles, not a periodic series
+    { pattern: "multi-country_outbreak-of-cholera_epidemiological_update", verifiedOn: "2026-07-30", recheckAfterDays: 180 }, // WHO's numbered cholera epi-update series stopped at #38 (30 June 2026); no #39 exists and the announced WER migration hadn't appeared as of 2026-07-30 (see reference_who_cholera_epi_update_moves_to_wer_2026_07_30)
+    { pattern: "ecdc.europa.eu/en/all-topics-z/cholera/surveillance-and-disease-data", verifiedOn: "2026-07-30", recheckAfterDays: 60 }, // ECDC cholera-monthly page — confirmed 2026-07-30 live page matches DB exactly, monthly cadence
+    { pattern: "health-topics---meningitis/meningitis_bulletin", verifiedOn: null, recheckAfterDays: 180 },            // WHO AFRO meningitis bulletin — surveillance season ended at week 26/2026, no bulletin published again until the next season (see meningitis_season_end_week26_2026)
+    { pattern: "ecdc.europa.eu/en/middle-east-respiratory-syndrome-coronavirus-mers-cov-situation-update", verifiedOn: "2026-07-30", recheckAfterDays: 180 }, // ECDC MERS-CoV dashboard — updated in place, not republished; confirmed 2026-07-30 live page identical to DB (case detection at its lowest since 2014)
+    { pattern: "dge.gob.pe/sala-situacional-dengue", verifiedOn: "2026-08-08", recheckAfterDays: 14 },                 // Peru MoH (CDC Peru) dengue dashboard — redirects to a pure JS/Shiny map (app7.dge.gob.pe/maps/sala_metaxenica/) with no dated articles to scrape; confirmed 2026-08-08 our stored week-26 figure (34,820 cases/36 deaths) matches the last publicly-cited MINSA bulletin, no newer week found in press — updates in place on its own WEEKLY cadence, hence the short recheck: this one goes false fastest of the sixteen.
+    { pattern: "disease-outbreak-news/item/2026-DON610", verifiedOn: "2026-08-08", recheckAfterDays: 180 },            // WHO yellow fever Global surveillance summary — confirmed 2026-08-08 no successor DON exists (prior yellow-fever DON is 2025-DON570, Americas-only, ~1yr gap); this aggregate series is irregular, not fixed-cadence. Specific URL only, NOT a blanket disease-outbreak-news exemption — most DON-sourced rows (e.g. active Ebola/DRC) really do get renumbered every few weeks and must keep the strict 21-day check.
+    { pattern: "weekly-epidemiological-record", verifiedOn: "2026-08-12", recheckAfterDays: 14 },                      // WHO WER — general bulletin (many diseases, not cholera-specific), cited per-issue (e.g. wer101-31) with no ingestion cron in this repo that advances the citation as newer issues publish, unlike sync-who-regional's live fetchers. Confirmed 2026-08-12: issue 31 (27 Jul-2 Aug 2026) was then the latest published issue; Somalia/Tanzania cholera rows citing it (233/0, 113/2 cases/deaths) matched it exactly, both explicitly "no cases in the last 28 days". A row's `date` here reflects the last real case activity in the cited table, not the issue's publish date — re-verify against whatever the current latest wer101-NN issue is before assuming a gap, don't just trust the day-count. NO LONGER TRUE as of 2026-09-01: wer101-32/33/34 have published. Kept unmodified rather than re-dated, because re-dating it without opening the new issues would be inventing the verification this section exists to demand.
   ];
   // A dashboard/tracker source is skipped by the tight 7/21-day rule above because
   // it doesn't publish per-article dates — but an unconditional skip left rows
@@ -536,11 +563,33 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
   const STALE_DAYS_DASHBOARD = 180;
   const dashboardStaleThreshold = new Date(Date.now() - STALE_DAYS_DASHBOARD * 86_400_000).toISOString().split("T")[0];
 
+  // Filled by the loop below, read by 4b bis. Two different questions, kept
+  // apart: how many rows an exemption COVERS (a pattern matching nothing is
+  // dead weight), and which rows it ALONE keeps quiet (those a fresh
+  // source_confirmed_at would have exempted anyway don't depend on it).
+  const matchedByExemption  = new Map<string, number>();
+  const silencedByExemption = new Map<string, string[]>();
+
   for (const row of rows ?? []) {
     if (row.is_seed || !row.date || anomalies.some((a) => a.row.id === row.id)) continue;
     // The confirmation is bounded by the same threshold this row would be
     // judged on, so the exemption cannot outlive the question it answers.
-    const isDashboardSource = DASHBOARD_SOURCES.some((d) => (row.source ?? "").includes(d));
+    const exemption = DASHBOARD_SOURCES.find((d) => (row.source ?? "").includes(d.pattern)) ?? null;
+    const isDashboardSource = exemption !== null;
+    // Would the strict rule have flagged this row if the exemption didn't exist?
+    // Recorded per entry so 4b bis can say what each lapsed verification is
+    // currently holding quiet — an expired exemption covering nothing is a line
+    // to delete, one covering a 65-day-old PHEIC-adjacent row is a line to re-check.
+    if (exemption) {
+      matchedByExemption.set(exemption.pattern, (matchedByExemption.get(exemption.pattern) ?? 0) + 1);
+      const strictMax = row.is_pheic ? STALE_DAYS_PHEIC : STALE_DAYS;
+      const strictThreshold = row.is_pheic ? pheicThreshold : staleThreshold;
+      if (!isVerifiedStale(row, strictMax) && row.date <= strictThreshold) {
+        const held = silencedByExemption.get(exemption.pattern) ?? [];
+        held.push(`${row.disease} / ${row.country} (${Math.round((Date.now() - new Date(row.date).getTime()) / 86_400_000)}j)`);
+        silencedByExemption.set(exemption.pattern, held);
+      }
+    }
     const confirmationMaxAge = isDashboardSource
       ? STALE_DAYS_DASHBOARD
       : row.is_pheic ? STALE_DAYS_PHEIC : STALE_DAYS;
@@ -572,6 +621,43 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
         detail: `Stale — dernière donnée il y a ${daysSince}j (${row.date}) — vérifier source : ${row.source ?? "N/A"}`,
       });
     }
+  }
+
+  // ── 4b bis. Les exemptions de cadence, vérifiées à leur tour ──────────────
+  // Audite la liste DASHBOARD_SOURCES elle-même, pas les lignes : chaque entrée
+  // est une vérification humaine datée dans un commentaire, et rien ne la
+  // relisait. Signalement seul — aucune ligne ne change de seuil ici.
+  const staleExemptions = DASHBOARD_SOURCES.map((d) => ({
+    ...d,
+    ageDays: d.verifiedOn ? Math.round((Date.now() - new Date(d.verifiedOn).getTime()) / 86_400_000) : null,
+    matched: matchedByExemption.get(d.pattern) ?? 0,
+    silenced: silencedByExemption.get(d.pattern) ?? [],
+  })).filter((d) => d.ageDays === null || d.ageDays > d.recheckAfterDays);
+
+  if (staleExemptions.length > 0) {
+    // Une seule entrée agrégée : seize motifs au maximum, et les lister un par un
+    // noierait les vraies anomalies de lignes du rapport.
+    const lines = staleExemptions
+      .sort((a, b) => b.silenced.length - a.silenced.length || b.matched - a.matched || (b.ageDays ?? 1e9) - (a.ageDays ?? 1e9))
+      .map((d) => {
+        const when = d.ageDays === null
+          ? "jamais datée"
+          : `vérifiée le ${d.verifiedOn} (${d.ageDays}j, à revoir tous les ${d.recheckAfterDays}j)`;
+        const holds = d.matched === 0
+          ? "ne correspond à aucune ligne active — motif mort, à supprimer plutôt qu'à re-vérifier"
+          : d.silenced.length === 0
+            ? `couvre ${d.matched} ligne(s), dont aucune ne dépend d'elle aujourd'hui (toutes exemptées par ailleurs via source_confirmed_at) — priorité basse`
+            : `couvre ${d.matched} ligne(s), dont ${d.silenced.length} qu'elle SEULE tient hors du filet : ${d.silenced.join(", ")}`;
+        return `« ${d.pattern} » — ${when} ; ${holds}`;
+      });
+    needsReview.push({
+      label: `[EXEMPTION] ${staleExemptions.length} exemption(s) de cadence à re-vérifier`,
+      detail:
+        `Ces motifs de DASHBOARD_SOURCES (app/api/cron/data-quality/route.ts) font passer une ligne du seuil strict (${STALE_DAYS}j, ${STALE_DAYS_PHEIC}j sur une ligne PHEIC) au seuil large de ${STALE_DAYS_DASHBOARD}j, au motif que la source publie plus lentement. Chacun repose sur une vérification humaine — « j'ai ouvert la page, aucune édition plus récente » — dont la validité a expiré, ou qui n'a jamais été datée. ` +
+        `Vérifié le 2026-09-01 sur le motif le plus ancien : le commentaire WER affirmait que l'édition 31 était la dernière parue au 12/08, or wer101-32, -33 et -34 ont paru depuis. ` +
+        lines.join(" | ") +
+        `. Aucune ligne n'a changé de seuil : une exemption périmée s'applique toujours, elle est seulement signalée. Pour en traiter une : ouvrir la source, puis mettre à jour verifiedOn (et recheckAfterDays si la cadence réelle diffère), ou supprimer le motif s'il ne couvre plus rien.`,
+    });
   }
 
   // ── 4c. Duplication check ─────────────────────────────────────────────────
