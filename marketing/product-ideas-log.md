@@ -2377,3 +2377,56 @@ Dengue / Pérou                : plus d'exemption, filet standard 21 j, date à 
 2. **Dengue / Kiribati** — URL ReliefWeb dans une ligne inactive à `source_priority` 0, donc hors du site public et hors de l'audit 4m. Cosmétique.
 
 Le point « Dengue / Pérou » et le point « exemptions à re-vérifier » sont clos.
+
+#### 8. ✅ `check-wer-cholera` livré — le dernier point ouvert est traité, en détection et non en ingestion (commits `c2050dd6`, `c6b4c969`)
+
+Le point 2 du reliquat était « ingestion de la mise à jour choléra du WER — gros effort, en attente d'une décision de périmètre ». En regardant le travail de près, la décision se tranchait toute seule : **ce n'est pas l'ingestion qui manquait, c'est la détection.**
+
+**Ce qui manquait vraiment.** Les six lignes — Choléra RD Congo (32 193 cas / 908 décès), Soudan, Soudan du Sud, Congo, Somalie, Tanzanie — citent `wer101-31` et ne portaient **aucun `source_confirmed_at`**, parce qu'aucun cron du dépôt ne lit le WER. Leur fraîcheur reposait entièrement sur un commentaire en prose relu par un humain le 12/08. Rien ne pouvait voir paraître une nouvelle mise à jour choléra, **ni la voir manquer**. Les chiffres, eux, sont justes — c'est vérifié plus haut.
+
+**Pourquoi détection seule, et non ingestion.** Les chiffres ne sont pas dans une table exploitable mais dans une narration par pays à l'intérieur du PDF (« *Between 1 January 2026 and 28 June 2026, the Democratic Republic of the Congo reported a total of 32 193 cases and 908 deaths* »), et six pays devraient être extraits de prose libre. C'est un chantier distinct, avec ses propres modes de panne. Même partage des rôles que `disease-coverage` et `sync-pacific-surveillance` : signaler l'événement, laisser l'écriture à un humain. Dit explicitement dans l'en-tête du fichier plutôt que laissé à deviner.
+
+**Le piège autour duquel la sonde est construite.** Le WER est **hebdomadaire** (une édition tous les vendredis), la mise à jour choléra qu'il porte est **mensuelle**. Comparer les numéros d'édition crierait au loup chaque vendredi — c'est exactement l'erreur que j'ai faite en début de soirée. Seule la présence du marqueur dans le PDF compte. Rejoué contre les sources réelles avant livraison :
+
+```
+wer101-31  ->  MISE À JOUR CHOLÉRA  (« Data as of 28 June 2026 »)
+wer101-32  ->  pas de mise à jour
+wer101-33  ->  pas de mise à jour
+wer101-34  ->  pas de mise à jour
+```
+
+**Trois choix de conception, tous hérités de pannes réelles de ce dépôt.**
+
+- **Une édition illisible arrête la sonde en `error`, elle n'est pas enjambée.** Un numéro sauté est exactement la façon dont une mise à jour manquée deviendrait invisible pour toujours — la forme de la panne PAHO réparée le 30/08. `lastScannedIssue` n'avance pas au-delà, donc le passage suivant réessaie la même.
+- **La liste d'éditions illisible est une `error`, pas un `no_data`.** `health-check` documente `no_data` comme un état d'inactivité légitime et le laisse silencieux : une page injoignable se serait lue « rien de neuf cette semaine » indéfiniment.
+- **`rows` reste à 0, `evaluatedAt` porte le fait que le contrôle a tourné.** Une confirmation n'est pas une écriture de donnée ; gonfler `rows` poserait un `lastNonZero` et revendiquerait une ingestion qui n'a pas eu lieu.
+
+Enregistré dans `CRON_WINDOWS` **et** `vercel.json` dans le même commit que la route, au lieu de plusieurs jours plus tard comme ses trois voisines hebdomadaires — c'est tout l'objet des commentaires qui les entourent. `check-cron-schedule` : 21 commentaires `Schedule:` concordants.
+
+**Conséquence : l'exemption WER est retirée** (`c6b4c969`). Dès lors qu'un cron répond à la question, une exemption en prose qui y répond moins bien n'est pas seulement redondante, elle est **nuisible** : elle accorderait à ces lignes une fenêtre de confirmation de 180 jours là où l'honnête est 21. Si le cron cesse un jour de tamponner, ces lignes doivent redevenir signalées sous trois semaines — c'est ce que le retrait restaure. Règle écrite pour la suite : **une exemption vaut pour une source que rien ne relit ; dès qu'un cron s'en charge, la supprimer.**
+
+Le tampon a été amorcé à la main sur les 6 lignes (script one-off, non commité par `.gitignore`), parce que le cron ne passe que lundi et que le retrait aurait sinon fait signaler ces lignes six jours pour une question déjà tranchée ce soir. Le tampon est vrai, pas une commodité : les quatre éditions publiées du volume 101 ont été téléchargées et analysées. `updated_at` n'a bougé sur aucune des six lignes — la migration `20260824030000` a fait son travail, vérifié après écriture.
+
+**Effet visible pour un utilisateur, mesuré après coup :**
+
+```
+avant : ⚠ SANS MAJ · 65j   « foyer peut-être résolu ou non rapporté »
+après : ✓ SOURCE CONFIRMÉE · 65j
+        sur les 6 lignes, dont Choléra / RD Congo (32 193 cas)
+```
+
+L'OMS n'a effectivement rien publié de plus récent — le badge d'avertissement était faux, et il était le seul énoncé du produit sur ces six foyers.
+
+**État final des deux sections, rejoué contre la prod :**
+
+```
+motifs dans DASHBOARD_SOURCES : 13   (16 au départ)
+section 4b   — signalements   :  2   Dengue / Nicaragua · Diphtérie / Australie   (inchangé toute la soirée)
+section 4b bis — entrées      :  0
+```
+
+#### Reliquat après cette troisième passe
+
+**Un seul point, cosmétique :** Dengue / Kiribati porte encore une URL ReliefWeb, dans une ligne inactive à `source_priority` 0 — hors du site public et hors du jeu que lit la section 4m. Aucune exposition légale, aucun impact utilisateur.
+
+Tout le reste du reliquat du 26/08 et du 31/08 est clos.
