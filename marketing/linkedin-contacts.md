@@ -9,7 +9,7 @@
 
 **Une retombée hors des trois fils surveillés, trouvée en vérifiant la messagerie** : **Dossa Paul YAOÏTCHA a envoyé un DM lundi 31/08 à 17:59** (« Bonsoir Monsieur. J'espère que vous allez! J'ai vraiment apprécié vos différents commentaires, distinction à mon post concernant le rôle des rites funéraires dans la transmission de Ebola. J'ai beaucoup appris de vos réactions. Merci infiniment »), jamais traité par aucune session. Politesse de clôture pure, sans question ouverte, mais la règle DM du SKILL range « remerciement à accuser réception » parmi les messages méritant une réponse.
 
-#### 🔒 DM — **Dossa Paul YAOÏTCHA**, FR, vouvoiement — **EN ATTENTE DE VALIDATION**
+#### ✅ DM — **Dossa Paul YAOÏTCHA**, FR, vouvoiement — **ENVOYÉ**
 
 Fil relu intégralement (§4) : un seul message, recopié verbatim dans `tmp/thread-dossa-dm-01.txt`. *langue du fil = fr ; langue du brouillon = fr.* Premier DM jamais échangé avec ce contact (le fil de commentaires publics existe séparément).
 
@@ -17,11 +17,11 @@ Fil relu intégralement (§4) : un seul message, recopié verbatim dans `tmp/thr
 
 **CTA** : aucun — politesse pure, aucun CTA ne s'applique (politique commune §3). Aucun lien, aucune mention HWG.
 
-`QA : mécanique PASS au 2e passage (107 car., limite 1300, 1 paragraphe, fr/fr, 0 chiffre, 0 lien, 0 CTA) — 1er passage FAIL sur context.too-soon (erreur de ma part : un lastOutboundDate avait été renseigné à tort, alors qu'aucun DM sortant n'a jamais existé vers ce contact avant celui-ci — corrigé en retirant ce champ, aucun vrai problème de délai) | relecteur VERDICT: REECRIRE 5, 7, 12 au 1er jet (mélange avec le fil public de commentaires), corrigé par suppression complète des deux phrases empruntées | faits cités : aucun | registre du 01/09 | statut : 🔒 EN FILE DE VALIDATION`
+`QA : mécanique PASS au 2e passage (107 car., limite 1300, 1 paragraphe, fr/fr, 0 chiffre, 0 lien, 0 CTA) — 1er passage FAIL sur context.too-soon (erreur de ma part : un lastOutboundDate avait été renseigné à tort, alors qu'aucun DM sortant n'a jamais existé vers ce contact avant celui-ci — corrigé en retirant ce champ, aucun vrai problème de délai) | relecteur VERDICT: REECRIRE 5, 7, 12 au 1er jet (mélange avec le fil public de commentaires), corrigé par suppression complète des deux phrases empruntées | faits cités : aucun | registre du 01/09 | statut : envoyé le 01/09 à 06:16, sur ordre explicite de David en session interactive (« envoie »)`
 
 > Bonsoir, merci à vous, ça a été un plaisir d'échanger sous votre post. Belle continuation dans vos travaux.
 
-**Ne jamais cliquer sur Envoyer sans validation explicite de David** — conforme à la règle DM (23/07). En attente.
+**Envoyé sur validation explicite de David.** Texte comparé caractère pour caractère avant le clic (107 attendus, 107 côté éditeur, identique: true), fil revérifié inchangé juste avant (« Conversation active », toujours 1 seul message). Après envoi : une seule occurrence, horodatage 06:16 confirmé.
 
 ---
 
