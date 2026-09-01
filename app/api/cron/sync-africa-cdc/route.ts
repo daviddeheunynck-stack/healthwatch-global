@@ -1,4 +1,5 @@
-// Africa CDC News scraper — runs daily at 09:10 UTC (vercel.json: "10 9 * * *").
+// Africa CDC News scraper.
+// Schedule: 10 9 * * *  (daily, 09:10 UTC)
 // The header used to claim "runs Wed + Sat … the handler below no-ops except
 // Wed/Sat"; no such day check has ever existed in this file, and reading it as
 // true makes four runs out of six look like days the cron never fired —
