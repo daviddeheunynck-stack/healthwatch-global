@@ -11,6 +11,19 @@ import { fetchWithRetry } from "@/lib/fetch-retry";
 export const dynamic = "force-dynamic";
 export const maxDuration = 120;
 
+// Combined wall-clock budget for the two verifyFromDON() loops (section 4's
+// anomaly-fix pass and section 4e's resolution/containment pass) — same
+// pattern as TARGET_LOOP_BUDGET_MS in sync-who-regional, added here
+// 2026-09-02 after that cron was found to have the identical structural gap:
+// both loops can in principle run over every active WHO DON row with no
+// budget guard at all, and section 4e adds its own 150ms rate-limit delay on
+// top. Measured 2026-09-02: 0 rows currently match section 4e's DON_RE
+// filter and 0 anomalies exist, so today's real cost is ~0s — but a locked
+// row population is not a guarantee, and the rest of this cron (sections
+// 4f-4n, 5, the email send) needs its share of maxDuration=120 regardless of
+// how many rows these two loops end up processing.
+const DON_VERIFY_BUDGET_MS = 70_000;
+
 const BOM = String.fromCharCode(65279);
 const clean = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM), "").trim();
 
@@ -351,6 +364,10 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
 
   const fixes: Fix[] = [];
   const needsReview: NeedsReview[] = [];
+  // Shared start time for DON_VERIFY_BUDGET_MS — covers this section's loop
+  // AND section 4e's below, since both draw verifyFromDON() calls from the
+  // same budget. See the constant's own comment above.
+  const donVerifyStart = Date.now();
 
   // Section 3's drop/spike detection only runs for rows that HAVE a snapshot to
   // compare against (`if (snap && ...)`), so a missing snapshot doesn't fail the
@@ -377,7 +394,19 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
     }
   }
 
-  for (const a of anomalies) {
+  for (const [anomalyIdx, a] of anomalies.entries()) {
+    // Bail out before maxDuration kills the function outright — see
+    // DON_VERIFY_BUDGET_MS above. Remaining anomalies are simply not
+    // auto-verified this run; they stay flagged as anomalies (nothing here
+    // silently clears them) and get picked up on the next run.
+    if (Date.now() - donVerifyStart > DON_VERIFY_BUDGET_MS) {
+      needsReview.push({
+        label: "[BUDGET] Vérification DON interrompue",
+        detail: `Budget de temps dépassé (${Math.round(DON_VERIFY_BUDGET_MS / 1000)}s) — ${anomalies.length - anomalyIdx} anomalie(s) restante(s) non vérifiée(s) contre la source WHO DON ce run, reprises au prochain passage.`,
+      });
+      break;
+    }
+
     const { row, type, snap } = a;
     const label = `${row.disease} / ${row.country}`;
 
@@ -770,12 +799,22 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
   //   - Formal end-of-outbreak declaration → auto-deactivate
   //   - Strong containment signal          → flag for manual review
   const anomalyIds = new Set(anomalies.map((a) => a.row.id));
+  let donVerify4eBudgetHit = false;
   for (const row of rows ?? []) {
     if (row.is_seed) continue;
     if (!DON_RE.test(row.source ?? "")) continue;
     if (anomalyIds.has(row.id)) continue;
     const label = `${row.disease} / ${row.country}`;
     if ((row.source_priority ?? 0) >= 10) continue; // locked row — never auto-deactivate, see 4. above
+    // Bail out before maxDuration kills the function outright — same shared
+    // DON_VERIFY_BUDGET_MS as section 4 above. A single flag (rather than a
+    // per-row needsReview entry) since this loop can filter through many
+    // rows before finding one that qualifies; the run summary below reports
+    // it once.
+    if (Date.now() - donVerifyStart > DON_VERIFY_BUDGET_MS) {
+      donVerify4eBudgetHit = true;
+      break;
+    }
     const don = await verifyFromDON(row.source);
     if (don?.resolved) {
       // Same contract as applyCaseUpdate above: guard at the DB level too (the
@@ -805,6 +844,12 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
       });
     }
     await new Promise((r) => setTimeout(r, 150));
+  }
+  if (donVerify4eBudgetHit) {
+    needsReview.push({
+      label: "[BUDGET] Vérification résolution/containment DON interrompue",
+      detail: `Budget de temps dépassé (${Math.round(DON_VERIFY_BUDGET_MS / 1000)}s, partagé avec la section 4) — le reste des lignes WHO DON actives n'a pas été vérifié pour une fin d'épidémie ou un signal de containment ce run, repris au prochain passage.`,
+    });
   }
 
   // ── 4f. Seed data freshness check ────────────────────────────────────────────
