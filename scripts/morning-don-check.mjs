@@ -61,7 +61,11 @@ const KNOWN_SEED_CLUSTERS = [
   // chiffre réel) — les trois dépassaient pourtant Cuba (1 457), suivie comme active.
   // Réactivées/insérées avec is_seed=true + source_priority=10, alignées sur le reste du
   // cluster. Cf. fix-chikungunya-argentina-suriname-frenchguiana-2026-08-01.mjs.
-  { label: "Chikungunya (DON581, multi-pays)", diseaseMatch: /chikungunya/i, expectedCount: 8 },
+  // 2026-09-02 : cluster 8 -> 7. Mayotte clôturée sur ordre explicite de David (active=false,
+  // is_seed reste true) — le chikungunya avait disparu de la section arbovirose du bulletin de
+  // surveillance régionale SPF Mayotte depuis le 07/08 (S31). Dernier chiffre confirmé : 1396
+  // cas / 0 décès (24/07, S29). Voir fix-chikungunya-cluster-nydoh-0827-2026-09-02.mjs.
+  { label: "Chikungunya (DON581, multi-pays)", diseaseMatch: /chikungunya/i, expectedCount: 7 },
   { label: "MERS-CoV (DON591)", diseaseMatch: /mers-cov/i, expectedCount: 1 },
   { label: "Choléra (DON579, multi-pays)", diseaseMatch: /cholera/i, expectedCount: 4 },
   { label: "Polio PHEIC (Afghanistan/Pakistan/Palestine)", diseaseMatch: /polio/i, expectedCount: 3 },
@@ -313,24 +317,11 @@ const CLUSTER_EDITION_PENDING = {
   // Choléra : (vide) — WER 101-31 appliqué le 10/08 sur ordre de David, voir
   // scripts/fix-cholera-don579-cluster-wer101-31-2026-08-10.mjs.
   //
-  // Chikungunya : édition du 13/08 appliquée le 17/08 sur ordre de David, voir
-  // scripts/fix-chikungunya-cluster-nydoh-0813-2026-08-17.mjs (Brésil 110569/50→116095/47,
-  // Argentine 11986/2→12114/2 ; Bolivie/Cuba/Suriname inchangés, Guyane française
-  // délibérément non touchée — sourcée SPF, pas PAHO, cf. le script pour le détail).
-  // ⏳ NOUVELLE ÉDITION TROUVÉE LE 01/09, EN ATTENTE D'ARBITRAGE DE DAVID — ne pas appliquer
-  // en autonomie (le 13/08 avait été appliqué sur ordre explicite, pas de plein droit).
-  Chikungunya:
-    "NY DOH Global Health Update du 27/08/2026 (données PAHO extraites le 27/08) + SPF Guyane " +
-    "du 28/08 (SE34). Écarts avec la base : Brésil 116095/47 → 121265/48 ; Cuba 1457/2 → 2716/6 " +
-    "(deaths ×3, plus gros écart du cluster) ; Argentine 12114/2 → 12226/2 ; Maurice 6675/0 → " +
-    "6868/0 (Africa CDC au 24/08, cadrage « Maurice 6769 + Rodrigues 99 » — vérifier que le 6675 " +
-    "en base était bien le combiné avant d'écrire) ; Guyane française 1222/0 → 1693/0 (SPF, SE34 " +
-    "17-23/08, 317 hospitalisations depuis janvier — source SPF conservée, pas PAHO, cf. 17/08). " +
-    "Bolivie (41944/27) et Suriname (7484/0) : chiffres IDENTIQUES, seule la date d'arrêté " +
-    "avancerait au 27/08. ⚠️ Mayotte (1396/0, arrêté 24/07) : le chikungunya a DISPARU du bulletin " +
-    "SPF Mayotte — le bulletin du 07/08 (SE31) ne contient plus que Paludisme, Mpox et le réseau " +
-    "sentinelle, plus aucune section arbovirose. Pas de chiffre plus récent à écrire ; à trancher " +
-    "séparément (clôture/monitoring ?) plutôt qu'un rafraîchissement.",
+  // Chikungunya : (vide) — édition du 27/08 (NY DOH, PAHO) + Guyane SPF du 28/08 appliquées le
+  // 02/09 sur ordre de David, voir scripts/fix-chikungunya-cluster-nydoh-0827-2026-09-02.mjs
+  // (Brésil 116095/47→121265/48, Argentine 12114/2→12226/2, Cuba 1457/2→2716/6, Maurice
+  // 6675/0→6868/0, Guyane française 1222/0→1693/0 ; Bolivie/Suriname inchangés). Mayotte
+  // CLÔTURÉE (active=false) le même jour, sur ordre explicite — pas un rafraîchissement.
 };
 
 const CLUSTER_EDITION_CHECKED = {
@@ -383,18 +374,13 @@ const CLUSTER_EDITION_CHECKED = {
   // hétérogènes). Ne pas chercher à « rafraîchir » les chiffres pays par pays.
   // 🔎 Au prochain passage : la seule édition à guetter est un nouveau DON OMS.
   Cereulide: "2026-08-24",
-  // Chikungunya : NY State DOH Global Health Update du 13/08/2026 (données PAHO au 13/08),
-  // recherché le 17/08 via la page de listing globalhealthreports.health.ny.gov, qui liste
-  // l'édition la plus récente en premier. ⚠️ Le PDF n'est pas lisible par WebFetch (flux
-  // compressés) : WebFetch l'enregistre malgré tout en local et le chemin est retourné dans le
-  // résultat — c'est ce fichier qu'il faut passer à Read, qui gère les PDF nativement.
-  // Édition plus récente que celle en base → entrée ouverte dans CLUSTER_EDITION_PENDING.
-  // Recherche refaite le 01/09 : l'édition courante du listing NY DOH est celle du 27/08/2026
-  // (cadence hebdomadaire nette : 6.25, 7.2, 7.9, 7.16, 7.23, 7.30, 8.6, 8.13, 8.20, 8.27), donc
-  // deux éditions plus récentes que le 13/08 appliqué. Côté SPF : Guyane a un bulletin au 28/08
-  // (1 693 cas, SE34) ; Mayotte a cessé de publier une section chikungunya. Détail des écarts
-  // pays par pays dans CLUSTER_EDITION_PENDING ci-dessus — en attente d'arbitrage.
-  Chikungunya: "2026-09-01",
+  // Chikungunya : édition NY DOH du 27/08/2026 (PAHO) + bulletin SPF Guyane du 28/08 (SE34)
+  // appliquées le 02/09 sur ordre de David — voir fix-chikungunya-cluster-nydoh-0827-2026-09-02.mjs.
+  // Mayotte clôturée (active=false) le même jour, sort donc du cluster actif (8→7, voir
+  // KNOWN_SEED_CLUSTERS). ⚠️ Le PDF NY DOH n'est pas lisible par WebFetch (flux compressés) :
+  // WebFetch l'enregistre malgré tout en local et le chemin est retourné dans le résultat —
+  // c'est ce fichier qu'il faut passer à Read, qui gère les PDF nativement.
+  Chikungunya: "2026-09-02",
 };
 // Les clés de CLUSTER_EDITION_CHECKED étaient comparées à `disease_en` en égalité
 // stricte. Ça marche tant que la clé est exactement le libellé en base ("Cholera",
