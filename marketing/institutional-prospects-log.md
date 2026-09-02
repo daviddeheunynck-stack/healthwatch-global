@@ -3838,3 +3838,48 @@ Le brouillon **MoH Jordanie** a d'abord échoué sur `The service is currently u
 
 - **Un seul déclenchement de la routine aujourd'hui**, contrairement au 01/09. Le doublon signalé hier ne s'est pas reproduit ; la vérification côté planification reste utile mais n'est plus urgente.
 - **⚠️ Fichiers modifiés non touchés par cette routine, laissés tels quels** (règle `AGENTS.md`) : `marketing/qa/product-claims.manual.json` (modifié), `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis).
+
+### 🔄 ADDENDUM 2026-09-02 (~13:15 UTC) — bounce PNG le jour même, remplacement créé
+
+Signalé par David en session, capture d'écran à l'appui, peu après l'envoi du lot.
+
+**1. Le lot a été envoyé par David.** Les 10 brouillons créés à 06:20 UTC sont partis à **13:08 UTC**, soit ~6 h 48 après création. Profil « relecture humaine » du tableau de discrimination du 16/08, pas le bug d'envoi instantané du connecteur. Aucun incident. `list_drafts` en fin d'addendum : **1 seul brouillon**, le remplacement ci-dessous.
+
+**2. ❌ BOUNCE — `health_ministry@health.gov.pg` (National Department of Health, Papouasie-Nouvelle-Guinée).** Fil `1a060c6962963e30` : envoi à **13:08:53 UTC**, notification `mailer-daemon@googlemail.com` à **13:09:07 UTC, 14 secondes après**. Motif Gmail : « l'adresse est introuvable ou ne peut pas recevoir de messages ».
+
+**Balayage des bounces** (`from:mailer-daemon`, `from:postmaster`, `subject:"Delivery Status Notification"`, `subject:Undeliverable`, `subject:"Undelivered Mail"`, `subject:"Adresse introuvable"`, `subject:"Address not found"`, `after:2026/09/01`, corbeille incluse) : **2 fils seulement**, celui d'Antigua d'hier et celui de PNG. **Aucun des 9 autres contacts du lot n'a rebondi.** *(Bilan cumulé non retotalisé ici : porteur unique `daily-relance-check-healthwatch`, consigne du 16/08.)*
+
+**⚠️ Leçon nouvelle, et elle limite explicitement le contrôle ajouté ce matin : un MX valide ne prouve pas que la boîte existe.**
+
+Ce contact avait passé **les deux** contrôles disponibles :
+- **Source** : `health_ministry@health.gov.pg` était publiée en clair sur `health.gov.pg`, lue en HTTP 200 pendant le run, à deux endroits (section contact **et** pied de page). Ce n'est pas un cas « index de recherche seul ».
+- **DNS** : `health.gov.pg` a des MX Microsoft 365 valides — c'est même ce qui le distingue d'Antigua hier, où le domaine n'avait aucun MX.
+
+Le domaine accepte donc bien du courrier ; c'est la **boîte locale** qui n'existe pas (ou plus). Le contrôle MX reste utile — il aurait écarté Antigua en une seconde — mais **il attrape la classe « domaine mort », pas la classe « adresse périmée sur un domaine vivant »**. Aucune vérification préalable à l'envoi ne couvre la seconde : seul l'envoi la révèle. **À ne pas surinterpréter dans les runs futurs : « MX ✅ » n'est pas « adresse délivrable ✅ ».** Le taux de délivrabilité du canal restera plafonné par cette limite tant que la seule preuve possible sera l'envoi lui-même.
+
+**3. Remplacement créé dans le temps du run (règle du 19/08).**
+
+Cibles examinées et écartées avant de trancher, dans l'ordre :
+- **Autre boîte du NDoH PNG** — `health.gov.pg` ne publie que celle-ci ; aucune autre adresse du domaine trouvée sur le site ni ailleurs en lecture directe.
+- **MINSA Panama** — `minsa.gob.pa/direccion/direccion-general-de-salud-publica` accessible mais sans adresse (téléphone seul) ; `appwebs.minsa.gob.pa/woferentes/Contacto.aspx` en ECONNRESET. L'adresse d'épidémiologie trouvée, `vigepipanama@yahoo.com`, est une **boîte grand public publiée à côté d'adresses `@minsa.gob.pa`** — condition (b) du critère du 25/08 non remplie, écartée.
+- **MINSANTE Cameroun** — page contact en 404, racine sans adresse.
+- **MSP Équateur** et **MinSalud Colombie** — pages contact en 404.
+- **MSPBS Paraguay** — page contact accessible, aucune adresse publiée (téléphones seuls).
+- **Ministère de la Santé de Zanzibar** — `info@mohz.go.tz` connu du **seul extrait moteur** ; les trois URL du site (racine, `/eng/contact-us/`, `/temp/home/contact-us`) servent une coquille JavaScript sans adresse. Écarté par la règle du 18/08. Dommage, c'était la seule piste AFRO du lot.
+
+**Retenu : `info@mohp.gov.np` — Ministry of Health and Population, Népal** (SEARO). Brouillon `r431452687996115112`, objet « HealthWatch Global — outbreak alerts, MoHP Nepal » (47 caractères).
+
+- **Vérification** : publiée en clair et à plusieurs reprises sur `mohp.gov.np`, **domaine propre du ministère**, lu en HTTP 200. Boîte fonctionnelle, pas nominative (la boîte du Secrétaire, `healthsecretary.mohp.np@gmail.com`, est grand public **et** nominative — doublement écartée par les critères des 19/08 et 25/08).
+- **MX** : ✅ `mx1.nepal.gov.np` / `mx2.nepal.gov.np`.
+- **Anti-doublon** : `mohp.gov.np` → **0**. L'unique occurrence de « MoHP » dans le journal (l. 1330) est `mohp.gov.eg`, l'Égypte — sans rapport.
+- **⚠️ Deuxième contact népalais du même lot, signalé.** Le bureau pays OMS (`senepwr@who.int`) est déjà dans les 10 de ce matin. Deux **employeurs distincts** — le plafond du 25/08 porte sur l'organisation faîtière, il n'est pas franchi — mais deux messages partent vers le même pays le même jour, et ces deux entités se connaissent. Choix assumé faute de piste AFRO/AMRO vérifiable après 7 tentatives ; à arbitrer autrement par David s'il préfère différer l'un des deux.
+- Rédaction distincte de celle du bureau OMS (angle « surveillance nationale » et non « contexte régional »), aucun lien cliquable, « healthwatch-global dot com », question explicite en clôture.
+
+**4. Compteurs corrigés.**
+
+- **Lot du jour : 9 délivrés / 10 préparés** — PNG n'a pas été délivré. Le compteur cumulé du canal ne doit pas compter ce contact comme atteint.
+- **Prospectés : 327** — inchangé (le contact PNG a bien été prospecté).
+- **Envoyés : 327** = 317 + les 10 de ce lot partis à 13:08 UTC.
+- **Délivrés : 9 sur les 10 de ce lot.** Total de délivrabilité du canal recalculé par `daily-relance-check-healthwatch`, porteur unique du bilan cumulé.
+- **Profondeur de file en fin d'addendum : 1 brouillon** — le remplacement Népal, non envoyé, vérifié en `labelIds: ["DRAFT"]`.
+- **Relance J+10** : le lot du 02/09 devient éligible le **12/09**, sur **9 contacts** ; `health_ministry@health.gov.pg` est **écarté définitivement** (adresse introuvable, aucune relance possible).
