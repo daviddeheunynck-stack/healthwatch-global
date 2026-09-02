@@ -2901,3 +2901,23 @@ Volontairement pas touché : les boucles par article/bulletin en aval (`entry.ur
 `npx tsc --noEmit` et `npx eslint` propres sur les deux fichiers touchés.
 
 **Bilan cumulé fetch-retry, six commits ce soir : 16 crons entiers (les 14 initiaux + who-emro + spf) + les 11 fetchers par-cible de `sync-who-regional` (70 des 139 cibles) couverts.** Reliquat pour le reste : `sync-usda-aphis` (chaîne de candidats CSV, pas encore reconsidérée à la lumière de ce soir) et `sync-endemic-data` (helper générique partagé sur 7 sites d'appel, structure encore non vérifiée).
+
+### Suite du même soir (02/09, session interactive) — retry construit sur `sync-usda-aphis` et `sync-endemic-data`, dernier volet
+
+David a demandé le rollout sur ces deux derniers crons (« rollout sur sync-usda-aphis et sync-endemic-data »). Verrou de code réacquis, édition faite, relâché après le push.
+
+**✅ CONSTRUIT, commit `46d63eeb`.**
+
+**`sync-usda-aphis`** — même reconsidération que who-emro/spf (commit `9a9860e4`) : `APHIS_CSV_CANDIDATES` (4 candidats, 2×4s) puis repli HTML `APHIS_HTML_URL` (2×7,5s). La 3ᵉ stratégie (`scrapeAphisTableauCsv`, navigateur headless pilotant l'UI « Download crosstab » de Tableau) reste **volontairement hors périmètre** — mécanisme différent, pas un simple `fetch()` à envelopper.
+
+**`sync-endemic-data`** — le cas le plus délicat de ce soir. `fetchHtml()` était un helper partagé sur **6 sites d'appel** aux profils de risque très différents, jamais vérifié jusqu'ici (c'est exactement pourquoi ce cron avait été écarté du rollout initial). Lecture complète du fichier avant toute édition :
+- **4 sites sûrs** : boucles bornées sur des URLs candidates/listing génuinement distinctes — 3 flux RSS (dengue Philippines), 1 appel API unique (recherche du dernier bulletin choléra), 3 pages de recherche (leptospirose Thaïlande), 8 semaines de bulletin SEARO devinées. Retry ajouté (2×6s chacun).
+- **2 sites laissés inchangés** : boucles par article découvert (jusqu'à 5-6 items, après succès du listing) — même discipline que le reste du rollout de ce soir, ce sont des fetchs par-item.
+
+`fetchHtml()` prend désormais un paramètre `retry` optionnel (défaut : 1 tentative, comportement identique à avant) plutôt que d'être enveloppée en bloc — seul moyen de respecter la distinction site par site sans dupliquer le helper. Le fetch PDF direct de `tryWHOGlobalCholeraUpdate` (3 candidats de date, hors `fetchHtml`) est traité séparément, même calibrage.
+
+**Plus aucun appel `fetch()` brut dans les deux fichiers** — tout passe désormais par `fetchWithRetry`, directement ou via `fetchHtml()`.
+
+`npx tsc --noEmit` et `npx eslint` propres sur les deux fichiers touchés.
+
+**Bilan cumulé fetch-retry, sept commits ce soir : les 18 crons de source identifiés dans la proposition initiale sont désormais tous couverts** (18 entiers pour ceux à listing unique, plus les 11 fetchers ciblés de `sync-who-regional` sur ses 139 cibles). Aucun reliquat annoncé ce soir ne reste en attente — la seule chose délibérément non touchée est `queryReliefWeb` dans `sync-who-regional` (code mort, `reliefWebOk = false`) et la stratégie Tableau/headless-browser d'APHIS (mécanisme différent, hors du périmètre « ajouter du retry à un fetch »).
