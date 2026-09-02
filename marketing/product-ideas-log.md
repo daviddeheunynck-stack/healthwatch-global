@@ -2855,3 +2855,19 @@ David a demandé le retry sur ce sous-ensemble précis (« ajoute le retry sur l
 `npx tsc --noEmit` et `npx eslint` propres sur le fichier touché.
 
 **Bilan cumulé fetch-retry, trois commits ce soir (`bb2a707b`, `07493f46`, `6399da3b`) : 14 crons entiers + 8 fetchers ciblés d'un 15e (`sync-who-regional`, 46 cibles sur ses 139) couverts.** Reliquat inchangé pour le reste : `sync-usda-aphis`, `sync-who-emro`, `sync-spf`, `sync-endemic-data` (chaînes de secours / helper générique partagé), et pour `sync-who-regional` spécifiquement, `fetchPolioGPEIThisWeek`/`fetchWNVEcdc` (nécessitent une mise en cache avant qu'un retry ait du sens) et la méningite (déjà résiliente).
+
+### Suite du même soir (02/09, session interactive) — mise en cache + retry construits pour GPEI et WNV
+
+David a demandé la mise en cache pour ces deux fetchers (« ajoute la mise en cache pour GPEI et WNV »), le dernier des trois volets laissés ouverts ce soir (garde-fou → retry GHO/xmart/ArcGIS → ce commit). Verrou de code réacquis, édition faite, relâché après le push.
+
+**✅ CONSTRUIT, commit `a31bf33b`.** `getGpeiSection()` et `getWnvSeason()` : un cache module-level (une promesse partagée) mémorise le premier fetch+parse de chaque page pour toutes les cibles suivantes du même run, remis à zéro au début de chaque `runSyncWhoRegional()` — protection contre un conteneur serverless chaud qui servirait la page de la veille, même si peu probable pour un cron quotidien à 24h d'écart.
+
+**`fetchWNVEcdc` va plus loin que le simple fetch.** La page entière était aussi **ré-analysée** 7 fois (pas seulement re-téléchargée) : le total saison (`sorted`, `totalCases`, `totalAreas`, `countryList`) agrège TOUS les pays et ne dépend pas de la cible — donc identique à chaque appel. La fonction extrait désormais un objet `WnvSeason` complet une seule fois ; chaque cible ne fait plus qu'un `byCountry.get(countryEn)` dessus.
+
+**`fetchWithRetry` ajouté aux deux fetch désormais uniques** — 2 tentatives, 5s (GPEI) / 7,5s (WNV), proches des timeouts originaux à tentative unique. Sûr maintenant, contrairement à ce soir plus tôt : multiplier par 13/7 comme évoqué dans l'entrée précédente n'a plus de sens, puisqu'il n'y a plus qu'UN fetch par run pour chacun.
+
+**Vérifié avant intégration**, simulation isolée du patron de mémoïsation (13 appels sur la même promesse → 1 fetch réel confirmé ; reset entre deux runs simulés → re-fetch confirmé).
+
+`npx tsc --noEmit` et `npx eslint` propres sur le fichier touché.
+
+**Bilan cumulé fetch-retry, quatre commits ce soir (`bb2a707b`, `07493f46`, `6399da3b`, `a31bf33b`) : 14 crons entiers + les 10 fetchers par-cible de `sync-who-regional` (46+13+7 = 66 cibles sur ses 139) couverts, plus une redondance réseau de 20 fetches/run (13 GPEI + 7 WNV) éliminée.** Reliquat inchangé pour le reste : `sync-usda-aphis`, `sync-who-emro`, `sync-spf`, `sync-endemic-data` (chaînes de secours / helper générique partagé) et, dans `sync-who-regional`, le fetcher méningite (déjà résilient par sa propre boucle de candidats — pas de redondance à corriger, contrairement à GPEI/WNV) et `queryReliefWeb` (code mort).
