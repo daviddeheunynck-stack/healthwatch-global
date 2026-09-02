@@ -2472,3 +2472,89 @@ Une entrée ajoutée : `reference_wer_cholera_update_is_monthly_not_weekly` — 
 | Section 4b bis | 9 entrées → 0 |
 | Un constat corrigé | le WER n'était pas périmé — voir le point 2 |
 | Reliquat restant | aucun point actionnable |
+
+---
+
+## 2026-09-02 — Proposition du jour
+
+Signal de départ : le retour du **31/08 de `lepapapericles5@gmail.com`** (essai actif, Afrique), premier retour produit jamais reçu sur l'**accessibilité** plutôt que sur la donnée — « je suis dans une zone avec une faible couverture de connexion, raison pour laquelle j'ai du mal à revenir sur le tableau ». Pour lui, le produit **c'est l'e-mail** ; le tableau de bord est hors d'atteinte.
+
+### 0. La piste évidente ne tient pas — mesurée avant d'être écrite
+
+`product-feedback.md` ouvrait la piste d'« une version allégée du digest pour connexions faibles ». **Vérifié, il n'y a rien à alléger.** Les gabarits ont été transpilés et rendus avec des données réalistes :
+
+```
+digest  1 foyer   : 2 648 o   ·  alerte simple : 2 444 o
+digest  3 foyers  : 4 398 o
+digest 10 foyers  : 10 646 o   (le maximum possible, cf. MAX_DIGEST_ITEMS_PER_EMAIL)
+```
+
+Aucune image distante, aucune police distante, aucun `background-image` : `grep` sur les 17 gabarits de `lib/*email*.ts` ne trouve **pas un seul `<img>`**. Un e-mail de 10 Ko autoporteur n'est pas un problème de bande passante, et le dire aurait été inventer un défaut. Ce qui est vrai, en revanche, c'est ce qui suit.
+
+### 1. 🔴 Deux foyers sur trois « alertés » n'ont jamais été nommés à personne — et ils sont éteints pour l'avenir
+
+**Signal.** Les trois digests plafonnent l'e-mail à 10 foyers et résument le reste en une phrase — `« + 105 autres foyers actifs — consultez le tableau de bord complet. »` (`lib/alert-emails.ts:69`), `« + N autres alertes maladies — consultez le tableau de bord complet. »` (`lib/disease-alert-email.ts:79`), `« + N autres foyers actifs, consultables dans votre tableau de bord. »` (`lib/signup-digest-email.ts:42`). Or **tous** les foyers du lot, coupés ou non, sont écrits dans `outbreak_alert_log` — le code le dit lui-même : *« every item still gets logged/Slacked below regardless of whether it made the cut for the email body »* (`regional-alerts/route.ts:466`). Et ces lignes sont précisément **ce qui supprime les alertes futures** sur la même paire utilisateur/foyer, sauf escalade de risque ou +20 % de cas.
+
+Un foyer coupé est donc **nommé nulle part et éteint pour toujours**. Le seul rattrapage offert est le tableau de bord.
+
+**Mesuré sur la prod ce matin** (`outbreak_alert_log`, 3 313 lignes, paginé — un résultat à exactement 1000 aurait été une troncature) :
+
+```
+lots (utilisateur × jour) : 249, dont 48 tronqués
+TOTAL : 3 313 foyers journalisés comme alertés
+        dont 2 236 jamais nommés  →  67,5 %
+
+pires lots :  2026-08-29  114 foyers → 10 nommés, 104 jamais nommés
+              2026-08-28  109 foyers → 10 nommés,  99 jamais nommés
+              2026-08-22  103 foyers → 10 nommés,  93 jamais nommés
+```
+
+**Et pour l'utilisateur qui a écrit le 31/08 :**
+
+```
+2026-08-20 :  36 foyers → 10 nommés,  26 jamais nommés   (digest d'inscription)
+2026-08-21 :   1                       0
+2026-08-23 :   8                       0
+2026-08-24 :   2                       0
+2026-08-27 :   2                       0
+soit 26 foyers sur 49 qu'il n'a aucun moyen de connaître.
+```
+
+**Pourquoi c'est un angle neuf et pas une re-proposition.** Le plafond a été relevé le 25/08 comme *« arbitrage délibéré et documenté, pas un défaut »*, et à raison : il protège la lisibilité d'un e-mail. Ce qui a changé le 31/08, c'est qu'un utilisateur réel a dit ne pas pouvoir atteindre la surface vers laquelle le plafond renvoie. « Consultez le tableau de bord » n'est un résumé que pour qui peut l'ouvrir ; pour les autres c'est une perte sèche. L'arbitrage sur les **cartes** reste bon — c'est le renvoi qui ne l'est plus.
+
+**Correctif proposé, chiffré.** Ne pas relever le plafond de cartes : ajouter sous les cartes une **ligne de texte nue nommant les foyers coupés** (`Maladie · Pays`, séparés par ` · `, sans lien ni encadré), et remplacer le renvoi au tableau de bord par cette liste. Longueur réelle mesurée sur les 131 foyers actifs : moyenne **30 caractères** par libellé, soit **~3,5 Ko pour 105 foyers** (digest 10,6 → ~14 Ko) et **~0,9 Ko pour les 26** du cas ci-dessus. Trois gabarits touchés, la même modification dans chacun.
+
+**Effort :** petit — trois gabarits, cinq langues chacun, aucune requête ni schéma en plus (les libellés sont déjà dans le lot passé au gabarit, il suffit de ne pas les jeter).
+
+**Risque/inconnue :** (a) un libellé va jusqu'à **146 caractères** en base (les intitulés d'événement de sécurité alimentaire) — 105 de ceux-là feraient un mur, il faut un plafond de longueur par libellé ; (b) une liste de 105 noms reste peu lisible : le regroupement par maladie (« Choléra — 7 pays ») serait plus lisible mais perd le pays, c'est un arbitrage de fond à trancher ; (c) le vrai problème de fond reste que 114 foyers en un seul lot est un régime d'alerte anormal, et nommer les coupés le rend visible sans le corriger.
+
+**⛔ Délibérément NON construite ce soir — garde-fou 3.** Cette modification change le **contenu d'e-mails envoyés à des clients** (14 essais actifs, dont trois pilotes institutionnels — Georgetown, ministère de Malte, ARIES). Le garde-fou de cette routine réserve ce domaine à une demande explicite de David en session. La conception ci-dessus est complète et chiffrée : un mot suffit pour la faire construire.
+
+### 2. 🔴 Un cron qui vient d'être ajouté est compté « en retard » sur-le-champ — la supervision est rouge depuis hier pour cette seule raison
+
+**Signal.** Relevé de l'état des 51 crons ce matin : `health-check` est en `error` depuis 23 h, et depuis le correctif du 29/08 il dit enfin pourquoi —
+
+```
+health-check -> {"status":"error", "error":"1 cron(s) en retard : check-wer-cholera — plus 1 incident(s) Sentry"}
+```
+
+`check-wer-cholera` a été créé **hier** (commit `c2050dd6`, 2026-09-01 04h49 UTC) et tourne **le lundi à 08h30**. Son premier passage est donc le 07/09. Le rapport de 07h05 le matin même est parti rouge — ligne d'objet comprise — pour un cron dont l'heure n'était pas encore venue, et repartira rouge **six jours de suite**, avec un avertissement Sentry chaque jour.
+
+**La cause est une seule branche** (`health-check/route.ts:921`) :
+
+```ts
+const run = cronMap[name];
+if (!run) {
+  overdue.push(name);                                  // « jamais passé » = « en retard »
+  return { name, ageH: null, windowH, ok: false, label: "jamais" };
+}
+```
+
+« N'a jamais tourné » et « aurait dû tourner » sont traités comme la même chose. Ils ne le sont pas : il manque la date à partir de laquelle on est en droit d'attendre un passage. Le défaut est structurel — il se rejouera à l'identique au prochain cron ajouté, et d'autant plus longtemps que sa cadence est lente.
+
+**Pourquoi ça compte au-delà du confort.** C'est la seule supervision de haut niveau du produit, et c'est précisément le motif de panne que ce dépôt combat depuis un mois : un rouge qui ne veut rien dire apprend à ne plus lire le rouge. Le 27/08 avait déjà livré exactement ce diagnostic sur un autre cron (« affiche EN ERREUR depuis 4 jours parce que son garde-fou a fait ce pour quoi il a été écrit »).
+
+**Effort :** petit — une branche, pas de migration.
+
+**Risque/inconnue :** relâcher cette branche pourrait masquer un cron ajouté à `CRON_WINDOWS` mais oublié dans `vercel.json`, qui ne tournerait jamais. Traité en donnant une **échéance** et non une exemption : voir la construction ci-dessous.
+
