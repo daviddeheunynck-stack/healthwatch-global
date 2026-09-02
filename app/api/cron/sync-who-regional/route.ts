@@ -40,6 +40,7 @@ import { normalizeDisease } from "@/lib/disease-data";
 import { findCountry, isCountryName } from "@/lib/geo-data";
 import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
 import { errorMessage } from "@/lib/error";
+import { fetchWithRetry } from "@/lib/fetch-retry";
 import * as Sentry from "@sentry/nextjs";
 import { truncateAtSentence } from "@/lib/truncate-text";
 import { dateFloorGuard, spikeGuard, collapseGuard, zeroCaseGuard, zeroDeathGuard, lockedRowRegressionGuard, lockedRowIsFreezing } from "@/lib/outbreak-guards";
@@ -199,13 +200,19 @@ function fetchMeaslesGHO(country_en: string): () => Promise<Found | null> {
   return async () => {
     const iso3 = GHO_MEASLES_ISO3[country_en];
     if (!iso3) return null;
+    const url = `https://ghoapi.azureedge.net/api/WHS3_62?%24filter=SpatialDim%20eq%20'${iso3}'&%24orderby=TimeDim%20desc&%24top=1`;
+    // fetchWithRetry: 2 attempts, 5s each — worst case ~10.5s, about the same
+    // total wait as the original single 10s attempt, so a fully-down host
+    // doesn't meaningfully change how fast TARGET_LOOP_BUDGET_MS is consumed;
+    // a brief blip now recovers instead of costing this target the whole day.
+    // See lib/fetch-retry.ts (2026-09-02) — safe here now that the loop has
+    // a time budget to fall back on.
+    const { response: res } = await fetchWithRetry(
+      url, { headers: { "User-Agent": "HealthWatch-Global/1.0 (health surveillance; contact@healthwatch-global.com)" } },
+      { attempts: 2, timeoutMs: 5000, backoffMs: [500] },
+    );
+    if (!res || !res.ok) return null;
     try {
-      const url = `https://ghoapi.azureedge.net/api/WHS3_62?%24filter=SpatialDim%20eq%20'${iso3}'&%24orderby=TimeDim%20desc&%24top=1`;
-      const res = await fetch(url, {
-        headers: { "User-Agent": "HealthWatch-Global/1.0 (health surveillance; contact@healthwatch-global.com)" },
-        signal:  AbortSignal.timeout(10_000),
-      });
-      if (!res.ok) return null;
       type GHORec = { SpatialDim: string; TimeDim: number; NumericValue: number | null };
       const json = await res.json() as { value: GHORec[] };
       const rec  = json.value?.[0];
@@ -238,13 +245,15 @@ function fetchPolioGHO(country_en: string): () => Promise<Found | null> {
   return async () => {
     const iso3 = GHO_WPV_ISO3[country_en];
     if (!iso3) return null;
+    const url = `https://ghoapi.azureedge.net/api/VACCINEPREVENTABLE_WILDPOLIO?%24filter=SpatialDim%20eq%20'${iso3}'&%24orderby=TimeDim%20desc&%24top=1`;
+    // fetchWithRetry: 2 attempts, 5s each — see fetchMeaslesGHO above and
+    // lib/fetch-retry.ts (2026-09-02).
+    const { response: res } = await fetchWithRetry(
+      url, { headers: { "User-Agent": "HealthWatch-Global/1.0 (health surveillance; contact@healthwatch-global.com)" } },
+      { attempts: 2, timeoutMs: 5000, backoffMs: [500] },
+    );
+    if (!res || !res.ok) return null;
     try {
-      const url = `https://ghoapi.azureedge.net/api/VACCINEPREVENTABLE_WILDPOLIO?%24filter=SpatialDim%20eq%20'${iso3}'&%24orderby=TimeDim%20desc&%24top=1`;
-      const res = await fetch(url, {
-        headers: { "User-Agent": "HealthWatch-Global/1.0 (health surveillance; contact@healthwatch-global.com)" },
-        signal:  AbortSignal.timeout(10_000),
-      });
-      if (!res.ok) return null;
       type GHORec = { SpatialDim: string; TimeDim: number; NumericValue: number | null };
       const json = await res.json() as { value: GHORec[] };
       const rec  = json.value?.[0];
@@ -471,13 +480,15 @@ function fetchYellowFeverGHO(country_en: string): () => Promise<Found | null> {
   return async () => {
     const iso3 = GHO_YF_ISO3[country_en];
     if (!iso3) return null;
+    const url = `https://ghoapi.azureedge.net/api/WHS3_50?%24filter=SpatialDim%20eq%20'${iso3}'&%24orderby=TimeDim%20desc&%24top=1`;
+    // fetchWithRetry: 2 attempts, 5s each — see fetchMeaslesGHO above and
+    // lib/fetch-retry.ts (2026-09-02).
+    const { response: res } = await fetchWithRetry(
+      url, { headers: { "User-Agent": "HealthWatch-Global/1.0 (health surveillance; contact@healthwatch-global.com)" } },
+      { attempts: 2, timeoutMs: 5000, backoffMs: [500] },
+    );
+    if (!res || !res.ok) return null;
     try {
-      const url = `https://ghoapi.azureedge.net/api/WHS3_50?%24filter=SpatialDim%20eq%20'${iso3}'&%24orderby=TimeDim%20desc&%24top=1`;
-      const res = await fetch(url, {
-        headers: { "User-Agent": "HealthWatch-Global/1.0 (health surveillance; contact@healthwatch-global.com)" },
-        signal:  AbortSignal.timeout(10_000),
-      });
-      if (!res.ok) return null;
       type GHORec = { SpatialDim: string; TimeDim: number; NumericValue: number | null };
       const json = await res.json() as { value: GHORec[] };
       const rec  = json.value?.[0];
@@ -510,13 +521,15 @@ function fetchLeishmaniasisGHO(country_en: string): () => Promise<Found | null> 
   return async () => {
     const iso3 = GHO_LEISH_ISO3[country_en];
     if (!iso3) return null;
+    const url = `https://ghoapi.azureedge.net/api/NTD_LEISHVNUM?%24filter=SpatialDim%20eq%20'${iso3}'&%24orderby=TimeDim%20desc&%24top=1`;
+    // fetchWithRetry: 2 attempts, 5s each — see fetchMeaslesGHO above and
+    // lib/fetch-retry.ts (2026-09-02).
+    const { response: res } = await fetchWithRetry(
+      url, { headers: { "User-Agent": "HealthWatch-Global/1.0 (health surveillance; contact@healthwatch-global.com)" } },
+      { attempts: 2, timeoutMs: 5000, backoffMs: [500] },
+    );
+    if (!res || !res.ok) return null;
     try {
-      const url = `https://ghoapi.azureedge.net/api/NTD_LEISHVNUM?%24filter=SpatialDim%20eq%20'${iso3}'&%24orderby=TimeDim%20desc&%24top=1`;
-      const res = await fetch(url, {
-        headers: { "User-Agent": "HealthWatch-Global/1.0 (health surveillance; contact@healthwatch-global.com)" },
-        signal:  AbortSignal.timeout(10_000),
-      });
-      if (!res.ok) return null;
       type GHORec = { SpatialDim: string; TimeDim: number; NumericValue: number | null };
       const json = await res.json() as { value: GHORec[] };
       const rec  = json.value?.[0];
@@ -549,13 +562,15 @@ function fetchDiphtheriaGHO(country_en: string): () => Promise<Found | null> {
   return async () => {
     const iso3 = GHO_DIPHTHERIA_ISO3[country_en];
     if (!iso3) return null;
+    const url = `https://ghoapi.azureedge.net/api/WHS3_41?%24filter=SpatialDim%20eq%20'${iso3}'&%24orderby=TimeDim%20desc&%24top=1`;
+    // fetchWithRetry: 2 attempts, 5s each — see fetchMeaslesGHO above and
+    // lib/fetch-retry.ts (2026-09-02).
+    const { response: res } = await fetchWithRetry(
+      url, { headers: { "User-Agent": "HealthWatch-Global/1.0 (health surveillance; contact@healthwatch-global.com)" } },
+      { attempts: 2, timeoutMs: 5000, backoffMs: [500] },
+    );
+    if (!res || !res.ok) return null;
     try {
-      const url = `https://ghoapi.azureedge.net/api/WHS3_41?%24filter=SpatialDim%20eq%20'${iso3}'&%24orderby=TimeDim%20desc&%24top=1`;
-      const res = await fetch(url, {
-        headers: { "User-Agent": "HealthWatch-Global/1.0 (health surveillance; contact@healthwatch-global.com)" },
-        signal:  AbortSignal.timeout(10_000),
-      });
-      if (!res.ok) return null;
       type GHORec = { SpatialDim: string; TimeDim: number; NumericValue: number | null };
       const json = await res.json() as { value: GHORec[] };
       const rec  = json.value?.[0];
@@ -639,8 +654,12 @@ function fetchDengueGlobalSurveillance(country_en: string): () => Promise<Found 
       const url =
         `${base}?%24filter=ISO3%20eq%20'${iso3}'%20and%20YEAR%20eq%20${year}%20and%20CASES%20ne%20null` +
         `&%24orderby=START_DATE%20asc&%24top=100&excludeSysColumns=0`;
-      const res = await fetch(url, { headers: { "User-Agent": ua }, signal: AbortSignal.timeout(10_000) });
-      if (!res.ok) return null;
+      // fetchWithRetry: 2 attempts, 5s each — see fetchMeaslesGHO above and
+      // lib/fetch-retry.ts (2026-09-02). Worst-case wait per call stays close
+      // to the original single 10s attempt (this function can make up to 2
+      // such calls per target on a full sumYear→latestUrl fallback).
+      const { response: res } = await fetchWithRetry(url, { headers: { "User-Agent": ua } }, { attempts: 2, timeoutMs: 5000, backoffMs: [500] });
+      if (!res || !res.ok) return null;
       const json = await res.json() as { value: Rec[] };
       const rows = json.value ?? [];
       if (rows.length === 0) return null;
@@ -682,8 +701,8 @@ function fetchDengueGlobalSurveillance(country_en: string): () => Promise<Found 
       const latestUrl =
         `${base}?%24filter=ISO3%20eq%20'${iso3}'%20and%20CASES%20ne%20null` +
         `&%24orderby=START_DATE%20desc&%24top=1&excludeSysColumns=0`;
-      const latestRes = await fetch(latestUrl, { headers: { "User-Agent": ua }, signal: AbortSignal.timeout(10_000) });
-      if (!latestRes.ok) return null;
+      const { response: latestRes } = await fetchWithRetry(latestUrl, { headers: { "User-Agent": ua } }, { attempts: 2, timeoutMs: 5000, backoffMs: [500] });
+      if (!latestRes || !latestRes.ok) return null;
       const latestJson = await latestRes.json() as { value: Rec[] };
       const lastYear = latestJson.value?.[0]?.YEAR;
       return withinCeiling(lastYear ? await sumYear(lastYear) : null);
@@ -713,15 +732,17 @@ function fetchMpoxGlobalSurveillance(country_en: string): () => Promise<Found | 
   return async () => {
     const iso3 = MPOX_ISO3[country_en];
     if (!iso3) return null;
+    const url =
+      `https://xmart-api-public.who.int/MPX/V_MPX_VALIDATED_DAILY` +
+      `?%24filter=ISO3%20eq%20'${iso3}'&%24orderby=DATE%20desc&%24top=1&excludeSysColumns=0`;
+    // fetchWithRetry: 2 attempts, 5s each — see fetchMeaslesGHO above and
+    // lib/fetch-retry.ts (2026-09-02).
+    const { response: res } = await fetchWithRetry(
+      url, { headers: { "User-Agent": "HealthWatch-Global/1.0 (health surveillance; contact@healthwatch-global.com)" } },
+      { attempts: 2, timeoutMs: 5000, backoffMs: [500] },
+    );
+    if (!res || !res.ok) return null;
     try {
-      const url =
-        `https://xmart-api-public.who.int/MPX/V_MPX_VALIDATED_DAILY` +
-        `?%24filter=ISO3%20eq%20'${iso3}'&%24orderby=DATE%20desc&%24top=1&excludeSysColumns=0`;
-      const res = await fetch(url, {
-        headers: { "User-Agent": "HealthWatch-Global/1.0 (health surveillance; contact@healthwatch-global.com)" },
-        signal:  AbortSignal.timeout(10_000),
-      });
-      if (!res.ok) return null;
       type Rec = { DATE: string; TOTAL_CONF_CASES: number | null; TOTAL_PROB_CASES: number | null; TOTAL_CONF_DEATHS: number | null };
       const json = await res.json() as { value?: Rec[] };
       const rec = json.value?.[0];
@@ -821,8 +842,12 @@ function fetchCholeraGlobalSurveillance(country_en: string): () => Promise<Found
       // silently returns HTTP 200 with a JSON {error:...} body, not a 4xx.
       const where = `iso_3_code='${iso3}' AND date_wk>=TIMESTAMP '${year}-01-01 00:00:00' AND date_wk<TIMESTAMP '${year + 1}-01-01 00:00:00'`;
       const url   = `${base}?where=${encodeURIComponent(where)}&outFields=date_wk,cases,deaths&orderByFields=date_wk+ASC&resultRecordCount=100&f=json`;
-      const res = await fetch(url, { headers: { "User-Agent": ua }, signal: AbortSignal.timeout(10_000) });
-      if (!res.ok) return null;
+      // fetchWithRetry: 2 attempts, 5s each — see fetchMeaslesGHO above and
+      // lib/fetch-retry.ts (2026-09-02). Worst-case wait per call stays close
+      // to the original single 10s attempt (this function can make up to 2
+      // such calls per target on a full sumYear→probeUrl fallback).
+      const { response: res } = await fetchWithRetry(url, { headers: { "User-Agent": ua } }, { attempts: 2, timeoutMs: 5000, backoffMs: [500] });
+      if (!res || !res.ok) return null;
       const json = await res.json() as { features?: Feature[]; error?: unknown };
       const features = json.features ?? [];
       if (json.error || features.length === 0) return null;
@@ -865,8 +890,8 @@ function fetchCholeraGlobalSurveillance(country_en: string): () => Promise<Found
       // than silence, and correctly surfaces as stale via data-quality rather
       // than hiding the gap.
       const probeUrl = `${base}?where=${encodeURIComponent(`iso_3_code='${iso3}'`)}&outFields=date_wk&orderByFields=date_wk+DESC&resultRecordCount=1&f=json`;
-      const probeRes = await fetch(probeUrl, { headers: { "User-Agent": ua }, signal: AbortSignal.timeout(10_000) });
-      if (!probeRes.ok) return null;
+      const { response: probeRes } = await fetchWithRetry(probeUrl, { headers: { "User-Agent": ua } }, { attempts: 2, timeoutMs: 5000, backoffMs: [500] });
+      if (!probeRes || !probeRes.ok) return null;
       const probeJson = await probeRes.json() as { features?: Feature[] };
       const lastMs = probeJson.features?.[0]?.attributes.date_wk;
       return lastMs ? await sumYear(new Date(lastMs).getUTCFullYear()) : null;
