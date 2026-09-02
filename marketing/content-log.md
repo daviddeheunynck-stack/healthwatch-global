@@ -2,7 +2,7 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
-## 📅 Session linkedin-hwg-content-proposal — 02/09/2026 (mercredi MWF, 8h35) — 🔴 **AUCUN POST PROPOSÉ au créneau planifié, 2e créneau consécutif** — un brouillon complet rédigé puis retiré : l'angle avait été publié sur X 2 jours plus tôt. ⚠️ **Mise à jour 09h04, même run interactif** : David a demandé la rédaction du candidat PARTNERS (§6). Brouillon **PRÊT — en attente de validation**, voir entrée dédiée juste en dessous.
+## 📅 Session linkedin-hwg-content-proposal — 02/09/2026 (mercredi MWF, 8h35) — 🔴 **AUCUN POST PROPOSÉ au créneau planifié, 2e créneau consécutif** — un brouillon complet rédigé puis retiré : l'angle avait été publié sur X 2 jours plus tôt. ⚠️ **Mise à jour 09h04-09h28, même run interactif** : David a demandé la rédaction du candidat PARTNERS (§6), puis un double-check, puis a tapé « publie ». ✅ **PUBLIÉ à 09h28**, voir entrée dédiée juste en dessous.
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-content-proposal` datée du 02/09 dans ce fichier à l'ouverture (la plus récente était `linkedin-hwg-monitoring` du 01/09) → premier déclenchement du jour. Horloge machine à l'heure : `date` renvoie **Wed Sep 2 08:38 2026**. Branche vérifiée avant écriture : **master**.
 
@@ -94,7 +94,7 @@ QA: AUCUN POST PROPOSÉ | brouillon rédigé puis RETIRÉ avant présentation | 
 
 ---
 
-### Post MWF — rédigé le mercredi 2 septembre 2026 (run `linkedin-hwg-content-proposal`, rédaction demandée par David en session interactive à 09h04, après le run planifié de 8h35 à zéro post) — Ebola/RDC, l'essai thérapeutique PARTNERS recrute à l'intérieur d'une flambée à 48,1 % de létalité sans attendre qu'elle se termine — statut : PRÊT — en attente de la validation explicite de David
+### Post MWF — rédigé le mercredi 2 septembre 2026 (run `linkedin-hwg-content-proposal`, rédaction demandée par David en session interactive à 09h04, après le run planifié de 8h35 à zéro post) — Ebola/RDC, l'essai thérapeutique PARTNERS recrute à l'intérieur d'une flambée à 48,1 % de létalité sans attendre qu'elle se termine — statut : ✅ **PUBLIÉ le 02/09/2026 à 09h28** (dérogation ponctuelle, David a tapé « publie » en session interactive après avoir demandé et obtenu un double-check)
 
 **Contexte** : angle identifié en §6 du run planifié de 8h35 comme piste de remplacement (« (a) Ouvrir une deuxième famille éditoriale [...] l'essai thérapeutique PARTNERS [...] jamais servi sur aucun des deux canaux »), après que 4 candidats de remplacement aient été écartés et le brouillon initial du matin (champ vaccin, « absent → inconnu ») retiré pour redite avec le thread X du 31/08. David a demandé la rédaction de ce candidat directement en session (« Rédige le post PARTNERS pour maintenant »).
 
@@ -138,9 +138,9 @@ QA: AUCUN POST PROPOSÉ | brouillon rédigé puis RETIRÉ avant présentation | 
 - **Mise en forme** : 8 paragraphes courts, aucun tiret cadratin, lien nu, bloc source distinct — relu tel quel dans le fichier archivé, cohérent avec le texte publié plus bas.
 - **`ngram.history` remonté à 193 collisions** après régénération (contre 19 au jet précédent) : **mesuré, 195 self-only + 22 both, 0 rest-only** — la totalité vient de l'auto-collision avec l'entrée elle-même, déjà archivée dans ce fichier plus tôt aujourd'hui (voir la mise en garde structurelle en `docs/outreach-qa.md` §2). Aucune redite réelle trouvée ailleurs dans le corpus.
 
-**Le texte a été corrigé dans le fichier ci-dessous pour refléter le double-check** (une phrase). Statut inchangé : **PRÊT — en attente de validation.**
+**Le texte a été corrigé dans le fichier ci-dessous pour refléter le double-check** (une phrase). **David a ensuite tapé « publie »** directement en session, autorisation explicite pour ce post précis (règle `CLAUDE.md`, dérogation ponctuelle, non extrapolable aux prochains posts).
 
-### TEXTE — statut : **PRÊT — en attente de la validation explicite de David avant qu'il ne publie lui-même** (règle de non-publication autonome du contenu de marque LinkedIn, [[feedback_no_self_publishing]])
+### TEXTE — statut : ✅ **PUBLIÉ le 02/09/2026 à 09h28**, sur ordre explicite de David tapé en session (« publie »)
 
 > Ebola in the Democratic Republic of the Congo has no approved treatment. A randomised trial designed to find one is already running inside the outbreak that needs it.
 >
@@ -158,8 +158,16 @@ QA: AUCUN POST PROPOSÉ | brouillon rédigé puis RETIRÉ avant présentation | 
 >
 > Sources: WHO Disease Outbreak News, Ebola disease caused by Bundibugyo virus, Democratic Republic of the Congo, published 2026-08-28. WHO news release, Patient enrolment begins in a scientific trial to identify the first effective treatments for Bundibugyo virus disease, published 2026-07-02.
 
+**🖥️ Navigateur** : 2 navigateurs connectés (`23c7ecdd-…` « Browser 1 », `a466bc2e-…` « Browser 2 »), `AskUserQuestion` indisponible dans cet environnement — David averti en session, sélection directe de `23c7ecdd-…` (navigateur habituel). Aucune entrée `🔴` du jour dans `_shared/browser-status.md` avant ouverture. Composeur ouvert sans la popup Premium habituelle (absente ce run). Texte saisi paragraphe par paragraphe (saut de ligne double avant chaque nouveau paragraphe). Un `Page.captureScreenshot` isolé a timeout pendant une vérification de zoom ; retenté avec succès immédiatement, sans effet sur la suite (signature « timeout isolé », pas « renderer dégradé »).
+
+**Le défilement à la souris dans le composeur est resté inopérant à cette taille de fenêtre** (déjà documenté le 26/08) : le texte semblait s'arrêter à la dernière phrase des sources, sans carte de lien visible. **Navigation au clavier (`Tab`)** a révélé que la carte s'était en réalité bien chargée, hors du cadre visible par simple défilement — titre (« Disease outbreak monitoring — WHO, ECDC, PAHO, Africa CDC in one dashboard | HealthWatch Global ») et domaine (`healthwatch-global.com`) confirmés rendus avant de chercher le bouton Publier.
+
+**Relecture intégrale effectuée avant clic** (`ctrl+Home`/`ctrl+End`), texte affiché comparé phrase par phrase à l'archive ci-dessus : identique, y compris l'orthographe de MBP134 et remdesivir, vérifiée par zoom. Clic sur Publier, toast « Le post a bien été publié » confirmé. Post ouvert et relu en entier sur sa propre page : identité (David Deheunynck, ✅ vérifié), visibilité publique (icône globe), horodatage « maintenant », texte intégral identique à l'archive, lien `healthwatch-global.com` auto-formaté en hyperlien bleu, carte de lien correcte. Compteur d'impressions du profil passé de 367 à 368.
+
+**Publication confirmée** : https://www.linkedin.com/feed/update/urn:li:share:7500816419312320512/
+
 ```
-QA: PRÊT — en attente de publication | double-check David 09h18 : registres réconfirmés inchangés, 2 sources re-fetchées indépendamment, 1 défaut réel corrigé (date attachée à tort au chiffre d'enrôlement), 1 nuance de citation signalée non corrigée (extrait Rojek, majuscule ajustée) | mécanique FAIL sur jet final (2 blockers, tous deux faux positifs analysés : context.cta-repeat hors portée sur linkedin-post, ngram.history 195 self-only + 22 both + 0 rest-only après régénération — 100% auto-collision) | relecteur REECRIRE 1, 6, 9, 11 au 1er jet, correction ciblée appliquée (Q12 déjà PASS, angle non remis en cause) | 1 vrai blocker mécanique corrigé au 1er jet (lexique "real time") | faits cités: bd1c3a46 (5794/2786/48.1 au 2026-08-26) + matériau source (250 inscrits, 2 juillet, MBP134) | registres du 02/09 09h18 | 1 claim produit ajoutée (champ traitement), non citée dans le texte final
+QA: PUBLIÉ ✅ le 02/09 à 09h28 | double-check David 09h18 : registres réconfirmés inchangés, 2 sources re-fetchées indépendamment, 1 défaut réel corrigé (date attachée à tort au chiffre d'enrôlement), 1 nuance de citation signalée non corrigée (extrait Rojek, majuscule ajustée) | mécanique FAIL sur jet final (2 blockers, tous deux faux positifs analysés : context.cta-repeat hors portée sur linkedin-post, ngram.history 195 self-only + 22 both + 0 rest-only après régénération — 100% auto-collision) | relecteur REECRIRE 1, 6, 9, 11 au 1er jet, correction ciblée appliquée (Q12 déjà PASS, angle non remis en cause) | 1 vrai blocker mécanique corrigé au 1er jet (lexique "real time") | faits cités: bd1c3a46 (5794/2786/48.1 au 2026-08-26) + matériau source (250 inscrits, 2 juillet, MBP134) | registres du 02/09 09h18 | 1 claim produit ajoutée (champ traitement), non citée dans le texte final | publié sur ordre explicite de David tapé en session (« publie »)
 ```
 
 ---
