@@ -2748,3 +2748,40 @@ Appliqué à **4 crons** dont le fetch de listing est un appel unique et identif
 **Rollout volontairement non étendu ce soir** aux ~15 autres crons de source dont la chaîne de fetch a plusieurs étapes (listing puis détail par item, parfois PDF) — `sync-who-regional` (14 appels `fetch()`), `sync-paho-alerts`, `sync-spf`, `sync-who-afro`, `sync-pacific-surveillance`, `sync-wpro-dengue-update`, `check-wer-cholera`, `check-mpox-sitrep`, `sync-ecdc-threats`, `sync-cdc-notices`, `sync-ukhsa`, `sync-who-emro`, `sync-usda-aphis`, `sync-samoa-dengue`, `sync-endemic-data`. Chacun demande une lecture au cas par cas pour isoler avec certitude le bon appel (« lequel est la liste, lequel est le détail par item ») sans envelopper par erreur une boucle par article déjà sans marge sous `maxDuration` — précisément le risque qui vient d'être trouvé et corrigé sur `sync-africa-cdc`. Reste au log comme périmètre d'extension naturel, pas une omission silencieuse.
 
 **Statut final des deux idées : CONSTRUITES** (1a entièrement ; 2 sur le périmètre resserré ci-dessus, extension documentée comme reste à faire).
+
+### Suite du même soir (02/09, session interactive) — rollout du fetch-retry sur les crons restants
+
+David a demandé le rollout complet en session interactive (« rollout du fetch-retry sur les crons restants »). Verrou de code réacquis proprement cette fois (`daily-product-ideas-healthwatch`, échéance 19h30 UTC) — le verrou de test constaté hier avait entre-temps expiré.
+
+**Lecture du flux de contrôle avant édition, fichier par fichier**, pour distinguer sans ambiguïté le fetch de listing (unique, dont l'échec est fatal et rapporté) d'une chaîne de secours à plusieurs candidats (déjà résiliente par construction) ou d'un helper générique partagé sur plusieurs sites d'appel.
+
+**✅ CONSTRUIT, commit `07493f46`** — 10 crons supplémentaires, chacun calibré individuellement (pire cas très en-dessous de son `maxDuration`) :
+
+| cron | site enveloppé | maxDuration | pire cas |
+|---|---|---|---|
+| `sync-ecdc-threats` | `ECDC_RSS_FEED`, étape 1 | 60 | 21s |
+| `sync-cdc-notices` | `CDC_NOTICES_URL`, étape 1 | 120 | 21s |
+| `sync-ukhsa` | `UKHSA_ATOM`, étape 1 | 300 | 32s |
+| `check-wer-cholera` | `WER_LISTING_URL` (`fetchIssueList`, retourne `null`) | 60 | 21s |
+| `check-mpox-sitrep` | `WHO_SITREP_PAGE` (`fetchLatestSitrep`, retourne `null`) | 60 | 21s |
+| `sync-samoa-dengue` | `LISTING_URL` (`findLatestIssue`, retourne `null`) | 90 | 21s |
+| `sync-pacific-surveillance` | `LISTING_URL` (`findLatestBulletinItemUrl`, lève une exception) | 60 | 21s |
+| `sync-wpro-dengue-update` | `LISTING_URL` (`findLatestEditionUrl`, lève une exception) | 60 | 21s |
+| `sync-paho-alerts` | **deux** sites : `PAHO_ALERT_URL` (étape 1) et `PAHO_SITREP_URL` (`collectSitrepItems`, sous-pipeline rougeole indépendant) | 300 | 32s chacun |
+| `sync-who-afro` | seulement `AFRO_LIST_URL` (branche HTML de secours) | 120 | 21s |
+
+Pour `sync-who-afro`, l'essai RSS rapide qui précède (`AFRO_RSS_URL`) est **délibérément laissé sans retry** : il dégrade déjà proprement en tombant sur la branche HTML à tout échec (`catch { /* fall through */ }`), donc le réessayer aurait seulement retardé l'arrivée sur le vrai fallback, sans bénéfice.
+
+**Volontairement non touché ce soir — documenté, pas une omission silencieuse.** Cinq crons restent sans retry, chacun pour une raison structurelle distincte, pas par manque de temps :
+
+- **`sync-who-regional`** (14 appels `fetch()`) — gros cron en éventail multi-source, demande une lecture complète avant toute édition.
+- **`sync-usda-aphis`** — chaîne de candidats CSV (`APHIS_CSV_CANDIDATES`, boucle `for...of` avec `catch { continue }`) puis repli HTML. Résiliente par construction : un candidat en échec réseau passe déjà au suivant. Ajouter un retry par candidat multiplierait le pire cas sans gain net évident.
+- **`sync-who-emro`** — même patron : `EMRO_LIST_URLS`, boucle de candidats avec `continue` silencieux.
+- **`sync-spf`** — même patron à deux niveaux : `SPF_RSS_URLS` (boucle de candidats) puis repli HTML, tous deux avalant leurs erreurs sans les rapporter.
+- **`sync-endemic-data`** — `fetchHtml(url)` est un helper générique appelé **7 fois** à des endroits différents du fichier (flux, listing, JSON WHO, PDF…) ; l'envelopper de retry s'appliquerait aveuglément aux 7 sites, dont certains sont probablement des boucles par item — pas vérifié faute de lecture complète du fichier ce soir.
+
+Chacun de ces cinq redemande une lecture au cas par cas pour ne pas envelopper par erreur une boucle par article déjà sans marge sous `maxDuration` — précisément le défaut trouvé et corrigé hier soir sur `sync-africa-cdc` avant le premier commit.
+
+`npx tsc --noEmit` et `npx eslint` propres sur les 10 fichiers touchés. Verrou de code relâché après le push.
+
+**Bilan cumulé fetch-retry (deux commits, `bb2a707b` + `07493f46`) : 14 crons sur 51 couverts.** Les 5 restants ci-dessus, plus les crons hors périmètre de la proposition initiale (déclencheurs horaires/toutes les N minutes qui se rattrapent seuls), forment le reliquat.
