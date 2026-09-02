@@ -2871,3 +2871,17 @@ David a demandé la mise en cache pour ces deux fetchers (« ajoute la mise en c
 `npx tsc --noEmit` et `npx eslint` propres sur le fichier touché.
 
 **Bilan cumulé fetch-retry, quatre commits ce soir (`bb2a707b`, `07493f46`, `6399da3b`, `a31bf33b`) : 14 crons entiers + les 10 fetchers par-cible de `sync-who-regional` (46+13+7 = 66 cibles sur ses 139) couverts, plus une redondance réseau de 20 fetches/run (13 GPEI + 7 WNV) éliminée.** Reliquat inchangé pour le reste : `sync-usda-aphis`, `sync-who-emro`, `sync-spf`, `sync-endemic-data` (chaînes de secours / helper générique partagé) et, dans `sync-who-regional`, le fetcher méningite (déjà résilient par sa propre boucle de candidats — pas de redondance à corriger, contrairement à GPEI/WNV) et `queryReliefWeb` (code mort).
+
+### Suite du même soir (02/09, session interactive) — mise en cache + retry construits pour la méningite
+
+David a demandé la mise en cache pour ce dernier fetcher (« ajoute la mise en cache pour la méningite aussi »). Verrou de code réacquis, édition faite, relâché après le push.
+
+**✅ CONSTRUIT, commit `ceaad694`.** `fetchMeningitisAFRO` (WHO AFRO n'a pas d'index d'édition fiable) fait une recherche par candidats — jusqu'à 6 semaines × 3 dossiers CDN = 18 URLs testées séquentiellement jusqu'au premier succès. **Trouvé en construisant** : cette recherche ne dépend d'AUCUN paramètre par cible — les 4 cibles (Nigeria, Tchad, Burkina Faso, Soudan du Sud) cherchent exactement la même suite de candidats et, une fois trouvée, la même table PDF entière ; seul le lookup final `table.get(label)` diffère par pays. C'est la même redondance que GPEI/WNV, mais **multipliée par la boucle imbriquée** : sans cache, chaque cible relançait la recherche complète depuis zéro, jusqu'à 4× la même suite de requêtes pour retrouver la MÊME édition.
+
+`getMeningitisBulletin()` : cache module-level (une promesse partagée), recherche faite une seule fois par run, remise à zéro au début de chaque `runSyncWhoRegional()` — même patron que `getGpeiSection()`/`getWnvSeason()`.
+
+`fetchWithRetry` ajouté sur **chaque candidat** de la boucle (2 tentatives, 7,5s) — sans danger même sur 18 candidats : la plupart des ratés sont un 404 délibéré (essai de plusieurs semaines/dossiers pour deviner la bonne édition), et `fetchWithRetry` ne réessaie jamais les 4xx (seulement les échecs réseau et 502/503/504) — donc le pire cas reste proche de l'original à tentative unique. Seul un candidat qui aurait réellement marché mais a subi un incident réseau passager bénéficie de la tentative supplémentaire.
+
+`npx tsc --noEmit` et `npx eslint` propres sur le fichier touché.
+
+**Bilan cumulé fetch-retry, cinq commits ce soir (`bb2a707b`, `07493f46`, `6399da3b`, `a31bf33b`, `ceaad694`) : 14 crons entiers + les 11 fetchers par-cible de `sync-who-regional` (66+4 = 70 cibles sur ses 139) couverts, plus deux redondances réseau/CPU éliminées (20 fetches/run GPEI+WNV, jusqu'à 3× la recherche complète méningite/run).** Reliquat pour le reste : `sync-usda-aphis`, `sync-who-emro`, `sync-spf`, `sync-endemic-data` (chaînes de secours / helper générique partagé) et, dans `sync-who-regional`, uniquement `queryReliefWeb` (code mort, `reliefWebOk = false` — rien à envelopper).
