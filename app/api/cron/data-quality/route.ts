@@ -6,6 +6,7 @@ import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { sendBrevoEmail } from "@/lib/brevo-send";
 import { isCollapse, isSpike, deathsExceedCases, isZeroData } from "@/lib/outbreak-guards";
 import { sourceStatusOf, sourceName, isForbiddenSourceHost, PUBLICLY_CLAIMED_SOURCES } from "@/lib/source-trust";
+import { fetchWithRetry } from "@/lib/fetch-retry";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 120;
@@ -182,12 +183,13 @@ function parseGPEIThisWeek(rawHtml: string): GPEIWeek | null {
 }
 
 async function fetchGPEIThisWeek(): Promise<GPEIWeek | null> {
+  // fetchWithRetry: 2 attempts, 8s each (unchanged from the original
+  // single-attempt timeout — see the sync-usda-aphis lesson, 2026-09-02).
+  // Called once per run, so no per-item budget concern. See
+  // lib/fetch-retry.ts (2026-09-02).
+  const { response: res } = await fetchWithRetry(GPEI_THIS_WEEK_URL, { headers: FETCH_HEADERS }, { attempts: 2, timeoutMs: 8000, backoffMs: [1000] });
+  if (!res || !res.ok) return null;
   try {
-    const res = await fetch(GPEI_THIS_WEEK_URL, {
-      headers: FETCH_HEADERS,
-      signal: AbortSignal.timeout(8000),
-    });
-    if (!res.ok) return null;
     return parseGPEIThisWeek(await res.text());
   } catch {
     return null;

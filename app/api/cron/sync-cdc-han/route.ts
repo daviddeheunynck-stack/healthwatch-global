@@ -24,6 +24,7 @@ import { logCronRun } from "@/lib/cron-monitor";
 import { COUNTRIES, findCountry, isAggregateCountry } from "@/lib/geo-data";
 import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
 import { errorMessage } from "@/lib/error";
+import { fetchWithRetry } from "@/lib/fetch-retry";
 import { truncateAtSentence } from "@/lib/truncate-text";
 import { dateFloorGuard, spikeGuard, collapseGuard, zeroCaseGuard, zeroDeathGuard, lockedRowRegressionGuard, lockedRowIsFreezing } from "@/lib/outbreak-guards";
 import { stampSourceConfirmed } from "@/lib/source-confirmed";
@@ -298,21 +299,27 @@ async function runCdcHan(_req: NextRequest, supabase: SupabaseClient) {
   const today = new Date().toISOString().substring(0, 10);
 
   // ── 1. Fetch HAN notice list from CDC's WCMS search API ──────────────────
-  let searchJson: string;
-  try {
-    const res = await fetch(buildHANSearchUrl(), { headers: FETCH_HEADERS, signal: AbortSignal.timeout(15_000) });
-    if (!res.ok) {
-      console.error(`[cdc-han] search HTTP ${res.status}`);
-      await logCronRun(supabase, "sync-cdc-han", "error", 0, `HAN search HTTP ${res.status}`);
-      return NextResponse.json({ error: `HAN search HTTP ${res.status}` }, { status: 502 });
-    }
-    searchJson = await res.text();
-  } catch (e) {
-    console.error("[cdc-han] fetch search:", errorMessage(e));
-    Sentry.captureException(e, { tags: { cron: "sync-cdc-han" } });
-    await logCronRun(supabase, "sync-cdc-han", "error", 0, errorMessage(e));
-    return NextResponse.json({ error: errorMessage(e) }, { status: 502 });
+  // fetchWithRetry: 2 attempts, 15s each (unchanged from the original
+  // single-attempt timeout — see the sync-usda-aphis lesson, 2026-09-02: a
+  // shortened per-attempt timeout can turn a working-but-slow source into a
+  // false failure). See lib/fetch-retry.ts (2026-09-02).
+  const { response: res, error: searchFetchErr, attemptsMade } = await fetchWithRetry(
+    buildHANSearchUrl(), { headers: FETCH_HEADERS }, { attempts: 2, timeoutMs: 15_000, backoffMs: [1000] },
+  );
+  if (!res) {
+    const msg = `${errorMessage(searchFetchErr)} (${attemptsMade} tentative(s))`;
+    console.error("[cdc-han] fetch search:", msg);
+    Sentry.captureException(searchFetchErr ?? new Error(msg), { tags: { cron: "sync-cdc-han" } });
+    await logCronRun(supabase, "sync-cdc-han", "error", 0, msg);
+    return NextResponse.json({ error: msg }, { status: 502 });
   }
+  if (!res.ok) {
+    const msg = `HAN search HTTP ${res.status} (${attemptsMade} tentative(s))`;
+    console.error(`[cdc-han] ${msg}`);
+    await logCronRun(supabase, "sync-cdc-han", "error", 0, msg);
+    return NextResponse.json({ error: msg }, { status: 502 });
+  }
+  const searchJson = await res.text();
 
   const entries = parseHANSearch(searchJson);
   console.log(`[cdc-han] Found ${entries.length} recent alert(s) within ${MAX_AGE_DAYS} days`);

@@ -8,6 +8,8 @@ import type { ParsedOutbreak } from "./outbreak-parser";
 import type { CountryGeo } from "./geo-data";
 import { extractAdmin1, geocodeAdmin1 } from "./geo-extract";
 import { truncateAtSentence } from "./truncate-text";
+import { fetchWithRetry } from "./fetch-retry";
+import { errorMessage } from "./error";
 
 const WHO_DON_API = "https://www.who.int/api/news/diseaseoutbreaknews";
 
@@ -37,12 +39,19 @@ export async function fetchWHODONList(top = 25): Promise<WHONewsItem[]> {
     "$top": String(top),
   });
 
-  const res = await fetch(`${WHO_DON_API}?${params}`, {
-    headers: FETCH_HEADERS,
-    signal: AbortSignal.timeout(15000),
-  });
-
-  if (!res.ok) throw new Error(`WHO OData API → HTTP ${res.status}`);
+  // fetchWithRetry: 2 attempts, 15s each (unchanged from the original
+  // single-attempt timeout — see the sync-usda-aphis lesson, 2026-09-02:
+  // shrinking a per-attempt timeout below a source's real response time
+  // turns a working fetch into a false failure). This is the WHO DON
+  // listing shared by sync-outbreaks and check-new-don — both run hourly,
+  // making this the single most-executed external fetch in the product.
+  // Throws on failure, same contract as before: both callers already wrap
+  // this in their own try/catch. See lib/fetch-retry.ts (2026-09-02).
+  const { response: res, error, attemptsMade } = await fetchWithRetry(
+    `${WHO_DON_API}?${params}`, { headers: FETCH_HEADERS }, { attempts: 2, timeoutMs: 15_000, backoffMs: [1000] },
+  );
+  if (!res) throw new Error(`${errorMessage(error)} (${attemptsMade} tentative(s))`);
+  if (!res.ok) throw new Error(`WHO OData API → HTTP ${res.status} (${attemptsMade} tentative(s))`);
   const json = await res.json();
   return json.value || [];
 }
