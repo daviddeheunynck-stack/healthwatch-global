@@ -135,6 +135,113 @@ Aucune invitation envoyée dans ce premier passage. **Motif assumé** : les deux
 
 ---
 
+## 📅 Session linkedin-hwg-followup-check — 02/09/2026 (13h, 1er des 2 créneaux après-midi)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` du 02/09 dans ce fichier ni dans `content-log.md` à l'ouverture → **premier déclenchement de cette routine aujourd'hui**. Les entrées du 02/09 déjà présentes appartiennent à `linkedin-hwg-content-proposal` et à `linkedin-hwg-monitoring` (9h + reprise interactive), routines distinctes. Horloge machine à l'heure (`Wed Sep 2 13:03 2026`). Branche vérifiée avant écriture : **master**.
+
+**🖥️ Navigateur** : `23c7ecdd-…` sélectionné directement (§7). Une chute du pont en cours de run, **réparée par la seule re-sélection du deviceId** — `list_connected_browsers` listait toujours `23c7ecdd-…`, donc pas une perte d'appairage : aucune notification de panne, aucun redémarrage de Chrome, aucune entrée `🔴` dans `_shared/browser-status.md`.
+
+**Registre de faits régénéré ce run** (13:03) : 226 faits citables sur 110 lignes affichées.
+
+---
+
+### 1️⃣ 💬 MESSAGERIE — 3 FILS ONT BOUGÉ, LES TROIS TRAITÉS
+
+**Liste des 10 conversations lue en entier, triée par récence.** **Trois messages entrants** depuis le run de 9h, tous des réponses aux DM envoyés ce matin sur ordre explicite de David. C'est le meilleur taux de retour observé sur ce carnet : **3 réponses de fond en moins de deux heures sur 4 DM envoyés**.
+
+- ⭐⭐ **John Omari Baso — 11h20, entrant.** Répond à la question technique posée le matin même : « *Pour les 62 isolats en attente, le résulté sera porté à la semaine où il tombe, c'est pareil pour les 11 cas positifs dont les échantillons étaient envoyés avant...* » Réponse nette et exploitable. Traité en section 2.
+- ⭐⭐ **Julien Tuba — 10h46 puis 10h50, entrant, 2 messages.** Répond en profondeur à la question du matin (« *qu'est-ce que vous voyez dans un bulletin que quelqu'un qui n'y a jamais mis les pieds ne verra pas ?* ») : qualité et dynamique de la surveillance, mise en perspective géographique, **signaux faibles** (« *une zone qui cesse soudainement de notifier* »), et ce que le bulletin ne dit pas. 1 744 caractères sur le seul second message. Traité en section 2.
+- ⭐ **Dossa Paul YAOÏTCHA — 11h01, entrant.** Répond honnêtement qu'il ne peut pas trancher la question posée : « *je suis étudiant en master One Health, pas épidémiologiste de terrain ayant travaillé sur Ebola* ». Il ajoute que la littérature identifie bien cette lacune, **suppose à tort que David a lui-même travaillé sur des systèmes de surveillance**, et précise que le partage de coordonnées visait « *d'autres opportunités que [vous] pourriez partager avec moi* ». Traité en section 2.
+- **Isaias Fernandes Co** — notre réponse de 10h19 (« *After next week is fine, and good luck with the event. Send a slot once you are back…* ») est **le dernier message du fil**. Il n'a pas encore renvoyé de créneau. Rien de dû.
+- **Inchangés, rien n'est dû** : Harvey Basivikidi (notre envoi du 01/09 est le dernier) · Buno Tona · SOUAD BELKACEMI. · Bobossam Cissoko · Summer Galloway, Ph.D. · **Abou A. SOUMAH** (« *Merci beaucoup David* », 29/08, politesse sans fond) · **Dr. Siaka Condé** (« *Let me look at this for a moment* », 29/08, 4e jour sans retour).
+
+---
+
+### 2️⃣ 🔒 DM — 3 RÉDIGÉS, LES TROIS EN FILE DE VALIDATION, AUCUN ENVOYÉ
+
+**Règle du 23/07 appliquée : aucun de ces textes n'est envoyé par la routine.** Quota DM du jour inchangé : **4 envoyés sur 8**, tous par la session du matin sur ordre explicite de David ; un DM en file ne consomme rien tant qu'il n'est pas envoyé. Les trois sont par ailleurs des réponses en fil actif, donc hors quota froid ([[feedback_reply_quota_cold_outreach_only]]). **Notification push envoyée en fin de run.**
+
+⚠️ **Faux positif mécanique commun aux trois, écarté sur pièce** : `context.too-soon` (« dernier message il y a 0 j, minimum 3 j »). La règle mesure l'écart entre deux **envois de David** sans voir les messages entrants ; dans les trois fils le dernier message est de l'interlocuteur, reçu le matin même. Ce sont des **réponses en fil actif, pas des relances**. Classe déjà consignée plusieurs fois, et **confirmée indépendamment par les trois relecteurs**, qui ont chacun retrouvé la définition du seuil dans `lexicon.json` (bloc `followup`, aux côtés de `maxUnansweredOutbound`) et conclu au faux positif sans se concerter.
+
+#### 🔒 DM 1 — **John Omari Baso** (`/in/john-omari-baso-84500b1b0/`), FR, vouvoiement, fil actif, SANS CTA — **EN FILE**
+
+Fil relu intégralement (§4) : **18 messages depuis le 27/08**, recopiés verbatim dans `tmp/thread-john-0209-13h.txt` (diapositive jointe transcrite incluse). *langue du fil = fr ; langue du brouillon = fr.* Vouvoiement maintenu, cohérent avec l'arbitrage de ce matin (son « toi » unique du 30/08 s'auto-corrige dans la même phrase).
+
+**Arbitrage CTA** : le lien healthwatch-global.com et l'essai de deux semaines **ont déjà été envoyés dans ce fil** le 27/08. Anti-répétition appliquée, **rien n'est resservi**, ni lien, ni offre, ni nom de produit.
+
+**L'angle** : sa réponse établit que le résultat d'un isolat est porté à la semaine où il tombe, jamais rétroactivement. Conséquence qu'il n'a pas tirée et que lui seul peut trancher : le **cumul annuel** est-il recalculé depuis la base du laboratoire, ou additionné à partir des semaines déjà publiées ? Selon le cas, le cumul et la somme des hebdomadaires divergent avec le temps — et de l'aval, seul le cumul est visible.
+
+⚠️ **Un `ngram.history` corrigé avant le relecteur** : la citation littérale « 55 poliovirus PFA et ENV » figurait déjà dans nos archives (la diapositive y a été transcrite ce matin). Reformulée en « 55 poliovirus détectés en PFA et ENV », sans perte de précision.
+
+`QA : mécanique FAIL sur le seul faux positif context.too-soon (587 car., limite 1300, 2 paragraphes, fr/fr, 0 lien, 0 CTA, 0 tiret cadratin ; 35, 62, 55, 8 et 22 tous tracés from-thread) — 1 blocker ngram.history antérieur corrigé avant le relecteur | relecteur VERDICT: ENVOYER, **12 PASS au 1er jet**, aucune réserve — vérifie nommément que le message ne rouvre pas le point du GPEI central que John avait explicitement écarté, et que « de mon côté je ne vois que le cumul » est couvert par product-claims.manual.json | faits cités : aucun de la base, tous du fil | registre du 02/09 (13:03) | statut : en file de validation`
+
+> C'est net, et c'est exactement ce que je ne pouvais pas deviner depuis les publications : la semaine 35 restera ce qu'elle est, elle ne sera pas rouverte quand les 62 tomberont.
+>
+> Ça me fait une deuxième question, sur le cumul cette fois. Les 55 poliovirus détectés en PFA et ENV, les 8 provinces et 22 zones de santé affectées de votre tableau, ils sont recalculés depuis la base du laboratoire, ou additionnés à partir des semaines déjà publiées ? Selon le cas, le cumul et la somme des hebdomadaires peuvent finir par ne plus dire la même chose, et de mon côté je ne vois que le cumul.
+
+#### 🔒 DM 2 — **Julien Tuba** (`/in/julien-tuba-a31abb143/`), FR, vouvoiement, fil actif, SANS CTA — **EN FILE**
+
+Fil relu intégralement (§4) : 3 messages, recopiés verbatim dans `tmp/thread-julien-tuba-0209-13h.txt`. *langue du fil = fr ; langue du brouillon = fr.*
+
+**Arbitrage CTA** : le nom HealthWatch Global a déjà été servi ce matin dans ce fil, aucun lien ni essai n'a été envoyé. Anti-répétition appliquée : **le nom n'est pas resservi**, et un CTA commercial au 2e échange d'un fil ouvert ce matin serait prématuré. **CTA vérifié puis délibérément omis.**
+
+**L'angle** : sur les quatre familles de signaux faibles qu'il cite, une seule devrait en théorie se voir depuis l'aval — la zone qui cesse soudainement de notifier. En pratique elle ne se voit pas, parce qu'elle n'arrive pas sous forme de zéro : elle n'arrive pas du tout. La question lui rend la main sur sa propre méthode.
+
+🔴 **Le relecteur a fait échouer le 1er jet sur deux points réels, corrigés tous les deux.**
+- **(4) Affirmation produit non couverte.** Le brouillon écrivait « *une zone qui ne notifie plus sort du tableau au lieu d'y figurer à zéro* » — une mécanique produit que **ni `lexicon.json` ni `product-claims.json` ne couvrent**, et que le relecteur juge en outre probablement **inexacte** : `lib/outbreaks.ts` conserve à l'affichage les lignes non actives récentes sur une fenêtre de 60 jours. Dire une mécanique fausse à un professionnel de la surveillance était le vrai risque.
+- **(9) Terrain politique par ambiguïté de référent.** « *le tableau* » n'était rattaché à rien : lu comme le tableau des bulletins publiés, la phrase revenait à commenter la qualité des publications d'Africa CDC devant l'un de ses agents.
+- **Correction appliquée** : toute mécanique retirée, la phrase reformulée comme une limite de lecture personnelle (« *ne m'arrive pas* », « *de là où je lis* »), sans rien affirmer ni du produit ni des bulletins. ⚠️ Un `ngram.history` apparu sur la version corrigée (« se ressemblent trait pour trait ») a été levé par reformulation.
+
+`QA : mécanique FAIL sur le seul faux positif context.too-soon après correction (553 car., limite 1300, 3 paragraphes, fr/fr, 0 chiffre, 0 lien, 0 CTA, 0 tiret cadratin) — 1 blocker ngram.history apparu en cours de correction, levé | relecteur VERDICT: REECRIRE 4, 9 au 1er jet, les deux corrigés — 10 PASS sur 12 par ailleurs, dont attribution verbatim vérifiée et apport reconnu distinct | faits cités : aucun | registre du 02/09 (13:03) | statut : en file de validation`
+
+> Je relis votre réponse deux fois, et c'est un point de votre liste qui m'arrête : la zone qui cesse soudainement de notifier. C'est le seul de vos signaux faibles qui devrait, en théorie, se voir aussi depuis l'extérieur.
+>
+> En pratique presque jamais, ou alors pas de là où je lis. Une zone qui décroche ne m'arrive pas sous la forme d'un zéro, elle ne m'arrive pas du tout. À cette distance, le silence et l'absence de cas se lisent pareil, et je n'ai pas de quoi les séparer.
+>
+> D'où ma question : comment repérez-vous, vous, qu'une zone a décroché ?
+
+#### 🔒 DM 3 — **Dossa Paul YAOÏTCHA** (`/in/dossa-paul-yaoïtcha-41202b2b7/`), FR, vouvoiement, fil actif, SANS CTA — **EN FILE**
+
+Fil relu intégralement (§4) : 5 messages depuis le 31/08, recopiés verbatim dans `tmp/thread-yaoitcha-0209-13h.txt`. *langue du fil = fr ; langue du brouillon = fr.*
+
+**Le point le plus important de ce brouillon est une correction sur David lui-même.** Paul écrit : « *Vous êtes visiblement bien mieux placé que moi pour connaître la réponse exacte, ayant probablement vous-même travaillé sur ce type de systèmes de surveillance.* » **C'est faux** : David n'est pas épidémiologiste, n'a jamais participé à une riposte et n'a jamais construit de système de surveillance de terrain. Laisser passer aurait installé une fausse compétence dans l'esprit d'un interlocuteur qui la répétera ailleurs. Le brouillon corrige explicitement, sans se dévaloriser.
+
+**Arbitrage CTA** : aucun lien ni essai n'a jamais été envoyé dans ce fil, et un échange de fond a bien eu lieu — le CTA serait donc mécaniquement autorisé. **Vérifié puis délibérément omis** : Paul vient de demander des « *opportunités* », c'est-à-dire un débouché professionnel ; répondre par une offre d'essai produit se lirait comme une esquive. Le brouillon répond franchement qu'il n'y a rien à proposer.
+
+🔴 **Le relecteur a fait échouer le 1er jet sur un point réel (question 6).** Le brouillon écrivait « *donc je suis en aval de vous, pas en amont* », ce qui **place Paul du côté de la production de données** — exactement ce qu'il vient de démentir (« *Je n'ai pas participé à cette riposte, ni à aucune autre* »), et ce qui contredisait la phrase précédente du même paragraphe. **Corrigé par suppression**, remplacé par « tout en bout de chaîne », qui ne positionne que David. Le relecteur signalait par ailleurs, sans faire échouer, l'absence de salutation dans un fil très formel des deux côtés : **« Bonjour Paul, » ajouté en tête**.
+
+`QA : mécanique FAIL sur le seul faux positif context.too-soon (697 car., limite 1300, 3 paragraphes, fr/fr, 0 chiffre, 0 lien, 0 CTA, 0 tiret cadratin) | relecteur VERDICT: REECRIRE 6 au 1er jet, corrigé par suppression — 11 PASS sur 12 par ailleurs, dont les 3 affirmations produit toutes rattachées à hwg_claims.allowed, et apport reconnu double (correction d'une erreur sur David + question que lui seul peut trancher) | faits cités : aucun | registre du 02/09 (13:03) | statut : en file de validation`
+
+> Bonjour Paul, votre franchise vaut mieux qu'une réponse assurée, et elle appelle une correction de mon côté. Je ne viens pas du terrain non plus : je n'ai jamais participé à une riposte, ni construit un système de surveillance. Je lis des bulletins déjà publiés et j'en tiens une base à jour, tout en bout de chaîne.
+>
+> C'est pour ça que votre paragraphe sur la littérature m'intéresse plus que le reste. Vous auriez une référence en tête sur ces données de terrain qui ne sont jamais versées dans un dépôt accessible ? C'est à peu près le seul chemin par lequel je peux documenter ce trou sans l'inventer.
+>
+> Sur les opportunités, je n'ai rien à proposer aujourd'hui, je travaille seul sur ce projet.
+
+⚠️ **Rappel du piège de re-vérification (27/08)** : ces trois textes sont maintenant cités mot pour mot dans ce fichier. Les repasser au contrôle mécanique après cet archivage renverra un `ngram.history` **contre eux-mêmes**. Ce n'est pas un gabarit recyclé, c'est leur propre citation.
+
+---
+
+### 3️⃣ ✅ INVITATIONS REÇUES — 0 NOUVELLE, 2 TOUJOURS EN ATTENTE
+
+Compteur inchangé à **2**, vérifié sur `/mynetwork/invitation-manager/`. Les deux sont **Zachariah G. Houdari** (*Financial Services Professional*) et **OLAOLUWA PHILIP** (*GIScientist | Climate Action Researcher*, géospatial et climat sans santé publique). Décisions du 31/08 non rejugées, **aucun élément neuf** — laissées en attente, conformément au carry-over.
+
+---
+
+### 4️⃣ 👤 SUIVIS ET FOLLOW-BACK — 0 DÛ, QUOTA DÉJÀ REMPLI CE MATIN
+
+- **Abonnés : 404**, strictement identique au relevé de 9h. Le haut de la liste triée par récence porte toujours Ghayyoor Sultan et Jacob Banda, tous deux traités ce matin. **Aucun nouvel abonné depuis, aucun follow-back dû.**
+- **Relations : 289**, triées par ajouts récents, **inchangées**. Les deux acceptations les plus récentes datent du 02/09 au matin (Ghayyoor Sultan, Jacob Banda). **Aucune invitation envoyée par nous n'a été acceptée depuis** — en particulier, la note de connexion envoyée ce matin au **Dr. Malachie MANAOUDA** n'a pas encore été acceptée, donc aucun message de bienvenue dû à ce titre.
+- **Quota suivis : 8/7-10**, déjà dans la fourchette à l'issue du run du matin. Aucune recherche active supplémentaire menée ce run : les nouveaux abonnés étaient tous traités, aucune acceptation neuve, et la recherche de contenu du run n'a fait remonter aucun profil franchissant la barre de §10 qui ne soit pas déjà suivi (Kyaw Thowai Prue Prince l'est depuis ce matin).
+
+---
+
+### 5️⃣ 🧾 NOTES DE CONNEXION — 0 CE RUN
+
+Aucune invitation envoyée. **Motif assumé** : aucun candidat neuf franchissant la barre de pertinence n'est apparu ce run, et les deux dossiers en attente sont bloqués pour des raisons connues et documentées (Mohammad Ilias Hossain : note rédigée et QA-validée, **volontairement non retentée** conformément au carry-over du 31/08 ; Dr. Ibrahima Socé Fall : **toujours aucun hook honnête**, §10, sa seule prise de parole récente sur Ebola/RDC étant un grief institutionnel, §9). Quota du jour inchangé : **1/7**, celle envoyée ce matin au Dr. Malachie MANAOUDA.
+
+---
+
 ## 📅 Session linkedin-hwg-monitoring — 01/09/2026 (9h)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` du 01/09 dans ce fichier ni dans `content-log.md` à l'ouverture. La seule entrée du 01/09 déjà présente appartient à la **session interactive de David de ~05h50-06h16** → **premier déclenchement de cette routine aujourd'hui**. Horloge machine à l'heure (`Tue Sep 1 09:04 2026`). Navigateur : dernière entrée d'appairage de `_shared/browser-status.md` **🟢 RÉTABLI (31/08 ~13:05)**, aucun bridage, `23c7ecdd-…` sélectionné directement (§7).

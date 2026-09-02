@@ -329,6 +329,115 @@ Rouverts **sur le post, pas sur la notification**.
 
 ---
 
+## 📅 Session linkedin-hwg-followup-check — 02/09/2026 (13h, 1er des 2 créneaux après-midi)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` du 02/09 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture. Les entrées du 02/09 déjà présentes appartiennent à `linkedin-hwg-content-proposal` (8h35 + reprise interactive, post PARTNERS publié à 09h28) et à `linkedin-hwg-monitoring` (9h, + reprise avec David) → **premier déclenchement de cette routine aujourd'hui**. Horloge machine à l'heure (`Wed Sep 2 13:03 2026`). Branche vérifiée avant écriture : **master**.
+
+**🖥️ Navigateur** : `_shared/browser-status.md` lu avant ouverture, dernière entrée d'appairage **🟢 RÉTABLI (31/08)**, aucune entrée `🔴` du jour → aucun bridage. `23c7ecdd-…` sélectionné directement sans confirmation (§7, session planifiée), malgré l'invite de l'outil à faire choisir entre deux navigateurs. **Une chute du pont en cours de run** (« Claude in Chrome is not connected ») **réparée par la seule re-sélection du deviceId**, conforme à §7 : `list_connected_browsers` listait toujours `23c7ecdd-…`, donc pas une perte d'appairage, aucune notification push, aucun redémarrage de Chrome. Reste du run sans incident.
+
+**Registre de faits régénéré ce run** (`npm run qa:facts` → **226 faits citables sur 110 lignes affichées**, 81 lignes `is_seed` exclues, 9 faits périmés).
+
+**Quotas à la clôture** : commentaires **4/7 publiés** aujourd'hui toutes sessions confondues (3 ce matin + **1 ce run**, Kyaw Thowai Prue Prince) · **DM 3 rédigés ce run, tous 🔒 en file de validation, 0 envoyé** (quota du jour inchangé à 4/8 envoyés, tous par la session du matin sur ordre de David) · suivis **8/7-10**, inchangés, aucun dû · notes de connexion **1/7**, inchangée · invitations reçues **2 en attente**, inchangées · **0 écriture en base**. Détail messagerie et textes complets des 3 DM : `linkedin-contacts.md`, entrée du jour.
+
+---
+
+### 1️⃣ SUIVI DES FILS ACTIFS (§14) — 6 FILS ROUVERTS SUR LE POST, AUCUNE RETOMBÉE NEUVE
+
+Rouverts **sur le post, pas sur la notification**. Les trois commentaires publiés ce matin ont tous moins de 4 h à l'heure du contrôle.
+
+- **Adesoye Emmanuel Tunde** (`urn:li:activity:7500813394892062720`) — notre commentaire est **le seul du post**, 20 impressions, aucune réponse.
+- **Oke Ikpekpe** (`urn:li:activity:7500522694187089920`) — notre réponse du 8e tour reste le dernier message du sous-fil, 163 impressions sur son message précédent. Rien de neuf.
+- **Rocham Mulumbwe / post de Jacob Banda** (`urn:li:activity:7500293159126761472`) — notre réponse en sous-fil reste la dernière, aucun bouton « réponses précédentes » restant à déplier. Jacob Banda n'a rien ajouté depuis sa politesse d'hier.
+- **Dr. Jean Kaseya** (`urn:li:activity:7500220920481873920`) — notre commentaire toujours là, 29 impressions. Le seul ajout depuis est un commentaire de premier niveau de Clément W. (WFP) qui ne s'adresse pas à nous.
+- **Mohammad Ilias Hossain** (`urn:li:activity:7499900718590595072`) — notre commentaire reste le dernier, 7 impressions.
+- **SOUAD BELKACEMI., page ECDC, James Schlitt, Melvin Sanicas, Dossa Paul YAOÏTCHA** — vérifiés ce matin à 9h, aucun signal dans les notifications de 13h les concernant ; non rouverts un par un ce run, seule la notification « Frédéric Bernard aime un commentaire de SOUAD BELKACEMI. » (17 h) les touche, et elle porte sur un like, pas sur une réponse.
+
+**Notifications parcourues : 10 cartes distinctes.** Aucune n'est une réponse à un commentaire HWG. Sans action : 4 vues de profil, un like sur notre commentaire (Olivier Mushagalusa et 4 autres), une carte « Vous connaissez peut-être BANZA Freddy Mutoka » déjà exploitée ce matin, un post #Hiring de Harvey Basivikidi (hors périmètre), un post d'Ana Bento déjà écarté ce matin (§9), une republication de Marie Jaspard annonçant un décès dans la communauté de santé mondiale (hors périmètre commentaire), une republication de cours WASH. Une carte statistique : **un post de David a atteint 213 impressions**, 1 vue de profil et 1 abonné générés.
+
+---
+
+### 2️⃣ 💬 COMMENTAIRE PUBLIÉ — 1
+
+#### ✅ COMMENTAIRE 4/7 — **Kyaw Thowai Prue Prince, MBBS, MSc, FETP** (`/in/dr-prince-kyaw-thowai-prue/`), EN, top-level
+
+`urn:li:activity:7500870581622452224`, **post publié 12 minutes avant le repérage**, trouvé en **recherche de contenu triée par date** (mots-clés `disease surveillance data`, filtre 24 h). *Medical Epidemiologist | One Health | Surveillance | Outbreak Response | PHEOC, IEDCR*, Bangladesh, **1er degré**, suivi activé ce matin. **Aucun commentaire sur le post, nous sommes le premier.** *langue du post = en ; langue du brouillon = en.*
+
+**Le post** : compte rendu du **Data for Health (D4H) Cross-Country Exchange Program** à Kigali, l'équipe du *National Bulletin for Public Health* du Bangladesh et de l'IEDCR reçue par l'équipe du *Rwanda Public Health Bulletin*. Quatre enseignements listés : diffusion par les canaux réellement utilisés (WhatsApp, e-mails ciblés par public), infographies et notes de synthèse pour décideurs, suivi éditorial dans un système numérique dédié pour tenir les délais, partenariats universités et médias. Puis visites du Rwanda Biomedical Centre et du National Health Intelligence Centre (tableau de bord intégré, alertes de décès communautaires inhabituels, drones).
+
+**Reprise du carry-over #6.** Kyaw avait été écarté ce matin sur son post TSI, pour angle redondant avec le commentaire Oke, avec la consigne « à reprendre avec un angle distinct ». C'est un **post différent**, publié depuis, et l'angle retenu n'a rien à voir avec celui de ce matin.
+
+**L'angle publié** : les canaux ciblés (WhatsApp, listes e-mail par public) atteignent les lecteurs que le bulletin connaît déjà ; celui qu'ils ne peuvent pas atteindre est celui qui n'est sur aucune liste, position exacte de HWG lisant un bulletin national depuis un autre pays. Le 4e point du post (partenariats médias/universités) franchit bien ce fossé, mais **par traduction et non par publication** : ce qui passe est une couverture, pas le bulletin. D'où la question, que seul un participant peut trancher : la copie publique du site a-t-elle été discutée à Kigali comme un lecteur ayant ses propres besoins ?
+
+🔴 **Le relecteur a fait échouer le 1er jet sur deux points réels, corrigés tous les deux.**
+- **(7) Prémisse fausse.** Le brouillon ouvrait sur « *Everything on that list improves reach toward readers the bulletin already knows about* » — **démenti par le post lui-même**, dont le 4e enseignement (« *partnerships with universities and media outlets so research translates into public awareness* ») vise précisément le public hors liste. Corrigé en restreignant la portée aux deux canaux poussés, et en **reconnaissant explicitement le 4e point** au lieu de l'écraser.
+- **(11) Gabarit à l'échelle de la journée.** Le 1er jet rejouait la charpente des trois commentaires publiés le matin (aphorisme, puis « so » + conséquence en aval, puis question binaire finale « *X of its own, or does it just Y* »), la clausule étant presque calquée sur celle du commentaire Oke. Corrigé : ouverture en position personnelle, plus d'articulateur « so », **question finale non binaire**.
+- ⚠️ Un `ngram.history` a été levé au passage sur « *the one I keep turning over* », formule déjà servie ailleurs — reformulée avant publication.
+
+`QA : mécanique PASS au 1er jet, puis PASS de nouveau après correction (521 puis 519 car., 2 paragraphes, en/en, 0 blocker, 0 warn, 0 review — 1 ngram.history apparu sur la version corrigée, levé par reformulation) | relecteur VERDICT: REECRIRE 7, 11 au 1er jet, les deux corrigés — 10 PASS sur 12 par ailleurs, dont terrain politique explicitement vérifié (aucun nom d'institution repris, IEDCR et hôtes rwandais non commentés) | faits cités : aucun | registre du 02/09 (13:03) | statut : publié le 02/09`
+
+> The WhatsApp and targeted email part stayed with me, because I am on none of those lists. Reading a national bulletin from another country, what reaches me is the file left on the website and nothing else.
+>
+> Your fourth point, the university and media partnerships, does cross that gap, but it crosses it by translation rather than by publication: what comes through is coverage, and the bulletin itself stays where it was. I would be curious whether the website copy came up in Kigali as a reader with needs of its own.
+
+**Verrou §15 appliqué juste avant le clic** : `git log` inchangé depuis l'ouverture du run (`1552e0f3` toujours en tête), aucune occurrence de `7500870581622452224` dans les deux journaux, aucune entrée du jour ne mentionnant cette cible. **§16** : aucun commentaire publié aujourd'hui ne porte sur le même événement (diffusion d'un bulletin national, sujet neuf de la journée).
+
+**Publication confirmée** : identité de la cible (URN dans l'URL + nom de l'auteur dans la page) et **comparaison du texte tapé au texte attendu faites dans le même appel JS que le clic** (`okText: true`, 519 caractères, 2 paragraphes, `okUrl: true`, `okAuthor: true`). Après rechargement : **une seule occurrence**, horodatage « maintenant », 2 paragraphes intacts, compteur du post passé à 1 commentaire.
+
+#### ❌ CIBLES EXAMINÉES ET ÉCARTÉES
+
+- **BANZA Freddy Mutoka** (`urn:li:activity:7500630813257134083`, 16 h) — **seul porteur frais de l'événement Bas-Uele** trouvé par la recherche `Bas-Uele Ebola`. Abandonné ce matin après relecture, avec consigne de carry-over explicite « ne pas retenter le même angle chez lui » ; le motif de rejet du relecteur (terrain politique sous le post d'un agent OMS qui écrit « *We are confident* ») **vaut pour tout angle interrogeant la lisibilité des chiffres publiés par son institution**, pas seulement pour l'angle du matin. Non retenté ce run.
+- **Emanuel Luttersdorfer** (2 j, *Occupational Health Consultant*, Chine) — briefing Ebola RDC/Ouganda reprenant nos propres chiffres (5 794 / 2 786 / 48,1 %). **Hors fenêtre 48 h**, et post promotionnel renvoyant vers son site. Matière retenue en section 3 comme **signal**, pas comme cible.
+- **Abdulrazaq Tanga** (5 h, *Bachelor of Pharmacy Student*, Tanzanie) — relaie le bulletin hebdomadaire du ministère de la Santé tanzanien, semaine 35 (morsures animales 510, morsures de serpent 224, dengue à Dar es Salaam et Pwani, rotavirus). Matière réelle et exactement dans le domaine HWG, mais **profil d'étudiant sans position de terrain** : la barre de pertinence de §10 n'est pas franchie pour l'audience visée. Écarté, **source à retenir** (voir section 3).
+- **« 247 Bulletin News »** (17 h, agrégateur d'actualité) et **cavalierenews** (2 h, presse italienne) — reprises secondaires sans matière propre. Exploitées en section 3.
+- **Institut de Recherche, de Médiation et de Facilitation (IReMeF)**, **Darrel Ornelle ELION ASSIANA**, **Global Maternity**, **District Collectors Internship Programme** — parcourus dans le fil d'actualité et dans les recherches `outbreak response` / `epidemiological bulletin`, aucun angle de surveillance exploitable ou hors périmètre.
+
+---
+
+### 3️⃣ 📊 DONNÉES ÉPIDÉMIOLOGIQUES (§8) — AUCUNE ÉCRITURE, 3 SIGNALEMENTS
+
+**Aucune écriture en base ce run** : une routine sociale signale, elle n'ingère pas (§8).
+
+🟡 **1. Fièvre du Nil occidental / Grèce — notre ligne est en retard d'une publication, et le retard est structurel, pas fautif.** `5d84c70c-…` porte **214 cas arrêtés au 27/08**, source `wnv-weekly.ecdc.europa.eu`, `sourceConfirmedAt` du 02/09 à 08h06 (le cron a bien reconfirmé la source ce matin). Une reprise de presse du jour cite **232 cas confirmés et 19 décès**, dont environ 60 % en Attique, d'après un entretien du Pr Gkikas Magiorkinis (hygiène et épidémiologie, EKPA) à l'Orange Press Agency. **Reprise secondaire, non citable, aucune écriture.** Point utile : notre source est le bulletin hebdomadaire ECDC, la donnée grecque nationale le devance de quelques jours par construction. **Ce n'est pas une panne de cron, c'est la cadence de la source** — à ne pas traiter comme le cas PAHO du 30/08. Aucun décès n'est porté sur cette ligne, à vérifier lors du prochain point ECDC.
+
+🔵 **2. Ebola/RDC — le vaccin déployé n'est pas homologué contre la souche en circulation.** Un post relève que la RDC a lancé la vaccination ERVEBO des personnels de première ligne à Kisangani (Tshopo, Bas-Uele, Haut-Uele), et rappelle qu'**ERVEBO est homologué contre le virus Ebola Zaïre, l'efficacité contre le virus Bundibugyo n'étant pas établie**. Cohérent avec ce que rend déjà la fiche maladie publique HWG, vérifiée en direct le 02/09 par `linkedin-hwg-content-proposal` (badge « *Not available for active strain* », traitement « *Experimental* »). **Aucune écriture, aucun commentaire publié là-dessus** : sous un post d'institution ou d'agent de riposte, le point bascule immédiatement en terrain politique (§9). Noté comme matière de fond, à traiter éventuellement en contenu de marque, pas en commentaire de prospection.
+
+🟢 **3. Tanzanie — le bulletin hebdomadaire du ministère de la Santé existe et circule.** *Jarida La Taarifa ya Magonjwa Kwa Jamii*, semaine 35 (24-30 août 2026), avec ventilation régionale. Notre seule ligne Tanzanie est **Choléra, arrêtée au 28/06** (`5db4495e-…`, 66 jours). Ce bulletin est un candidat de source pour rafraîchir cette ligne et en ouvrir d'autres (dengue Dar es Salaam et Pwani, rotavirus). **Signalé pour `morning-don-check`** : il faut retrouver le document officiel, pas la reprise LinkedIn qui l'a fait remonter.
+
+🔴 **Rappel non résolu, 3e jour consécutif** : l'écart de cumul Ebola/RDC signalé les 01/09 et 02/09 matin (nos 5 794 / 2 786 au 26/08 contre 6 100 / 2 950 attribués aux autorités RDC au 31/08 via OCHA) n'a rien reçu de neuf ce run. Toujours du ressort de `morning-don-check`.
+
+---
+
+### 4️⃣ 🔁 CARRY-OVER POUR LE CRÉNEAU DE 17h (02/09)
+
+1. 🔒 **TROIS DM ATTENDENT DAVID**, tous rédigés ce run, tous des réponses à des messages entrants reçus entre 10h46 et 11h20 : **John Omari Baso** (FR), **Dossa Paul YAOÏTCHA** (FR), **Julien Tuba** (FR). Textes complets et rapports QA dans `linkedin-contacts.md`, entrée du jour. **Notification push envoyée ce run.**
+2. ⭐⭐ **Les 4 DM envoyés ce matin ont produit 3 réponses en moins de deux heures.** John Omari Baso répond à une question technique de fond, Julien Tuba envoie deux messages substantiels, Dossa Paul YAOÏTCHA répond honnêtement. **C'est le meilleur taux de retour du carnet à ce jour** — le traiter vite, l'élan est réel.
+3. ⭐⭐ **Isaias Fernandes Co** — *AI & Technologies Officer, OMS AFRO*. Notre réponse envoyée ce matin à 10h19 (« *After next week is fine…* ») est **le dernier message du fil**, il n'a pas encore renvoyé de créneau. **Rappel : il accepte le principe d'un appel à partir de la semaine du 14 septembre.** Rien à faire tant qu'il n'a pas répondu, mais à ne pas perdre de vue.
+4. 🗓️ **Ligne d'événement (§16)**
+   - 🔵 **Ebola/RDC, extension à Bas-Uele — ÉVÉNEMENT TOUJOURS OUVERT, aucun support consommé.** BANZA Freddy Mutoka reste écarté (voir section 2). **Le press briefing Africa CDC du 3 septembre tombe demain** : la page Africa CDC est libre en commentaire et c'est le meilleur porteur suivant. Ensuite **Prof. Mohamed Janabi** (libre) et **Dr. Ibrahima Socé Fall**. ⚠️ Page **WHO AFRO** toujours inatteignable, ne pas en faire un support.
+   - 🔵 **Écart de cumul Ebola/RDC** — 3e jour, appartient à `morning-don-check`.
+   - 🔵 **Diphtérie/Nigéria figée depuis 164 jours**, **Choléra/Tanzanie figée depuis 66 jours**, **West Nile/Grèce en retard d'une parution ECDC** — voir section 3.
+5. ⭐⭐ **Dr. Ibrahima Socé Fall** — inchangé : profil de tout premier plan, déjà relation de 1er degré, aucun échange, **toujours aucun hook honnête** (sa seule prise de parole directe sur Ebola/RDC est un grief institutionnel, §9). Meilleure opportunité dormante du carnet.
+6. ⭐ **Kyaw Thowai Prue Prince** — **traité ce run**, commentaire publié. **Blocage hebdomadaire jusqu'au 09/09.** Son post TSI de ce matin n'a donc plus à être repris.
+7. ⭐ **Rocham Mulumbwe** — bon candidat connexion dès qu'il répond à notre commentaire. Inchangé.
+8. ➖ **Jacob Banda**, **Ghayyoor Sultan**, **Abubakar Sadiq Tahir**, **Alexandre APPROUTSADI YOKSOU** — relations acceptées, **toujours pas de welcome DM faute de hook honnête** ou parce que l'échange de fond est déjà public. Inchangés.
+9. ➖ **Yakoza Nyirenda** — invitation sans note du 30/08, toujours en attente.
+10. ⭐⭐ **Dr. Malachie MANAOUDA** — note de connexion envoyée ce matin, **pas encore acceptée** (relations toujours à 289). Si elle est acceptée : welcome DM, en file de validation.
+11. 🔴 **Mohammad Ilias Hossain, note de connexion : toujours non retentée**, conformément au carry-over du 31/08. Note rédigée et QA-validée, **ne pas la réécrire**.
+12. ⭐ **Abou A. SOUMAH** — son « *Merci beaucoup David* » du 29/08 reste le dernier message de son fil. Politesse sans fond, rien de dû, mais le fil est ouvert si un hook apparaît.
+13. **Dr. Siaka Condé** — « *Let me look at this for a moment* » du 29/08, toujours pas revenu (4e jour). Ne pas relancer avant le 05/09.
+14. ❌ **Ne pas reproposer sans élément neuf** : Zachariah G. Houdari (services financiers) et OLAOLUWA PHILIP (géospatial/climat sans santé publique), les 2 invitations reçues encore en attente, décisions du 31/08 non rejugées faute d'élément neuf ; Haider Durrani, Kipchirchir Kigen, Victoria Kanana ; **Abdulrazaq Tanga** (étudiant, écarté ce run comme cible, sa source retenue).
+15. ⚠️ **`urn:li:activity:7500522694187089920` = `urn:li:activity:7499051354368331776`** — même post d'Oke Ikpekpe, l'URN servi par les notifications diffère de celui archivé. À ne pas traiter comme deux fils.
+16. 🔧 **Note d'outillage, à ne pas rediagnostiquer** : sur la nouvelle coquille LinkedIn, les commentaires ne sont **pas** atteignables par les sélecteurs `article.comments-comment-*`, et `document.body.innerHTML` ne contient aucun `urn:li:activity:`. Ce qui marche : `document.querySelector('main').innerText` après deux `computer scroll`, et pour récupérer un URN, la page `/recent-activity/all/` du profil (les URN y sont dans le HTML). L'éditeur de commentaire, lui, est un `[contenteditable="true"]` classe `tiptap ProseMirror`, accessible en JS, et le bouton de publication est le `button` dont `innerText === 'Commenter'` **sans** `aria-label` (celui **avec** `aria-label="Commenter"` est l'icône de la barre d'action du post, pas le bouton d'envoi).
+17. **Blocages hebdomadaires au 02/09 après ce run** : **nouveau ce run — Kyaw Thowai Prue Prince (09/09)** ; Adesoye Emmanuel Tunde et Rocham Mulumbwe (09/09) ; Dr. Jean Kaseya, page ECDC, Jacob Banda (08/09) ; Harvey Basivikidi (03/09, top-level) ; Oke Ikpekpe (04/09, top-level seulement, sous-fil ouvert et actif au 8e tour) ; Jason Kindrachuk, Dr Jeeven Kumar (04/09) ; Global Health EDCTP3, French Healthcare Association, Health Policy Watch, Tambe Elvis Akem, SOUAD BELKACEMI (05/09) ; Melvin Sanicas, Dossa Paul YAOÏTCHA, Mohammad Ilias Hossain (07/09, top-level seulement, sous-fils ouverts). **Libres** : Robert Herriman, Patrick AYONGA, Oliver Morgan, Dr Fabrice KHADDY, page Africa CDC, Vital Strategies, Tedros, **Prof. Mohamed Janabi**, INRB, Miriam Mbueshi, Apoorva Wasnik, Johan Verheyden, Gaelle Gonzalez, Lori Peterson, Dr. Malachie MANAOUDA, James Schlitt, Martin Yakum, Ifedayo Adetifa, Julien Harneis, BANZA Freddy Mutoka (aucun commentaire publié chez lui, donc aucun blocage créé).
+
+---
+
+### 5️⃣ 🔧 ARBRE DE TRAVAIL
+
+`marketing/qa/product-claims.manual.json` **modifié avant ce run** (2 claims ajoutées le 31/08, plus 1 le 02/09 par la routine de contenu) et **toujours non commité** : il appartient au dispositif QA, pas à cette routine — laissé tel quel, comme aux runs précédents. `marketing/qa/*.json` régénérés, non suivis. **Fichiers n'appartenant pas à cette routine, laissés intacts** (`AGENTS.md`) : `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis, inchangés depuis le 29/08). **Branche vérifiée avant commit : `master`.** `git log` **n'a pas bougé pendant le run** (`1552e0f3` en tête à l'ouverture comme à la clôture), aucune session sœur n'a écrit dans l'arbre. Aucun verrou de code (`_shared/code-lock.md`) demandé : cette routine ne touche ni `app/`, ni `lib/`, ni `components/`, ni les dépendances.
+
+---
+
 ## 📅 Session linkedin-hwg-monitoring — 01/09/2026 (9h)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` datée du 01/09 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture (dernière en date : 31/08, 9h). La seule entrée du 01/09 déjà présente appartient à une **session interactive de David vers 05h50-06h16** (envoi des DM Harvey Basivikidi et Dossa Paul YAOÏTCHA sur ordre explicite) — run intentionnellement distinct → **premier déclenchement de cette routine aujourd'hui**. Horloge machine à l'heure : `date` renvoie **Tue Sep 1 09:04 2026**.
