@@ -1,6 +1,99 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
+## 📅 Session linkedin-hwg-monitoring — 02/09/2026 (9h)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` du 02/09 dans ce fichier ni dans `content-log.md` à l'ouverture → **premier déclenchement de cette routine aujourd'hui**. Les deux entrées du 02/09 déjà présentes dans `content-log.md` appartiennent à `linkedin-hwg-content-proposal` (créneau 8h35 puis reprise interactive avec David, post PARTNERS publié à 09h28) — routine distincte, quotas distincts. Horloge machine à l'heure (`Wed Sep 2 09:03 2026`). Branche vérifiée avant écriture : **master**.
+
+**🖥️ Navigateur** : `_shared/browser-status.md` lu avant ouverture. Dernière entrée d'appairage **🟢 RÉTABLI (31/08 ~13:05)**, aucune entrée `🔴` du jour → aucun bridage. `23c7ecdd-…` sélectionné directement sans confirmation (§7, session planifiée), malgré l'invite de l'outil à faire choisir entre deux navigateurs. Session sans incident hors **5 timeouts CDP isolés sur `Page.captureScreenshot`**, tous contournés par relance immédiate, sans effet sur les actions.
+
+**Registre de faits régénéré ce run** (`npm run qa:facts` → **226 faits citables sur 110 lignes affichées**, 81 lignes `is_seed` exclues, 8 faits périmés).
+
+⚠️ **Une session interactive de David tournait en parallèle sur ce navigateur** (`linkedin-hwg-content-proposal`, 09h04-09h28). §11 : **redémarrage de Chrome sauté en fin de session**, conformément à la règle. §15 appliqué avant chaque publication : aucune entrée du jour ne mentionnait mes cibles.
+
+---
+
+### 1️⃣ 💬 MESSAGERIE — 1 SEUL FIL A BOUGÉ, TRAITÉ
+
+**Liste des 10 conversations lue en entier, triée par récence.** Un seul message entrant depuis le run du 01/09 (9h) : les créneaux de 13h et 17h du 01/09 **n'ont pas tourné** (aucune entrée dans les deux journaux), les 3 DM mis en file hier y sont donc restés.
+
+- ⭐⭐ **John Omari Baso — 01/09, 15h12 puis ~22h, entrant, 3 messages d'affilée.** « Bonjour David », puis **une diapositive de synthèse en image**, puis « *Voici la mise à jour de la situation épidémiologique Polio en RDC pour la semaine épidémiologique 35* ». **C'est exactement le comportement que David lui avait demandé le 31/08** (« *Quand quelque chose bouge chez vous avant de sortir, dites-le moi* ») : la demande a fonctionné. Traité en section 2. Contenu de la diapositive en section 5 (§8).
+- **Inchangés, rien n'est dû** : Dossa Paul YAOÏTCHA et Isaias Fernandes Co (leurs messages du 01/09 sont toujours les derniers, nos réponses sont **en file de validation depuis hier**) · Harvey Basivikidi (notre envoi du 01/09 est le dernier) · Buno Tona · SOUAD BELKACEMI. · Bobossam Cissoko · Summer Galloway, Ph.D. · Abou A. SOUMAH · Dr. Siaka Condé (« *Let me look at this for a moment* », 29/08, toujours pas revenu).
+
+---
+
+### 2️⃣ 🔒 DM — 1 RÉDIGÉ, EN FILE DE VALIDATION, AUCUN ENVOYÉ
+
+**Règle du 23/07 appliquée : ce texte n'est pas envoyé par la routine.** Quota DM du jour : **0 envoyé sur 8** ; un DM en file ne consomme rien tant qu'il n'est pas envoyé. **Notification push envoyée en fin de run.**
+
+#### 🔒 DM 1 — **John Omari Baso**, FR, vouvoiement — **EN FILE**
+
+Fil relu intégralement (§4) : **16 messages depuis le 27/08**, recopiés verbatim dans `tmp/thread-john-0209.txt`, **diapositive jointe transcrite en toutes lettres** dans le même fichier. *langue du fil = fr ; langue du brouillon = fr.*
+
+**Registre tu/vous, tranché explicitement.** John a employé « toi » **une seule fois**, le 30/08, et s'est corrigé dans la même phrase (« *Pour bien converger avec toi ou selon ce que vous voulez* ») ; ses deux messages suivants reviennent au vouvoiement. **Le vouvoiement est donc maintenu** — le relecteur a confirmé ce choix indépendamment. Ce n'est pas le cas prévu par [[feedback_linkedin_tutoiement_mirror_contact]] : il n'y a pas eu de passage au tutoiement.
+
+**Arbitrage CTA.** Le lien healthwatch-global.com et l'essai de deux semaines **ont déjà été envoyés dans ce fil**, dans le 3e message (27/08 : « *Two weeks to look at what does surface on healthwatch-global.com costs nothing* »). Anti-répétition appliquée : **rien n'est resservi**, ni lien, ni offre, ni nom de produit.
+
+🔴 **Le relecteur a fait échouer le 1er jet sur deux points réels, dont un que je n'avais pas vu du tout.**
+- **(5) Attribution.** Le brouillon écrivait « *avec les zones de santé comptées une par une* » — **faux** : la diapositive donne des compteurs **par province** (« 8 provinces et 22 ZS affectées : MAN 11, HLO 38… ») et les ZS en agrégat, elle n'en nomme que trois. Il écrivait aussi « *je ne l'avais encore jamais vue écrite noir sur blanc* », **démenti par le fil lui-même** : John avait déjà envoyé une ventilation chiffrée par province le 29/08 (« *2 cas au Sud-Kivu, 1 cas au Kasaï et 1 cas à Kinshasa* »). Le compliment effaçait sa contribution précédente.
+- **(7) Fil — le point le plus coûteux.** Le brouillon redemandait où le document est publié. C'était la **4e fois** que David posait cette question dans ce fil, elle avait déjà reçu une réponse (« *le bulletin épidémiologique ne circule pas sur le lien publique* »), et surtout **elle contredisait l'engagement pris le 31/08** : « *Vous m'indiquez où regarder, je me charge de trouver la trace publiable.* » John a indiqué où regarder ; le brouillon lui repassait le travail.
+- **Correction appliquée** : les deux affirmations retirées, l'engagement réaffirmé en une ligne, et la question remplacée par un point réellement neuf de la diapositive (les 62 isolats en attente de séquençage et ce qu'ils font au décompte hebdomadaire).
+
+⚠️ **Faux positif mécanique documenté, écarté sur pièce** : `context.too-soon` (« dernier message il y a 2 j, minimum 3 j »). La règle mesure l'écart entre deux **envois de David** sans voir les messages entrants ; les trois derniers messages du fil sont de John. **C'est une réponse en fil actif, pas une relance** — même classe de faux positif que celle déjà consignée pour John et Rodrigo. Le relecteur l'a confirmé indépendamment.
+
+`QA : mécanique FAIL sur le seul faux positif context.too-soon (565 car., limite 1300, 2 paragraphes, fr/fr, 0 lien, 0 CTA, 0 tiret cadratin ; 62 et 35 tracés from-thread) — 1 blocker ngram.history antérieur corrigé avant le relecteur (« existe-t-il quelque part », formule déjà servie) | relecteur VERDICT: REECRIRE 5, 7 au 1er jet, corrigés — 10 PASS sur 12 par ailleurs, dont CTA non resservi et registre vous confirmé | faits cités : aucun de la base, 62 et 35 viennent de la diapositive du fil | registre du 02/09 (09:03) | statut : en file de validation`
+
+> Bonjour John, merci, et ce n'est pas une formule : c'est exactement ce que je vous avais demandé, un signal de votre côté quand quelque chose bouge. Retrouver ce qui en ressort publiquement, c'est mon travail, pas le vôtre.
+>
+> Une ligne de votre tableau m'arrête : les 62 isolats encore en attente de séquençage. Si une partie revient positive plus tard, le décompte de la semaine 35 est-il repris rétroactivement, ou le résultat est-il porté à la semaine où il tombe ? Selon la réponse, un chiffre hebdomadaire ne veut pas dire la même chose quand on le lit de loin.
+
+#### 🔒 RAPPEL — 3 DM TOUJOURS EN FILE DEPUIS LE 01/09 (1 jour)
+
+Les créneaux de 13h et 17h du 01/09 n'ayant pas tourné, ces trois textes n'ont jamais été présentés à David. **Vérifiés en direct ce run dans la messagerie** : dans les trois cas notre côté n'a rien envoyé, l'état de la file est exact. Textes complets et rapports QA : entrée du 01/09 de ce fichier.
+
+1. **Dossa Paul YAOÏTCHA** (FR) — réponse à son échange de coordonnées.
+2. ⭐⭐ **Isaias Fernandes Co** (EN) — *AI & Technologies Officer, OMS AFRO, pilote PDX sur 47 États membres*. **Il accepte le principe d'un appel** à partir de la semaine du 14 septembre. Signal de traction le plus fort du dossier.
+3. **Julien Tuba** (FR) — message de bienvenue, *AVoHC at Africa CDC*, RDC.
+
+---
+
+### 3️⃣ ✅ INVITATIONS REÇUES — 2 ACCEPTÉES, 2 LAISSÉES
+
+Compteur passé de **4 à 2**, vérifié après coup.
+
+- ⭐ **Jacob Banda** (`/in/jacob-banda-8598781b3/`) — *Surveillance Officer | Field Epidemiologist | Data Analyst*, **ZNPHI (Zambie)**, mutuel Buno Tona. **Nous avons commenté son post hier** (commentaire 3/7 du 01/09) et **il a répondu** ; il envoie l'invitation à son tour. Cœur de cible. Identité vérifiée par le slug dans le même appel JS que le clic.
+- ⭐ **Ghayyoor Sultan** (`/in/ghayyoor-sultan/`) — *PhD Researcher in Antimicrobial Resistance | One Health Epidemiologist | DVM, MSc Global Public Health*, **Nirmal Kandel + 15 relations en commun**. AMR et One Health, dans le périmètre. Identité vérifiée de la même façon.
+- ❌ **Zachariah G. Houdari** (services financiers) et **OLAOLUWA PHILIP** (géospatial/climat sans santé publique) — laissées en attente, décisions du 31/08 non rejugées faute d'élément neuf.
+
+**Messages de bienvenue : aucun rédigé, motifs explicites.**
+- **Jacob Banda** : un échange de fond est **déjà en cours publiquement** sous son post (notre commentaire, sa réponse, et une réponse publiée ce run à un tiers dans le même fil). Un DM aujourd'hui doublonnerait cette conversation. À reprendre quand le fil public sera clos.
+- **Ghayyoor Sultan** : son post le plus récent (7 h) porte sur la **sécurité des AINS**, pas sur la surveillance ni l'AMR de terrain. **Aucun hook honnête dans le périmètre**, §10. À reprendre dès qu'il publie sur son sujet de thèse.
+
+---
+
+### 4️⃣ 👤 SUIVIS — 6, TOUS EXÉCUTÉS ET VÉRIFIÉS
+
+Chaque clic vérifié dans le même appel JS : slug du profil comparé, puis libellé du bouton relu après coup (« Suivre » → « Suivi »).
+
+1. ⭐⭐ **BANZA Freddy Mutoka** (`/in/banza-freddy-mutoka-4153b132/`) — *Health Emergencies Response Officer, **World Health Emergencies Programme, WHO***, Dakar, 2e degré, **35 relations en commun**, 851 abonnés. Repéré dans les notifications (« Vous connaissez peut-être »). Publie **en première personne sur la riposte Ebola en RDC**. Une invitation lui a déjà été envoyée par le passé, **toujours « En attente »** — d'où le suivi seul. Commenté ce run.
+2. ⭐ **Rocham Mulumbwe** (`/in/rocham-mulumbwe-587570186/`) — *Biomedical Scientist | Epidemiologist | Data analyst*, 3e degré. **A commenté substantiellement sous notre propre commentaire** chez Jacob Banda. Commenté ce run.
+3. **Adesoye Emmanuel Tunde** (`/in/adesoye-emmanuel-tunde-302536362/`) — *Medical Laboratory Scientist | Diagnostics & Laboratory Innovation*, 3e degré, Nigéria. Repéré en recherche de contenu triée par date. Commenté ce run.
+4. ⭐ **Dr. Norbert TANKE DONGMO** (`/in/dr-norbert-tanke-dongmo-msc-mfeltp-phd-faiph-faph-28875375/`) — *Spécialiste en Santé Publique, Épidémiologiste de terrain*, **World Health Organization**, Alger, 2e degré. Repéré dans les commentaires du post de BANZA.
+5. ⭐⭐ **Dr. Ibrahima Socé Fall** (`/in/dr-ibrahima-socé-fall-80503928/`) — *Global Health Leader, **CEO Institut Pasteur de Dakar**, former Assistant Director-General at WHO*. ⚠️ **Déjà relation de 1er degré**, mais le bouton « Suivre » était actif sur son profil : le suivi n'était donc pas activé. Corrigé. **Profil de tout premier plan déjà dans le réseau, à exploiter** (voir carry-over).
+6. **Kyaw Thowai Prue Prince, MBBS, MSc, FETP** (`/in/dr-prince-kyaw-thowai-prue/`) — *Medical Epidemiologist | One Health | Surveillance | Outbreak Response | PHEOC, IEDCR*, Bangladesh, **1er degré**, même situation que ci-dessus (suivi non activé). Post du jour sur l'atelier ToT **TSI (Transmissibility, Severity & Impact)** de l'IEDCR avec l'OMS Bangladesh.
+
+**Abonnés : 404** (401 au 01/09). Les nouveaux du haut de liste sont Ghayyoor Sultan et Jacob Banda, déjà traités ci-dessus ; aucun follow-back supplémentaire dû.
+
+**Relations : 289**, triées par ajouts récents. Seules les deux acceptations du jour sont neuves — **aucune invitation envoyée par nous n'a été acceptée depuis le 01/09**, donc aucun message de bienvenue supplémentaire dû à ce titre.
+
+---
+
+### 5️⃣ 🧾 NOTES DE CONNEXION — 0
+
+Aucune invitation envoyée ce run. **Motif assumé** : les deux meilleurs candidats du jour sont soit déjà relation (Jacob Banda, Ghayyoor Sultan, acceptés ce matin), soit déjà en invitation « En attente » (BANZA Freddy Mutoka). Les autres suivis du run sont périphériques ou sans hook frais. **Mohammad Ilias Hossain : note toujours pas retentée**, conformément au carry-over du 31/08 (« ne pas retenter par le même chemin ») — la note reste rédigée et QA-validée, **ne pas la réécrire**.
+
+---
+
 ## 📅 Session linkedin-hwg-monitoring — 01/09/2026 (9h)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` du 01/09 dans ce fichier ni dans `content-log.md` à l'ouverture. La seule entrée du 01/09 déjà présente appartient à la **session interactive de David de ~05h50-06h16** → **premier déclenchement de cette routine aujourd'hui**. Horloge machine à l'heure (`Tue Sep 1 09:04 2026`). Navigateur : dernière entrée d'appairage de `_shared/browser-status.md` **🟢 RÉTABLI (31/08 ~13:05)**, aucun bridage, `23c7ecdd-…` sélectionné directement (§7).

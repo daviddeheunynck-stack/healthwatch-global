@@ -172,6 +172,163 @@ QA: PUBLIÉ ✅ le 02/09 à 09h28 | double-check David 09h18 : registres réconf
 
 ---
 
+## 📅 Session linkedin-hwg-monitoring — 02/09/2026 (9h)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` du 02/09 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture. Les deux entrées du 02/09 déjà présentes ici appartiennent à `linkedin-hwg-content-proposal` (créneau 8h35, puis reprise interactive avec David et publication du post PARTNERS à 09h28) → **premier déclenchement de cette routine aujourd'hui**. Horloge machine à l'heure (`Wed Sep 2 09:03 2026`). Branche vérifiée avant écriture : **master**.
+
+**Détail intégral des invitations, suivis, DM et veille messagerie : `linkedin-contacts.md`, entrée du jour.**
+
+**Quotas à la clôture** : commentaires **3/7 publiés** (Adesoye Emmanuel Tunde, Rocham Mulumbwe, Oke Ikpekpe) **+ 1 candidat abandonné après relecture** (BANZA Freddy Mutoka) · **DM 1 rédigé et 🔒 EN FILE**, **+3 toujours en file depuis le 01/09**, 0 envoyé sur 8 · suivis **6/7-10** · **2 invitations reçues acceptées** (4 → 2 en attente) · notes de connexion **0/7** · **0 écriture en base**.
+
+⚠️ **Les créneaux de 13h et 17h du 01/09 n'ont pas tourné** (aucune entrée dans les deux journaux). Conséquence directe : la réponse d'Oke Ikpekpe (01/09 ~14h) et celle de Jacob Banda (01/09 ~12h) n'avaient été vues par personne, et les 3 DM mis en file hier matin n'ont jamais été présentés à David.
+
+---
+
+### 1️⃣ SUIVI DES FILS ACTIFS (§14) — 8 FILS ROUVERTS UN PAR UN, 2 RETOMBÉES NEUVES
+
+Rouverts **sur le post, pas sur la notification**.
+
+- ⭐⭐ **Oke Ikpekpe** — **il a répondu**, 19 h avant l'ouverture du run, en interpellant David nommément. Traité en section 2. ⚠️ **Le post porte désormais l'URN `urn:li:activity:7500522694187089920`** dans les notifications et l'URL, là où nos archives le désignent par `urn:li:activity:7499051354368331776` : **même post, même fil** (« *What happens to outbreak preparedness when there is no outbreak?* »), URN de notification différent de l'URN d'origine. À ne pas prendre pour deux fils.
+- ⭐ **Jacob Banda** (`urn:li:activity:7500293159126761472`) — il a répondu à notre commentaire du 01/09, mais **par une politesse sans fond** (« *Absolutely, and I'm always open to learning from experts in the field* »). **Aucune réponse rédigée** : elle n'aurait été qu'un accusé de réception habillé (question 12 du relecteur). **En revanche un tiers a repris notre argument avec du fond** — voir commentaire 2/7.
+- **SOUAD BELKACEMI.** (`urn:li:activity:7499735785110192129`) — notre commentaire du 31/08 reste le dernier du sous-fil. La notification du jour (« Frédéric Bernard aime un commentaire de SOUAD BELKACEMI qui mentionne votre nom ») porte sur **un like sur son message du 31/08**, pas sur une réponse neuve. Rien n'est dû.
+- **Dr. Jean Kaseya** (`urn:li:activity:7500220920481873920`) — notre commentaire de 23 h est toujours là, **29 impressions**. Un commentaire de premier niveau publié depuis (Clément W., WFP) ne s'adresse pas à nous.
+- **page ECDC** (`urn:li:activity:7500168211833909249`) — notre commentaire est le seul du post, **4 impressions**. Rien.
+- **James Schlitt, PhD, MPH** (`urn:li:activity:7500143469085057027`, post de David) — notre réponse reste le dernier message, aucune contre-réponse.
+- **Melvin Sanicas** (`urn:li:activity:7499221325358501889`) — les deux entrées les plus récentes (Sinan Almukhtar, Global Health Press) sont des commentaires de premier niveau vieux de 3 jours, pas des réponses à notre sous-fil.
+- **Dossa Paul YAOÏTCHA** (`urn:li:activity:7499435689214758912`) et **Mohammad Ilias Hossain** (`urn:li:activity:7499900718590595072`) — inchangés, notre message reste le dernier de notre branche.
+
+**Notifications parcourues : 9 cartes distinctes** après dédoublonnage. Sans action : 4 vues de profil, un like sur notre commentaire (Olivier Mushagalusa et 4 autres), deux republications hors périmètre, une newsletter Wellcome Trust. La carte « Vous connaissez peut-être BANZA Freddy Mutoka » a été exploitée (section 4 de `linkedin-contacts.md`).
+
+---
+
+### 2️⃣ 💬 COMMENTAIRES PUBLIÉS — 3
+
+#### ✅ COMMENTAIRE 1/7 — **Adesoye Emmanuel Tunde** (`/in/adesoye-emmanuel-tunde-302536362/`), EN, top-level
+
+`urn:li:activity:7500813394892062720`, **publié 5 minutes avant le repérage**. *Medical Laboratory Scientist | Diagnostics & Laboratory Innovation*, 3e degré, Nigéria. Repéré en **recherche de contenu triée par date** (mots-clés `outbreak surveillance`, filtre 24 h). **Aucun commentaire sur le post, nous sommes le premier.** *langue du fil = en ; langue du brouillon = en.*
+
+**Le post** : « *NEARLY 1,000 SUSPECTED DIPHTHERIA CASES IN KATSINA. WHY AREN'T WE TALKING ABOUT THIS?* » — cas suspects dans 29 LGA de Katsina, près de 1 000 depuis janvier, des dizaines de décès, et un plaidoyer pour le rôle du laboratoire dans la confirmation.
+
+**L'angle publié, et le fait qui l'a rendu possible.** Le premier jet reposait sur une lecture fausse du registre : j'avais conclu, sur une recherche tronquée à 12 résultats, que **HWG n'avait aucune ligne diphtérie pour le Nigéria**. C'est faux — la ligne existe (`1ca31b07-…`, `active: true`) et elle porte **65 759 cas suspects et 2 229 décès arrêtés au 22 mars**. Vérifié avant rédaction. L'angle est donc bien meilleur que le premier : le total national existe, il est énorme, et il n'a pas bougé depuis cinq mois — de sorte que le foyer de Katsina peut y être déjà compté ou pas du tout, sans qu'on puisse le dire d'en aval. C'est une part réelle de la réponse à son « *why aren't we talking about this* », sans jamais commenter le silence lui-même.
+
+⚠️ **Deux faux positifs mécaniques documentés, écartés sur pièce, confirmés par le relecteur.** `facts.unsourced` sur **« 22 »**, quantième de « dated 22 March », donc l'`asOf` de la ligne citée dans la même phrase — **même faux positif que le « 26 » du 01/09**, il est structurel. `facts.value-no-context-match` sur **2 229** : la fenêtre de contexte de l'outil démarre après « The Nigeria diphtheria line », donc il ne voit ni la maladie ni le pays qui sont pourtant dans la phrase.
+
+`QA : mécanique FAIL sur les deux seuls faux positifs ci-dessus (457 car., 2 paragraphes, en/en, 0 lien, 0 CTA, 0 tiret cadratin) | relecteur VERDICT: ENVOYER, **12 PASS au 1er jet**, aucune réserve — vérifie nommément que le grief du post (« why aren't we talking about this ») n'est ni repris ni contesté, et que « suspected » est bien le libellé de la source de la ligne | faits cités : Diphtérie/Nigéria `1ca31b07-…`, 65 759 cas suspects et 2 229 décès au 22/03 | registre du 02/09 (09:03) | statut : publié le 02/09`
+
+> The laboratory point has a consequence at the reading end. The Nigeria diphtheria line I keep reads 65,759 suspected cases and 2,229 deaths, dated 22 March, and it has not moved since.
+>
+> So the Katsina figure you quote may already be counted inside that total, or counted nowhere at all, and nothing on my side tells me which. You sit on the confirmation step: when a state records suspected cases, what has to happen before the national figure absorbs them?
+
+**Publication confirmée** : texte comparé **caractère pour caractère dans le même appel JS que le clic** (457 attendus, 457 côté éditeur, `identique: true`, URL revérifiée dans le même appel). Après rechargement : **une seule occurrence**, horodatage « maintenant », 2 paragraphes intacts.
+
+#### ✅ COMMENTAIRE 2/7 — **Rocham Mulumbwe** (`/in/rocham-mulumbwe-587570186/`), EN, réponse en sous-fil
+
+`urn:li:activity:7500293159126761472` — **le post de Jacob Banda commenté hier**. *Biomedical Scientist | Epidemiologist | Data analyst*, 3e degré. **Il a publié un commentaire de fond 21 h avant le run, en reprenant explicitement notre argument** (« *QGIS can visualise and analyse the data we have, but it cannot correct limitations introduced during data collection and reporting* ») et en le prolongeant d'une question neuve : « *whether different reporting levels can be validly compared over time* ». *langue du fil = en ; langue du brouillon = en.*
+
+**Pourquoi lui et pas Jacob Banda.** L'auteur du post avait répondu le premier, mais par une politesse. Rocham Mulumbwe est le seul à avoir apporté du fond, et sa dernière phrase est une question ouverte à laquelle notre position en aval répond directement. Les 4 commentaires du post ont été lus en entier avant rédaction (§5) : personne n'avait pris cet angle.
+
+**L'angle publié** : le niveau de rapportage peut changer d'un numéro à l'autre du même bulletin **sans que le bulletin le signale**, et la comparaison dans le temps devient alors silencieusement une comparaison de deux objets différents. Le correctif ne relève pas de la compétence cartographique mais du **versionnement de l'unité par la source elle-même, dans le numéro où elle change**.
+
+`QA : mécanique PASS au 1er passage (547 car., 2 paragraphes, en/en, 0 blocker, 0 warn) | relecteur VERDICT: ENVOYER, **12 PASS au 1er jet**, aucune réserve — relève nommément que « The fix is not a mapping skill » ne vise pas la formation annoncée par l'auteur du post, cadrage déjà posé publiquement par Rocham lui-même | faits cités : aucun | registre du 02/09 (09:03) | statut : publié le 02/09`
+
+> Rocham Mulumbwe Your last question is the one that costs most once the data has left you. A reporting level can change between two issues of the same bulletin without the bulletin flagging it, so the number just arrives at a different resolution and a comparison over time quietly becomes a comparison of two different objects.
+>
+> The fix is not a mapping skill. It is the source recording that its unit changed, in the issue where it changed. Does anything in the reporting chain you work with carry that, or is it reconstructed later by whoever happens to notice?
+
+**Publication confirmée** : 563 attendus, 563 côté éditeur, `identique: true`, URL revérifiée dans le même appel JS que le clic. ⚠️ **Un double espace avait été introduit après la mention** (la pastille « Rocham Mulumbwe » porte déjà son espace, plus celui que j'avais tapé) : **repéré au contrôle caractère par caractère et corrigé avant publication**, pas après. Après rechargement : une seule occurrence, 2 paragraphes, mention correcte.
+
+#### ✅ COMMENTAIRE 3/7 — **Oke Ikpekpe** (`/in/oke-ikpekpe/`), EN, réponse en sous-fil, **8e tour**
+
+`urn:li:activity:7500522694187089920` (= `…7499051354368331776` dans nos archives, même post). **Fil relu intégralement, 12 messages de sous-fil dépliés un par un, recopiés verbatim dans `tmp/thread-oke-0209.txt`.** Sa réponse de 19 h : « *Hmm, this is where accountability becomes important. The person or unit responsible for carrying out a check should not also be the only one responsible for knowing whether it happened.* » *langue du fil = en ; langue du brouillon = en.*
+
+**Arbitrage sur le blocage hebdomadaire.** Oke Ikpekpe est bloqué en commentaire jusqu'au **04/09**. Le blocage porte sur les commentaires de premier niveau ; ce sous-fil est ouvert et actif depuis le 28/08 (8 tours), et §14 qualifie explicitement une réponse trouvée dans un fil actif d'opportunité de commentaire à part entière. Même régime que Melvin Sanicas et Mohammad Ilias Hossain.
+
+**L'angle publié.** Oke s'arrête à une exigence de personne (« *someone else should know it is due* ») ; la réponse propose un **porteur structurel** de cette attente, qui ne dépend de personne : la numérotation. Un bulletin numéroté par semaine épidémiologique signale son propre trou quand un numéro n'apparaît pas, parce que l'attente est portée par le calendrier. Une évaluation sans cadence et sans numéro n'a rien de tel.
+
+🔴 **Le relecteur a fait échouer le 1er jet sur un point réel (question 6).** Le brouillon demandait « *In what you review, do preparedness checks…* » — cette **position d'observateur n'est pas lisible sur son intitulé** (*Research Associate | Medical Writer*), et c'était la **troisième fois** que David la posait dans ce fil sans qu'Oke ne la ratifie jamais (ses réponses restent normatives ou générales). Le relecteur signalait par ailleurs, sans faire échouer, que la question finale reprenait le moule exact de celle de David deux tours plus haut (« *In the work you review, is …, or do both ends sit in the same office?* »). **Corrigé en supprimant l'attribution de corpus** — ce qui a fait tomber le moule au passage. Il notait aussi que « *A weekly bulletin that skips an issue reports its own gap* » était trop général (beaucoup de séries numérotent par ordre de parution, le saut ne s'y voit pas) : **corrigé en restreignant à un bulletin numéroté par semaine épidémiologique**, cas où l'affirmation est exacte.
+
+`QA : mécanique PASS après correction (618 car., 2 paragraphes, en/en, 0 blocker, 0 warn — PASS aussi au 1er jet) | relecteur VERDICT: REECRIRE 6 au 1er jet (position d'observateur déduite, jamais ratifiée en 2 sollicitations), corrigé par suppression — 11 PASS sur 12 par ailleurs, dont apport reconnu distinct de ce qu'Oke avait dit | faits cités : aucun | registre du 02/09 (09:03) | statut : publié le 02/09`
+
+> Oke Ikpekpe One cheap form of that custody is already in the system, and it is the numbering. A bulletin numbered by epidemiological week reports its own gap when an issue does not appear, because the expectation sits in the calendar rather than in anyone remembering a check was due. From outside, the hole is visible without knowing who owed what to whom.
+>
+> An assessment with no cadence and no number has none of that. It can simply not happen, and nothing is left where it should have been. Where a preparedness check is expected, does it usually come with a cadence of its own, or does it arrive only when someone asks for it?
+
+**Publication confirmée** : 630 attendus, 630 côté éditeur, comparaison caractère par caractère (`diffAt: -1`) **dans le même appel JS que le clic**. Après rechargement : une seule occurrence, « maintenant », 2 paragraphes.
+
+#### ❌ CANDIDAT ABANDONNÉ APRÈS RELECTURE — **BANZA Freddy Mutoka**, la meilleure cible du jour
+
+`urn:li:activity:7500630813257134083`, 12 h. *Health Emergencies Response Officer, **World Health Emergencies Programme, WHO***, Dakar. Post annonçant que **Bas-Uele est une province nouvellement touchée** par la flambée d'Ebola en RDC, 4 cas confirmés, déploiement d'experts. Les 4 commentaires existants sont des encouragements, aucun angle analytique pris. Profil suivi ce run.
+
+**Le brouillon, passé au contrôle mécanique après correction d'un `ngram.history` sur 8 séquences** (la citation « 5 794 cas / 2 786 décès / 26 août » recopiée telle quelle depuis le commentaire Kaseya de la veille) :
+
+> A newly affected province is the kind of change a cumulative total cannot carry. On my side DR Congo is a single national row, 5,794 cases against 2,786 deaths, with a cutoff of 26 August, and whether Bas-Uele already sits inside those figures or not, they read the same either way.
+>
+> So the list of affected provinces works as an indicator of its own, and it is the part I have no way to rebuild from a national count. Does that list get published on a fixed rhythm, or does it only move on the day a new province is confirmed?
+
+🔴 **Le relecteur l'a fait échouer sur deux points de fond, et il a raison sur les deux.**
+- **(9) Terrain politique.** Sous le post d'un agent de l'OMS qui écrit « *WHO has scaled up the response* » et « *We are confident* », la clause « *whether Bas-Uele already sits inside those figures or not* » interroge publiquement la lisibilité des chiffres publiés par sa propre institution, et la question finale (« *or does it only move on the day a new province is confirmed?* ») met le rythme de publication de l'OMS dans le cadre du commentaire. **Exactement le motif retenu la veille sous le post de Jean Kaseya.** Aggravant : « *they read the same either way* », sous une annonce d'extension géographique, se lit aussi comme « ça ne change rien ».
+- **(11) Gabarit.** Même ligne, mêmes chiffres, même date et **même construction en trois temps** que le commentaire publié la veille sous le post de Kaseya (aphorisme sur ce qu'un nombre ne transporte pas → citation de `bd1c3a46-…` → « le compteur n'est pas la partie informative, c'est [la date | la liste de provinces] »). Deux commentaires publics à un jour d'intervalle, devant des audiences fortement recouvrantes.
+
+**Décision : renoncer au candidat, pas de 2e essai.** Le relecteur note lui-même que l'apport du texte reposait entièrement sur la question que le point 9 fait tomber : le corriger n'aurait pas été une correction mais une réécriture depuis zéro, ce que le dispositif du 26/08 exclut pour un commentaire. **L'événement Bas-Uele n'est pas abandonné pour autant, il passe en ligne d'événement (§16) avec d'autres porteurs.**
+
+⚠️ **Réserve utile du relecteur, à garder** : d'autres lignes RDC de la base portent un `admin1` réel (ex. `"Bulape Health Zone"`). **Ne jamais généraliser en « ma base est nationale »** — c'est vrai de la ligne Ebola/RDC (`admin1: null`), pas de la base.
+
+#### ❌ AUTRES CIBLES EXAMINÉES ET ÉCARTÉES
+
+- **Kyaw Thowai Prue Prince** (1er degré, *Medical Epidemiologist, PHEOC/IEDCR*, Bangladesh), post de 12 min sur l'atelier ToT **TSI** avec l'OMS Bangladesh et le Pandemic Fund. Matière réelle, mais l'angle disponible (une évaluation produite à partir de données de terrain précoces ne ressort presque jamais publiquement) est **le même que celui du commentaire Oke publié ce run** — §16 point 1 : argument identique sous deux posts différents, c'est le gabarit à l'échelle de la journée. **Écarté pour cette raison, à reprendre avec un autre angle.** Profil suivi.
+- **page Africa CDC**, post de 2 j sur l'extension Ebola à 60 zones de santé dans 6 provinces au 26 août — **hors fenêtre 48 h** (2 j pouvant valoir jusqu'à 72 h), et la page reste **libre** pour le briefing du 3 septembre.
+- **Baobab Pulse**, agrégateur d'actualités généré automatiquement — reprise secondaire, aucune matière propre. Contenu exploité en section 3 comme **signal**, pas comme cible.
+- **Jacob Banda** — sa réponse est une politesse sans fond, une réponse n'aurait été qu'un accusé de réception habillé (voir section 1).
+
+---
+
+### 3️⃣ 📊 DONNÉES ÉPIDÉMIOLOGIQUES (§8) — AUCUNE ÉCRITURE, 3 SIGNALEMENTS DONT 2 SÉRIEUX
+
+**Aucune écriture en base ce run.** Une routine sociale signale, elle n'ingère pas (§8) : lire la source primaire entière n'est pas fiable depuis une session LinkedIn.
+
+🔴 **1. Ebola/RDC — l'écart signalé hier se confirme par une deuxième voie, et il est large.** Notre ligne porte **5 794 cas et 2 786 décès arrêtés au 26 août** (`bd1c3a46-…`, WHO DON616). Deux éléments neufs aujourd'hui :
+- **BANZA Freddy Mutoka, agent du WHO Health Emergencies Programme**, annonce **Bas-Uele comme province nouvellement touchée, 4 cas confirmés** (post de 12 h, première personne institutionnelle).
+- Un agrégateur d'actualités relaie une déclaration de **Tom Fletcher, Coordonnateur des secours d'urgence de l'ONU** : « *As of Monday, DRC authorities reported over 6,100 confirmed cases and 2,950 deaths, with more than 5,000 infections recorded in Ituri Province alone* », plus un déficit de financement de 1,1 milliard de dollars.
+
+**Ni l'un ni l'autre n'est une source primaire** : un post LinkedIn et une reprise secondaire, exactement les deux cas que §8 interdit d'utiliser (précédent du 19/08). **Aucune écriture, aucune tentative.** Mais **c'est le deuxième jour consécutif qu'un écart de cet ordre remonte par une voie différente** (hier : un agrégateur allemand, 6 000 / 2 911) : une source primaire plus fraîche que le 26/08 existe très probablement — **déclaration OCHA/Fletcher datée du 31/08, ou sitrep des autorités RDC**. **À faire ingérer par `morning-don-check`, pas ici.** Garde-fou rappelé : ne jamais écrire un cumul qui baisse.
+
+🟡 **2. Polio/RDC — la ventilation par province existe, sous une forme non publique.** John Omari Baso a envoyé en messagerie **la diapositive de synthèse de la semaine épidémiologique 35**, qui porte précisément la couche que le point hebdomadaire GPEI ne transporte pas : « *Situation 2026 : 55 poliovirus PFA et ENV et 4 poliovirus contacts et communautaires ; dont 50 circulants cVDPV2 et 9 VDPV2 ; **8 provinces et 22 ZS affectées : MAN 11, HLO 38, KCE 2, TAN 3, KIN 1, SKV 2, LUA 1, NUB 1*** », plus 11 nouveaux poliovirus à SE 35 (Haut-Lomami, Nord-Ubangi/Wasolo, Lualaba/Fungurume) et **62 isolats en attente de séquençage**. Notre ligne Polio/RDC porte **43 cas au 26 août** (GPEI). **Document privé, non citable, aucune écriture** — signalé parce qu'il indique quel document chercher et parce que le retard de séquençage explique mécaniquement pourquoi un décompte hebdomadaire bouge après coup.
+
+🟢 **3. Diphtérie/Nigéria — ligne arrêtée au 22 mars, soit 164 jours.** `1ca31b07-…` porte 65 759 cas suspects et 2 229 décès **au 22/03/2026**, `active: true`, source `leadership.ng` (média). Un post de terrain du jour évoque **près de 1 000 cas suspects dans 29 LGA de Katsina depuis janvier**. Non citable comme source, mais la ligne est manifestement à rafraîchir contre le **NCDC** (qui alimente déjà notre ligne Lassa/Nigéria, `ncdc.gov.ng`) plutôt que contre une reprise de presse. **Signalé pour `morning-don-check`.**
+
+---
+
+### 4️⃣ 🔁 CARRY-OVER POUR LE CRÉNEAU DE 13h (02/09)
+
+1. 🔒 **QUATRE DM ATTENDENT DAVID**, dont **trois depuis le 01/09 au matin** que personne ne lui a jamais présentés (les créneaux de 13h et 17h du 01/09 n'ont pas tourné) : Dossa Paul YAOÏTCHA (FR), **Isaias Fernandes Co (EN)**, Julien Tuba (FR), plus **John Omari Baso (FR)** rédigé ce run. Textes complets et rapports QA dans `linkedin-contacts.md`, entrées du 01/09 et du 02/09. **Notification push envoyée ce run.**
+2. ⭐⭐ **Isaias Fernandes Co accepte le principe d'un appel** — *AI & Technologies Officer, OMS AFRO, pilote PDX sur 47 États membres* — à partir de la **semaine du 14 septembre**. Signal de traction le plus fort du dossier, **en file depuis 1 jour**. À rappeler à David tant qu'il n'est pas traité.
+3. ⭐⭐ **John Omari Baso fournit maintenant spontanément de la donnée de terrain**, en réponse à la demande explicite de David du 31/08. C'est le premier retour concret de ce dispositif : **le traiter vite pour ne pas casser l'élan**.
+4. 🗓️ **Ligne d'événement (§16)**
+   - 🔵 **Ebola/RDC, extension à Bas-Uele — ÉVÉNEMENT OUVERT, aucun support consommé.** Le porteur idéal (**BANZA Freddy Mutoka**, WHO WHE) a été **abandonné après relecture**, pas parce que le post était mauvais mais parce que le brouillon rejouait celui de la veille. **Ne pas retenter le même angle chez lui.** Porteurs alternatifs, dans l'ordre : page **Africa CDC** (libre, et le **press briefing du 3 septembre** tombe demain), **Prof. Mohamed Janabi** (libre, cible perdue depuis le 28/08), **Dr. Ibrahima Socé Fall** (nouveau, voir point 5). ⚠️ Page **WHO AFRO** toujours inatteignable, ne pas en faire un support.
+   - 🔵 **Écart de cumul Ebola/RDC (6 100 / 2 950 au 31/08 contre nos 5 794 / 2 786 au 26/08)** — événement de **données**, appartient à `morning-don-check`. Deuxième jour consécutif, ne pas laisser tomber.
+   - 🔵 **Diphtérie/Nigéria, ligne figée depuis 164 jours** — voir section 3, à rafraîchir contre le NCDC.
+5. ⭐⭐ **Dr. Ibrahima Socé Fall** (`/in/dr-ibrahima-socé-fall-80503928/`) — *CEO Institut Pasteur de Dakar, ancien Assistant Director-General de l'OMS*, **déjà relation de 1er degré**, suivi activé ce run. **Aucun échange en messagerie n'a jamais eu lieu.** Profil de tout premier plan, à traiter dès qu'un hook honnête se présente — c'est la meilleure opportunité dormante du carnet.
+6. ⭐ **Kyaw Thowai Prue Prince** (1er degré, IEDCR Bangladesh) — post TSI **écarté ce run pour cause d'angle redondant avec le commentaire Oke**, pas pour manque de matière. À reprendre avec un angle distinct tant que le post reste dans la fenêtre 48 h.
+7. ⭐ **Rocham Mulumbwe** — suivi et commenté ce run, **bon candidat connexion dès qu'il répond**.
+8. ➖ **Jacob Banda** (nouvelle relation) — welcome DM volontairement non rédigé, l'échange de fond est déjà public. À reprendre quand le fil sera clos.
+9. ➖ **Ghayyoor Sultan** (nouvelle relation) — welcome DM non rédigé, **aucun hook dans le périmètre** (son dernier post porte sur la sécurité des AINS). À reprendre dès qu'il publie sur l'AMR ou la surveillance.
+10. ⭐⭐ **Dr. Malachie MANAOUDA** — Ministre de la Santé Publique du Cameroun, suivi, **connexion prioritaire dès qu'un hook frais se présente**. Porté depuis le 22/08, toujours pas exécuté.
+11. 🔴 **Mohammad Ilias Hossain, note de connexion : non retentée**, conformément au carry-over du 31/08. Note rédigée et QA-validée, **ne pas la réécrire**.
+12. ➖ **Abubakar Sadiq Tahir** et **Alexandre APPROUTSADI YOKSOU** — relations acceptées, toujours **pas de welcome DM faute de hook honnête**, §10. Reprendre dès qu'ils publient dans le périmètre.
+13. ➖ **Yakoza Nyirenda** — invitation sans note du 30/08, **toujours en attente**. Si acceptée : welcome DM, en file de validation.
+14. ⭐ **Mamoudou Kindy K. Diallo** — suivi le 01/09, activité publique quasi nulle, aucun hook. Inchangé.
+15. ❌ **Ne pas reproposer sans élément neuf** : Zachariah G. Houdari (services financiers) et OLAOLUWA PHILIP (géospatial/climat sans santé publique), les 2 invitations reçues encore en attente ; Haider Durrani, Kipchirchir Kigen, Victoria Kanana.
+16. ⚠️ **`urn:li:activity:7500522694187089920` = `urn:li:activity:7499051354368331776`** — même post d'Oke Ikpekpe. L'URN servi par les notifications diffère de celui archivé. À ne pas traiter comme deux fils.
+17. **Blocages hebdomadaires au 02/09 après ce run** : **nouveaux ce run — Adesoye Emmanuel Tunde et Rocham Mulumbwe (09/09)** ; Dr. Jean Kaseya, page ECDC, Jacob Banda (08/09) ; Harvey Basivikidi (03/09, top-level) ; **Oke Ikpekpe (04/09, top-level seulement, sous-fil ouvert et actif au 8e tour)** ; Jason Kindrachuk, Dr Jeeven Kumar (04/09) ; Global Health EDCTP3, French Healthcare Association, Health Policy Watch, Tambe Elvis Akem, SOUAD BELKACEMI (05/09) ; Melvin Sanicas, Dossa Paul YAOÏTCHA, Mohammad Ilias Hossain (07/09, top-level seulement, sous-fils ouverts). **Ifedayo Adetifa et Julien Harneis sont libres depuis aujourd'hui.** Également **libres** : Robert Herriman, Patrick AYONGA, Oliver Morgan, Dr Fabrice KHADDY, page Africa CDC, Vital Strategies, Tedros, **Prof. Mohamed Janabi**, INRB, Miriam Mbueshi, Apoorva Wasnik, Johan Verheyden, Gaelle Gonzalez, Lori Peterson, Dr. Malachie MANAOUDA, James Schlitt, Martin Yakum, **BANZA Freddy Mutoka** (candidat abandonné, aucun commentaire publié, donc aucun blocage créé).
+
+---
+
+### 5️⃣ 🔧 ARBRE DE TRAVAIL
+
+`marketing/qa/product-claims.manual.json` **modifié avant ce run** (2 claims ajoutées le 31/08 à 17h) et **toujours non commité** : il appartient au dispositif QA, pas à cette routine — même traitement qu'aux quatre runs précédents, laissé tel quel. `marketing/qa/*.json` régénérés, non suivis. **Fichiers n'appartenant pas à cette routine, laissés intacts** (`AGENTS.md`) : `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis, inchangés depuis le 29/08). **Branche vérifiée avant commit : `master`.** `git log` a bougé deux fois pendant le run (`37a3d646` puis `1b7764b2` puis `7c61ca0e`, tous de `linkedin-hwg-content-proposal` en session interactive avec David) — **§15 revérifié avant chaque publication**, aucune de ces écritures ne touchait mes cibles.
+
+---
+
 ## 📅 Session linkedin-hwg-monitoring — 01/09/2026 (9h)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` datée du 01/09 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture (dernière en date : 31/08, 9h). La seule entrée du 01/09 déjà présente appartient à une **session interactive de David vers 05h50-06h16** (envoi des DM Harvey Basivikidi et Dossa Paul YAOÏTCHA sur ordre explicite) — run intentionnellement distinct → **premier déclenchement de cette routine aujourd'hui**. Horloge machine à l'heure : `date` renvoie **Tue Sep 1 09:04 2026**.
