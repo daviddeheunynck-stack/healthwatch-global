@@ -2,7 +2,7 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
-## 📅 Session linkedin-hwg-content-proposal — 02/09/2026 (mercredi MWF, 8h35) — 🔴 **AUCUN POST PROPOSÉ, 2e créneau consécutif** — un brouillon complet rédigé puis retiré : l'angle avait été publié sur X 2 jours plus tôt
+## 📅 Session linkedin-hwg-content-proposal — 02/09/2026 (mercredi MWF, 8h35) — 🔴 **AUCUN POST PROPOSÉ au créneau planifié, 2e créneau consécutif** — un brouillon complet rédigé puis retiré : l'angle avait été publié sur X 2 jours plus tôt. ⚠️ **Mise à jour 09h04, même run interactif** : David a demandé la rédaction du candidat PARTNERS (§6). Brouillon **PRÊT — en attente de validation**, voir entrée dédiée juste en dessous.
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-content-proposal` datée du 02/09 dans ce fichier à l'ouverture (la plus récente était `linkedin-hwg-monitoring` du 01/09) → premier déclenchement du jour. Horloge machine à l'heure : `date` renvoie **Wed Sep 2 08:38 2026**. Branche vérifiée avant écriture : **master**.
 
@@ -90,6 +90,64 @@ Conformément à `AGENTS.md`, ce run ne stage que `marketing/content-log.md`. La
 
 ```
 QA: AUCUN POST PROPOSÉ | brouillon rédigé puis RETIRÉ avant présentation | mécanique FAIL (2 blockers, 2 faux positifs analysés : context.cta-repeat hors portée sur linkedin-post, ngram.history 36/301 collisions toutes en nom de pays / titre de bulletin / citation OMS obligatoire) | relecteur REECRIRE 1, 4, 5, 6, 7, 9, 10, 11, 12 — Q11 et Q6 disqualifiants, vérifiés à la main | motif du retrait : angle publié par HWG sur X le 31/08 (thread 2094377082448998849) + charpente déclarée fermée le 31/08 pour ce créneau nommément | 4 angles de remplacement écartés sur pièce | faits cités: bd1c3a46 (5794 / 2786 / 48.1 au 2026-08-26) | registres du 02/09 06h38 | 1 claim produit ajoutée
+```
+
+---
+
+### Post MWF — rédigé le mercredi 2 septembre 2026 (run `linkedin-hwg-content-proposal`, rédaction demandée par David en session interactive à 09h04, après le run planifié de 8h35 à zéro post) — Ebola/RDC, l'essai thérapeutique PARTNERS recrute à l'intérieur d'une flambée à 48,1 % de létalité sans attendre qu'elle se termine — statut : PRÊT — en attente de la validation explicite de David
+
+**Contexte** : angle identifié en §6 du run planifié de 8h35 comme piste de remplacement (« (a) Ouvrir une deuxième famille éditoriale [...] l'essai thérapeutique PARTNERS [...] jamais servi sur aucun des deux canaux »), après que 4 candidats de remplacement aient été écartés et le brouillon initial du matin (champ vaccin, « absent → inconnu ») retiré pour redite avec le thread X du 31/08. David a demandé la rédaction de ce candidat directement en session (« Rédige le post PARTNERS pour maintenant »).
+
+**Étape 0 bis (clause ajoutée ce jour même)** : `grep -n "^## 📅 Thread" content-log.md` relu avant rédaction — aucun des 6 derniers threads X ne porte sur l'essai PARTNERS lui-même (le plus proche, le thread du 31/08, porte sur le vaccin Ervebo, sujet distinct). Confirmé aussi par grep du mot « PARTNERS » sur tout le fichier : mentionné en veille passive à plusieurs reprises (Sir Peter Horby, repost INRB, note MinSanteRDC) mais **jamais publié comme angle propre par HWG**, sur aucun canal.
+
+**Sources primaires, vérifiées mot pour mot** :
+- OMS, Disease Outbreak News DON616, 28/08/2026 : « *As of 26 August 2026, a total of 5794 confirmed cases, including 2786 deaths, have been reported, corresponding to a crude case fatality ratio (CFR) of 48.1%.* » ; « *[...] as no approved vaccines or specific treatments currently exist for BVD.* » ; « *The trial began enrollment on 2 July. The trial, known as the PARTNERS trial, is now open in three different clinical management facilities in Ituri province and has enrolled over 250 people who are confirmed cases.* »
+- OMS, communiqué du 02/07/2026, « Patient enrolment begins in a scientific trial to identify the first effective treatments for Bundibugyo virus disease » : « *Platform Adaptive Randomised Trial for New and Repurposed Filovirus TreatmentS* » (acronyme PARTNERS) ; « *The trial will assess whether two antiviral therapies – a monoclonal antibody (MBP134) and remdesivir – can improve survival among people diagnosed with BVD. It will also evaluate whether combining the two antivirals provides additional benefits.* » ; « *The trial has been coordinated by the Institut National de Recherche Biomédicale (INRB) in the Democratic Republic of the Congo, the Institute of Tropical Medicine in Belgium, and the University of Oxford in the United Kingdom.* » ; citation attribuée, « *Research needs to happen alongside the response, not after it. The PARTNERS trial gives us an opportunity to evaluate potential treatments during the outbreak itself* » — Professeure Amanda Rojek.
+- Fiche maladie publique healthwatch-global.com/en/disease/ebola-virus-disease, lue en direct 02/09 : champ « Treatment » rendu « Experimental ».
+
+**Registre produit** : 1 claim manuelle ajoutée ce run (7e en vigueur après build), couvrant le champ « Treatment » de la fiche maladie (4 valeurs, pas de rétrogradation par souche contrairement au champ vaccin). Provenance : `lib/disease-data.ts` (`treatment: TreatmentStatus`), `app/[locale]/disease/[slug]/page.tsx` lignes ~121-153 et ~600-602. **Cette claim n'est finalement plus citée dans le texte publié** (voir déroulé ci-dessous) mais reste en vigueur pour un usage futur.
+
+### Déroulé — correction ciblée après le relecteur, pas de réécriture
+
+**Contrôle mécanique, 1er jet** : `FAIL` — 1 blocker réel (`lexique`, « real time », interdit en anglais comme en français, même raison : HWG agrège des bulletins publiés, la latence est celle de la source), corrigé (« randomised, in real time, inside an active outbreak » → « randomised, during the outbreak itself, not after it »). 2 blockers analysés comme faux positifs documentés (`context.cta-repeat` : marqueurs trouvés dans le `threadFile`, qui pour un post de marque porte le matériau source verbatim et non un fil sortant ; `ngram.history` : collisions sur le nom du pays, le titre du DON616, et la citation OMS obligatoire « no approved vaccines or specific treatments currently exist for BVD », dont la seule occurrence antérieure est dans l'entrée déjà archivée ce matin même — auto-collision documentée).
+
+**Le brouillon incluait initialement une chute méta** (« *Our own treatment field for this outbreak still reads "Experimental". Somewhere inside those 250 enrolments is the process by which that field might eventually change* »), motivée par la claim produit ajoutée en même temps.
+
+**Le relecteur indépendant a rendu `REECRIRE 1, 6, 9, 11` sur ce 1er jet, et les quatre points étaient réels :**
+- 🔴 **Q1** — « *Three months into an Ebola outbreak* » (ouverture) et « *eight weeks in* » n'étaient dans aucune des deux sources fournies : la première est une durée non sourcée, la seconde un calcul (02/07 → 26/08) présenté sans être identifié comme tel.
+- 🔴 **Q6/Q9** — « *already enrolling patients faster than most trials manage after an outbreak ends* » et « *Most treatment evidence for a new pathogen arrives once the outbreak that could have used it is over, built from cases that were never randomised against anything* » sont des affirmations comparatives sur la norme du secteur, **sans donnée de comparaison dans le matériau fourni** — un jugement de valeur non étayé sur la conduite de l'essai, terrain politique interdit.
+- 🔴🔴 **Q11, le point le plus lourd** — la chute méta sur le champ « Treatment » de HWG **rejoue exactement la charpente « notre colonne cache une distinction »**, que cette même routine a déclarée fermée le 31/08 pour ce créneau (« *aucun de ces angles ne rejoue la famille « une colonne, deux sens »* »), et c'est le retournement méta que l'angle PARTNERS avait été précisément choisi le matin même pour éviter (« *Le corpus n'a jamais publié de post qui raconte un fait épidémiologique pour lui-même, sans retournement méta* »).
+- **Q12 en `PASS`** : le fait central (l'essai PARTNERS, son ampleur, sa méthode) n'a jamais été publié par HWG sur aucun canal, seulement observé en veille passive.
+
+**Correction ciblée appliquée, pas de réécriture depuis zéro** (critère du dispositif : l'angle, pas le compteur — Q12 en `PASS`, l'angle lui-même n'était pas en cause) :
+- Ouverture remplacée par une phrase entièrement sourcée, sans durée ni comparaison : « *Ebola in the Democratic Republic of the Congo has no approved treatment. A randomised trial designed to find one is already running inside the outbreak that needs it.* »
+- « eight weeks in » retiré.
+- Les deux phrases comparatives non étayées retirées ; la citation de Rojek, déjà sourcée et attribuée, porte seule l'idée que la recherche doit avancer pendant la riposte, pas après.
+- **La chute méta entièrement retirée.** Le post se termine sur la citation de Rojek puis le bloc lien/sources, sans retournement produit. **La claim produit sur le champ traitement reste en vigueur au registre pour un usage futur, mais n'est plus citée dans ce texte.**
+- Relecture éditoriale (item 8) : une formulation resserrée (« alone, combined, or against » → « alone or together, against »), rien d'autre à changer.
+
+**Contrôle mécanique, jet final** : `FAIL`, **1420 caractères, 8 paragraphes**, `draftLang: en`. Mêmes 2 blockers faux positifs qu'au 1er jet (`context.cta-repeat`, `ngram.history` sur nom de pays/titre de bulletin/citation obligatoire), aucun blocker nouveau. Pas de 2e passage du relecteur sur ce jet corrigé (correction ciblée sur des points nommés, conforme au dispositif — pas une boucle).
+
+### TEXTE — statut : **PRÊT — en attente de la validation explicite de David avant qu'il ne publie lui-même** (règle de non-publication autonome du contenu de marque LinkedIn, [[feedback_no_self_publishing]])
+
+> Ebola in the Democratic Republic of the Congo has no approved treatment. A randomised trial designed to find one is already running inside the outbreak that needs it.
+>
+> WHO's report of 2026-08-28 puts the outbreak at 5794 confirmed cases and 2786 deaths as of 2026-08-26, a crude case fatality ratio of 48.1%. The species is Bundibugyo virus. WHO writes: "no approved vaccines or specific treatments currently exist for BVD."
+>
+> On 2 July, a trial meant to change that opened for enrolment. It is called PARTNERS, short for Platform Adaptive Randomised Trial for New and Repurposed Filovirus TreatmentS, coordinated by INRB in DR Congo, the Institute of Tropical Medicine in Belgium, and the University of Oxford.
+>
+> It tests two antiviral therapies, a monoclonal antibody called MBP134 and remdesivir, alone or together, against standard supportive care.
+>
+> By 2026-08-26, across three clinical facilities in Ituri province, it had enrolled over 250 confirmed cases.
+>
+> One of the trial's investigators, Professor Amanda Rojek, put it this way: "Research needs to happen alongside the response, not after it."
+>
+> healthwatch-global.com
+>
+> Sources: WHO Disease Outbreak News, Ebola disease caused by Bundibugyo virus, Democratic Republic of the Congo, published 2026-08-28. WHO news release, Patient enrolment begins in a scientific trial to identify the first effective treatments for Bundibugyo virus disease, published 2026-07-02.
+
+```
+QA: PRÊT — en attente de publication | mécanique FAIL sur jet final (2 blockers, tous deux faux positifs analysés : context.cta-repeat hors portée sur linkedin-post, ngram.history sur nom de pays/titre DON/citation OMS obligatoire) | relecteur REECRIRE 1, 6, 9, 11 au 1er jet, correction ciblée appliquée (Q12 déjà PASS, angle non remis en cause) | 1 vrai blocker mécanique corrigé au 1er jet (lexique "real time") | faits cités: bd1c3a46 (5794/2786/48.1 au 2026-08-26) + matériau source (250 inscrits, 2 juillet, MBP134) | registres du 02/09 06h38 | 1 claim produit ajoutée (champ traitement), non citée dans le texte final
 ```
 
 ---
