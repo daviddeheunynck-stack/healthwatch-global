@@ -3883,3 +3883,27 @@ Cibles examinées et écartées avant de trancher, dans l'ordre :
 - **Délivrés : 9 sur les 10 de ce lot.** Total de délivrabilité du canal recalculé par `daily-relance-check-healthwatch`, porteur unique du bilan cumulé.
 - **Profondeur de file en fin d'addendum : 1 brouillon** — le remplacement Népal, non envoyé, vérifié en `labelIds: ["DRAFT"]`.
 - **Relance J+10** : le lot du 02/09 devient éligible le **12/09**, sur **9 contacts** ; `health_ministry@health.gov.pg` est **écarté définitivement** (adresse introuvable, aucune relance possible).
+
+### 🔄 ADDENDUM 2026-09-02 (~13:17 UTC) — Népal différé sur ordre de David, remplacement AFRO retenu
+
+David, en session, sur le signalement du double contact népalais de l'addendum précédent : **« différe le népal, trouve autre chose »**.
+
+**1. Brouillon Népal retiré de la file.** `info@mohp.gov.np` (brouillon `r431452687996115112`) **mis à la corbeille**, non envoyé. Récupérable dans la corbeille si David veut le reprendre plus tard — c'est un report, pas un abandon : le contact reste vérifié (adresse en clair sur `mohp.gov.np` lu en HTTP 200, MX `mx1/mx2.nepal.gov.np` valides) et n'a **pas** été inscrit au journal comme prospecté. Il reste disponible pour un run futur, une fois le bureau pays OMS du Népal retombé.
+
+**2. Remplacement retenu : CAPRISA — Centre for the AIDS Programme of Research in South Africa** (Durban, université du KwaZulu-Natal). Afrique du Sud / **AFRO**, segment académique-recherche. Brouillon `r-6138124283235788915`, objet « HealthWatch Global — outbreak alerts for CAPRISA » (47 caractères).
+
+- **Adresse** : `caprisa@caprisa.org`, boîte institutionnelle, **seule adresse publiée** sur `caprisa.org/Pages/Contact-Us`, lue en HTTP 200.
+- **MX** : ✅ Mimecast ZA (`za-smtp-inbound-1` / `-2.mimecast.co.za`).
+- **Anti-doublon** : `caprisa.org` → **0**, `CAPRISA` → **0**, `KwaZulu` / `ukzn` → **0** dans le journal ; `CAPRISA` → **0** dans `linkedin-contacts.md`. Les autres entrées sud-africaines du journal (`nicd.ac.za`, `uct.ac.za`, `wits.ac.za`, `phasa.org.za`) sont quatre organisations distinctes — plafond de concentration non concerné.
+- Rédaction reliée au mandat réel (épidémiologie TB-VIH en Afrique australe, apport du flux Africa CDC pour le contexte régional), aucun lien cliquable, « healthwatch-global dot com », question explicite en clôture.
+
+**3. Effet sur l'équilibre du lot — le déséquilibre signalé ce matin est partiellement corrigé.** Le lot passe de « aucun contact AFRO ni AMRO » à **un contact AFRO**. Répartition finale des 10 : WPRO ×3 (Sydney, Cambodge, Micronésie — PNG retiré), SEARO ×2 (PGIMER, OMS Népal), EMRO ×1 (Ain Shams), AFRO ×1 (CAPRISA), EURO ×3 (Difäm, PharmAccess, Wemos). **AMRO reste à zéro** sur ce lot : les 6 pistes AMRO testées ce run (MINSA Panama, MSP Équateur, MinSalud Colombie, MSPBS Paraguay, BOG Suriname, Dominique, Grenade) ont toutes échoué en lecture directe ou sur le critère de boîte grand public. Segments : **3 gouvernement/OMS / 4 académique / 3 ONG**.
+
+**4. Autres cibles examinées et écartées pour ce remplacement** : **Division of Epidemiology & Biostatistics, Stellenbosch** (l'URL de la division redirige en 302 vers la racine `su.ac.za`, aucune page d'unité atteignable), **Facultad Nacional de Salud Pública, Universidad de Antioquia** (403 sur le portail `udea.edu.co`).
+
+**5. Compteurs — inchangés par cet addendum.**
+
+- **Lot du jour : toujours 9 délivrés / 10 préparés.** Le remplacement n'est pas envoyé, il ne rétablit pas le compteur à 10.
+- **Prospectés : 327** — inchangé. Ni le Népal (différé, non journalisé comme prospecté) ni CAPRISA (non envoyé) ne s'ajoutent tant que l'envoi n'a pas eu lieu.
+- **Envoyés : 327** — inchangé.
+- **Profondeur de file : 1 brouillon** — CAPRISA, vérifié en `labelIds: ["DRAFT"]`, non envoyé.
