@@ -128,6 +128,18 @@ QA: AUCUN POST PROPOSÉ | brouillon rédigé puis RETIRÉ avant présentation | 
 
 **Contrôle mécanique, jet final** : `FAIL`, **1420 caractères, 8 paragraphes**, `draftLang: en`. Mêmes 2 blockers faux positifs qu'au 1er jet (`context.cta-repeat`, `ngram.history` sur nom de pays/titre de bulletin/citation obligatoire), aucun blocker nouveau. Pas de 2e passage du relecteur sur ce jet corrigé (correction ciblée sur des points nommés, conforme au dispositif — pas une boucle).
 
+### Double-check demandé par David en session interactive (« double check le posst »), après archivage
+
+**Registres régénérés à l'instant** (09h18) : rien n'avait bougé — `bd1c3a46` porte toujours 5794/2786/48,1 % au 26/08. **Les deux sources primaires ont été re-fetchées indépendamment**, sans se relire soi-même, pour confronter chaque citation et chaque paraphrase mot pour mot :
+
+- 🟠 **Un vrai défaut trouvé, corrigé.** « *By 2026-08-26, across three [...] it had enrolled over 250 confirmed cases* » attachait une date précise (celle de la table cas/décès/CFR du DON616) à un chiffre — l'enrôlement — que la source **ne date pas explicitement**. Le DON616 rapporte le « over 250 » comme un fait du document publié le 28/08, sans lui accoler « as of 26 August ». Corrigé en « *By the time of that report* », qui ne prétend plus à une précision que la source n'offre pas.
+- ⚠️ **Une nuance de citation, non corrigée, signalée pour transparence.** La citation de Rojek dans le texte final (« *Research needs to happen alongside the response, not after it* ») est un extrait d'une phrase plus longue : « *One of the key lessons from recent outbreaks is that research needs to happen alongside the response, not after it. The PARTNERS trial gives us an opportunity to evaluate potential treatments during the outbreak itself, so that the evidence generated can help inform patient care when it is needed most – in months rather than years.* » Le fragment retenu est une proposition autonome, non déformée sur le fond, avec uniquement la majuscule de « Research » ajustée pour en faire une phrase indépendante (convention de citation usuelle, pas un guillemet à l'intérieur d'un guillemet). Signalé plutôt que corrigé silencieusement : David peut demander la citation complète ou des crochets si un usage plus strict est préféré.
+- ✅ **Reste vérifié à l'identique** : le nombre de cas/décès/CFR (paraphrase, pas de guillemets, chiffres exacts) ; la citation OMS sur l'absence de traitement approuvé (verbatim exact) ; l'acronyme PARTNERS (verbatim exact) ; les trois institutions coordonnatrices (paraphrase fidèle, pas de guillemets) ; les deux molécules testées, MBP134 et remdesivir (orthographe et noms exacts).
+- **Mise en forme** : 8 paragraphes courts, aucun tiret cadratin, lien nu, bloc source distinct — relu tel quel dans le fichier archivé, cohérent avec le texte publié plus bas.
+- **`ngram.history` remonté à 193 collisions** après régénération (contre 19 au jet précédent) : **mesuré, 195 self-only + 22 both, 0 rest-only** — la totalité vient de l'auto-collision avec l'entrée elle-même, déjà archivée dans ce fichier plus tôt aujourd'hui (voir la mise en garde structurelle en `docs/outreach-qa.md` §2). Aucune redite réelle trouvée ailleurs dans le corpus.
+
+**Le texte a été corrigé dans le fichier ci-dessous pour refléter le double-check** (une phrase). Statut inchangé : **PRÊT — en attente de validation.**
+
 ### TEXTE — statut : **PRÊT — en attente de la validation explicite de David avant qu'il ne publie lui-même** (règle de non-publication autonome du contenu de marque LinkedIn, [[feedback_no_self_publishing]])
 
 > Ebola in the Democratic Republic of the Congo has no approved treatment. A randomised trial designed to find one is already running inside the outbreak that needs it.
@@ -138,7 +150,7 @@ QA: AUCUN POST PROPOSÉ | brouillon rédigé puis RETIRÉ avant présentation | 
 >
 > It tests two antiviral therapies, a monoclonal antibody called MBP134 and remdesivir, alone or together, against standard supportive care.
 >
-> By 2026-08-26, across three clinical facilities in Ituri province, it had enrolled over 250 confirmed cases.
+> By the time of that report, across three clinical facilities in Ituri province, it had enrolled over 250 confirmed cases.
 >
 > One of the trial's investigators, Professor Amanda Rojek, put it this way: "Research needs to happen alongside the response, not after it."
 >
@@ -147,7 +159,7 @@ QA: AUCUN POST PROPOSÉ | brouillon rédigé puis RETIRÉ avant présentation | 
 > Sources: WHO Disease Outbreak News, Ebola disease caused by Bundibugyo virus, Democratic Republic of the Congo, published 2026-08-28. WHO news release, Patient enrolment begins in a scientific trial to identify the first effective treatments for Bundibugyo virus disease, published 2026-07-02.
 
 ```
-QA: PRÊT — en attente de publication | mécanique FAIL sur jet final (2 blockers, tous deux faux positifs analysés : context.cta-repeat hors portée sur linkedin-post, ngram.history sur nom de pays/titre DON/citation OMS obligatoire) | relecteur REECRIRE 1, 6, 9, 11 au 1er jet, correction ciblée appliquée (Q12 déjà PASS, angle non remis en cause) | 1 vrai blocker mécanique corrigé au 1er jet (lexique "real time") | faits cités: bd1c3a46 (5794/2786/48.1 au 2026-08-26) + matériau source (250 inscrits, 2 juillet, MBP134) | registres du 02/09 06h38 | 1 claim produit ajoutée (champ traitement), non citée dans le texte final
+QA: PRÊT — en attente de publication | double-check David 09h18 : registres réconfirmés inchangés, 2 sources re-fetchées indépendamment, 1 défaut réel corrigé (date attachée à tort au chiffre d'enrôlement), 1 nuance de citation signalée non corrigée (extrait Rojek, majuscule ajustée) | mécanique FAIL sur jet final (2 blockers, tous deux faux positifs analysés : context.cta-repeat hors portée sur linkedin-post, ngram.history 195 self-only + 22 both + 0 rest-only après régénération — 100% auto-collision) | relecteur REECRIRE 1, 6, 9, 11 au 1er jet, correction ciblée appliquée (Q12 déjà PASS, angle non remis en cause) | 1 vrai blocker mécanique corrigé au 1er jet (lexique "real time") | faits cités: bd1c3a46 (5794/2786/48.1 au 2026-08-26) + matériau source (250 inscrits, 2 juillet, MBP134) | registres du 02/09 09h18 | 1 claim produit ajoutée (champ traitement), non citée dans le texte final
 ```
 
 ---
