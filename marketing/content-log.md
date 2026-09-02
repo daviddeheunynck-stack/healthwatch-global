@@ -2,6 +2,98 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session linkedin-hwg-content-proposal — 02/09/2026 (mercredi MWF, 8h35) — 🔴 **AUCUN POST PROPOSÉ, 2e créneau consécutif** — un brouillon complet rédigé puis retiré : l'angle avait été publié sur X 2 jours plus tôt
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-content-proposal` datée du 02/09 dans ce fichier à l'ouverture (la plus récente était `linkedin-hwg-monitoring` du 01/09) → premier déclenchement du jour. Horloge machine à l'heure : `date` renvoie **Wed Sep 2 08:38 2026**. Branche vérifiée avant écriture : **master**.
+
+**Étape 0 — aucun brouillon en attente.** Le brouillon du 28/08 (Dengue/Taïwan) a été **retiré** le 31/08 et n'est pas repris. Aucun post de marque LinkedIn publié depuis le **26/08** (« deux horloges »). Le 31/08 s'est soldé par un run à zéro post ; **ce run aussi, ce qui fait deux créneaux MWF consécutifs sans publication.**
+
+**Registres régénérés en début de run** : `npm run qa:facts` → **226 faits citables sur 110 lignes affichées**, 81 lignes `is_seed` exclues, **8 faits périmés** (contre 21 le 31/08). `npm run qa:claims` → 805 chaînes de copie publique sur 5 locales, couverture citable 110 foyers / 73 pays / 17 maladies / 32 hôtes source, **6 claims manuelles en vigueur (1 ajoutée par ce run, voir §5)**.
+
+---
+
+### 1️⃣ L'ANGLE RETENU, LE BROUILLON, ET POURQUOI IL EST RETIRÉ
+
+**Angle** : la flambée Ebola de RD Congo est causée par le virus **Bundibugyo**, pas par *Zaire ebolavirus* ; la valeur honnête du champ « vaccin » pour cette ligne n'est donc ni « disponible » ni « indisponible », mais **inconnue** — un état qu'un champ catégoriel n'a nulle part où ranger. Matière entièrement vérifiée en source primaire (WHO DON616 du 28/08, chaque citation relue mot pour mot sur `who.int`, jamais depuis un extrait de moteur), plus le rendu réel de la fiche maladie publique lu en direct.
+
+**Le brouillon a été rédigé, contrôlé mécaniquement et soumis au relecteur indépendant. Il est retiré avant présentation à David.** Motif principal, non rattrapable par une correction : **l'angle a été publié par HWG lui-même sur X le 31/08, il y a deux jours.**
+
+Fil X du 31/08 (https://x.com/HWatchGlobal/status/2094377082448998849), t2 et t3 :
+> « *Ervebo is licensed for Ebola virus disease, the Zaire species. WHO's 28 August situation report states it is not known whether it protects against Bundibugyo virus in humans, and that the trial runs alongside this wider use rather than before it.* »
+> « *That moves protection here from absent to unknown.* »
+
+C'est la même source, la même citation et la même bascule que le brouillon LinkedIn. **Ce n'est pas un angle voisin, c'est le même, deux jours plus tard, sur l'autre réseau.** Le fil X du 31/08 documentait par ailleurs que le fait sous-jacent (« pas de vaccin homologué pour Bundibugyo ») est **« massivement sur-servi »** dans le corpus HWG (replies des 11-13/07, au moins 3 replies archivées dans `x-watchlist.md`), raison pour laquelle il ne l'avait lui-même gardé qu'en demi-phrase de contexte.
+
+⚠️ **Ce point n'a pas été vu à la rédaction.** Il a été trouvé en remontant une collision `ngram.history` du contrôle mécanique (la citation OMS « *not known whether it provides protection…* » apparaissait déjà **une fois** dans ce fichier) jusqu'à l'entrée du 31/08. **Le premier jet, écrit avant cette découverte, était en plus factuellement tronqué** : il présentait la riposte comme reposant uniquement sur la recherche de cas et l'isolement, **en omettant que la vaccination des soignants a effectivement commencé le 27/08** — un tri sélectif des faits que le run X du 31/08 avait explicitement identifié et évité. Corrigé dans le 2e jet avant tout contrôle.
+
+### 2️⃣ CE QUE LE RELECTEUR INDÉPENDANT A RENDU — `REECRIRE 1, 4, 5, 6, 7, 9, 10, 11, 12`
+
+Neuf questions sur douze en échec, sur un texte déjà corrigé une fois. Les cinq plus lourdes, toutes vérifiées à la main et toutes réelles :
+
+- 🔴🔴 **Q11 (gabarit) — deux motifs, chacun disqualifiant à lui seul.** (a) L'angle publié sur X le 31/08, ci-dessus. (b) La charpente est celle de la famille **« notre colonne cache une distinction »**, que **cette routine a elle-même déclarée fermée le 31/08, en nommant le créneau d'aujourd'hui** : « *servie ou écartée quatre fois en trois semaines (10/08 publié, 21/08 écarté, 26/08 publié, 28/08 retiré) […] aucun de ces angles ne rejoue la famille « une colonne, deux sens »* ». Le brouillon en était le cinquième exemplaire. Le relecteur a en outre aligné le squelette sur celui du post du 26/08 pli pour pli, jusqu'aux dimensions (26/08 : 1754 car., 10 paragraphes ; ce brouillon : 1756 car., 10 paragraphes).
+- 🔴🔴 **Q6 (raisonnement) — la prémisse d'ouverture est contredite par la source citée.** Le brouillon déclarait « faux » de dire qu'aucun vaccin n'existe. Or c'est **une phrase de l'OMS au présent dans le DON616 lui-même** : « *as no approved vaccines or specific treatments currently exist for BVD* ». Le fil X du 31/08 tenait la distinction juste que ce brouillon perdait : *« La phrase reste vraie, et elle a cessé de décrire la situation »* — vraie, pas fausse.
+- 🔴 **Q9 (terrain politique).** « *It is being given anyway.* » et « *not ahead of it* » prennent position sur le séquencement d'une campagne de vaccination hors indication. L'OMS présente l'essai comme **complémentaire** (« *is key to provide important new evidence* »), pas comme tardif. Le fil X du 31/08 avait écrit noir sur blanc qu'il ne franchissait pas cette ligne ; ce brouillon ne pouvait pas produire la même phrase.
+- 🔴 **Q5 (attribution).** « *WHO describes the clinical trial as running…* » fusionne deux objets distincts de la source : un essai **vaccinal recommandé et à démarrer** (« *starting a clinical trial […] is key* ») et l'essai de **traitement** PARTNERS, seul réellement lancé (enrôlement ouvert le 02/07). Défaut de la même famille que celui attrapé le 31/08 (une déduction prolongeant « *the page states…* » sans rupture d'énonciation).
+- 🟠 **Q7 (cohérence interne).** §5 pose que « non » est malhonnête, §6 présente comme aboutissement le fait que HWG affiche précisément ce « non » (« Not available for active strain »), sans dire que l'override ne résout pas le problème énoncé.
+- 🟠 **Q1 et Q4.** « *Our own field has four settings* » : le cardinal et l'énumération ne sont couverts **ni** par le registre de faits **ni** par le registre produit. La claim ajoutée ce run couvre l'override de badge, pas le domaine de valeurs qu'il surcharge.
+- 🟠 **Q10.** L'étiquette « *The line and its source* » pointait vers la racine du site, alors que la ligne et le badge décrits vivent sur `/en/disease/ebola-virus-disease` ; et le mot « source » y désignait deux objets différents à une ligne d'intervalle.
+
+**Q2, Q3, Q8 en `PASS`** : fraîcheur (`ageDays: 4`, date portée dans la phrase), statut (flambée présentée comme en cours, `active: true`), langue et registre (`draftLang en` / `threadLang en`, cohérent de bout en bout).
+
+### 3️⃣ CONTRÔLE MÉCANIQUE — verdict brut et analyse des deux blockers
+
+`FAIL`, **1756 caractères, 10 paragraphes**, `draftLang: en`, `threadLang: en`. **Deux blockers, tous deux faux positifs, et c'est l'un d'eux qui a fait trouver le vrai problème :**
+
+- `context.cta-repeat` — marqueurs « lien healthwatch-global » et « trial » **trouvés dans le `threadFile`**, qui pour un post de marque contient le matériau source verbatim et non un fil sortant antérieur. Faux positif de portée : le canal `linkedin-post` du lexique porte `ctaAllowed: true` et `linkAllowed: true`, et il n'existe aucun fil dans lequel un argumentaire aurait pu être « déjà servi ». Même famille que le cas Adam Abdullahi du 27/08 (annotations d'un `threadFile` lues comme du fil).
+- `ngram.history` — 27 formules. **Mesuré : 301 n-grammes de 5 mots, 36 collisions, 265 neufs.** Les 36 se répartissent en trois familles, toutes inévitables : le nom du pays (« *democratic republic of the congo* », 25 occurrences antérieures dans le corpus), le titre du bulletin OMS cité en pied de post, et la **citation verbatim obligatoire** de l'OMS sur Ervebo. La formule réellement recyclée du 1er jet (« *HealthWatch Global is not outside this* », reprise mot pour mot du post du 26/08) avait été retirée avant ce passage.
+
+⚠️ **À retenir pour le dispositif** : le contrôle mécanique n'a **pas** vu la vraie répétition (l'angle publié sur X le 31/08), comme le 31/08 déjà. Mais l'une de ses collisions, remontée à sa source au lieu d'être écartée comme faux positif, y menait directement. **Un `ngram.history` « faux positif » mérite d'être remonté jusqu'à l'entrée d'archive qui le porte avant d'être classé sans suite** — c'est l'inverse du réflexe pris depuis le 23/08.
+
+### 4️⃣ POURQUOI AUCUN ANGLE DE REMPLACEMENT N'A ÉTÉ RÉDIGÉ
+
+Quatre candidats examinés et écartés **sur pièce**, chacun avec le motif écrit :
+
+1. **Polio, « une source qui se rafraîchit par morceaux »** — recommandé par le relecteur, et c'était la matière n°2 du carry-over du 31/08. **Écarté : rejoue le post du 05/08** (« *dans une seule source, la date « as of » appartient à chaque ligne, pas au tableau de bord* », Guatemala au 12 avril vs Colombie au 28 juin, 77 jours d'écart). Le mécanisme est identique, seule la source change (GPEI au lieu du tableau de bord dengue de l'OMS). Le relecteur ne pouvait pas le savoir, ce post n'était pas dans son périmètre de recherche. État constaté ce matin, pour mémoire : la page GPEI affiche « *Country updates as of 26 August 2026* », 2 des 13 lignes polio de HWG portent l'arrêté du 26/08 (Nigéria 43, RD Congo 37), les **11 autres restent au 18/08**, inchangé depuis le 28/08.
+2. **Rougeole / Amériques, le Guatemala comme épicentre réel** (31 140 cas contre 12 479 au Mexique et 2 465 aux États-Unis, PAHO SitRep #9 arrêté au 08/08) — **écarté : terrain déjà couvert deux fois**, les 15/07 et 20/07, ce dernier ayant précisément établi que le cumul guatémaltèque est un artefact de définition de cas.
+3. **Dengue Pacifique, l'échelle rapportée à la population** (Samoa 20 193 cas au 24/08) — **écarté : déjà écarté le 19/08 pour la même raison**, « *rejoue le thread X du 03/08 (classement par nombre de cas sans dénominateur)* ». Vérifié dans ce fichier, ligne 5389.
+4. **Grippe aviaire / États-Unis, trois lignes actives simultanées** — **écarté** : le carry-over du 31/08 le signale lui-même comme « *précisément la famille d'angles sur-servie* ».
+
+**Le constat de ce run n'est pas qu'il manquait de données.** La base est en bon état (8 faits périmés seulement, contre 21 le 31/08 et 53 le 26/08 ; le doublon Ebola/RDC est résolu ; la ligne Ebola est vérifiée à 4 jours). **Ce qui manque est un angle dont la forme ne soit pas déjà servie** — voir §6.
+
+### 5️⃣ REGISTRE PRODUIT — 1 claim manuelle ajoutée
+
+Ajoutée à `marketing/qa/product-claims.manual.json` (6 claims en vigueur après build) : **la fiche maladie publique porte un badge vaccin sensible à la souche du foyer actif.** Quand un foyer actif est causé par une souche non couverte par le vaccin listé (Bundibugyo face à `Ervebo (Zaire strain only)`), le badge est rétrogradé et affiche « Not available for active strain ». La ligne du foyer dans le tableau, elle, n'affiche pas la souche : elle porte le nom générique « Ebola virus disease ».
+
+Provenance : `app/[locale]/disease/[slug]/page.tsx` (clé `vaccineStrainWarning` sur les 5 locales, override de badge commenté lignes ~387-388), `lib/disease-data.ts` (entrée `patterns: ["ebola","bundibugyo"]`). **Vérifié en direct** sur `https://healthwatch-global.com/en/disease/ebola-virus-disease` le 02/09 : badge rendu « Not available for active strain », traitement « Experimental », CFR de référence « 25–90 % ». La claim reste valable et réutilisable même si le post qui l'a motivée est retiré.
+
+### 6️⃣ 🏷️HORS-ROUTINE : le stock d'angles de la routine est épuisé, et ce n'est pas un problème de données
+
+**Deux créneaux MWF consécutifs sans publication, et un troisième brouillon retiré en une semaine (28/08, puis celui-ci).** Les trois retraits ont le même motif de fond : **le corpus de marque HWG est construit sur une seule charpente** — « le chiffre affiché ne dit pas ce qu'on croit, et la partie manquante est celle qui compte ». Elle a produit d'excellents posts (05/08, 07/08, 10/08, 12/08, 17/08, 21/08, 26/08), et elle est arrivée au bout : sur les 4 candidats de remplacement examinés ce matin, **les 4 sont écartés pour redite**, dont 2 par des décisions déjà prises les 19/08 et 31/08.
+
+Ce n'est pas une décision qu'une routine de contenu peut prendre seule, d'où le tag. **Deux pistes à trancher par David :**
+
+- **(a) Ouvrir une deuxième famille éditoriale.** Le corpus n'a jamais publié de post qui raconte un fait épidémiologique pour lui-même, sans retournement méta. Exemple disponible et vérifié ce matin, jamais servi sur aucun des deux canaux : **l'essai thérapeutique PARTNERS**, sponsorisé par l'OMS, enrôlement ouvert le 02/07, **plus de 250 cas confirmés enrôlés** dans trois centres de prise en charge de l'Ituri, au milieu d'une flambée à 48,1 % de létalité. Un essai randomisé qui recrute à cette échelle à l'intérieur d'une flambée à filovirus est un fait remarquable en soi.
+- **(b) Coordonner X et LinkedIn au lieu de les laisser se croiser.** Le doublon évité ce matin ne l'a été que par une collision de n-gramme remontée par curiosité. `x-hwg-content-proposal` (lundi) et `linkedin-hwg-content-proposal` (lundi/mercredi/vendredi) puisent dans la même base et le même registre de faits, et **rien dans leurs SKILL ne demande à l'une de vérifier ce que l'autre a publié.** Le créneau LinkedIn du mercredi tombe systématiquement 2 jours après le thread X du lundi. Une clause d'Étape 0 croisée (« relire les entrées de l'autre routine des 7 derniers jours ») coûterait un `grep` et aurait attrapé le cas d'aujourd'hui à la rédaction plutôt qu'au contrôle.
+
+### 7️⃣ 🦠 DONNÉES — 0 écriture, 0 anomalie nouvelle
+
+Aucune écriture en base (`AGENTS.md` : les données applicatives n'appartiennent à aucune routine documentaire). Lecture seule, une requête Supabase sur les lignes actives.
+
+- ✅ **Ebola/RD Congo, doublon résolu et confirmé** : une seule ligne active, `bd1c3a46`, **5 794 cas / 2 786 décès arrêtés au 26/08**, CFR 48,1 %, source WHO DON616, `source_confirmed_at` 2026-08-26, `ageDays: 4`. Les trois chiffres sont **exacts au mot près** contre le DON616 relu ce matin. Rien à corriger.
+- 🟠 **Défaut de lien source polio, toujours ouvert** (signalé les 28/08 et 31/08) : les 13 lignes polio ont un `source` qui n'est pas une URL nue mais une URL suivie d'une annotation entre parenthèses (« *(GPEI, Global Polio Update slide deck, data in WHO HQ as of 18 August 2026)* »), rendue en `href` brut. Le lien de source ne mène nulle part. **Bloquant pour tout post citant une source polio**, ce qui a pesé dans l'écart du candidat n°1.
+- 🟠 **`pricing.faq5_a` toujours non tranchée** : la FAQ dit « *WHO, PAHO, and ECDC* » quand la couverture réelle compte **32 hôtes source**, dont des médias. Inchangé depuis le 26/08.
+- ➖ **Fraîcheur du registre en nette amélioration** : 8 faits périmés ce matin, contre 21 le 31/08 et 53 le 26/08.
+
+### 8️⃣ ARBRE DE TRAVAIL — fichiers modifiés non touchés par cette routine
+
+Conformément à `AGENTS.md`, ce run ne stage que `marketing/content-log.md`. Laissés tels quels et signalés : `marketing/qa/product-claims.manual.json` (**modifié — contient des ajouts non commités des runs des 28/08 et 31/08, plus la claim ajoutée par ce run en §5 ; non stagé pour ne pas emporter le travail des deux autres runs**), `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis, inchangés depuis le 29/08). Les `marketing/qa/*.json` régénérés par ce run appartiennent au dispositif QA, pas à cette routine. Aucun verrou de code demandé : ce run n'a édité ni `app/`, ni `lib/`, ni `components/`, ni aucune dépendance npm.
+
+```
+QA: AUCUN POST PROPOSÉ | brouillon rédigé puis RETIRÉ avant présentation | mécanique FAIL (2 blockers, 2 faux positifs analysés : context.cta-repeat hors portée sur linkedin-post, ngram.history 36/301 collisions toutes en nom de pays / titre de bulletin / citation OMS obligatoire) | relecteur REECRIRE 1, 4, 5, 6, 7, 9, 10, 11, 12 — Q11 et Q6 disqualifiants, vérifiés à la main | motif du retrait : angle publié par HWG sur X le 31/08 (thread 2094377082448998849) + charpente déclarée fermée le 31/08 pour ce créneau nommément | 4 angles de remplacement écartés sur pièce | faits cités: bd1c3a46 (5794 / 2786 / 48.1 au 2026-08-26) | registres du 02/09 06h38 | 1 claim produit ajoutée
+```
+
+---
+
 ## 📅 Session linkedin-hwg-monitoring — 01/09/2026 (9h)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` datée du 01/09 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture (dernière en date : 31/08, 9h). La seule entrée du 01/09 déjà présente appartient à une **session interactive de David vers 05h50-06h16** (envoi des DM Harvey Basivikidi et Dossa Paul YAOÏTCHA sur ordre explicite) — run intentionnellement distinct → **premier déclenchement de cette routine aujourd'hui**. Horloge machine à l'heure : `date` renvoie **Tue Sep 1 09:04 2026**.
