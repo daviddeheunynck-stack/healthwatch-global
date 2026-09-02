@@ -114,6 +114,22 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
     },
   },
   {
+    patterns: ["rotavirus"],
+    info: {
+      name_en: "Rotavirus infection", name_fr: "Infection à rotavirus",
+      name_es: "Infección por rotavirus", name_ar: "عدوى فيروس الروتا",
+      name_id: "Infeksi rotavirus",
+      pathogenType: "virus_rna", family: "Reoviridae",
+      transmission: ["contact", "waterborne", "foodborne", "fomite"],
+      incubationMin: 1, incubationMax: 3,
+      cfr_ref: "< 1 % avec réhydratation adaptée ; historiquement une cause majeure de mortalité infantile là où l'accès aux soins est limité",
+      r0_ref: "Estimations très variables selon le contexte (garderies, hôpitaux) — pas de valeur consensuelle unique",
+      vaccine: "yes", vaccineName: "Rotarix / RotaTeq (orale, calendriers nationaux variables)",
+      treatment: "supportive",
+      travelerRisk: { africa: "moderate", asia: "moderate" },
+    },
+  },
+  {
     patterns: ["avian influenza", "h5n1", "h5n2", "h5n5", "h5n6", "h7n9", "h9n2", "h3n8", "h10n3"],
     info: {
       name_en: "Avian Influenza", name_fr: "Grippe aviaire",
