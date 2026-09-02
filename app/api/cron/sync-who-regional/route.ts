@@ -426,18 +426,41 @@ function extractCountryBlock(sectionLines: string[], countryName: string): strin
   return sectionLines.slice(nameIdx + 1, end);
 }
 
+// Module-level cache for the ONE GPEI weekly-page fetch shared by all 13
+// cVDPV country targets — before 2026-09-02 each target refetched the exact
+// same URL independently every run (13 requests for 1 page). Reset at the
+// top of runSyncWhoRegional() so a warm serverless container never serves a
+// previous run's cached page across days.
+let gpeiSectionCache: Promise<{ asOf: string | null; lines: string[] } | null> | null = null;
+
+async function getGpeiSection(): Promise<{ asOf: string | null; lines: string[] } | null> {
+  if (!gpeiSectionCache) {
+    gpeiSectionCache = (async () => {
+      // fetchWithRetry: 2 attempts, 5s each — safe to add now that this runs
+      // once per run instead of once per target. See lib/fetch-retry.ts
+      // (2026-09-02).
+      const { response: res } = await fetchWithRetry(
+        GPEI_THIS_WEEK_URL, { headers: { "User-Agent": "HealthWatch-Global/1.0 (health surveillance; contact@healthwatch-global.com)" } },
+        { attempts: 2, timeoutMs: 5000, backoffMs: [500] },
+      );
+      if (!res || !res.ok) return null;
+      try {
+        return extractGPEICountryUpdates(await res.text());
+      } catch {
+        return null;
+      }
+    })();
+  }
+  return gpeiSectionCache;
+}
+
 function fetchPolioGPEIThisWeek(country_en: string): () => Promise<Found | null> {
   return async () => {
     const serotypes = GPEI_CVDPV_TARGETS[country_en];
     if (!serotypes) return null;
+    const section = await getGpeiSection();
+    if (!section?.asOf) return null;
     try {
-      const res = await fetch(GPEI_THIS_WEEK_URL, {
-        headers: { "User-Agent": "HealthWatch-Global/1.0 (health surveillance; contact@healthwatch-global.com)" },
-        signal:  AbortSignal.timeout(10_000),
-      });
-      if (!res.ok) return null;
-      const section = extractGPEICountryUpdates(await res.text());
-      if (!section?.asOf) return null;
       const block = extractCountryBlock(section.lines, country_en);
       if (!block) return null; // country not narrated this week — nothing new, not stale
 
@@ -929,58 +952,95 @@ function parseEcdcDate(s: string): string | null {
   return `${m[3]}-${mm}-${m[1].padStart(2, "0")}`;
 }
 
+interface WnvSeason {
+  weekMatch:     RegExpMatchArray;
+  producedMatch: RegExpMatchArray;
+  date:          string;
+  byCountry:     Map<string, { cases: number; areas: number }>;
+  sorted:        [string, { cases: number; areas: number }][];
+  totalCases:    number;
+  totalAreas:    number;
+  countryList:   string;
+}
+
+// Module-level cache for the ONE WNV weekly-page fetch AND parse shared by
+// all 7 European country targets — before 2026-09-02 each target refetched
+// AND reparsed the exact same page independently (the season totals below
+// are identical for every country, since they aggregate across all of them).
+// Reset at the top of runSyncWhoRegional() so a warm serverless container
+// never serves a previous run's cached page across days.
+let wnvSeasonCache: Promise<WnvSeason | null> | null = null;
+
+async function getWnvSeason(): Promise<WnvSeason | null> {
+  if (!wnvSeasonCache) {
+    wnvSeasonCache = (async () => {
+      // fetchWithRetry: 2 attempts, 7.5s each (worst case ~16s, close to the
+      // original single 15s attempt) — safe to add now that this runs once
+      // per run instead of once per target. See lib/fetch-retry.ts
+      // (2026-09-02).
+      const { response: res } = await fetchWithRetry(
+        "https://wnv-weekly.ecdc.europa.eu/",
+        { headers: { "User-Agent": "HealthWatch-Global/1.0 (health surveillance; contact@healthwatch-global.com)", "Accept": "text/html,*/*" } },
+        { attempts: 2, timeoutMs: 7500, backoffMs: [1000] },
+      );
+      if (!res || !res.ok) return null;
+      try {
+        const html = await res.text();
+
+        // "Week 32, 2026" / "Produced on 7 August 2026 at 10:00, based on data
+        // submitted up until and including 5 August 2026." The exact data-cutoff
+        // date (the second one) didn't survive a plain regex reliably — some markup
+        // splits that specific phrase — so `date` uses the produced-on date
+        // instead, which is always present and only ever 1-2 days later.
+        const weekMatch     = html.match(/Week\s+(\d+),\s*(\d{4})/);
+        const producedMatch = html.match(/Produced on\s+(\d{1,2}\s+\w+\s+\d{4})/);
+        if (!weekMatch || !producedMatch) return null;
+        const date = parseEcdcDate(producedMatch[1]);
+        if (!date) return null;
+
+        const jsonMatch = html.match(/<script type="application\/json"[^>]*>([\s\S]*?)<\/script>/);
+        if (!jsonMatch) return null;
+        let data: unknown;
+        try { data = (JSON.parse(jsonMatch[1]) as { x?: { data?: unknown } })?.x?.data; } catch { return null; }
+        if (!Array.isArray(data) || data.length < 7) return null;
+        const countries = data[0] as unknown[];
+        const totals    = data[6] as unknown[];
+        if (!Array.isArray(countries) || !Array.isArray(totals) || countries.length !== totals.length) return null;
+
+        const byCountry = new Map<string, { cases: number; areas: number }>();
+        for (let i = 0; i < countries.length; i++) {
+          const c = countries[i];
+          if (typeof c !== "string" || typeof totals[i] !== "number") continue;
+          const cur = byCountry.get(c) ?? { cases: 0, areas: 0 };
+          cur.cases += totals[i] as number;
+          cur.areas += 1;
+          byCountry.set(c, cur);
+        }
+
+        const sorted = [...byCountry.entries()].sort((a, b) => b[1].cases - a[1].cases);
+        let totalCases = 0, totalAreas = 0;
+        for (const [, v] of sorted) { totalCases += v.cases; totalAreas += v.areas; }
+        const countryList = sorted.map(([c, v]) => `${c} ${v.cases}`).join(", ");
+
+        return { weekMatch, producedMatch, date, byCountry, sorted, totalCases, totalAreas, countryList };
+      } catch {
+        return null;
+      }
+    })();
+  }
+  return wnvSeasonCache;
+}
+
 function fetchWNVEcdc(countryEn: string): () => Promise<Found | null> {
   return async () => {
-    const res = await fetch("https://wnv-weekly.ecdc.europa.eu/", {
-      headers: {
-        "User-Agent": "HealthWatch-Global/1.0 (health surveillance; contact@healthwatch-global.com)",
-        "Accept":     "text/html,*/*",
-      },
-      signal: AbortSignal.timeout(15_000),
-    });
-    if (!res.ok) return null;
-    const html = await res.text();
-
-    // "Week 32, 2026" / "Produced on 7 August 2026 at 10:00, based on data
-    // submitted up until and including 5 August 2026." The exact data-cutoff
-    // date (the second one) didn't survive a plain regex reliably — some markup
-    // splits that specific phrase — so `date` uses the produced-on date
-    // instead, which is always present and only ever 1-2 days later.
-    const weekMatch     = html.match(/Week\s+(\d+),\s*(\d{4})/);
-    const producedMatch = html.match(/Produced on\s+(\d{1,2}\s+\w+\s+\d{4})/);
-    if (!weekMatch || !producedMatch) return null;
-    const date = parseEcdcDate(producedMatch[1]);
-    if (!date) return null;
-
-    const jsonMatch = html.match(/<script type="application\/json"[^>]*>([\s\S]*?)<\/script>/);
-    if (!jsonMatch) return null;
-    let data: unknown;
-    try { data = (JSON.parse(jsonMatch[1]) as { x?: { data?: unknown } })?.x?.data; } catch { return null; }
-    if (!Array.isArray(data) || data.length < 7) return null;
-    const countries = data[0] as unknown[];
-    const totals    = data[6] as unknown[];
-    if (!Array.isArray(countries) || !Array.isArray(totals) || countries.length !== totals.length) return null;
-
-    const byCountry = new Map<string, { cases: number; areas: number }>();
-    for (let i = 0; i < countries.length; i++) {
-      const c = countries[i];
-      if (typeof c !== "string" || typeof totals[i] !== "number") continue;
-      const cur = byCountry.get(c) ?? { cases: 0, areas: 0 };
-      cur.cases += totals[i] as number;
-      cur.areas += 1;
-      byCountry.set(c, cur);
-    }
-    const target = byCountry.get(countryEn);
+    const season = await getWnvSeason();
+    if (!season) return null;
+    const target = season.byCountry.get(countryEn);
     // Country absent from this week's table (season not started yet there, or
     // over) — return null and let the row hold its last real value rather than
     // guess; this source has no "outbreak declared over" signal to auto-
     // deactivate on, unlike the WHO DON pages section 4e of data-quality reads.
     if (!target || target.cases <= 0) return null;
-
-    const sorted = [...byCountry.entries()].sort((a, b) => b[1].cases - a[1].cases);
-    let totalCases = 0, totalAreas = 0;
-    for (const [, v] of sorted) { totalCases += v.cases; totalAreas += v.areas; }
-    const countryList = sorted.map(([c, v]) => `${c} ${v.cases}`).join(", ");
 
     return {
       cases:  target.cases,
@@ -990,9 +1050,9 @@ function fetchWNVEcdc(countryEn: string): () => Promise<Found | null> {
       // protects a real future death count from being overwritten by this
       // permanently-0 value.
       deaths: 0,
-      date,
+      date: season.date,
       source: "https://wnv-weekly.ecdc.europa.eu/",
-      description: `West Nile virus, ${weekMatch[2]} European transmission season: ${target.cases} locally acquired human cases reported in ${countryEn} as at ${producedMatch[1]}, across ${target.areas} affected area${target.areas === 1 ? "" : "s"}. Season total across ${sorted.length} European countries: ${totalCases} cases in ${totalAreas} affected areas (${countryList}). Source: ECDC, Surveillance of West Nile Virus infections in humans in Europe, weekly report, week ${weekMatch[1]}, produced ${producedMatch[1]}.`,
+      description: `West Nile virus, ${season.weekMatch[2]} European transmission season: ${target.cases} locally acquired human cases reported in ${countryEn} as at ${season.producedMatch[1]}, across ${target.areas} affected area${target.areas === 1 ? "" : "s"}. Season total across ${season.sorted.length} European countries: ${season.totalCases} cases in ${season.totalAreas} affected areas (${season.countryList}). Source: ECDC, Surveillance of West Nile Virus infections in humans in Europe, weekly report, week ${season.weekMatch[1]}, produced ${season.producedMatch[1]}.`,
     };
   };
 }
@@ -1602,6 +1662,11 @@ async function runSyncWhoRegional(_req: NextRequest, supabase: SupabaseClient) {
   // Rows this run re-read from the source and found unchanged — stamped as
   // verified in one batched write after the loop (see lib/source-confirmed.ts).
   const sourceConfirmed: string[] = [];
+  // Reset the GPEI/WNV shared-page caches for this run — see getGpeiSection()
+  // and getWnvSeason() above. Without this, a warm serverless container could
+  // in principle serve a previous invocation's cached page across days.
+  gpeiSectionCache = null;
+  wnvSeasonCache   = null;
   const loopStart = Date.now();
 
   // Process each target
