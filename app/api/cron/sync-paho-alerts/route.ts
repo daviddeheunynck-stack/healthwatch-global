@@ -37,6 +37,7 @@ import { COUNTRIES, findCountry, isAggregateCountry } from "@/lib/geo-data";
 import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
 import { extractAdmin1, geocodeAdmin1 } from "@/lib/geo-extract";
 import { errorMessage } from "@/lib/error";
+import { fetchWithRetry } from "@/lib/fetch-retry";
 import { translateDescription } from "@/lib/translate";
 import { regressionGuard, lockedRowRegressionGuard, lockedRowIsFreezing } from "@/lib/outbreak-guards";
 import { stampSourceConfirmed } from "@/lib/source-confirmed";
@@ -1156,8 +1157,13 @@ async function collectSitrepItems(
   supabase: SupabaseClient,
   log: LogEntry[],
 ): Promise<{ items: AlertData[]; deactivated: number }> {
-  const listRes = await fetch(PAHO_SITREP_URL, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(15_000) });
-  if (!listRes.ok) throw new Error(`sitrep listing HTTP ${listRes.status}`);
+  // fetchWithRetry: 2 attempts, 15s each (worst case 32s vs. maxDuration=300)
+  // on a transient network blip — see lib/fetch-retry.ts (2026-09-02).
+  const { response: listRes, error: sitrepFetchErr, attemptsMade: sitrepAttempts } = await fetchWithRetry(
+    PAHO_SITREP_URL, { headers: FETCH_HEADERS }, { attempts: 2, timeoutMs: 15_000, backoffMs: [2000] },
+  );
+  if (!listRes) throw new Error(`${errorMessage(sitrepFetchErr)} (${sitrepAttempts} tentative(s))`);
+  if (!listRes.ok) throw new Error(`sitrep listing HTTP ${listRes.status} (${sitrepAttempts} tentative(s))`);
 
   const entry = parseSitrepListing(await listRes.text());
   if (!entry) {
@@ -1283,21 +1289,25 @@ async function runPahoAlerts(_req: NextRequest, supabase: SupabaseClient) {
   const today = new Date().toISOString().substring(0, 10);
 
   // ── 1. Fetch PAHO alert listing ───────────────────────────────────────────
-  let listingHtml: string;
-  try {
-    const res = await fetch(PAHO_ALERT_URL, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(15_000) });
-    if (!res.ok) {
-      console.error(`[paho] listing HTTP ${res.status}`);
-      await logCronRun(supabase, "sync-paho-alerts", "error", 0, `PAHO listing HTTP ${res.status}`);
-      return NextResponse.json({ error: `PAHO listing HTTP ${res.status}` }, { status: 502 });
-    }
-    listingHtml = await res.text();
-  } catch (e) {
-    console.error("[paho] fetch listing:", errorMessage(e));
-    Sentry.captureException(e, { tags: { cron: "sync-paho-alerts" } });
-    await logCronRun(supabase, "sync-paho-alerts", "error", 0, errorMessage(e));
-    return NextResponse.json({ error: errorMessage(e) }, { status: 502 });
+  // fetchWithRetry: 2 attempts, 15s each (worst case 32s vs. maxDuration=300)
+  // on a transient network blip — see lib/fetch-retry.ts (2026-09-02).
+  const { response: res, error: listingFetchErr, attemptsMade } = await fetchWithRetry(
+    PAHO_ALERT_URL, { headers: FETCH_HEADERS }, { attempts: 2, timeoutMs: 15_000, backoffMs: [2000] },
+  );
+  if (!res) {
+    const msg = `${errorMessage(listingFetchErr)} (${attemptsMade} tentative(s))`;
+    console.error("[paho] fetch listing:", msg);
+    Sentry.captureException(listingFetchErr ?? new Error(msg), { tags: { cron: "sync-paho-alerts" } });
+    await logCronRun(supabase, "sync-paho-alerts", "error", 0, msg);
+    return NextResponse.json({ error: msg }, { status: 502 });
   }
+  if (!res.ok) {
+    const msg = `PAHO listing HTTP ${res.status} (${attemptsMade} tentative(s))`;
+    console.error(`[paho] ${msg}`);
+    await logCronRun(supabase, "sync-paho-alerts", "error", 0, msg);
+    return NextResponse.json({ error: msg }, { status: 502 });
+  }
+  const listingHtml = await res.text();
 
   const entries = parseListing(listingHtml);
   console.log(`[paho] Found ${entries.length} recent alert(s) within ${MAX_AGE_DAYS} days`);

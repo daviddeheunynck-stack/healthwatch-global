@@ -22,6 +22,7 @@ import { COUNTRIES, findCountry, isAggregateCountry } from "@/lib/geo-data";
 import { extractNumbers, assessRisk, UMBRELLA_COUNTRY_LABELS } from "@/lib/outbreak-parser";
 import { extractAdmin1, geocodeAdmin1 } from "@/lib/geo-extract";
 import { errorMessage } from "@/lib/error";
+import { fetchWithRetry } from "@/lib/fetch-retry";
 import { dateFloorGuard, spikeGuard, deathsNeverDecreaseGuard, implausibleDeathsGuard, lockedRowRegressionGuard, lockedRowIsFreezing } from "@/lib/outbreak-guards";
 import { stampSourceConfirmed } from "@/lib/source-confirmed";
 
@@ -529,21 +530,26 @@ async function runEcdcThreats(_req: NextRequest, supabase: SupabaseClient) {
   const today = new Date().toISOString().substring(0, 10);
 
   // ── 1. Fetch ECDC Epidemiological Update RSS feed ─────────────────────────
-  let rssXml: string;
-  try {
-    const res = await fetch(ECDC_RSS_FEED, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(15_000) });
-    if (!res.ok) {
-      console.error(`[ecdc] RSS HTTP ${res.status}`);
-      await logCronRun(supabase, "sync-ecdc-threats", "error", 0, `ECDC RSS HTTP ${res.status}`);
-      return NextResponse.json({ error: `ECDC RSS HTTP ${res.status}` }, { status: 502 });
-    }
-    rssXml = await res.text();
-  } catch (e) {
-    console.error("[ecdc] fetch RSS:", errorMessage(e));
-    Sentry.captureException(e, { tags: { cron: "sync-ecdc-threats" } });
-    await logCronRun(supabase, "sync-ecdc-threats", "error", 0, errorMessage(e));
-    return NextResponse.json({ error: errorMessage(e) }, { status: 502 });
+  // fetchWithRetry: 2 attempts, 10s each (worst case 21s vs. maxDuration=60,
+  // leaving margin for the per-item loop below) on a transient network blip
+  // — see lib/fetch-retry.ts (2026-09-02).
+  const { response: res, error: rssFetchErr, attemptsMade } = await fetchWithRetry(
+    ECDC_RSS_FEED, { headers: FETCH_HEADERS }, { attempts: 2, timeoutMs: 10_000, backoffMs: [1000] },
+  );
+  if (!res) {
+    const msg = `${errorMessage(rssFetchErr)} (${attemptsMade} tentative(s))`;
+    console.error("[ecdc] fetch RSS:", msg);
+    Sentry.captureException(rssFetchErr ?? new Error(msg), { tags: { cron: "sync-ecdc-threats" } });
+    await logCronRun(supabase, "sync-ecdc-threats", "error", 0, msg);
+    return NextResponse.json({ error: msg }, { status: 502 });
   }
+  if (!res.ok) {
+    const msg = `ECDC RSS HTTP ${res.status} (${attemptsMade} tentative(s))`;
+    console.error(`[ecdc] ${msg}`);
+    await logCronRun(supabase, "sync-ecdc-threats", "error", 0, msg);
+    return NextResponse.json({ error: msg }, { status: 502 });
+  }
+  const rssXml = await res.text();
 
   const entries = parseRSSFeed(rssXml);
   console.log(`[ecdc] Found ${entries.length} recent item(s) within ${MAX_AGE_DAYS} days`);

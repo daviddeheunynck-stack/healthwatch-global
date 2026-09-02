@@ -24,6 +24,7 @@ import { findCountry, isAggregateCountry } from "@/lib/geo-data";
 import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
 import { extractAdmin1, geocodeAdmin1 } from "@/lib/geo-extract";
 import { errorMessage } from "@/lib/error";
+import { fetchWithRetry } from "@/lib/fetch-retry";
 import { truncateAtSentence } from "@/lib/truncate-text";
 import { dateFloorGuard, bothZeroGuard, collapseGuard, zeroDeathGuard, lockedRowRegressionGuard, lockedRowIsFreezing } from "@/lib/outbreak-guards";
 import { stampSourceConfirmed } from "@/lib/source-confirmed";
@@ -204,24 +205,25 @@ export async function GET(req: NextRequest) {
   const today    = new Date().toISOString().substring(0, 10);
 
   // ── 1. Fetch notice listing page ─────────────────────────────────────────
-  let listHtml: string;
-  try {
-    const res = await fetch(CDC_NOTICES_URL, {
-      headers: FETCH_HEADERS,
-      signal:  AbortSignal.timeout(15_000),
-    });
-    if (!res.ok) {
-      console.error(`[cdc-notices] listing HTTP ${res.status}`);
-      await logCronRun(supabase, "sync-cdc-notices", "error", 0, `CDC notices HTTP ${res.status}`);
-      return NextResponse.json({ error: `CDC notices HTTP ${res.status}` }, { status: 502 });
-    }
-    listHtml = await res.text();
-  } catch (e) {
-    console.error("[cdc-notices] fetch listing:", errorMessage(e));
-    Sentry.captureException(e, { tags: { cron: "sync-cdc-notices" } });
-    await logCronRun(supabase, "sync-cdc-notices", "error", 0, errorMessage(e));
-    return NextResponse.json({ error: errorMessage(e) }, { status: 502 });
+  // fetchWithRetry: 2 attempts, 10s each (worst case 21s vs. maxDuration=120)
+  // on a transient network blip — see lib/fetch-retry.ts (2026-09-02).
+  const { response: res, error: listFetchErr, attemptsMade } = await fetchWithRetry(
+    CDC_NOTICES_URL, { headers: FETCH_HEADERS }, { attempts: 2, timeoutMs: 10_000, backoffMs: [1000] },
+  );
+  if (!res) {
+    const msg = `${errorMessage(listFetchErr)} (${attemptsMade} tentative(s))`;
+    console.error("[cdc-notices] fetch listing:", msg);
+    Sentry.captureException(listFetchErr ?? new Error(msg), { tags: { cron: "sync-cdc-notices" } });
+    await logCronRun(supabase, "sync-cdc-notices", "error", 0, msg);
+    return NextResponse.json({ error: msg }, { status: 502 });
   }
+  if (!res.ok) {
+    const msg = `CDC notices HTTP ${res.status} (${attemptsMade} tentative(s))`;
+    console.error(`[cdc-notices] ${msg}`);
+    await logCronRun(supabase, "sync-cdc-notices", "error", 0, msg);
+    return NextResponse.json({ error: msg }, { status: 502 });
+  }
+  const listHtml = await res.text();
 
   // ── 2. Parse notice links ─────────────────────────────────────────────────
   interface Notice { path: string; level: string; title: string }

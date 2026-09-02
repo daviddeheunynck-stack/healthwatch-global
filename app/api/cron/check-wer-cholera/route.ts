@@ -37,6 +37,7 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { logCronRun, isRealProduction, captureSelfReport } from "@/lib/cron-monitor";
 import { sendBrevoEmail } from "@/lib/brevo-send";
 import { errorMessage } from "@/lib/error";
+import { fetchWithRetry } from "@/lib/fetch-retry";
 import { stampSourceConfirmed } from "@/lib/source-confirmed";
 import * as Sentry from "@sentry/nextjs";
 
@@ -91,9 +92,14 @@ function parseIssueRef(url: string): { volume: number; issue: number } | null {
 // ── 1. List the editions WHO currently publishes ─────────────────────────────
 
 async function fetchIssueList(): Promise<WerIssue[] | null> {
+  // fetchWithRetry: 2 attempts, 10s each (worst case 21s vs. maxDuration=60)
+  // on a transient network blip — see lib/fetch-retry.ts (2026-09-02).
+  const { response: res, error: fetchErr, attemptsMade } = await fetchWithRetry(
+    WER_LISTING_URL, { headers: FETCH_HEADERS }, { attempts: 2, timeoutMs: 10_000, backoffMs: [1000] },
+  );
+  if (!res) { console.log(`[wer-cholera] listing: ${errorMessage(fetchErr)} (${attemptsMade} tentative(s))`); return null; }
   try {
-    const res = await fetch(WER_LISTING_URL, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(20000) });
-    if (!res.ok) { console.log(`[wer-cholera] listing → HTTP ${res.status}`); return null; }
+    if (!res.ok) { console.log(`[wer-cholera] listing → HTTP ${res.status} (${attemptsMade} tentative(s))`); return null; }
     const html = await res.text();
     const seen = new Map<string, WerIssue>();
     const hrefRe = /href="([^"]*wer\d+-\d+[^"]*)"/gi;

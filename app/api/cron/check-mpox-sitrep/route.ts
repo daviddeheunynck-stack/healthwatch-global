@@ -17,6 +17,7 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { sendBrevoEmail } from "@/lib/brevo-send";
 import { errorMessage } from "@/lib/error";
+import { fetchWithRetry } from "@/lib/fetch-retry";
 import { regressionGuard, lockedRowRegressionGuard } from "@/lib/outbreak-guards";
 import { stampSourceConfirmed } from "@/lib/source-confirmed";
 import * as Sentry from "@sentry/nextjs";
@@ -62,15 +63,17 @@ const MONTHS: Record<string, string> = {
 // ── 1. Detect latest sitrep on WHO page ──────────────────────────────────────
 
 async function fetchLatestSitrep(): Promise<{ url: string; num: number } | null> {
+  // fetchWithRetry: 2 attempts, 10s each (worst case 21s vs. maxDuration=60)
+  // on a transient network blip — see lib/fetch-retry.ts (2026-09-02).
+  const { response: res, error: fetchErr, attemptsMade } = await fetchWithRetry(
+    WHO_SITREP_PAGE, { headers: FETCH_HEADERS }, { attempts: 2, timeoutMs: 10_000, backoffMs: [1000] },
+  );
+  if (!res) { console.log(`[mpox] fetch WHO page: ${errorMessage(fetchErr)} (${attemptsMade} tentative(s))`); return null; }
   try {
-    const res = await fetch(WHO_SITREP_PAGE, {
-      headers: FETCH_HEADERS,
-      signal: AbortSignal.timeout(15000),
-    });
-    if (!res.ok) { console.log(`[mpox] WHO page → HTTP ${res.status}`); return null; }
+    if (!res.ok) { console.log(`[mpox] WHO page → HTTP ${res.status} (${attemptsMade} tentative(s))`); return null; }
     return parseSitrepLinks(await res.text());
   } catch (e) {
-    console.log("[mpox] fetch WHO page:", errorMessage(e));
+    console.log("[mpox] parse WHO page:", errorMessage(e));
     return null;
   }
 }

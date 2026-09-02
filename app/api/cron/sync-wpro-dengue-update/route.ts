@@ -73,6 +73,8 @@ import {
   type GuardedIncoming, type GuardedLockedRow,
 } from "@/lib/outbreak-guards";
 import { stampSourceConfirmed } from "@/lib/source-confirmed";
+import { fetchWithRetry } from "@/lib/fetch-retry";
+import { errorMessage } from "@/lib/error";
 
 export const dynamic     = "force-dynamic";
 export const maxDuration = 60;
@@ -210,8 +212,13 @@ const TARGETS: Target[] = [
 // ── Discovery ──────────────────────────────────────────────────────────────
 
 async function findLatestEditionUrl(): Promise<{ itemUrl: string; edition: string }> {
-  const res = await fetch(LISTING_URL, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(20_000) });
-  if (!res.ok) throw new Error(`listing page HTTP ${res.status}`);
+  // fetchWithRetry: 2 attempts, 10s each (worst case 21s vs. maxDuration=60)
+  // on a transient network blip — see lib/fetch-retry.ts (2026-09-02).
+  const { response: res, error: fetchErr, attemptsMade } = await fetchWithRetry(
+    LISTING_URL, { headers: FETCH_HEADERS }, { attempts: 2, timeoutMs: 10_000, backoffMs: [1000] },
+  );
+  if (!res) throw new Error(`${errorMessage(fetchErr)} (${attemptsMade} tentative(s))`);
+  if (!res.ok) throw new Error(`listing page HTTP ${res.status} (${attemptsMade} tentative(s))`);
   const html = await res.text();
   // Listed newest-first — first match is the latest edition.
   const match = html.match(

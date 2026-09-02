@@ -53,6 +53,8 @@ import Anthropic from "@anthropic-ai/sdk";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun } from "@/lib/cron-monitor";
 import { regressionGuard, lockedRowRegressionGuard, lockedRowIsFreezing } from "@/lib/outbreak-guards";
+import { fetchWithRetry } from "@/lib/fetch-retry";
+import { errorMessage } from "@/lib/error";
 
 export const dynamic     = "force-dynamic";
 export const maxDuration = 90;
@@ -90,8 +92,13 @@ interface LatestIssue {
 }
 
 async function findLatestIssue(): Promise<LatestIssue | null> {
-  const res = await fetch(LISTING_URL, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(15_000) });
-  if (!res.ok) return null;
+  // fetchWithRetry: 2 attempts, 10s each (worst case 21s vs. maxDuration=90)
+  // on a transient network blip — see lib/fetch-retry.ts (2026-09-02).
+  const { response: res, error: fetchErr, attemptsMade } = await fetchWithRetry(
+    LISTING_URL, { headers: FETCH_HEADERS }, { attempts: 2, timeoutMs: 10_000, backoffMs: [1000] },
+  );
+  if (!res) { console.log(`[samoa-dengue] listing: ${errorMessage(fetchErr)} (${attemptsMade} tentative(s))`); return null; }
+  if (!res.ok) { console.log(`[samoa-dengue] listing → HTTP ${res.status} (${attemptsMade} tentative(s))`); return null; }
   const html = await res.text();
   const re = /href=["']([^"']*Dengue-sitrep-issue-no-(\d+)\.pdf)["']/gi;
   let m: RegExpExecArray | null;

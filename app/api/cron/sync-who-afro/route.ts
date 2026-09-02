@@ -23,6 +23,7 @@ import { normalizeDisease } from "@/lib/disease-data";
 import { COUNTRIES, findCountry, isAggregateCountry } from "@/lib/geo-data";
 import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
 import { errorMessage } from "@/lib/error";
+import { fetchWithRetry } from "@/lib/fetch-retry";
 import { truncateAtSentence } from "@/lib/truncate-text";
 import { dateFloorGuard, spikeGuard, collapseGuard, zeroCaseGuard, zeroDeathGuard, lockedRowRegressionGuard, lockedRowIsFreezing } from "@/lib/outbreak-guards";
 import { stampSourceConfirmed } from "@/lib/source-confirmed";
@@ -348,18 +349,26 @@ async function runSyncWhoAfro(_req: NextRequest, supabase: SupabaseClient) {
   } catch { /* fall through to HTML */ }
 
   if (pageEntries.length === 0) {
-    try {
-      const res = await fetch(AFRO_LIST_URL, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(15_000) });
-      if (!res.ok) {
-        await logCronRun(supabase, "sync-who-afro", "error", 0, `AFRO HTTP ${res.status}`);
-        return NextResponse.json({ error: `AFRO HTTP ${res.status}` }, { status: 502 });
-      }
-      pageEntries = extractOutbreakLinks(await res.text());
-    } catch (e) {
-      Sentry.captureException(e, { tags: { cron: "sync-who-afro" } });
-      await logCronRun(supabase, "sync-who-afro", "error", 0, errorMessage(e));
-      return NextResponse.json({ error: errorMessage(e) }, { status: 502 });
+    // fetchWithRetry: 2 attempts, 10s each (worst case 21s vs. maxDuration=120)
+    // on a transient network blip — see lib/fetch-retry.ts (2026-09-02). The
+    // RSS quick-check above already degrades gracefully on any failure (it
+    // just falls through to here), so it's deliberately left unwrapped —
+    // retrying it would only delay reaching this fallback for no benefit.
+    const { response: res, error: listFetchErr, attemptsMade } = await fetchWithRetry(
+      AFRO_LIST_URL, { headers: FETCH_HEADERS }, { attempts: 2, timeoutMs: 10_000, backoffMs: [1000] },
+    );
+    if (!res) {
+      const msg = `${errorMessage(listFetchErr)} (${attemptsMade} tentative(s))`;
+      Sentry.captureException(listFetchErr ?? new Error(msg), { tags: { cron: "sync-who-afro" } });
+      await logCronRun(supabase, "sync-who-afro", "error", 0, msg);
+      return NextResponse.json({ error: msg }, { status: 502 });
     }
+    if (!res.ok) {
+      const msg = `AFRO HTTP ${res.status} (${attemptsMade} tentative(s))`;
+      await logCronRun(supabase, "sync-who-afro", "error", 0, msg);
+      return NextResponse.json({ error: msg }, { status: 502 });
+    }
+    pageEntries = extractOutbreakLinks(await res.text());
   }
 
   console.log(`[who-afro] ${pageEntries.length} candidate articles`);

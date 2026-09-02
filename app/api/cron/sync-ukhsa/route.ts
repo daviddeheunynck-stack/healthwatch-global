@@ -19,6 +19,7 @@ import { normalizeDisease } from "@/lib/disease-data";
 import { COUNTRIES, findCountry, isAggregateCountry } from "@/lib/geo-data";
 import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
 import { errorMessage } from "@/lib/error";
+import { fetchWithRetry } from "@/lib/fetch-retry";
 import { truncateAtSentence } from "@/lib/truncate-text";
 import { dateFloorGuard, spikeGuard, collapseGuard, zeroCaseGuard, zeroDeathGuard, lockedRowRegressionGuard, lockedRowIsFreezing } from "@/lib/outbreak-guards";
 import { stampSourceConfirmed } from "@/lib/source-confirmed";
@@ -280,19 +281,23 @@ async function runUkhsa(_req: NextRequest, supabase: SupabaseClient) {
   const today = new Date().toISOString().substring(0, 10);
 
   // ── 1. Fetch UKHSA ATOM ───────────────────────────────────────────────────
-  let atomXml: string;
-  try {
-    const res = await fetch(UKHSA_ATOM, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(15_000) });
-    if (!res.ok) {
-      await logCronRun(supabase, "sync-ukhsa", "error", 0, `UKHSA ATOM HTTP ${res.status}`);
-      return NextResponse.json({ error: `UKHSA ATOM HTTP ${res.status}` }, { status: 502 });
-    }
-    atomXml = await res.text();
-  } catch (e) {
-    Sentry.captureException(e, { tags: { cron: "sync-ukhsa" } });
-    await logCronRun(supabase, "sync-ukhsa", "error", 0, errorMessage(e));
-    return NextResponse.json({ error: errorMessage(e) }, { status: 502 });
+  // fetchWithRetry: 2 attempts, 15s each (worst case 32s vs. maxDuration=300)
+  // on a transient network blip — see lib/fetch-retry.ts (2026-09-02).
+  const { response: res, error: atomFetchErr, attemptsMade } = await fetchWithRetry(
+    UKHSA_ATOM, { headers: FETCH_HEADERS }, { attempts: 2, timeoutMs: 15_000, backoffMs: [2000] },
+  );
+  if (!res) {
+    const msg = `${errorMessage(atomFetchErr)} (${attemptsMade} tentative(s))`;
+    Sentry.captureException(atomFetchErr ?? new Error(msg), { tags: { cron: "sync-ukhsa" } });
+    await logCronRun(supabase, "sync-ukhsa", "error", 0, msg);
+    return NextResponse.json({ error: msg }, { status: 502 });
   }
+  if (!res.ok) {
+    const msg = `UKHSA ATOM HTTP ${res.status} (${attemptsMade} tentative(s))`;
+    await logCronRun(supabase, "sync-ukhsa", "error", 0, msg);
+    return NextResponse.json({ error: msg }, { status: 502 });
+  }
+  const atomXml = await res.text();
 
   const entries = parseATOMFeed(atomXml);
   console.log(`[ukhsa] ${entries.length} entries within ${MAX_AGE_DAYS} days`);
