@@ -79,7 +79,17 @@ const FETCH_HEADERS = {
 interface Extracted { date: string; year: number; cases: number; deaths: number; }
 
 function extract(html: string): Extracted | null {
-  const dateM = html.match(/資料更新時間為(\d{4})\/(\d{2})\/(\d{2})/);
+  // The page's generic "data updated daily at HH:MM" notice
+  // (資料更新時間為每日上午08:30…) replaced its former specific
+  // 資料更新時間為YYYY/MM/DD timestamp at some point before 2026-09-02 —
+  // confirmed live that day (regex no longer matched, cron returned
+  // "extraction failed", cases/deaths regexes still matched fine). The
+  // statistics table's own "date of most recent case onset"
+  // (最近一例發病日) row is a more meaningful "as of" figure anyway — the
+  // actual freshness of the case data, not just when the page was
+  // regenerated — and uses the same YYYY/MM/DD format this fetcher already
+  // expects.
+  const dateM = html.match(/最近一例發病日<\/th>\s*<td>(\d{4})\/(\d{2})\/(\d{2})<\/td>/);
   if (!dateM) return null;
   const date = `${dateM[1]}-${dateM[2]}-${dateM[3]}`;
 
