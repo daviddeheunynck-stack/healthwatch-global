@@ -157,13 +157,13 @@ Aucune invitation envoyée dans ce premier passage. **Motif assumé** : les deux
 
 ---
 
-### 2️⃣ 🔒 DM — 3 RÉDIGÉS, LES TROIS EN FILE DE VALIDATION, AUCUN ENVOYÉ
+### 2️⃣ 🔒→✅ DM — 3 RÉDIGÉS, MIS EN FILE, PUIS **LES TROIS ENVOYÉS** SUR ORDRE EXPLICITE DE DAVID
 
-**Règle du 23/07 appliquée : aucun de ces textes n'est envoyé par la routine.** Quota DM du jour inchangé : **4 envoyés sur 8**, tous par la session du matin sur ordre explicite de David ; un DM en file ne consomme rien tant qu'il n'est pas envoyé. Les trois sont par ailleurs des réponses en fil actif, donc hors quota froid ([[feedback_reply_quota_cold_outreach_only]]). **Notification push envoyée en fin de run.**
+**Règle du 23/07 appliquée : la routine ne les a pas envoyés d'elle-même.** Les trois ont été mis en file, double-checkés à la demande de David, puis **envoyés à 13h59, 14h00 et 14h01 sur son ordre explicite** (« Publie les dms », tapé en session interactive après une première demande de clarification de ma part). Quota DM du jour porté à **7 envoyés sur 8**, dont 3 hors quota froid (réponses en fil actif) : **4 envoyés sur 8**, tous par la session du matin sur ordre explicite de David ; un DM en file ne consomme rien tant qu'il n'est pas envoyé. Les trois sont par ailleurs des réponses en fil actif, donc hors quota froid ([[feedback_reply_quota_cold_outreach_only]]). **Notification push envoyée en fin de run.**
 
 ⚠️ **Faux positif mécanique commun aux trois, écarté sur pièce** : `context.too-soon` (« dernier message il y a 0 j, minimum 3 j »). La règle mesure l'écart entre deux **envois de David** sans voir les messages entrants ; dans les trois fils le dernier message est de l'interlocuteur, reçu le matin même. Ce sont des **réponses en fil actif, pas des relances**. Classe déjà consignée plusieurs fois, et **confirmée indépendamment par les trois relecteurs**, qui ont chacun retrouvé la définition du seuil dans `lexicon.json` (bloc `followup`, aux côtés de `maxUnansweredOutbound`) et conclu au faux positif sans se concerter.
 
-#### 🔒 DM 1 — **John Omari Baso** (`/in/john-omari-baso-84500b1b0/`), FR, vouvoiement, fil actif, SANS CTA — **EN FILE**
+#### 🔒→✅ DM 1 — **John Omari Baso** (`/in/john-omari-baso-84500b1b0/`), FR, vouvoiement, fil actif, SANS CTA — **ENVOYÉ ET CONFIRMÉ 13h59**
 
 Fil relu intégralement (§4) : **18 messages depuis le 27/08**, recopiés verbatim dans `tmp/thread-john-0209-13h.txt` (diapositive jointe transcrite incluse). *langue du fil = fr ; langue du brouillon = fr.* Vouvoiement maintenu, cohérent avec l'arbitrage de ce matin (son « toi » unique du 30/08 s'auto-corrige dans la même phrase).
 
@@ -173,13 +173,13 @@ Fil relu intégralement (§4) : **18 messages depuis le 27/08**, recopiés verba
 
 ⚠️ **Un `ngram.history` corrigé avant le relecteur** : la citation littérale « 55 poliovirus PFA et ENV » figurait déjà dans nos archives (la diapositive y a été transcrite ce matin). Reformulée en « 55 poliovirus détectés en PFA et ENV », sans perte de précision.
 
-`QA : mécanique FAIL sur le seul faux positif context.too-soon (587 car., limite 1300, 2 paragraphes, fr/fr, 0 lien, 0 CTA, 0 tiret cadratin ; 35, 62, 55, 8 et 22 tous tracés from-thread) — 1 blocker ngram.history antérieur corrigé avant le relecteur | relecteur VERDICT: ENVOYER, **12 PASS au 1er jet**, aucune réserve — vérifie nommément que le message ne rouvre pas le point du GPEI central que John avait explicitement écarté, et que « de mon côté je ne vois que le cumul » est couvert par product-claims.manual.json | faits cités : aucun de la base, tous du fil | registre du 02/09 (13:03) | statut : en file de validation`
+`QA : mécanique FAIL sur le seul faux positif context.too-soon (587 car., limite 1300, 2 paragraphes, fr/fr, 0 lien, 0 CTA, 0 tiret cadratin ; 35, 62, 55, 8 et 22 tous tracés from-thread) — 1 blocker ngram.history antérieur corrigé avant le relecteur | relecteur VERDICT: ENVOYER, **12 PASS au 1er jet**, aucune réserve — vérifie nommément que le message ne rouvre pas le point du GPEI central que John avait explicitement écarté, et que « de mon côté je ne vois que le cumul » est couvert par product-claims.manual.json | faits cités : aucun de la base, tous du fil | registre du 02/09 (13:03) | statut : envoyé le 02/09, sur ordre explicite de David (« Publie les dms », session interactive) — texte inséré par execCommand après échec de la frappe accentuée, relu caractère pour caractère et destinataire revérifié dans le même appel JS que le clic sur Envoyer, apparition dans le fil confirmée après coup`
 
 > C'est net, et c'est exactement ce que je ne pouvais pas deviner depuis les publications : la semaine 35 restera ce qu'elle est, elle ne sera pas rouverte quand les 62 tomberont.
 >
 > Ça me fait une deuxième question, sur le cumul cette fois. Les 55 poliovirus détectés en PFA et ENV, ils sont recalculés depuis la base du laboratoire, ou additionnés à partir des semaines déjà publiées ? La question ne vaut pas pour les 8 provinces et 22 zones de santé affectées, qui se réécrivent au lieu de s'additionner, et c'est justement ce qui me gêne : vus de loin, les deux se présentent comme un seul et même total.
 
-#### 🔒 DM 2 — **Julien Tuba** (`/in/julien-tuba-a31abb143/`), FR, vouvoiement, fil actif, SANS CTA — **EN FILE**
+#### 🔒→✅ DM 2 — **Julien Tuba** (`/in/julien-tuba-a31abb143/`), FR, vouvoiement, fil actif, SANS CTA — **ENVOYÉ ET CONFIRMÉ 14h00**
 
 Fil relu intégralement (§4) : 3 messages, recopiés verbatim dans `tmp/thread-julien-tuba-0209-13h.txt`. *langue du fil = fr ; langue du brouillon = fr.*
 
@@ -192,7 +192,7 @@ Fil relu intégralement (§4) : 3 messages, recopiés verbatim dans `tmp/thread-
 - **(9) Terrain politique par ambiguïté de référent.** « *le tableau* » n'était rattaché à rien : lu comme le tableau des bulletins publiés, la phrase revenait à commenter la qualité des publications d'Africa CDC devant l'un de ses agents.
 - **Correction appliquée** : toute mécanique retirée, la phrase reformulée comme une limite de lecture personnelle (« *ne m'arrive pas* », « *de là où je lis* »), sans rien affirmer ni du produit ni des bulletins. ⚠️ Un `ngram.history` apparu sur la version corrigée (« se ressemblent trait pour trait ») a été levé par reformulation.
 
-`QA : mécanique FAIL sur le seul faux positif context.too-soon après correction (553 car., limite 1300, 3 paragraphes, fr/fr, 0 chiffre, 0 lien, 0 CTA, 0 tiret cadratin) — 1 blocker ngram.history apparu en cours de correction, levé | relecteur VERDICT: REECRIRE 4, 9 au 1er jet, les deux corrigés — 10 PASS sur 12 par ailleurs, dont attribution verbatim vérifiée et apport reconnu distinct | faits cités : aucun | registre du 02/09 (13:03) | statut : en file de validation`
+`QA : mécanique FAIL sur le seul faux positif context.too-soon après correction (553 car., limite 1300, 3 paragraphes, fr/fr, 0 chiffre, 0 lien, 0 CTA, 0 tiret cadratin) — 1 blocker ngram.history apparu en cours de correction, levé | relecteur VERDICT: REECRIRE 4, 9 au 1er jet, les deux corrigés — 10 PASS sur 12 par ailleurs, dont attribution verbatim vérifiée et apport reconnu distinct | faits cités : aucun | registre du 02/09 (13:03) | statut : envoyé le 02/09, sur ordre explicite de David (« Publie les dms », session interactive) — texte inséré par execCommand après échec de la frappe accentuée, relu caractère pour caractère et destinataire revérifié dans le même appel JS que le clic sur Envoyer, apparition dans le fil confirmée après coup`
 
 > Je relis votre réponse deux fois, et c'est un point de votre liste qui m'arrête : la zone qui cesse soudainement de notifier. C'est celui de vos signaux faibles qui a l'air, vu de loin, le plus facile à repérer depuis l'extérieur.
 >
@@ -200,7 +200,7 @@ Fil relu intégralement (§4) : 3 messages, recopiés verbatim dans `tmp/thread-
 >
 > D'où ma question : comment repérez-vous, vous, qu'une zone a décroché ?
 
-#### 🔒 DM 3 — **Dossa Paul YAOÏTCHA** (`/in/dossa-paul-yaoïtcha-41202b2b7/`), FR, vouvoiement, fil actif, SANS CTA — **EN FILE**
+#### 🔒→✅ DM 3 — **Dossa Paul YAOÏTCHA** (`/in/dossa-paul-yaoïtcha-41202b2b7/`), FR, vouvoiement, fil actif, SANS CTA — **ENVOYÉ ET CONFIRMÉ 14h01**
 
 Fil relu intégralement (§4) : 5 messages depuis le 31/08, recopiés verbatim dans `tmp/thread-yaoitcha-0209-13h.txt`. *langue du fil = fr ; langue du brouillon = fr.*
 
@@ -210,7 +210,7 @@ Fil relu intégralement (§4) : 5 messages depuis le 31/08, recopiés verbatim d
 
 🔴 **Le relecteur a fait échouer le 1er jet sur un point réel (question 6).** Le brouillon écrivait « *donc je suis en aval de vous, pas en amont* », ce qui **place Paul du côté de la production de données** — exactement ce qu'il vient de démentir (« *Je n'ai pas participé à cette riposte, ni à aucune autre* »), et ce qui contredisait la phrase précédente du même paragraphe. **Corrigé par suppression**, remplacé par « tout en bout de chaîne », qui ne positionne que David. Le relecteur signalait par ailleurs, sans faire échouer, l'absence de salutation dans un fil très formel des deux côtés : **« Bonjour Paul, » ajouté en tête**.
 
-`QA : mécanique FAIL sur le seul faux positif context.too-soon (697 car., limite 1300, 3 paragraphes, fr/fr, 0 chiffre, 0 lien, 0 CTA, 0 tiret cadratin) | relecteur VERDICT: REECRIRE 6 au 1er jet, corrigé par suppression — 11 PASS sur 12 par ailleurs, dont les 3 affirmations produit toutes rattachées à hwg_claims.allowed, et apport reconnu double (correction d'une erreur sur David + question que lui seul peut trancher) | faits cités : aucun | registre du 02/09 (13:03) | statut : en file de validation`
+`QA : mécanique FAIL sur le seul faux positif context.too-soon (697 car., limite 1300, 3 paragraphes, fr/fr, 0 chiffre, 0 lien, 0 CTA, 0 tiret cadratin) | relecteur VERDICT: REECRIRE 6 au 1er jet, corrigé par suppression — 11 PASS sur 12 par ailleurs, dont les 3 affirmations produit toutes rattachées à hwg_claims.allowed, et apport reconnu double (correction d'une erreur sur David + question que lui seul peut trancher) | faits cités : aucun | registre du 02/09 (13:03) | statut : envoyé le 02/09, sur ordre explicite de David (« Publie les dms », session interactive) — texte inséré par execCommand après échec de la frappe accentuée, relu caractère pour caractère et destinataire revérifié dans le même appel JS que le clic sur Envoyer, apparition dans le fil confirmée après coup`
 
 > Bonjour Paul, votre franchise vaut mieux qu'une réponse assurée, et elle appelle une correction de mon côté. Je ne viens pas du terrain non plus : je n'ai jamais participé à une riposte, ni construit un système de surveillance. Je lis des bulletins déjà publiés et j'en tiens une base à jour, tout en bout de chaîne.
 >
@@ -235,7 +235,7 @@ Relecture à froid des trois brouillons, en revérifiant les sources plutôt qu'
 
 **Recontrôle mécanique après correction** : les trois repassent, avec pour seuls blockers `context.too-soon` (faux positif déjà documenté et confirmé par les trois relecteurs) et `ngram.history`. ⚠️ **Ce `ngram.history` est le piège de re-vérification du 27/08, vérifié sur pièce et non supposé** : chacune des séquences citées (« la semaine 35 restera ce », « rouverte quand les 62 tomberont », « votre franchise vaut mieux qu », « votre liste qui m'arrête ») n'a **qu'une seule occurrence** dans ce fichier, dans le bloc « 🔒 en file de validation » écrit par le run de 13h lui-même. Aucune collision avec un message réellement envoyé à un autre destinataire.
 
-**Les trois textes ci-dessus sont les versions corrigées, à jour. Statut inchangé : en file de validation, aucun envoyé.**
+**Les trois textes ci-dessus sont les versions corrigées, et ce sont bien celles qui sont parties.** David a tapé « Publie les dms » après ce double-check ; les trois ont été envoyés dans la foulée (13h59, 14h00, 14h01), chacun avec destinataire et texte vérifiés dans le même appel JS que le clic sur Envoyer, puis apparition dans le fil confirmée.
 
 ---
 

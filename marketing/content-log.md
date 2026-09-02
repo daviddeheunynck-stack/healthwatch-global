@@ -337,7 +337,7 @@ Rouverts **sur le post, pas sur la notification**.
 
 **Registre de faits régénéré ce run** (`npm run qa:facts` → **226 faits citables sur 110 lignes affichées**, 81 lignes `is_seed` exclues, 9 faits périmés).
 
-**Quotas à la clôture** : commentaires **4/7 publiés** aujourd'hui toutes sessions confondues (3 ce matin + **1 ce run**, Kyaw Thowai Prue Prince) · **DM 3 rédigés ce run, tous 🔒 en file de validation, 0 envoyé** (quota du jour inchangé à 4/8 envoyés, tous par la session du matin sur ordre de David) · suivis **8/7-10**, inchangés, aucun dû · notes de connexion **1/7**, inchangée · invitations reçues **2 en attente**, inchangées · **0 écriture en base**. Détail messagerie et textes complets des 3 DM : `linkedin-contacts.md`, entrée du jour.
+**Quotas à la clôture** : commentaires **4/7 publiés** aujourd'hui toutes sessions confondues (3 ce matin + **1 ce run**, Kyaw Thowai Prue Prince) · **DM 3 rédigés ce run, mis en file, double-checkés à la demande de David, puis ✅ les 3 envoyés sur son ordre explicite** (13h59, 14h00, 14h01 — quota du jour porté à 7/8, dont 3 hors quota froid car réponses en fil actif, donc 4/8 au sens du quota) · suivis **8/7-10**, inchangés, aucun dû · notes de connexion **1/7**, inchangée · invitations reçues **2 en attente**, inchangées · **0 écriture en base**. Détail messagerie et textes complets des 3 DM : `linkedin-contacts.md`, entrée du jour.
 
 ---
 
@@ -409,7 +409,7 @@ Rouverts **sur le post, pas sur la notification**. Les trois commentaires publi�
 
 ### 4️⃣ 🔁 CARRY-OVER POUR LE CRÉNEAU DE 17h (02/09)
 
-1. 🔒 **TROIS DM ATTENDENT DAVID**, tous rédigés ce run, tous des réponses à des messages entrants reçus entre 10h46 et 11h20 : **John Omari Baso** (FR), **Dossa Paul YAOÏTCHA** (FR), **Julien Tuba** (FR). Textes complets et rapports QA dans `linkedin-contacts.md`, entrée du jour. **Notification push envoyée ce run.**
+1. ✅ **LES TROIS DM ONT ÉTÉ ENVOYÉS**, après mise en file, notification push, double-check demandé par David et ordre explicite de sa part (« Publie les dms ») : **John Omari Baso** 13h59, **Julien Tuba** 14h00, **Dossa Paul YAOÏTCHA** 14h01. **File de validation vide à la clôture.** Le double-check a corrigé deux défauts factuels que ni le contrôle mécanique ni les relecteurs n'avaient vus — détail dans `linkedin-contacts.md`. ⚠️ **Incident de saisie à connaître** : `computer type` a mutilé le texte français dans le composeur de DM (« Çèèéèéàèàéèèèèèèè »), rattrapé par le contrôle de mise en forme avant tout envoi ; méthode de repli (`execCommand('insertText')`) écrite dans `_shared/browser-click-reliability.md` point 9.
 2. ⭐⭐ **Les 4 DM envoyés ce matin ont produit 3 réponses en moins de deux heures.** John Omari Baso répond à une question technique de fond, Julien Tuba envoie deux messages substantiels, Dossa Paul YAOÏTCHA répond honnêtement. **C'est le meilleur taux de retour du carnet à ce jour** — le traiter vite, l'élan est réel.
 3. ⭐⭐ **Isaias Fernandes Co** — *AI & Technologies Officer, OMS AFRO*. Notre réponse envoyée ce matin à 10h19 (« *After next week is fine…* ») est **le dernier message du fil**, il n'a pas encore renvoyé de créneau. **Rappel : il accepte le principe d'un appel à partir de la semaine du 14 septembre.** Rien à faire tant qu'il n'a pas répondu, mais à ne pas perdre de vue.
 4. 🗓️ **Ligne d'événement (§16)**
