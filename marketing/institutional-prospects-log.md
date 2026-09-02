@@ -3726,3 +3726,115 @@ Leçon du bounce Antigua d'hier (`health.gov.ag`, aucun MX, 550 en 14 s) : **`ns
 - **Bounces du jour : aucun** sur ce lot — aucun envoi n'a eu lieu depuis sa création. *(Bilan cumulé non retotalisé ici : porteur unique `daily-relance-check-healthwatch`, consigne du 16/08.)*
 
 **⚠️ Fichiers modifiés non touchés par cette routine, laissés tels quels** (règle `AGENTS.md`) : `marketing/qa/product-claims.manual.json` (modifié), `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis).
+
+---
+
+## 🔁 RELANCE J+10 — 2026-09-02, run automatique `daily-relance-check-healthwatch`
+
+**Résultat : 16 relances créées, l'arriéré est vidé.** Les deux lots en attente depuis plusieurs jours — **21/08 (10 contacts, J+12)** et **22/08 (6 contacts éligibles sur 10, J+11)** — sont traités intégralement. **Il ne reste aucun contact vérifié-mais-non-rédigé** pour la première fois depuis le 28/08.
+
+### 🚦 Frein de file — 10 en entrée, 26 en sortie, léger dépassement assumé
+
+`list_drafts` en tête de run (`pageSize: 50`, vue métadonnées) : **10 brouillons**, tous datés du 02/09 06:19-06:20 UTC, tous `labelIds: ["DRAFT"]` — les 10 contacts de prospection créés par `daily-institutional-prospecting-healthwatch` une dizaine de minutes plus tôt. Aucun reliquat des jours précédents : la file avait bien été vidée par David.
+
+**10 + 16 = 26, soit un brouillon au-dessus du seuil de ~25.** Décision de le franchir, motivée :
+
+- Le seuil est écrit « **~25** » dans le SKILL.md. Un dépassement d'**une** unité (+4 %) est dans la tolérance de ce tilde ; les refus des 29, 30/08 et 01/09 portaient sur 36, 36 et 46 brouillons, soit +44 % à +84 %.
+- **S'arrêter à 15 laisserait un orphelin** — un contact d'un lot à J+11 renvoyé à un run ultérieur — sans rien gagner en lisibilité de file pour David.
+- **David a vidé la file deux jours de suite** (01/09 : 27 envois à 04:45-04:48, puis 10 à 07:09, puis le remplacement Antigua à 07:18). La file n'est pas un goulot en ce moment.
+
+*Si l'arbitrage inverse est préféré, il suffit de le dire en session : le seuil reste une consigne de volume, pas une contrainte technique.*
+
+### 🔎 Vérification en direct — les 16, revérifiés ce run et pas repris sur la foi d'hier
+
+Les deux lots avaient déjà été contrôlés le 01/09, mais le contrôle est refait intégralement : une réponse a pu arriver dans les 24 h. Double contrôle exigé depuis l'incident THL Finlande du 25/08.
+
+- **Requêtes `to:` groupées** (2 appels, `includeTrash: true`) : **les 16 fils d'origine portent exactement 1 message, `labelIds: ["SENT"]`.** Aucune relance antérieure sur aucun d'eux.
+- **Requête `from:<domaine>` groupée** sur les 13 domaines des deux lots (`after:2026/08/20`, `includeTrash: true`) : **résultat vide, `{}`.** Aucune réponse humaine, aucun accusé automatique hors fil, aucun bounce.
+- **Anti-doublon** : aucune des 16 adresses n'apparaît dans une entrée « 🔁 RELANCE » antérieure du journal (contrôle du 01/09 reconduit, listes inchangées).
+
+### ✉️ Les 16 relances créées
+
+Toutes en réponse dans le fil d'origine (`replyToMessageId`), objet « Re: … » généré par Gmail, créées entre **06:28:35 et 06:30:13 UTC**. Ordre = original le plus ancien en premier.
+
+**Lot du 21/08** (envoyé le 21/08, 16:45:04-16:47:13 UTC — J+12)
+
+| # | Institution | Adresse | Langue | Fil d'origine | Brouillon |
+|---|---|---|---|---|---|
+| 1 | OPS/PAHO — Bureau pays Honduras | `hnd.email@paho.org` | **ES** | `1a022fb2395469e9` | `r-5713594186108596758` |
+| 2 | PAHO — Bureau pays Belize | `blzmail@paho.org` | EN | `1a022fb2eb56953a` | `r529192949259902685` |
+| 3 | PAHO — Bureau pays Suriname | `surpwr@paho.org` | EN | `1a022fb3e95f27bc` | `r7170517451512981145` |
+| 4 | MoH Jordanie | `mo@moh.gov.jo` | EN | `1a022fb4b1b5c8cb` | `r-2422406914750471443` |
+| 5 | RCHEPH Biélorussie | `mail@rcheph.by` | EN | `1a022fb56043d1e4` | `r-1167387592107790870` |
+| 6 | MoPH Afghanistan | `info.access@moph.gov.af` | EN | `1a022fb74207798c` | `r-7297181810410071199` |
+| 7 | FSP-USP Brésil | `fsp@usp.br` | EN | `1a022fb829639815` | `r-6317886388175899990` |
+| 8 | School of Global Health — Copenhague | `sgh@sund.ku.dk` | EN | `1a022fb91f3b7c27` | `r6962012151352914726` |
+| 9 | Relief International | `info@ri.org` | EN | `1a022fb9f96e3399` | `r4447037202076749056` |
+| 10 | GOAL Global | `info@goal.ie` | EN | `1a022fbaae4d8ddb` | `r3413181527312603817` |
+
+**Lot du 22/08** (envoyé le 22/08, 06:32:59-06:35:24 UTC — J+11)
+
+| # | Institution | Adresse | Langue | Fil d'origine | Brouillon |
+|---|---|---|---|---|---|
+| 11 | EMPHNET | `comm@emphnet.net` | EN | `1a0281de2286f12c` | `r-2067000981000004016` |
+| 12 | SPKC Lettonie | `pasts@spkc.gov.lv` | EN | `1a0281e411d7bf26` | `r-7785631340166166169` |
+| 13 | OPS/PAHO — Bureau pays Paraguay | `prycorresp@paho.org` | **ES** | `1a0281e662f372ba` | `r4293482190143683142` |
+| 14 | OMS — Bureau pays Mongolie | `wpmngwr@who.int` | EN | `1a0281e72b2d4cc9` | `r1474958241831858577` |
+| 15 | UPCH — FASPA (Pérou) | `faspa@oficinas-upch.pe` | **ES** | `1a0281e9b90f0670` | `r7609844921609527183` |
+| 16 | Universiti Malaya — SPM | `contact@spm.um.edu.my` | EN | `1a0281ea5520e6f8` | `r4247115025540377688` |
+
+**Rédaction.** Salutation identique à l'original (« Hi team, » ×13, « Hola, » ×3 — aucun nom réel dans ces deux lots), une phrase de rappel, une ligne sur l'accès Pro gratuit toujours ouvert, puis **la question de clôture de l'original reprise mot pour mot** avec son destinataire exact (« your surveillance team » ×3, « your team's monitoring » ×2, « your department », « your country teams », « your epidemiology department », « the office's day-to-day monitoring », « your students or research groups », « your researchers or students », « the teams planning your health responses », « the programmes you support », et les 3 questions espagnoles à l'identique).
+
+**4 cas particuliers conservent leur motif propre** au lieu du gabarit générique, conformément à l'étape 3 — ce sont les 4 originaux qui se terminaient sur une demande de redirection :
+
+- **PAHO Honduras** et **PAHO Belize** — la relance redit ne pas savoir si le message a atteint l'unité de vigilance épidémiologique, et redemande le transfert.
+- **MoH Jordanie** — la relance rappelle que la demande portait sur la **Communicable Diseases Directorate**, faute d'adresse publiée pour elle.
+- **MoPH Afghanistan** — idem pour l'équipe **DEWS** (Disease Early Warning System).
+- **FSP-USP** — idem pour le corps enseignant d'épidémiologie de la Faculté.
+
+**Conformité de forme, vérifiée par `list_drafts` en vue complète sur 3 brouillons témoins** (un ES à redirection, un EN à redirection, un EN générique) : aucun `htmlBody` fourni ; le `htmlBody` régénéré par Gmail sur le texte neuf ne contient que `<div dir="auto">` et des `<br/>`, **zéro balise `<a>`** ; **aucun domaine avec un `.` littéral** dans le texte nouveau (« healthwatch-global dot com » ×13, « healthwatch-global punto com » ×3) ; chaque corps se termine par une question avant la signature. *Le corps cité automatiquement par Gmail sous chaque relance contient le lien de l'original — normal et sans impact, aucun lien neuf n'a été introduit.*
+
+**Contrôle du bug d'envoi instantané du connecteur (incident du 15/08) : négatif.** `list_drafts` en fin de run : **les 26 brouillons portent `labelIds: ["DRAFT"]`, aucun n'est passé en `SENT`.**
+
+### ❌ 4 contacts du lot du 22/08 restent exclus — verrous du 01/09 reconduits sans changement
+
+`fhs@aub.edu.lb` et `ishp@shendetesia.gov.al` : **relance unique déjà consommée** (fils d'origine du 07 et 08/08 portant 2 sortants chacun). `secretariat@ieaweb.org` et `ravnateljstvo@hzjz.hr` : **deux premiers contacts reçus** du fait de l'incident de doublons du 22/08, une relance ferait un 3e message. Motifs vérifiés en direct le 01/09, non recontrôlés ce run — aucun élément nouveau ne pouvait les modifier en 24 h.
+
+### ⚠️ Incident technique — un `create_draft` en échec, doublon écarté avant retry
+
+Le brouillon **MoH Jordanie** a d'abord échoué sur `The service is currently unavailable.` Conformément à la prudence acquise sur cet outil, **un `list_drafts` filtré `to:mo@moh.gov.jo` a été passé avant toute reprise** : résultat `{}`, le brouillon n'existait pas. Recréé ensuite, une seule fois. **Vérifié en fin de run : un seul brouillon pour cette adresse.** `list_drafts` par ailleurs **stable** sur les trois appels du run (métadonnées ×2, vue complète ×1) — aucune des incohérences de pagination du 15/08.
+
+### 📊 Bilan cumulé
+
+**Balayage des bounces** (`from:mailer-daemon`, `from:postmaster`, `subject:"Delivery Status Notification"`, `subject:"Undelivered Mail"`, `subject:Undeliverable`, `subject:"Mail delivery failed"`, `subject:"Adresse introuvable"`, `subject:"Address not found"`, `after:2026/08/31`, corbeille incluse) : **un seul fil, celui d'Antigua du 01/09**, déjà consigné. **Aucun bounce neuf.**
+
+**✅ Envoi du remplacement Antigua vérifié en direct, il n'était que déduit.** Le run de prospection de ce matin concluait à son envoi depuis un `list_drafts` vide — précisément le raisonnement invalidé par l'enseignement du 16/08. **Contrôle fait ce run** (`to:ehealth2015@gmail.com OR from:`, corbeille incluse) : le message est bien parti le **01/09 à 07:18:08 UTC**, fil `1a05bd120784a955`, `labelIds: ["SENT"]`. Écart création → envoi ~3 min ; **ce n'est pas le bug d'envoi instantané du connecteur** (qui signe à la même seconde), mais une relecture rapide de David sur un brouillon isolé qu'il venait de signaler lui-même. Aucune réponse, aucun bounce sur cette adresse.
+
+**Bilan bounces cumulés depuis le 02/08 : 21** — recalculé depuis la liste nominative, **+1 par rapport au 29/08**. L'entrée neuve est la 21e ; les 20 premières sont identiques à la liste du 29/08 (l. 3034-3053), non reproduites ici.
+
+21. **MoH Antigua-et-Barbuda** (01/09) — `contact@health.gov.ag`, 550 No Such User, **domaine sans aucun enregistrement MX**. Contact jamais bouncé auparavant : la liste nominative s'allonge bien d'une unité (règle du 17/08). **Écarté définitivement**, aucune relance possible. Remplacement `ehealth2015@gmail.com` parti le 01/09, non bouncé.
+
+**Totaux au 2026-09-02, 06:31 UTC :**
+- **Prospectés : 327** — inchangé depuis le run de prospection de 06:20.
+- **Envoyés : 318** = 317 (état du 01/09 après envoi du lot) **+ 1** (le remplacement Antigua, envoi vérifié en direct ci-dessus). Les 26 brouillons en file ne sont pas partis.
+- **Délivrés : 297** = 318 envoyés − 21 (taille de la liste nominative de bounces), recompté dans le même mouvement que la liste, pas repris d'une ligne précédente.
+- **Taux de délivrabilité : 93,4 % (297/318)** — en baisse de 0,1 pt sur le 01/09, effet du bounce Antigua.
+- **⚠️ Réserve maintenue** : les 318 envoyés comptent **4 envois vers des institutions déjà contactées** (incident du 22/08) et **1 seconde tentative sur Antigua**. Le nombre d'**institutions distinctes** atteintes reste inférieur d'autant.
+- **Relances : 211 envoyées, 16 en attente d'envoi** (lots 21/08 et 22/08, créées ce run) — **total cumulé de relances créées depuis le début : 227** = 211 + 16.
+- **Réponses institutionnelles : aucune nouvelle** depuis le refus Neumann du 01/09 (05:11:28 UTC).
+
+**Profondeur de file en fin de run : 26 brouillons** — 16 relances + 10 prospections du 02/09.
+
+### 📅 Prochains lots
+
+- **24/08** (10 contacts) → J+10 le **03/09**, jamais vérifié en direct.
+- **25/08**, **26/08**, **27/08** → J+10 les 04, 05 et 06/09.
+- **30/08** (7 contacts, envoyés le 01/09 à 04:47-04:48) → J+10 le **11/09**, à compter de la date d'**envoi** et non de création.
+- **01/09** (9 contacts délivrés sur 10) → J+10 le **11/09**.
+- **EUPHA** → fenêtre ouverte depuis le 31/08, **arbitrage David toujours en attente** (3e run consécutif à le signaler).
+- **Fiona Walsh** (`fiona.walsh@uni-heidelberg.de`) → statut comptable toujours en attente d'arbitrage, laissée en « sans réponse ». Sans effet opérationnel, sa relance unique est consommée.
+
+### ⚠️ Signalements
+
+- **Un seul déclenchement de la routine aujourd'hui**, contrairement au 01/09. Le doublon signalé hier ne s'est pas reproduit ; la vérification côté planification reste utile mais n'est plus urgente.
+- **⚠️ Fichiers modifiés non touchés par cette routine, laissés tels quels** (règle `AGENTS.md`) : `marketing/qa/product-claims.manual.json` (modifié), `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis).
