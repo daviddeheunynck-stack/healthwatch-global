@@ -157,6 +157,16 @@ async function probeEdition(issueUrl: string): Promise<CholeraProbe | null> {
 
 // ── 3. Notify ────────────────────────────────────────────────────────────────
 
+// Same helper, same three replacements as sync-pacific-surveillance (l.144) and
+// disease-coverage (l.60). Nothing in this email is typed by a human: `citedUrl`
+// and `rowLabels` are `outbreaks.source` / `disease` / `country` — columns fed by
+// the scrapers from third-party HTML — and `issue.url` comes from WHO's own
+// listing markup. Unescaped, a `<` reaching any of them would land as live markup
+// in the admin's mail client.
+function esc(s: string) {
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
 async function notifyNewUpdate(
   issue: WerIssue,
   dataAsOf: string | null,
@@ -167,9 +177,9 @@ async function notifyNewUpdate(
   if (!to || !BREVO_API_KEY || !isRealProduction) return false;
   const html = `
     <p>Une nouvelle mise à jour choléra multi-pays est parue dans le Relevé épidémiologique hebdomadaire de l'OMS.</p>
-    <p><strong>Édition :</strong> <a href="${issue.url}">wer${issue.volume}-${issue.issue}</a>${dataAsOf ? ` — données arrêtées au ${dataAsOf}` : ""}</p>
-    <p><strong>Édition citée par la base :</strong> <a href="${citedUrl}">${citedUrl}</a></p>
-    <p>${rowLabels.length} ligne(s) concernée(s) : ${rowLabels.join(", ")}.</p>
+    <p><strong>Édition :</strong> <a href="${esc(issue.url)}">wer${issue.volume}-${issue.issue}</a>${dataAsOf ? ` — données arrêtées au ${esc(dataAsOf)}` : ""}</p>
+    <p><strong>Édition citée par la base :</strong> <a href="${esc(citedUrl)}">${esc(citedUrl)}</a></p>
+    <p>${rowLabels.length} ligne(s) concernée(s) : ${rowLabels.map(esc).join(", ")}.</p>
     <p>Les chiffres sont dans une narration par pays à l'intérieur du PDF, pas dans une table exploitable — la reprise est manuelle. Le lien « Download full edition (PDF) » est sur la page de l'édition.</p>
     <p><a href="${ADMIN_PANEL_URL}">Ouvrir l'admin</a></p>`;
   try {
