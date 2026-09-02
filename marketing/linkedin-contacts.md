@@ -88,9 +88,50 @@ Chaque clic vérifié dans le même appel JS : slug du profil comparé, puis lib
 
 ---
 
-### 5️⃣ 🧾 NOTES DE CONNEXION — 0
+### 5️⃣ 🧾 NOTES DE CONNEXION — 0 à la clôture initiale, 1 après reprise (voir 6️⃣)
 
-Aucune invitation envoyée ce run. **Motif assumé** : les deux meilleurs candidats du jour sont soit déjà relation (Jacob Banda, Ghayyoor Sultan, acceptés ce matin), soit déjà en invitation « En attente » (BANZA Freddy Mutoka). Les autres suivis du run sont périphériques ou sans hook frais. **Mohammad Ilias Hossain : note toujours pas retentée**, conformément au carry-over du 31/08 (« ne pas retenter par le même chemin ») — la note reste rédigée et QA-validée, **ne pas la réécrire**.
+Aucune invitation envoyée dans ce premier passage. **Motif assumé** : les deux meilleurs candidats du jour sont soit déjà relation (Jacob Banda, Ghayyoor Sultan, acceptés ce matin), soit déjà en invitation « En attente » (BANZA Freddy Mutoka). Les autres suivis du run sont périphériques ou sans hook frais. **Mohammad Ilias Hossain : note toujours pas retentée**, conformément au carry-over du 31/08 (« ne pas retenter par le même chemin ») — la note reste rédigée et QA-validée, **ne pas la réécrire**.
+
+---
+
+### 6️⃣ REPRISE DU RUN (David présent, quotas non remplis) — 2 suivis de plus, 1 note de connexion envoyée, 1 candidat commentaire abandonné
+
+**Motif de la reprise** : après l'envoi des 4 DM sur ordre explicite de David, les quotas restaient sous la fourchette (commentaires 3/7, notes de connexion 0/7). Poursuite active conformément à la règle « le quota est un objectif à remplir, pas un plafond ».
+
+⚠️ **Incident technique en cours de reprise, résolu sans conséquence** : `list_connected_browsers` a exigé une nouvelle sélection explicite du navigateur (le slot `23c7ecdd-…` s'était reconnecté sous un nouveau timestamp, nom affiché passé de « Browser 2 » à « David »). Re-sélectionné directement par deviceId (§7, le nom n'est qu'un label de slot), tab group recréé, aucune perte de contexte.
+
+**Ligne d'événement Bas-Uele (§16) — vérifiée, aucun support consommé.** Le post d'annonce du briefing Africa CDC du 3 septembre (`urn:li:activity:7500538161094135809`, il y a 21h, confirme date/heure : 16h00 EAT) reste une pure annonce pré-événement, 0 commentaire. **Conformément au carry-over, non traité comme support de commentaire — le briefing n'a pas encore eu lieu.** À rouvrir après le 3 septembre.
+
+**Dr. Ibrahima Socé Fall (carry-over) — toujours aucun hook honnête.** Ses 4 republications récentes sont hors périmètre (formation générique, cardiométabolique, malaria republiée d'un profil bloqué en commentaire) ou sans angle propre. 🔴 **Sa seule prise de parole directe sur Ebola/RDC** (réponse à Bamba Gaye, il y a 1 semaine) est un **grief institutionnel explicite** contre le manque de transparence de la RDC et des partenaires (« *Without transparency and accountability both from DRC and partners, this outbreak is going to last very long* ») — terrain politique pur, §9, **volontairement non exploité, ni en commentaire ni en note**. Reste en carry-over, hook à chercher ailleurs.
+
+**Ana Bento** — post nu (juste un lien FactCheck.org), titre encadré autour d'un débat politique US (immigration illégale vs vaccination) — écarté d'office, §9.
+
+**Prof. Mohamed Janabi** — toujours son post #RC76AFRO d'il y a 4 jours, hors fenêtre 48h. Rien de neuf.
+
+✅ **2 suivis supplémentaires, recherche active (`field epidemiologist outbreak response`)** :
+- ⭐⭐ **Veronicah Masanja** (`/in/veronicah-masanja-0532952bb/`) — *Epidemiologist-Senior Technical Officer at the Africa CDC*, Addis-Abeba, **10 mutuels dont Dr. Ambrose Talisuna et Mosoka Fallah**. Contenu substantiel et dans le périmètre (riposte Bundibugyo/Ouganda, désormais close) mais tout daté de 2-3 mois, rien dans la fenêtre 48h. Suivi seul, vérifié (« Activité · 328 abonnés · **Suivi** »).
+- **betty dipela** (`/in/betty-dipela-a10463b7/`) — *Senior Field Epidemiologist & Immunization Specialist, International Humanitarian Action, Fragile & Conflict-Affected Settings*, Bruxelles, 9 mutuels. Activité quasi nulle (1 seul repost, 4 mois, sujet périphérique). Suivi seul, vérifié (« Activité · 307 abonnés · **Suivi** »).
+- **Deborah Tembo** — écartée, rien de moins de 2 mois et quota déjà atteint (8/7-10). Reste à évaluer une prochaine fois si un hook apparaît.
+
+**Quota suivis final : 8/7-10.**
+
+🔒→✅ **Note de connexion envoyée — Dr. Malachie MANAOUDA** (`/in/dr-malachie-manaouda-11893aa0/`), FR, vouvoiement. *Ministre de la Santé Publique du Cameroun*, déjà suivi depuis le 22/08, source de notre ligne Choléra/Cameroun en base. Hook : son post d'il y a 2 jours, retour de la 76e session du Comité régional OMS Afrique à Addis-Abeba, cite « *quinze mois sans détection de poliovirus au Cameroun* » dans le Bassin du Lac Tchad. **Registre vérifié : aucune ligne Polio/Cameroun n'existe en base** (seule une ligne Choléra existe pour ce pays) — point central de la correction ci-dessous.
+
+🔴 **Le relecteur a fait échouer le 1er jet sur deux points réels.**
+- **(4) Affirmation HWG.** Le brouillon plaçait « *Je suis les foyers actifs pour HealthWatch Global* » juste après la mention du polio camerounais, ce qui laissait croire que HWG suit ce foyer précis — **faux, aucune ligne n'existe**. Corrigé en reformulant sur la veille des bulletins en général, découplée de la mention Cameroun/polio.
+- **(9) Terrain politique.** « *est un chiffre solide à tenir* » portait un jugement évaluatif sur un résultat sanitaire gouvernemental, sous la plume adressée à un ministre en exercice — sensible même en compliment. Retiré au profit d'une reprise neutre du fait (« *m'a marqué* »).
+
+⚠️ **Piège homonyme (§12), vérifié sur pièce avant le clic.** La recherche et la sidebar affichent plusieurs profils similaires : « MANAOUDA Malachie » et « Manaouda Malachie » (tous deux 3e degré, l'un « Docteur en médecine chez faculté de médecine de Yaoundé »), sans rapport avec le Ministre. **Un premier clic a atterri par erreur sur le bouton « Se connecter » d'un de ces homonymes en sidebar** (détecté par lecture du contexte DOM avant tout envoi, aucune invitation n'est partie à ce moment-là) — page rechargée, bon bouton reciblé par coordonnées sous le nom exact « Dr. Malachie MANAOUDA · 2e · 36 relations en commun ». Modale de confirmation relue avant frappe (« Personnalisez l'invitation que vous envoyez à **Dr. Malachie MANAOUDA** »).
+
+⚠️ **Composeur en shadow DOM (`#interop-outlet`), comme pour les DM Julien Tuba/MANAOUDA ce matin** — le champ de note n'est pas trouvable par les sélecteurs standards. Avant l'envoi, dialogue de note isolé par son texte propre (« Ajoutez une note à votre invitation… 192/200 ») et distingué explicitement des deux bulles de messagerie encore ouvertes en parallèle (Julien Tuba, Dossa Paul YAOÏTCHA) — aucun chevauchement, aucun risque d'envoi croisé.
+
+`QA : mécanique PASS (192 car., limite 200, 1 paragraphe, fr/fr, 0 tiret cadratin, 1 review hwg.claim résolue par correction) | relecteur VERDICT: REECRIRE 4, 9 au 1er jet, corrigés — 10 PASS sur 12 par ailleurs | faits cités : aucun de la base (le chiffre « quinze mois » vient du post du destinataire, pas du registre) | registre du 02/09 (09:03) | statut : envoyé le 02/09`
+
+> Bonjour Docteur, votre post d'Addis-Abeba m'a marqué : quinze mois sans poliovirus au Cameroun. Je construis une veille des bulletins sanitaires pour HealthWatch Global. Au plaisir d'échanger.
+
+**Publication confirmée** : bouton passé de « Se connecter » à « **En attente** » sur le profil vérifié, toast de confirmation visible. **Quota notes de connexion : 1/7.**
+
+❌ **Candidat commentaire abandonné après la règle des deux essais — Kyaw Thowai Prue Prince.** Nouvel angle cherché (distinct du commentaire Oke Ikpekpe de ce matin) sur son post TSI : l'adaptation de l'outil au-delà des pathogènes respiratoires. **Deux corrections consécutives ont échoué sur le même défaut** (`ngram.history`, formule déjà servie dans l'historique, à chaque fois une reformulation différente retombant sur une séquence déjà archivée). Conformément à la règle des deux essais (politique commune, §5 point 6) : **candidat abandonné, pas de 3e brouillon forcé.** Aucun commentaire publié, aucun blocage créé, la routine n'est pas bloquée.
 
 ---
 

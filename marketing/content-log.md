@@ -178,7 +178,7 @@ QA: PUBLIÉ ✅ le 02/09 à 09h28 | double-check David 09h18 : registres réconf
 
 **Détail intégral des invitations, suivis, DM et veille messagerie : `linkedin-contacts.md`, entrée du jour.**
 
-**Quotas à la clôture** : commentaires **3/7 publiés** (Adesoye Emmanuel Tunde, Rocham Mulumbwe, Oke Ikpekpe) **+ 1 candidat abandonné après relecture** (BANZA Freddy Mutoka) · **DM 1 rédigé et 🔒 EN FILE**, **+3 toujours en file depuis le 01/09**, 0 envoyé sur 8 · suivis **6/7-10** · **2 invitations reçues acceptées** (4 → 2 en attente) · notes de connexion **0/7** · **0 écriture en base**.
+**Quotas à la clôture** : commentaires **3/7 publiés** (Adesoye Emmanuel Tunde, Rocham Mulumbwe, Oke Ikpekpe) **+ 2 candidats abandonnés** (BANZA Freddy Mutoka après relecture, Kyaw Thowai Prue Prince après la règle des deux essais) · **DM 4 envoyés le 02/09 sur ordre explicite de David** (John Omari Baso, Dossa Paul YAOÏTCHA, Isaias Fernandes Co, Julien Tuba), 0 en file en fin de run · suivis **8/7-10** · **2 invitations reçues acceptées** (4 → 2 en attente) · notes de connexion **1/7 envoyée** (Dr. Malachie MANAOUDA) · **0 écriture en base**. Détail des DM envoyés, des 2 suivis supplémentaires et de la note de connexion : `linkedin-contacts.md`, section 6️⃣ de l'entrée du jour.
 
 ⚠️ **Les créneaux de 13h et 17h du 01/09 n'ont pas tourné** (aucune entrée dans les deux journaux). Conséquence directe : la réponse d'Oke Ikpekpe (01/09 ~14h) et celle de Jacob Banda (01/09 ~12h) n'avaient été vues par personne, et les 3 DM mis en file hier matin n'ont jamais été présentés à David.
 
