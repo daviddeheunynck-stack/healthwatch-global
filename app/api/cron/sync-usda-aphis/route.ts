@@ -359,13 +359,17 @@ async function runUsdaAphis(_req: NextRequest, supabase: SupabaseClient) {
   try {
     // Try each CSV candidate until one succeeds
     for (const url of APHIS_CSV_CANDIDATES) {
-      // fetchWithRetry: 2 attempts, 4s each — safe on a candidate-URL
-      // fallback list: fetchWithRetry never retries a 4xx, so a candidate
-      // that's genuinely gone still falls through to the next one at
-      // roughly the original 8s single-attempt pace. Only a transient
-      // network blip on a preferred candidate now gets a fair second try.
+      // fetchWithRetry: 2 attempts, 8s each (unchanged from the original
+      // single-attempt timeout — this host was measured at 9-10s even for a
+      // fast 404, so halving it as done elsewhere tonight caused every
+      // attempt here to time out before a real response ever arrived,
+      // confirmed 2026-09-02 in the post-rollout verification sweep:
+      // "aphis_unreachable" fired for the first time ever, purely from the
+      // shortened timeout, not a real outage). fetchWithRetry never retries
+      // a 4xx, so a candidate that's genuinely gone still falls through to
+      // the next one; a transient network blip now gets a fair second try.
       // See lib/fetch-retry.ts (2026-09-02).
-      const { response: res } = await fetchWithRetry(url, { headers: FETCH_HEADERS }, { attempts: 2, timeoutMs: 4000, backoffMs: [500] });
+      const { response: res } = await fetchWithRetry(url, { headers: FETCH_HEADERS }, { attempts: 2, timeoutMs: 8000, backoffMs: [500] });
       if (!res || !res.ok) continue; // network error, or 404/4xx — try next
       const ct = res.headers.get("content-type") ?? "";
       const body = await res.text();
@@ -382,10 +386,13 @@ async function runUsdaAphis(_req: NextRequest, supabase: SupabaseClient) {
     if (!csvSource) {
       // No CSV worked — try HTML table page
       console.warn("[usda-aphis] All CSV candidates failed — trying HTML page");
-      // fetchWithRetry: 2 attempts, 7.5s each (worst case ~16s, close to the
-      // original single 15s attempt).
+      // fetchWithRetry: 2 attempts, 15s each — unchanged from the original
+      // single-attempt timeout, same reasoning as the CSV loop above (this
+      // page measured at ~8s even on a fast day; halving the timeout caused
+      // a false "unreachable" on 2026-09-02). maxDuration=300 leaves ample
+      // room for the doubled worst case.
       const { response: htmlRes, error: htmlFetchErr, attemptsMade } = await fetchWithRetry(
-        APHIS_HTML_URL, { headers: FETCH_HEADERS }, { attempts: 2, timeoutMs: 7500, backoffMs: [1000] },
+        APHIS_HTML_URL, { headers: FETCH_HEADERS }, { attempts: 2, timeoutMs: 15_000, backoffMs: [1000] },
       );
       if (!htmlRes) {
         const msg = `[usda-aphis] APHIS unreachable (all CSV + HTML failed): ${errorMessage(htmlFetchErr)} (${attemptsMade} tentative(s))`;
