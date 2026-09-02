@@ -5,7 +5,7 @@ import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { sendBrevoEmail } from "@/lib/brevo-send";
 import { isCollapse, isSpike, deathsExceedCases, isZeroData } from "@/lib/outbreak-guards";
-import { sourceStatusOf, sourceName, isForbiddenSourceHost } from "@/lib/source-trust";
+import { sourceStatusOf, sourceName, isForbiddenSourceHost, PUBLICLY_CLAIMED_SOURCES } from "@/lib/source-trust";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 120;
@@ -1333,6 +1333,59 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
           (unverified.length > shown.length ? ` | +${unverified.length - shown.length} autre(s)` : "") +
           `. Deux causes possibles, à distinguer ligne par ligne : soit la source est réellement faible (réseau social, blog, texte sans URL) et la ligne est à re-sourcer, soit c'est une autorité légitime que personne n'a encore inscrite dans les listes d'éditeurs de lib/source-trust.ts — auquel cas un chiffre vrai s'affiche comme non sourcé. Trancher avec node scripts/check-source-trust.mjs avant toute modification des listes.`,
       });
+    }
+  }
+
+  // ── 4n. Sources publiquement annoncées, zéro ligne active ─────────────────
+  // /methodology liste quatre sources comme "Official data sources" (WHO DON,
+  // ECDC, PAHO, Africa CDC) — voir PUBLICLY_CLAIMED_SOURCES dans
+  // lib/source-trust.ts, dérivé du même tableau plutôt que recopié à part.
+  // Rien ne vérifiait jusqu'ici qu'une source annoncée alimente encore la
+  // base : trouvé le 2026-09-02, Africa CDC est citée dans 359 endroits
+  // (page d'accueil, méthodologie, e-mails d'onboarding/upgrade…) sans une
+  // seule ligne active depuis 22 jours — sync-africa-cdc tournait en erreur
+  // sans que rien ne rapproche ce statut de l'affirmation publique.
+  //
+  // Un zéro seul n'est pas une preuve de panne (des foyers peuvent
+  // légitimement se clore) : n'alerte que si, en plus, aucune écriture —
+  // active ou non — n'est arrivée de cet éditeur depuis son propre seuil de
+  // fraîcheur (staleAfterDays, calé sur la fréquence que /methodology
+  // annonce pour chaque source).
+  {
+    const { data: allSourceRows, error: allSourceErr } = await supabase
+      .from("outbreaks")
+      .select("active, source, updated_at");
+
+    if (allSourceErr) {
+      needsReview.push({
+        label: "[PROVENANCE] Contrôle des sources annoncées impossible",
+        detail: `Lecture des lignes pour la sonde de provenance en échec (${allSourceErr.message}) — aucune vérification ce matin de la couverture des quatre sources annoncées sur /methodology.`,
+      });
+    } else {
+      const activeLabels = new Set<string>();
+      const lastWriteByLabel = new Map<string, string>();
+      for (const r of allSourceRows ?? []) {
+        const label = sourceName(r.source);
+        if (r.active) activeLabels.add(label);
+        const ts = r.updated_at as string | null;
+        if (ts) {
+          const prev = lastWriteByLabel.get(label);
+          if (!prev || ts > prev) lastWriteByLabel.set(label, ts);
+        }
+      }
+
+      for (const claimed of PUBLICLY_CLAIMED_SOURCES) {
+        if (activeLabels.has(claimed.label)) continue;
+        const lastWrite = lastWriteByLabel.get(claimed.label);
+        const ageDays = lastWrite ? (Date.now() - new Date(lastWrite).getTime()) / 86_400_000 : Infinity;
+        if (ageDays <= claimed.staleAfterDays) continue; // encore dans sa fenêtre de grâce
+        needsReview.push({
+          label: `[PROVENANCE] ${claimed.label} annoncée, zéro ligne active`,
+          detail: lastWrite
+            ? `/methodology annonce « ${claimed.label} » comme l'une des quatre sources officielles, mais aucune ligne active ne lui est sourcée. Dernière écriture (active ou non) : ${lastWrite.slice(0, 10)}, soit ${Math.round(ageDays)}j — au-delà du seuil de ${claimed.staleAfterDays}j retenu pour cette source. Vérifier si le cron d'ingestion correspondant est en erreur (health-check) ou si la source a réellement cessé de publier.`
+            : `/methodology annonce « ${claimed.label} » comme l'une des quatre sources officielles, mais aucune ligne — active ou non — n'a jamais été sourcée à cet éditeur. Vérifier le cron d'ingestion correspondant.`,
+        });
+      }
     }
   }
 

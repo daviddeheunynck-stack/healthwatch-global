@@ -47,6 +47,8 @@ import { findCountry } from "@/lib/geo-data";
 import { assessRisk } from "@/lib/outbreak-parser";
 import { dateFloorGuard, collapseGuard, zeroCaseGuard, isYearRollover, lockedRowRegressionGuard, lockedRowIsFreezing } from "@/lib/outbreak-guards";
 import { stampSourceConfirmed } from "@/lib/source-confirmed";
+import { fetchWithRetry } from "@/lib/fetch-retry";
+import { errorMessage } from "@/lib/error";
 
 export const dynamic     = "force-dynamic";
 export const maxDuration = 30;
@@ -137,10 +139,20 @@ async function runSyncMalaysiaDengue(supabase: SupabaseClient) {
     return NextResponse.json({ error: "geo:malaysia missing" }, { status: 500 });
   }
 
-  const res = await fetch(SOURCE_URL, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(20_000) });
+  // fetchWithRetry: 2 attempts, 10s each (worst case 21s vs. maxDuration=30)
+  // on a transient network blip — see lib/fetch-retry.ts (2026-09-02).
+  const { response: res, error: srcFetchErr, attemptsMade } = await fetchWithRetry(
+    SOURCE_URL, { headers: FETCH_HEADERS }, { attempts: 2, timeoutMs: 10_000, backoffMs: [1000] },
+  );
+  if (!res) {
+    const msg = `${errorMessage(srcFetchErr)} (${attemptsMade} tentative(s))`;
+    await logCronRun(supabase, "sync-malaysia-dengue", "error", 0, msg);
+    return NextResponse.json({ error: msg }, { status: 502 });
+  }
   if (!res.ok) {
-    await logCronRun(supabase, "sync-malaysia-dengue", "error", 0, `HTTP ${res.status}`);
-    return NextResponse.json({ error: `HTTP ${res.status}` }, { status: 502 });
+    const msg = `HTTP ${res.status} (${attemptsMade} tentative(s))`;
+    await logCronRun(supabase, "sync-malaysia-dengue", "error", 0, msg);
+    return NextResponse.json({ error: msg }, { status: 502 });
   }
   const html = await res.text();
 

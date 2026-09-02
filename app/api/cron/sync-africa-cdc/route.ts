@@ -27,6 +27,7 @@ import { findMentionedAfricanCountries } from "@/lib/africa-cdc-countries";
 import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
 import { extractAdmin1, geocodeAdmin1 } from "@/lib/geo-extract";
 import { errorMessage } from "@/lib/error";
+import { fetchWithRetry } from "@/lib/fetch-retry";
 import { truncateAtSentence } from "@/lib/truncate-text";
 import { dateFloorGuard, spikeGuard, collapseGuard, zeroCaseGuard, zeroDeathGuard, implausibleDeathsGuard, lockedRowRegressionGuard, lockedRowIsFreezing } from "@/lib/outbreak-guards";
 import { stampSourceConfirmed } from "@/lib/source-confirmed";
@@ -375,21 +376,28 @@ async function runAfricaCdc(_req: NextRequest, supabase: SupabaseClient) {
   const today = new Date().toISOString().substring(0, 10);
 
   // ── 1. Fetch Africa CDC RSS feed ─────────────────────────────────────────
-  let rssXml: string;
-  try {
-    const res = await fetch(AFRICA_CDC_RSS, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(15_000) });
-    if (!res.ok) {
-      console.error(`[africa-cdc] RSS HTTP ${res.status}`);
-      await logCronRun(supabase, "sync-africa-cdc", "error", 0, `Africa CDC RSS HTTP ${res.status}`);
-      return NextResponse.json({ error: `Africa CDC RSS HTTP ${res.status}` }, { status: 502 });
-    }
-    rssXml = await res.text();
-  } catch (e) {
-    console.error("[africa-cdc] fetch RSS:", errorMessage(e));
-    Sentry.captureException(e, { tags: { cron: "sync-africa-cdc" } });
-    await logCronRun(supabase, "sync-africa-cdc", "error", 0, errorMessage(e));
-    return NextResponse.json({ error: errorMessage(e) }, { status: 502 });
+  // fetchWithRetry: a transient network blip used to cost this daily cron a
+  // full 24h cycle (found 2026-09-02 — see lib/fetch-retry.ts). Deliberately
+  // capped at 2 attempts / 8s each (worst case 17s, vs. 15s for the single
+  // original attempt): the per-article loop below has no time-budget guard
+  // of its own against maxDuration=60, so the retry can't eat much of it.
+  const { response: res, error: rssFetchErr, attemptsMade } = await fetchWithRetry(
+    AFRICA_CDC_RSS, { headers: FETCH_HEADERS }, { attempts: 2, timeoutMs: 8000, backoffMs: [1000] },
+  );
+  if (!res) {
+    const msg = `${errorMessage(rssFetchErr)} (${attemptsMade} tentative(s))`;
+    console.error("[africa-cdc] fetch RSS:", msg);
+    Sentry.captureException(rssFetchErr ?? new Error(msg), { tags: { cron: "sync-africa-cdc" } });
+    await logCronRun(supabase, "sync-africa-cdc", "error", 0, msg);
+    return NextResponse.json({ error: msg }, { status: 502 });
   }
+  if (!res.ok) {
+    const msg = `Africa CDC RSS HTTP ${res.status} (${attemptsMade} tentative(s))`;
+    console.error(`[africa-cdc] ${msg}`);
+    await logCronRun(supabase, "sync-africa-cdc", "error", 0, msg);
+    return NextResponse.json({ error: msg }, { status: 502 });
+  }
+  const rssXml = await res.text();
 
   const items = parseRSSFeed(rssXml);
   console.log(`[africa-cdc] Found ${items.length} recent item(s) within ${MAX_AGE_DAYS} days`);

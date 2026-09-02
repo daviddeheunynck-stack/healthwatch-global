@@ -28,6 +28,7 @@ import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { sendBrevoEmail } from "@/lib/brevo-send";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { errorMessage } from "@/lib/error";
+import { fetchWithRetry } from "@/lib/fetch-retry";
 import { regressionGuard, lockedRowRegressionGuard } from "@/lib/outbreak-guards";
 import { stampSourceConfirmed } from "@/lib/source-confirmed";
 import * as Sentry from "@sentry/nextjs";
@@ -131,18 +132,21 @@ interface SitrepData {
 }
 
 async function extractFromPdf(pdfUrl: string, num: number): Promise<{ data: SitrepData | null; text: string | null }> {
-  let buffer: Buffer;
-  try {
-    const res = await fetch(pdfUrl, {
-      headers: FETCH_HEADERS,
-      signal: AbortSignal.timeout(30000),
-    });
-    if (!res.ok) { console.log(`[drc-sitrep] PDF download → HTTP ${res.status}`); return { data: null, text: null }; }
-    buffer = Buffer.from(await res.arrayBuffer());
-  } catch (e) {
-    console.log("[drc-sitrep] PDF download:", errorMessage(e));
+  // fetchWithRetry: 2 attempts, 15s each (worst case 32s vs. maxDuration=60,
+  // leaving room for pdf-parse afterwards) on a transient network blip — see
+  // lib/fetch-retry.ts (2026-09-02).
+  const { response: res, error: fetchErr, attemptsMade } = await fetchWithRetry(
+    pdfUrl, { headers: FETCH_HEADERS }, { attempts: 2, timeoutMs: 15_000, backoffMs: [2000] },
+  );
+  if (!res) {
+    console.log(`[drc-sitrep] PDF download: ${errorMessage(fetchErr)} (${attemptsMade} tentative(s))`);
     return { data: null, text: null };
   }
+  if (!res.ok) {
+    console.log(`[drc-sitrep] PDF download → HTTP ${res.status} (${attemptsMade} tentative(s))`);
+    return { data: null, text: null };
+  }
+  const buffer = Buffer.from(await res.arrayBuffer());
 
   let text: string;
   try {

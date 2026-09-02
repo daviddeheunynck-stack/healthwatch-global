@@ -377,3 +377,26 @@ export function publishableSourceName(source: string | null | undefined): string
   if (!source) return null;
   return isForbiddenSourceHost(source) ? null : sourceName(source);
 }
+
+// ── Publiquement annoncées comme fournisseurs ────────────────────────────────
+// Les quatre sources listées comme "Official data sources" sur /methodology
+// (app/[locale]/methodology/page.tsx, tableau `sources`) — le nom ici est
+// exactement la valeur que sourceName() renvoie pour cette source, pas un
+// libellé recopié à part. Utilisé par data-quality section 4n pour vérifier
+// qu'une source annoncée alimente au moins une ligne active, sur le même
+// principe que la sonde de couverture GPEI (section 4j) : une affirmation
+// publique invérifiée finit par diverger silencieusement de la base — c'est
+// exactement ce qui est arrivé à Africa CDC (0 ligne active, trouvé 2026-09-02).
+//
+// `staleAfterDays` fixe le délai avant qu'un zéro actif devienne un signal :
+// une source peut légitimement retomber à zéro (foyers clos) sans être en
+// panne, donc la sonde n'alerte que si, en plus, aucune écriture (active ou
+// non) n'est arrivée de cet éditeur depuis ce délai. Calé sur la fréquence que
+// /methodology annonce elle-même pour chaque source — WHO DON tourne à
+// l'heure, les trois autres sont hebdomadaires/par événement.
+export const PUBLICLY_CLAIMED_SOURCES: ReadonlyArray<{ label: string; staleAfterDays: number }> = [
+  { label: "WHO DON",    staleAfterDays: 3 },
+  { label: "ECDC",       staleAfterDays: 14 },
+  { label: "PAHO",       staleAfterDays: 14 },
+  { label: "Africa CDC", staleAfterDays: 14 },
+];
