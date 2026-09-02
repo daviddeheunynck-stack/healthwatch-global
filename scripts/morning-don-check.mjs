@@ -342,7 +342,19 @@ const CLUSTER_EDITION_CHECKED = {
   // le bloc « Inside this edition » ne porte que « Highlighted signals and events » et le position
   // paper sur les vaccins typhoïdiques — pas d'update choléra. Le WER 101-31 (données au 28/06,
   // déjà appliqué) reste donc la dernière édition portant le tableau multi-pays. Rien à écrire.
-  Cholera: "2026-08-18",
+  // Revérifié le 02/09 : l'édition courante du listing est le WER 101-34, dont le bloc « Inside
+  // this edition » ne porte que « Highlighted signals and events », le point hebdomadaire sur les
+  // virus respiratoires et la réunion conjointe ACSoMP/GACVS — pas d'update choléra. Le WER 101-33
+  // (16/08, semaine épi. 33) a été ouvert explicitement pour couvrir le trou laissé entre le
+  // 101-32 déjà vérifié le 18/08 et le 101-34 : il porte les signaux et un article de mise en
+  // perspective sur l'épidémie de Bundibugyo en RDC ; le choléra n'y apparaît que comme ligne du
+  // tableau d'évaluation des signaux pour l'Afrique, sans tableau par pays ni date d'arrêté — ce
+  // n'est pas l'update mensuel. Les 3 éditions parues depuis le 101-31 sont donc toutes écartées
+  // et le WER 101-31 (données au 28/06, déjà appliqué) reste la dernière édition portant le
+  // tableau multi-pays. Rien à écrire.
+  // ⚠️ Rappel de méthode : l'update est MENSUEL, un numéro plus récent n'est pas une donnée plus
+  // récente — vérifier le marqueur dans l'édition, jamais le seul numéro.
+  Cholera: "2026-09-02",
   // MERS-CoV : DON591 toujours le dernier ; revérifié le 17/08 sur la page « MERS-CoV worldwide
   // overview » de l'ECDC, dont l'arrêté est passé au 03/08/2026 — toujours 2 cas / 1 décès en
   // Arabie saoudite depuis le 1er janvier 2026, et toujours 2 649 cas / 960 décès dans le monde
