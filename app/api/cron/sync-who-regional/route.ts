@@ -1179,47 +1179,81 @@ async function extractMeningitisTable(buf: Buffer): Promise<Map<string, { cases:
   return null;
 }
 
+interface MeningitisBulletin {
+  table: Map<string, { cases: number; deaths: number }>;
+  year:  number;
+  week:  number;
+  url:   string;
+}
+
+// Module-level cache for the ONE candidate-week/folder search shared by all 4
+// meningitis-belt targets — before 2026-09-02 each target independently
+// re-ran the same up-to-18-URL search (candidates × MENINGITIS_FOLDERS) from
+// scratch, even though the discovered edition and its table are identical for
+// every country (only the final `table.get(label)` lookup differs). Reset at
+// the top of runSyncWhoRegional() so a warm serverless container never serves
+// a previous run's cached edition across days.
+let meningitisCache: Promise<MeningitisBulletin | null> | null = null;
+
+async function getMeningitisBulletin(): Promise<MeningitisBulletin | null> {
+  if (!meningitisCache) {
+    meningitisCache = (async () => {
+      const ua = "HealthWatch-Global/1.0 (health surveillance; contact@healthwatch-global.com)";
+      const { year: curYear, week: curWeek } = currentIsoWeek();
+      const LOOKBACK = 6;
+
+      const candidates: Array<{ year: number; week: number }> = [];
+      for (let w = curWeek; w > Math.max(0, curWeek - LOOKBACK); w--) candidates.push({ year: curYear, week: w });
+      // Meningitis-belt season spans Nov-Jun across the year boundary — early in
+      // a new year, the latest real edition may still be numbered in the 40s-50s
+      // of the previous year.
+      if (curWeek <= 8) for (let w = 53; w >= 44; w--) candidates.push({ year: curYear - 1, week: w });
+
+      for (const { year, week } of candidates) {
+        const wk = String(week).padStart(2, "0");
+        for (const folderTpl of MENINGITIS_FOLDERS) {
+          const folder = folderTpl.replace("{year}", String(year));
+          const url = `https://cdn.who.int/media/docs/${folder}/meningitis_bulletin_${year}_week_${wk}.pdf`;
+          // fetchWithRetry: 2 attempts, 7.5s each. Safe on every one of up to
+          // 18 candidates — most misses here are a deliberate 404 (guessing
+          // which week/folder is the real edition), and fetchWithRetry never
+          // retries 4xx, so the worst case stays close to the original single
+          // 15s attempt per candidate. Only a genuine transient blip on the
+          // URL that WOULD have worked gets the extra try. See
+          // lib/fetch-retry.ts (2026-09-02).
+          const { response: res } = await fetchWithRetry(url, { headers: { "User-Agent": ua } }, { attempts: 2, timeoutMs: 7500, backoffMs: [500] });
+          if (!res || !res.ok) continue;
+          try {
+            const table = await extractMeningitisTable(Buffer.from(await res.arrayBuffer()));
+            if (!table) continue;
+            return { table, year, week, url };
+          } catch {
+            continue;
+          }
+        }
+      }
+      return null;
+    })();
+  }
+  return meningitisCache;
+}
+
 function fetchMeningitisAFRO(country_en: string): () => Promise<Found | null> {
   return async () => {
     const label = Object.entries(MENINGITIS_LABELS).find(([, en]) => en === country_en)?.[0];
     if (!label) return null;
 
-    const ua = "HealthWatch-Global/1.0 (health surveillance; contact@healthwatch-global.com)";
-    const { year: curYear, week: curWeek } = currentIsoWeek();
-    const LOOKBACK = 6;
-
-    const candidates: Array<{ year: number; week: number }> = [];
-    for (let w = curWeek; w > Math.max(0, curWeek - LOOKBACK); w--) candidates.push({ year: curYear, week: w });
-    // Meningitis-belt season spans Nov-Jun across the year boundary — early in
-    // a new year, the latest real edition may still be numbered in the 40s-50s
-    // of the previous year.
-    if (curWeek <= 8) for (let w = 53; w >= 44; w--) candidates.push({ year: curYear - 1, week: w });
-
-    for (const { year, week } of candidates) {
-      const wk = String(week).padStart(2, "0");
-      for (const folderTpl of MENINGITIS_FOLDERS) {
-        const folder = folderTpl.replace("{year}", String(year));
-        const url = `https://cdn.who.int/media/docs/${folder}/meningitis_bulletin_${year}_week_${wk}.pdf`;
-        try {
-          const res = await fetch(url, { headers: { "User-Agent": ua }, signal: AbortSignal.timeout(15_000) });
-          if (!res.ok) continue;
-          const table = await extractMeningitisTable(Buffer.from(await res.arrayBuffer()));
-          if (!table) continue;
-          const row = table.get(label);
-          if (!row || row.cases <= 0) return null; // verified table, but no data for this country this edition
-          return {
-            cases:  row.cases,
-            deaths: row.deaths,
-            date:   isoWeekEndDate(year, week),
-            source: url,
-            description: `Meningitis in ${country_en} — WHO AFRO reported ${row.cases.toLocaleString("en")} cumulative case${row.cases > 1 ? "s" : ""}${row.deaths > 0 ? ` and ${row.deaths.toLocaleString("en")} death${row.deaths > 1 ? "s" : ""}` : ""}, weeks 1-${week} of ${year}. Source: WHO AFRO Meningitis Weekly Bulletin (cross-checked against the bulletin's own printed regional total).`,
-          };
-        } catch {
-          continue;
-        }
-      }
-    }
-    return null;
+    const bulletin = await getMeningitisBulletin();
+    if (!bulletin) return null;
+    const row = bulletin.table.get(label);
+    if (!row || row.cases <= 0) return null; // verified table, but no data for this country this edition
+    return {
+      cases:  row.cases,
+      deaths: row.deaths,
+      date:   isoWeekEndDate(bulletin.year, bulletin.week),
+      source: bulletin.url,
+      description: `Meningitis in ${country_en} — WHO AFRO reported ${row.cases.toLocaleString("en")} cumulative case${row.cases > 1 ? "s" : ""}${row.deaths > 0 ? ` and ${row.deaths.toLocaleString("en")} death${row.deaths > 1 ? "s" : ""}` : ""}, weeks 1-${bulletin.week} of ${bulletin.year}. Source: WHO AFRO Meningitis Weekly Bulletin (cross-checked against the bulletin's own printed regional total).`,
+    };
   };
 }
 
@@ -1662,11 +1696,13 @@ async function runSyncWhoRegional(_req: NextRequest, supabase: SupabaseClient) {
   // Rows this run re-read from the source and found unchanged — stamped as
   // verified in one batched write after the loop (see lib/source-confirmed.ts).
   const sourceConfirmed: string[] = [];
-  // Reset the GPEI/WNV shared-page caches for this run — see getGpeiSection()
-  // and getWnvSeason() above. Without this, a warm serverless container could
-  // in principle serve a previous invocation's cached page across days.
-  gpeiSectionCache = null;
-  wnvSeasonCache   = null;
+  // Reset the GPEI/WNV/meningitis shared-page caches for this run — see
+  // getGpeiSection(), getWnvSeason() and getMeningitisBulletin() above.
+  // Without this, a warm serverless container could in principle serve a
+  // previous invocation's cached page across days.
+  gpeiSectionCache  = null;
+  wnvSeasonCache    = null;
+  meningitisCache   = null;
   const loopStart = Date.now();
 
   // Process each target
