@@ -2701,4 +2701,31 @@ const res = await fetch(AFRICA_CDC_RSS, { headers: FETCH_HEADERS, signal: AbortS
 **Risque/inconnue :** (a) trois tentatives sur un cron qui enchaîne ensuite N fetchs par article peuvent approcher le `maxDuration` — d'où le périmètre limité au listing ; (b) réessayer masque la fréquence réelle des incidents si on n'en garde pas trace, d'où le compteur de tentatives dans le journal ; (c) je n'ai pas mesuré le taux d'échec au-delà de 14 jours, la rétention Sentry consultable s'arrête là — les 4 jours perdus mesurés sont donc un plancher, pas un total.
 
 
-**Statut des deux idées : PROPOSÉE.** Construction évaluée à l'étape suivante (garde-fous + verrou de code partagé).
+**Statut initial des deux idées : PROPOSÉE** — issue de la construction ci-dessous.
+
+### Construction — reportée, verrou de code tenu par `daily-security-audit-healthwatch`
+
+Les deux idées passent les trois garde-fous (effort petit, aucune migration, aucun e-mail client — la moitié **(b)** de l'idée 1 en est explicitement exclue et n'est pas proposée à la construction). Elles n'ont pourtant pas été construites : le verrou de code partagé, en place depuis ce matin (`_shared/code-lock.md`), était déjà pris.
+
+**Statut des deux idées : construction reportée — verrou de code pris par `daily-security-audit-healthwatch` jusqu'au 2026-09-02T17:10:25Z, retentée au prochain run.**
+
+Sortie verbatim de la tentative d'acquisition, faite juste avant la première édition de code comme le veut le protocole :
+
+```
+$ node _shared/code-lock.mjs acquire daily-product-ideas-healthwatch
+REFUSE — verrou tenu par "daily-security-audit-healthwatch" jusqu'au 2026-09-02T17:10:25.568Z (acquis 2026-09-02T16:10:25.568Z).
+EXIT=1
+```
+
+Le verrou n'ayant pas été acquis, il n'est **pas** relâché par ce run — relâcher un verrou tenu par une autre routine serait pire que le contention qu'il évite.
+
+Conformément au protocole, aucune édition de `app/`, `lib/` ou `components/` n'a été faite ce soir, et le travail hors code (mesures, proposition, journal) a été mené jusqu'au bout.
+
+### Ce qui reste chez David
+
+1. **Idée 1, moitié (b)** — décision de positionnement sur l'annonce « Africa CDC », la seule des deux moitiés qui ne se construit pas seule. C'est aussi la seule chose de ce run qu'un prospect peut voir aujourd'hui.
+2. Les deux constructions repartent d'elles-mêmes au prochain run si le verrou est libre.
+
+### Fichiers modifiés par d'autres, laissés intacts (AGENTS.md)
+
+`marketing/qa/product-claims.manual.json` (modifié), `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis) étaient déjà présents au début de ce run — ce sont les mêmes trois qu'au run du matin. Non committés, non stashés, non annulés.
