@@ -2616,3 +2616,89 @@ David a demandé la construction en session interactive (« Construis l'idée 1 
 **Non fait, et volontairement** : le regroupement par maladie (« Choléra — 7 pays ») évoqué ce matin comme piste de lisibilité pour un très gros lot (105 foyers) n'a pas été construit — hors du périmètre chiffré à David ce matin, et une extension de scope non demandée. Le texte plat construit répond à l'utilisateur du 31/08 (26 foyers coupés sur son plus gros lot), pas nécessairement à un lot de 100+.
 
 **Effet réel au prochain envoi** : un utilisateur dont le lot dépasse 10 foyers verra désormais la liste complète des maladies/pays coupés, plus un e-mail de quelques centaines d'octets à quelques Ko selon la taille du lot (mesuré ce matin : ~3,5 Ko de texte pour 105 foyers).
+
+---
+
+## 2026-09-02 (run du soir, 18h20) — Proposition du jour
+
+Deuxième passage de la routine aujourd'hui (l'entrée du matin ci-dessus est close : ses deux idées sont livrées, `8cb6acaf` et `2048f6a9`). Angle de ce soir : la **provenance annoncée** et la **résilience d'ingestion**, mesurées en direct sur la prod (`.env.local.live`, lectures seules).
+
+### 1. 🔴 « Africa CDC » est annoncée comme l'une des quatre sources du produit sur toute la surface publique — et n'alimente **aucune** des 128 lignes actives
+
+**Signal.** Relevé de la base de prod ce soir, source par source :
+
+```
+lignes en base            : 294   (dont 128 actives)
+source = africacdc.org    :   2   (dont 0 active)
+   · Ebola/RDC     — inactive, dernière écriture 2026-08-12
+   · Ebola/Global  — inactive, dernière écriture 2026-07-15
+sync-africa-cdc — dernier insert/update (lastNonZero) : 2026-08-11  →  22,3 jours
+sync-africa-cdc — statut du dernier passage (02/09 09h10 UTC)       : error / "fetch failed"
+```
+
+Deux lignes actives *mentionnent* Africa CDC dans leur description (CCHF/Sénégal, Chikungunya/Maurice) mais sont sourcées ailleurs (`mesvaccins.net`, un PDF de l'État de New York) : c'est de la reprise de seconde main, pas une ingestion.
+
+**Ce que le produit dit, en face.** `Africa CDC` apparaît **359 fois dans 62 fichiers** hors code de fetch. Les plus chargés sont exactement les surfaces qu'un prospect voit en premier :
+
+```
+components/LandingPage.tsx            45    app/[locale]/pilot/page.tsx        11
+app/[locale]/about/page.tsx           28    lib/upgrade-email.ts               10
+app/[locale]/methodology/page.tsx     25    components/HeroBanner.tsx          10
+app/[locale]/diseases|countries       15    lib/welcome-email.ts                5
+app/[locale]/(dashboard)/page.tsx     13    lib/digest-email.ts / churn-email    5
+```
+
+plus l'image OG, le `manifest.ts`, le flux RSS, le flux JSON, la carte de partage d'un foyer, le pied de page du PDF régional et l'e-mail de confirmation d'abonnement — en cinq langues à chaque fois.
+
+Et ce ne sont pas des mentions vagues. `/methodology` affirme trois choses vérifiables et fausses aujourd'hui :
+- tableau des sources : `Africa CDC · couverture Afrique · « Per event + weekly sitrep »` ;
+- tableau des régions : `Afrique — Africa CDC + bulletins WHO AFRO · « Broadest regional coverage »` ;
+- déduplication : `WHO DON > ECDC > PAHO > Africa CDC` — un ordre de priorité sur une source qui n'a jamais de ligne à départager.
+
+La page de tarifs va plus loin (`messages/*.json`, clé `realtimeProDesc`, argument de vente du plan Pro) : « *the moment our hourly WHO, ECDC, PAHO & Africa CDC sync detects it* ».
+
+**Pourquoi c'est un angle neuf et pas la re-proposition du 29/07.** L'entrée du 29/07 traitait le défaut inverse — la page méthodologie **sous-déclarait** le pipeline (13 crons réels, 4 sources annoncées) — et le correctif de ce soir-là a porté sur `/methodology` seule. Le sens inverse n'a jamais été regardé : une source **annoncée** dont la base ne porte rien. Et la mémoire `project_faq5_sources_claim_narrower_than_reality_2026_08_26` a laissé le sujet ouvert côté FAQ sans mesurer ce cas-ci.
+
+**La couverture Afrique, elle, existe** — via `who.int`, `polioeradication.org` (13 lignes polio ajoutées le 22/08), `ncdc.gov.ng`, `afro.who.int`, `tchadinfos.com`, `enqueteplus.com`. Le défaut n'est donc pas un trou de couverture, c'est une **attribution fausse** : on nomme un fournisseur qui ne fournit pas. Pour un public d'épidémiologistes — et sur la zone que HWG prospecte le plus, d'où viennent les deux seuls retours utilisateurs réels — c'est une affirmation qui ne survit pas à cinq minutes de vérification.
+
+**Ce que la source publie pendant ce temps** (flux relu ce soir, 10 items, tous de moins de 45 jours) : *Uganda ends Ebola outbreak following completion of 42-day countdown* (27/08), *Africa CDC and WHO welcome the allocation of Ebola vaccines to the DRC* (20/08), *Three Months into the Bundibugyo Ebola Outbreak* (17/08). Le flux est vivant et parle du foyer phare de la base (Ebola/RDC, ligne verrouillée `source_priority=10`). Rien n'en arrive. *(Vérifié : Ebola/Ouganda est déjà inactive depuis le 29/07 — l'item du 27/08 n'aurait rien changé, je ne le compte pas comme une donnée manquée.)*
+
+**Correctif proposé, en deux moitiés qu'il ne faut pas confondre.**
+- **(a) Mécanique, et c'est celle-ci que la routine construit** : une sonde dans `data-quality`, section `4n`, sur le modèle exact de la sonde GPEI livrée le 22/08 (section `4j`) — pour chaque source **nommée publiquement** comme fournisseur (WHO, ECDC, PAHO, Africa CDC), compter les lignes actives dont l'hôte source correspond, et remonter dans `needsReview` toute source annoncée à zéro ligne active. Elle aurait crié il y a des semaines. Effort : petit, aucune migration, aucun e-mail client, un seul fichier.
+- **(b) Éditoriale, et elle appartient à David** : que faire de l'annonce elle-même. Trois options — réparer le pipeline (mais rien ne garantit qu'Africa CDC republie de l'exploitable au format attendu), qualifier la mention (« sources : OMS, ECDC, PAHO, Africa CDC, WHO AFRO, NCDC… » sans hiérarchie promise), ou la retirer. Non construite : c'est un choix de positionnement, et le retrait toucherait aussi `welcome-email.ts`, `upgrade-email.ts`, `churn-email.ts` et `digest-email.ts`, donc du contenu d'e-mails partant à des clients réels — garde-fou 3.
+
+**Effort :** petit pour (a). Non chiffré pour (b), qui est une décision avant d'être un chantier.
+
+**Risque/inconnue :** (a) la sonde a besoin d'une correspondance hôte→source annoncée écrite à la main, donc d'une liste à tenir — c'est le même défaut que le contrôle « pays câblé, zéro ligne » du 24/08, qui comparait la base à une copie manuelle périmée ; à dériver de `lib/source-trust.ts` plutôt que de recopier une liste. (b) Une source peut légitimement passer à zéro ligne active sans être en panne (foyers clos) — la sonde doit donc dire « zéro **et** aucune écriture depuis N jours », pas « zéro » seul.
+
+### 2. 🟠 Aucun des 51 crons ne réessaie un fetch : un incident réseau d'une seconde coûte un cycle entier — jusqu'à **sept jours** pour les six crons du lundi
+
+**Signal.** Ce qui a mis `sync-africa-cdc` en `error` ce matin n'est pas une panne de la source : le flux répond parfaitement depuis ici, avec **les en-têtes exacts de la prod** — 20 requêtes sur 20 en succès, 95 304 octets à chaque fois, et un certificat TLS valide jusqu'au 16/10 sur 12 sondes. C'était un incident transitoire, et une seule tentative a suffi à perdre la journée.
+
+**Mesuré dans Sentry** (fenêtre consultable de 14 jours, `statsPeriod` plafonné à `14d` par l'API) :
+
+```
+TypeError: fetch failed                        cron:sync-africa-cdc   2 jours : 28/08, 02/09
+TimeoutError: operation aborted due to timeout cron:check-new-don     2 jours : 21/08, 02/09
+```
+
+Le coût n'est pas le même selon la cadence, et c'est là qu'est le vrai point : `check-new-don` tourne **toutes les heures** (`20 * * * *`) — un timeout lui coûte une heure, il se rattrape seul. `sync-africa-cdc` tourne **une fois par jour** (`10 9 * * *`) — il perd 24 h. Et six crons de source ne tournent que le **lundi** (`sync-endemic-data`, `sync-pacific-surveillance`, `sync-wpro-dengue-update`, `sync-samoa-dengue`, `check-wer-cholera`, `send-sitrep-emails`) : pour eux, un `ECONNRESET` d'une seconde coûte **une semaine entière** d'ingestion, en silence, avec un `status: "error"` que personne ne distingue d'un échec de fond.
+
+**La cause est structurelle et tient en une ligne, répétée 51 fois.** Chaque cron fait exactement une tentative :
+
+```ts
+const res = await fetch(AFRICA_CDC_RSS, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(15_000) });
+```
+
+`grep` sur `app/api/cron/**` et `lib/**` : **aucun helper de réessai n'existe dans le dépôt**, et aucun cron n'en implémente un à la main. Le budget est pourtant là — `vercel.json` accorde `maxDuration: 300` à `app/api/cron/**`, et `sync-africa-cdc` se déclare à 60 s pour un fetch de 15 s.
+
+**Pourquoi ça compte au-delà de l'hygiène.** C'est la mémoire `reference_govt_sites_need_browser_user_agent` prise par l'autre bout : là, six runs de fausse panne venaient d'un filtrage d'en-tête ; ici, une vraie panne d'une seconde devient un trou d'une semaine. Dans les deux cas le produit conclut « la source est muette » sur la preuve d'une seule requête.
+
+**Correctif proposé.** Un helper partagé — `lib/fetch-retry.ts`, `fetchWithRetry(url, init, { attempts: 3, backoffMs: [1000, 4000] })` — qui ne réessaie que sur échec réseau et sur 502/503/504 (jamais sur 403 ni 404 : un filtrage d'UA ou un soft-404 n'est pas un incident transitoire et le marteler serait pire), et qui journalise le nombre de tentatives dans le message de `logCronRun` pour qu'un flux devenu instable finisse par se voir. Appliqué d'abord au **fetch de listing** des crons quotidiens et hebdomadaires — pas aux boucles par article, qui ont déjà leur propre budget de temps global.
+
+**Effort :** petit — un fichier neuf d'une trentaine de lignes, plus un remplacement d'appel par cron de source. Aucune migration, aucun e-mail client.
+
+**Risque/inconnue :** (a) trois tentatives sur un cron qui enchaîne ensuite N fetchs par article peuvent approcher le `maxDuration` — d'où le périmètre limité au listing ; (b) réessayer masque la fréquence réelle des incidents si on n'en garde pas trace, d'où le compteur de tentatives dans le journal ; (c) je n'ai pas mesuré le taux d'échec au-delà de 14 jours, la rétention Sentry consultable s'arrête là — les 4 jours perdus mesurés sont donc un plancher, pas un total.
+
+
+**Statut des deux idées : PROPOSÉE.** Construction évaluée à l'étape suivante (garde-fous + verrou de code partagé).
