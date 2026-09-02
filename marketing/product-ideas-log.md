@@ -2935,3 +2935,36 @@ David a demandé de vérifier que les 51 crons tournent sans erreur, suite au ro
 **Leçon retenue pour tout calibrage futur** : le principe « moitié du timeout, deux tentatives, même pire cas » n'est sûr que si le timeout raccourci reste supérieur au temps de réponse réel de la source en régime normal — vrai pour les 17 autres sources retenues ce soir (mesurées à moins d'une seconde), faux pour APHIS. Un calibrage par défaut ne remplace pas une mesure réelle quand la source est connue pour être lente.
 
 **Bilan final : les 20 crons touchés ce soir tournent tous sans erreur en prod, vérifié par appel direct et non par simple lecture de code.** Les 31 crons non modifiés n'ont pas été re-testés (aucun changement à vérifier) ; leur dernier statut connu (relevé plus tôt ce soir, avant le rollout) ne montrait aucune anomalie liée à ce travail.
+
+### Suite du même soir (02/09, session interactive) — rollout retry aux crons de source restants (31 crons du fleet non touchés ce soir)
+
+David a demandé le rollout sur le reste des crons non touchés (« rollout retry sur le reste des crons non touchés »). Verrou de code réacquis, édition faite, relâché après le push.
+
+**Survey systématique des `fetch()` des 31 crons restants avant toute édition** (mêmes principes que toute la soirée : distinguer ingestion externe vs envoi vers un vrai destinataire, ne jamais toucher un envoi).
+
+**Exclus délibérément — crons d'envoi, jamais candidats au retry.** `trigger-webhooks`, `watchlist-alerts`, `disease-alerts`, `push-alerts`, `regional-alerts`, `onboarding-sequence`, `weekly-digest`, `winback-sequence`, `send-sitrep-emails`, `trigger-tripwires`, `trigger-subscriber-alerts`, `trigger-pheic-alerts`, `trigger-regional-digest`, `pilot-follow-up`, `pilot-closing-reminder` : tous font un `POST` vers `api.brevo.com` (envoi réel à un abonné/pilote) ou vers l'URL webhook d'un client (`trigger-webhooks`). Ajouter du retry là-dessus risquerait un envoi/livraison dupliqué à un vrai destinataire si la requête aboutit côté serveur mais que la réponse expire côté nôtre — même famille de garde-fou que la règle maison sur les e-mails clients, jamais assouplie ce soir.
+
+**Exclus, autres raisons.** `health-check` (3 fetch en lecture seule — auto-scan du site + stats Brevo — plus 1 envoi admin ; hors périmètre « ingestion de source », pas urgent). `sync-ncdc` (suspendu le 02/09 pour raison légale, plus aucun fetch depuis ce jour). `enrich-admin1`, `sync-signals`, `disease-coverage`, `sync-brevo-blocklist`, `weekly-signal`, `signup-canary`, `expire-trials` : aucun fetch externe trouvé, rien à envelopper.
+
+**✅ CONSTRUIT, commit `fce8f58d`** (fusionné avec `b2588576`, une correction non liée poussée par une autre session pendant ce run — fusion propre, aucun chevauchement de fichiers) — trois sites d'ingestion externe réels trouvés et corrigés :
+
+1. **`lib/who-api.ts`, `fetchWHODONList()`** — **LE fetch le plus exécuté du produit**, partagé par `sync-outbreaks` ET `check-new-don`, tous deux **horaires**. Contrat « lève une exception » préservé à l'identique (les deux appelants l'encapsulent déjà dans leur propre `try/catch`) — **aucune modification nécessaire dans ces deux fichiers**, seul le point d'entrée partagé a changé.
+2. **`sync-cdc-han`**, fetch de listing (étape 1) — même forme exacte que les 14 crons traités plus tôt ce soir.
+3. **`data-quality`, `fetchGPEIThisWeek()`** (section 4j) — appel unique par run, distinct de la page GPEI mise en cache dans `sync-who-regional` (deux pages GPEI différentes utilisées à des fins différentes).
+
+**Calibrage : timeout par tentative INCHANGÉ par rapport à l'original partout** (15s WHO DON/cdc-han, 8s GPEI) plutôt que raccourci — leçon tirée du faux « aphis_unreachable » de ce soir (`6ba10a5a`) : pas de raccourcissement de timeout sans avoir mesuré la latence réelle de la source.
+
+**Volontairement pas touché, documenté plutôt que forcé** : `data-quality`, `verifyFromDON()` (sections 4/4e) — boucle sur potentiellement toutes les lignes actives sourcées WHO DON, **aucun garde-fou de budget temporel** — même défaut structurel que `sync-who-regional` avant le garde-fou construit ce soir (`5a235b75`). Mesuré avant de trancher : **0 ligne correspond actuellement au filtre `DON_RE` strict** (aucune ligne active non-seed, non-verrouillée), donc risque nul aujourd'hui — mais construire le garde-fou d'abord serait le même chantier distinct que pour `sync-who-regional`, pas un ajout mécanique à forcer dans ce rollout.
+
+`npx tsc --noEmit` et `npx eslint` propres sur les trois fichiers touchés.
+
+**Vérification en prod après déploiement** — les quatre points d'ingestion touchés (deux directement, deux via le fetch partagé `fetchWHODONList`) appelés un par un contre `https://healthwatch-global.com` :
+
+```
+sync-outbreaks   HTTP 200  success:true  source="WHO OData API"  8 foyers parsés, 25 déjà vus, 0 erreur
+check-new-don    HTTP 200  status="up_to_date"  25 vérifiés
+sync-cdc-han     HTTP 200  success:true  1 alerte, 0 erreur
+data-quality     HTTP 200  success:true  129 lignes actives, 0 anomalie, 0 erreur
+```
+
+Les quatre sont propres — la correction partagée de `fetchWHODONList()` est confirmée fonctionner pour ses deux appelants (`sync-outbreaks` ET `check-new-don`), sans qu'aucun des deux fichiers n'ait eu besoin d'être touché.
