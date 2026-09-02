@@ -48,6 +48,19 @@ import { stampSourceConfirmed } from "@/lib/source-confirmed";
 export const dynamic = "force-dynamic";
 export const maxDuration = 300; // ~100 targets × ~2s each; Vercel Pro allows 300s for crons
 
+// Overall wall-clock budget for the per-target fetch loop — same pattern as
+// ARTICLE_LOOP_BUDGET_MS in sync-who-afro, added here 2026-09-02 after this
+// cron was found to have no equivalent guard at all: 139 sequential targets,
+// several sharing one host (21 on ghoapi.azureedge.net, 27 on
+// xmart-api-public.who.int, 18 on ArcGIS), each with its own 10-15s
+// AbortSignal.timeout. A systemic outage on any ONE of those hosts already
+// pushes that host's targets alone to 180-270s — close to maxDuration=300
+// with zero safety margin, and a Vercel hard-kill mid-loop loses every row
+// not yet upserted, not just the ones hit by the outage. This bails out
+// cleanly instead: whatever was processed is still logged/upserted, and the
+// remaining targets are picked up on tomorrow's run.
+const TARGET_LOOP_BUDGET_MS = 220_000;
+
 const BOM = String.fromCharCode(65279);
 const clean = (v: string | undefined) => (v ?? "").replace(new RegExp("^" + BOM), "").trim();
 
@@ -1564,9 +1577,19 @@ async function runSyncWhoRegional(_req: NextRequest, supabase: SupabaseClient) {
   // Rows this run re-read from the source and found unchanged — stamped as
   // verified in one batched write after the loop (see lib/source-confirmed.ts).
   const sourceConfirmed: string[] = [];
+  const loopStart = Date.now();
 
   // Process each target
   for (const target of TARGETS) {
+    // Bail out before the Vercel maxDuration kills the function outright — a
+    // partial run that still logs/upserts what it processed beats a hard
+    // timeout with nothing persisted. Remaining targets are picked up on the
+    // next scheduled run. See TARGET_LOOP_BUDGET_MS above.
+    if (Date.now() - loopStart > TARGET_LOOP_BUDGET_MS) {
+      log.push({ label: "budget", status: "skip", detail: `time budget exceeded, ${TARGETS.length - results.skipped - results.inserted - results.updated - results.errors} target(s) left unprocessed` });
+      break;
+    }
+
     const diseaseInfo = normalizeDisease(target.disease_en);
     const countryInfo = findCountry(target.country_en);
     if (!countryInfo) {
