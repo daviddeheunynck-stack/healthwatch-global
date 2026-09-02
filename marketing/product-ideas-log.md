@@ -2885,3 +2885,19 @@ David a demandé la mise en cache pour ce dernier fetcher (« ajoute la mise en 
 `npx tsc --noEmit` et `npx eslint` propres sur le fichier touché.
 
 **Bilan cumulé fetch-retry, cinq commits ce soir (`bb2a707b`, `07493f46`, `6399da3b`, `a31bf33b`, `ceaad694`) : 14 crons entiers + les 11 fetchers par-cible de `sync-who-regional` (66+4 = 70 cibles sur ses 139) couverts, plus deux redondances réseau/CPU éliminées (20 fetches/run GPEI+WNV, jusqu'à 3× la recherche complète méningite/run).** Reliquat pour le reste : `sync-usda-aphis`, `sync-who-emro`, `sync-spf`, `sync-endemic-data` (chaînes de secours / helper générique partagé) et, dans `sync-who-regional`, uniquement `queryReliefWeb` (code mort, `reliefWebOk = false` — rien à envelopper).
+
+### Suite du même soir (02/09, session interactive) — retry construit sur `sync-who-emro` et `sync-spf`
+
+David a demandé le rollout sur ces deux crons (« rollout sur sync-who-emro et sync-spf »). Verrou de code réacquis, édition faite, relâché après le push.
+
+**Ces deux crons avaient été volontairement écartés du rollout initial** (entrée du 02/09 soir, commit `07493f46`) au motif « chaîne de secours à N candidats déjà résiliente, retry par candidat au gain incertain ». Ce jugement a été **reconsidéré** à la lumière du travail fait ensuite sur GPEI/WNV/méningite dans `sync-who-regional` : `fetchWithRetry` ne réessaie jamais un 4xx (seulement les échecs réseau et 502/503/504), donc l'ajouter sur une boucle de candidats est sûr par construction — un candidat génuinement absent (404, guessing la bonne URL) tombe toujours au suivant au même rythme qu'avant ; seul un candidat qui aurait fonctionné mais a subi un incident réseau passager bénéficie désormais d'une deuxième chance au lieu de tomber silencieusement sur un candidat plus faible.
+
+**✅ CONSTRUIT, commit `9a9860e4`.**
+- `sync-who-emro` : `EMRO_LIST_URLS` (2 candidats), 2 tentatives × 8s.
+- `sync-spf` : `SPF_RSS_URLS` (3 candidats) + repli HTML `SPF_NEWS_URL`, 2 tentatives × 6s chacun. Le repli HTML a dû être restructuré pour `fetchWithRetry` (qui ne lève jamais d'exception, contrairement au `fetch` original enveloppé dans un `try/catch`) — sans changer le comportement : un échec réseau reste fatal (log + retour 502, comme avant), un HTML mal formé reste fatal via son propre bloc `catch` désormais séparé du fetch.
+
+Volontairement pas touché : les boucles par article/bulletin en aval (`entry.url` dans who-emro, `item.url` et la boucle séquentielle de bulletins arbovirus dans spf) — même discipline que le reste du rollout de ce soir, ce sont des fetchs par-item distincts du fetch de listing.
+
+`npx tsc --noEmit` et `npx eslint` propres sur les deux fichiers touchés.
+
+**Bilan cumulé fetch-retry, six commits ce soir : 16 crons entiers (les 14 initiaux + who-emro + spf) + les 11 fetchers par-cible de `sync-who-regional` (70 des 139 cibles) couverts.** Reliquat pour le reste : `sync-usda-aphis` (chaîne de candidats CSV, pas encore reconsidérée à la lumière de ce soir) et `sync-endemic-data` (helper générique partagé sur 7 sites d'appel, structure encore non vérifiée).
