@@ -281,11 +281,11 @@ Aucune invitation envoyée. **Motif assumé** : aucun candidat neuf franchissant
 
 ---
 
-### 2️⃣ 🔒 DM — 2 RÉDIGÉS, **LES DEUX EN FILE DE VALIDATION, AUCUN ENVOYÉ**
+### 2️⃣ 🔒→✅ DM — 2 RÉDIGÉS, MIS EN FILE, PUIS **LES DEUX ENVOYÉS** SUR ORDRE EXPLICITE DE DAVID
 
-**Règle du 23/07 appliquée : la routine ne les envoie pas.** Les deux sont des **réponses en fil actif**, donc hors quota froid ([[feedback_reply_quota_cold_outreach_only]]) ; un DM en file ne consomme rien tant qu'il n'est pas envoyé. Quota du jour à la clôture : **7 envoyés sur 8** (4 froids + 3 réponses), inchangé par ce run. **Notification push envoyée en fin de run.**
+**Règle du 23/07 appliquée : la routine ne les a pas envoyés d'elle-même.** Les deux ont été mis en file, double-checkés en session interactive (sources revérifiées mot pour mot contre les deux fils, aucun n'avait bougé depuis la rédaction), puis **envoyés à 17h48 et 17h49 sur ordre explicite de David** (« Envoie les DM »). Les deux sont des **réponses en fil actif**, donc hors quota froid ([[feedback_reply_quota_cold_outreach_only]]) ; quota du jour porté à **9 envoyés sur 8** (4 froids + 5 réponses), le plafond de 8 n'ayant jamais visé les réponses en fil actif.
 
-#### 🔒 DM 1 — **John Omari Baso** (`/in/john-omari-baso-84500b1b0/`), FR, vouvoiement, fil actif, SANS CTA — **EN FILE DE VALIDATION**
+#### 🔒→✅ DM 1 — **John Omari Baso** (`/in/john-omari-baso-84500b1b0/`), FR, vouvoiement, fil actif, SANS CTA — **ENVOYÉ ET CONFIRMÉ 17h48**
 
 Fil relu intégralement (§4) : 20 messages depuis le 27/08, recopiés verbatim dans `tmp/thread-john-full-17h.txt`. *langue du fil = fr ; langue du brouillon = fr.* Vouvoiement maintenu.
 
@@ -298,13 +298,13 @@ Fil relu intégralement (§4) : 20 messages depuis le 27/08, recopiés verbatim 
 - **(12) Question déjà posée trois fois et explicitement déclinée par lui.** « *quel document les portera* » avait été demandé sous trois formulations ; John avait répondu « *moi je ne travaille pas ave le GPEI central* », et cette insistance avait déjà été lue une fois comme de la méfiance, qu'il avait fallu désamorcer. La reposer une 4e fois était le vrai risque du brouillon.
 - ⚠️ **Un troisième point, non signalé par le relecteur, a écarté sa propre suggestion de correction.** Il proposait de reposer la question de la fabrication du cumul (recalculé depuis la base du laboratoire, ou additionné). Vérifié contre le fil : John a déjà dit le 02/09 à 11h20 qu'un résultat tardif est **porté à la semaine où il tombe**, jamais rétroactivement — auquel cas les deux modes de calcul donnent le même total, et la question n'a plus d'objet. Angle abandonné, remplacé par celui ci-dessus.
 
-`QA : mécanique PASS au 1er jet (406 car.) puis PASS après réécriture (467 car., 2 paragraphes, fr/fr, 0 blocker, 0 warn, 0 chiffre hors fil) | relecteur VERDICT: REECRIRE 7, 12 au 1er jet, les deux corrigés par changement d'angle — 10 PASS sur 12 par ailleurs, dont attribution vérifiée verbatim et terrain politique tenu (le grief de John sur le retard du GPEI n'est ni repris ni contesté) | faits cités : aucun de la base, tous du fil (8 provinces, Lualaba, Nord-Ubangi) | registre du 02/09 (17:09) | statut : en file de validation`
+`QA : mécanique PASS au 1er jet (406 car.) puis PASS après réécriture (467 car., 2 paragraphes, fr/fr, 0 blocker, 0 warn, 0 chiffre hors fil) | relecteur VERDICT: REECRIRE 7, 12 au 1er jet, les deux corrigés par changement d'angle — 10 PASS sur 12 par ailleurs, dont attribution vérifiée verbatim et terrain politique tenu (le grief de John sur le retard du GPEI n'est ni repris ni contesté) | faits cités : aucun de la base, tous du fil (8 provinces, Lualaba, Nord-Ubangi) | registre du 02/09 (17:09) | statut : envoyé le 02/09 à 17h48, sur ordre explicite de David (« Envoie les DM », session interactive) — fil revérifié n'avoir pas bougé avant envoi, citations recontrôlées verbatim contre le fil, texte relu caractère pour caractère et destinataire revérifié dans le même appel JS que le clic sur Envoyer, apparition dans le fil confirmée après coup`
 
 > Je m'étais trompé, et votre réponse le montre : je croyais que la liste des provinces se réécrivait chaque semaine. Si Lualaba et Nord Ubangi s'ajoutent aux précédentes, elle s'accumule comme le reste.
 >
 > Ce qui veut dire que huit provinces, c'est un cumul annuel, pas une photo de la semaine, et de loin je ne peux pas savoir combien en transmettent encore. Vous, comment faites-vous la part entre celles qui ont déclaré cette année et celles qui sont encore actives ?
 
-#### 🔒 DM 2 — **Julien Tuba** (`/in/julien-tuba-a31abb143/`), FR, vouvoiement, fil actif, SANS CTA — **EN FILE DE VALIDATION**
+#### 🔒→✅ DM 2 — **Julien Tuba** (`/in/julien-tuba-a31abb143/`), FR, vouvoiement, fil actif, SANS CTA — **ENVOYÉ ET CONFIRMÉ 17h49**
 
 Fil relu intégralement (§4) : 5 messages, tous du 02/09, recopiés verbatim dans `tmp/thread-julien-full-17h.txt`. *langue du fil = fr ; langue du brouillon = fr.*
 
@@ -316,7 +316,7 @@ Fil relu intégralement (§4) : 5 messages, tous du 02/09, recopiés verbatim da
 - **(11) Gabarit de structure, deux messages de suite dans le même fil.** Le message de 14h00 ouvrait par « *Je relis votre réponse deux fois, et c'est un point de votre liste qui m'arrête : …* » ; le 1er jet ouvrait par « *Votre dernière phrase est celle qui me reste : …* ». Même charpente exacte — désignation d'un fragment de son message, verbe d'accrochage, deux-points, citation. **Cas type de [[feedback_anti_template_check_structure_not_just_wording]]**, invisible au contrôle mécanique. Ouverture entièrement refaite.
 - **(7) Deux ruptures de continuité.** (a) Le 1er jet présentait l'attente documentaire comme neuve, alors que Julien nomme la continuité de la notification **en premier** dans le message auquel on répond. (b) À 14h00 David écrivait « *je n'ai pas de quoi les séparer* » ; le brouillon affirmait le contraire sans marquer le revirement. **Les deux corrigés explicitement** : la continuité lui est attribuée, et le changement d'avis est écrit noir sur blanc (« *à la relecture c'est un peu court* »).
 
-`QA : mécanique PASS au 1er jet (534 car.) puis PASS après réécriture (625 car., limite 1300, 2 paragraphes, fr/fr, 0 blocker, 0 warn ; seul info : le « 2 » de DHIS2, tracé from-thread) | relecteur VERDICT: REECRIRE 7, 11 au 1er jet, les deux corrigés — 10 PASS sur 12 par ailleurs, dont apport reconnu non trivial (le taux d'erreur du signal documentaire employé seul, qu'il n'a pas traité) | faits cités : aucun | registre du 02/09 (17:09) | statut : en file de validation`
+`QA : mécanique PASS au 1er jet (534 car.) puis PASS après réécriture (625 car., limite 1300, 2 paragraphes, fr/fr, 0 blocker, 0 warn ; seul info : le « 2 » de DHIS2, tracé from-thread) | relecteur VERDICT: REECRIRE 7, 11 au 1er jet, les deux corrigés — 10 PASS sur 12 par ailleurs, dont apport reconnu non trivial (le taux d'erreur du signal documentaire employé seul, qu'il n'a pas traité) | faits cités : aucun | registre du 02/09 (17:09) | statut : envoyé le 02/09 à 17h49, sur ordre explicite de David (« Envoie les DM », session interactive) — fil revérifié n'avoir pas bougé avant envoi, citations recontrôlées verbatim contre le fil, texte relu caractère pour caractère et destinataire revérifié dans le même appel JS que le clic sur Envoyer, apparition dans le fil confirmée après coup`
 
 > La continuité de la notification, c'est votre premier réflexe, et c'est aussi le seul de vos recoupements qui me soit accessible. Je vous disais tout à l'heure que je n'avais pas de quoi séparer un zéro d'un silence ; à la relecture c'est un peu court, il me reste les numéros précédents du bulletin, ce que cette zone déclarait les semaines d'avant.
 >

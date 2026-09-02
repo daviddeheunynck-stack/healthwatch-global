@@ -446,7 +446,7 @@ Rouverts **sur le post, pas sur la notification**. Les trois commentaires publi�
 
 **Registre de faits régénéré ce run** (17:09) : **226 faits citables sur 110 lignes affichées**, 81 lignes `is_seed` exclues, 9 faits périmés.
 
-**Quotas à la clôture** : commentaires **4/7**, **inchangé — 1 candidat rédigé, QA passée, puis abandonné avant publication** (Jean-Paul Gonzalez, voir section 2) · **DM : 2 rédigés ce run, les 2 en file de validation, aucun envoyé** (John Omari Baso, Julien Tuba) · suivis **9/7-10** (**+1 ce run** : Jean-Paul Gonzalez) · notes de connexion **1/7**, inchangée · invitations reçues **2 en attente**, inchangées · **0 écriture en base**. Textes complets des 2 DM en file : `linkedin-contacts.md`, entrée du jour.
+**Quotas à la clôture** : commentaires **4/7**, **inchangé — 1 candidat rédigé, QA passée, puis abandonné avant publication** (Jean-Paul Gonzalez, voir section 2) · **DM : 2 rédigés ce run, mis en file, double-checkés en session interactive, puis ✅ les 2 envoyés sur ordre explicite de David** (John Omari Baso 17h48, Julien Tuba 17h49), quota du jour porté à 9/8 (le plafond ne visant pas les réponses en fil actif) · suivis **9/7-10** (**+1 ce run** : Jean-Paul Gonzalez) · notes de connexion **1/7**, inchangée · invitations reçues **2 en attente**, inchangées · **0 écriture en base**. Détail messagerie et textes complets des 2 DM : `linkedin-contacts.md`, entrée du jour.
 
 ---
 
