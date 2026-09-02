@@ -2785,3 +2785,33 @@ Chacun de ces cinq redemande une lecture au cas par cas pour ne pas envelopper p
 `npx tsc --noEmit` et `npx eslint` propres sur les 10 fichiers touchés. Verrou de code relâché après le push.
 
 **Bilan cumulé fetch-retry (deux commits, `bb2a707b` + `07493f46`) : 14 crons sur 51 couverts.** Les 5 restants ci-dessus, plus les crons hors périmètre de la proposition initiale (déclencheurs horaires/toutes les N minutes qui se rattrapent seuls), forment le reliquat.
+
+### Suite du même soir (02/09, session interactive) — `sync-who-regional` : rollout NON fait, risque réel trouvé à l'investigation
+
+David a demandé le rollout sur `sync-who-regional`. Verrou de code réacquis puis relâché sans écriture — l'investigation a changé la conclusion.
+
+**Ce cron n'est pas de la même famille que les 14 déjà traités.** Les autres ont UN fetch de listing, dont l'échec est rare et coûteux (jusqu'à une semaine perdue). `sync-who-regional` fait l'inverse : ~139 cibles disease×pays traitées en **boucle séquentielle sans garde-fou de budget** (contrairement à `sync-who-afro`), chacune avec son propre fetcher direct — pas de fetch de listing unique à envelopper.
+
+**Chiffrage avant toute décision, par groupe d'hôte partagé** (chaque groupe est un point de défaillance commun — une panne systémique sur UN hôte touche toutes ses cibles le même run) :
+
+| groupe (hôte) | cibles | timeout/cible | pire cas SANS retry | pire cas AVEC retry (2×, backoff 1-2s) |
+|---|---|---|---|---|
+| `ghoapi.azureedge.net` (rougeole, polio-GHO, fièvre jaune, leishmaniose, diphtérie) | 21 | 10s | 210s | **~441s** |
+| `xmart-api-public.who.int` (dengue + mpox) | 27 | 10s | 270s | **~567s** |
+| ArcGIS (choléra) | 18 | 10s | 180s | **~378s** |
+| `wnv-weekly.ecdc.europa.eu` (VNO) | 7 (même URL relue 7×) | 15s | 105s | ~224s |
+| page hebdo GPEI (polio cVDPV) | 13 (même URL relue 13×) | 10s | 130s | ~273s |
+| bulletin méningite (`cdn.who.int`) | 4, déjà résilient (boucle interne semaines×dossiers) | 15s | — | non concerné |
+
+`maxDuration = 300`. **Trois des six groupes dépasseraient le budget avec un retry 2× en cas de panne systémique de leur hôte — jusqu'à 567s, presque le double du plafond.** Sans retry, aucun ne le dépasse aujourd'hui (le plus haut, xmart à 270s, reste sous 300s). Le retry transformerait ici une panne systémique **survivable** (le run se termine en retard mais entier, sur son propre `AbortSignal.timeout`) en une panne **fatale** (Vercel tue la fonction en plein milieu, perdant le travail de toutes les cibles restantes dans la boucle, pas seulement celles touchées par la panne).
+
+**Deux des six groupes ont, en plus, un défaut préexistant et distinct trouvé au passage** (pas construit ce soir, hors périmètre de « ajouter du retry ») : `fetchWNVEcdc` et `fetchPolioGPEIThisWeek` refetchent la **même URL** une fois par cible qui l'utilise — 7 fois pour la page VNO ECDC, 13 fois pour la page GPEI, sans aucune mise en cache partagée au sein d'un même run. Ajouter du retry là-dessus aurait multiplié un gaspillage déjà là, sans le corriger.
+
+**Conclusion : pas de sous-ensemble sûr à envelopper de retry ce soir.** Les six groupes se répartissent en trois catégories, aucune ne se prêtant à un ajout de retry mécanique sans risque net :
+1. Comptage de cibles trop élevé par hôte (ghoapi, xmart, ArcGIS) → budget déjà dépassé en cas de panne, avec retry.
+2. URL partagée réinterrogée en boucle (WNV, GPEI) → le vrai correctif est la mise en cache, pas le retry.
+3. Déjà résilient par construction (méningite, boucle multi-candidats).
+
+**Ce qui rendrait un rollout sûr ici, si David le souhaite comme chantier à part** : ajouter d'abord un garde-fou de budget temporel à la boucle principale de `runSyncWhoRegional` (même patron que `sync-who-afro`, trouvé le 02/09 au soir dans l'exploration d'hier — sortir proprement avant que Vercel tue la fonction, journaliser les cibles non traitées). Une fois ce filet posé, un retry devient sûr : le pire cas dégrade en « certaines cibles sautées, journalisé » plutôt qu'en troncature brutale en pleine écriture DB. Effort moyen (une nouvelle logique de budget + tests contre les ~139 cibles), pas petit — distinct du reste de ce rollout, qui a pu rester mécanique sur les 14 crons précédents précisément parce qu'aucun n'avait ce problème structurel.
+
+**Aucune ligne de code touchée ce soir sur ce fichier.** Verrou de code acquis puis relâché sans écriture, une fois la conclusion établie.
