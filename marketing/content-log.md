@@ -556,6 +556,20 @@ Le bouton de soumission d'une **réponse imbriquée** (reply à un commentaire e
 
 ---
 
+### ✅ MISE À JOUR 18h37-18h45, SESSION INTERACTIVE — ÉCRITURE FAITE, SIGNALEMENT CI-DESSUS RÉSOLU
+
+David a demandé de traiter directement la source primaire plutôt que d'attendre le prochain passage de `morning-don-check` (07h31 demain) — autorisé explicitement pour une session interactive par la politique commune §8 (« une session interactive » peut faire l'écriture, à la différence d'une routine sociale automatisée).
+
+**Source primaire lue en entier** : WHO AFRO, *External Situation Report 16*, données au 30 août 2026, https://iris.who.int/items/da465f8d-cb44-4d2c-a5b3-5d268d3abf16 (PDF de 12 pages téléchargé et lu intégralement, pas seulement l'extrait "Event description"). **6 100 cas confirmés, 2 950 décès (CFR 48,4 %)**, 6 provinces, 60 zones de santé touchées (50 en transmission active sur 21 jours), Ituri 82,2 % du cumul mais transmission en dispersion croissante (Nord-Kivu et Haut-Uélé en hausse sur la période 10-30/08 pendant que l'Ituri recule). 1 383 guérisons, 814 cas actifs, 24 330 contacts sous suivi, 160 professionnels de santé infectés (45 décès), 22 laboratoires actifs. USPPI toujours déclarée (2e Comité d'urgence RSI du 18/08), risque « très élevé » en RDC.
+
+⚠️ **Piège rencontré, à connaître pour la prochaine fois** : le lien « Download from IRIS » de la page de publication WHO AFRO du Report 16 est **cassé** — il pointe vers le PDF du **Report 12** (02/08), pas le 16. Même bitstream ID que celui affiché sur la page listing des publications DRC. Détecté en lisant le PDF téléchargé (titre « Report 12, Data as of 02 August 2026 » en page 1) plutôt qu'en faisant confiance au lien. Contournement : recherche directe sur `iris.who.int/search?query=...`, qui a remonté le bon item (`da465f8d-…`) avec sa date de publication exacte (2026-08-30) affichée dans les métadonnées de résultat — vérifié une 2e fois par le contenu du PDF lui-même avant écriture, le nom de fichier de la bitstream (`Wk_Ext_SitRep_1623082026.pdf`) étant lui-même trompeur (suggère le 23/08, date du Report 15).
+
+**Écriture en base, sans régression** (5 794→6 100 cas, 2 786→2 950 décès, 48,1 %→48,4 % CFR, date 26/08→30/08, `source_priority` inchangé à 10) via un script `scripts/fix-ebola-drc-sitrep16-2026-09-02.mjs` — **supprimé après confirmation**, conformément à la convention du dépôt pour les scripts de correctif ponctuel (`.gitignore`, jamais commités, jetés une fois le correctif vérifié appliqué). Revérifié en base par requête directe et sur `healthwatch-global.com/en/disease/ebola-virus-disease` (rendu confirmé : 6 100/2 950/48,4 %, « Updated: September 2, 2026 »). `npm run qa:facts` relancé après écriture.
+
+**Écarts des deux reprises secondaires (Africa CDC, sitrep MinSanté relayé par Herriman) non expliqués mais cohérents** : elles portent des chiffres légèrement supérieurs (6 186-6 206 / 3 007-3 009, un à deux jours plus tard) que ce PDF ne couvre pas encore — la trajectoire converge, pas d'anomalie. Aucune écriture supplémentaire tentée à partir de ces deux reprises secondaires : ni l'une ni l'autre ne constitue une source primaire, conformément à la règle habituelle.
+
+---
+
 ### 4️⃣ 🔁 CARRY-OVER POUR LE CRÉNEAU DE 9h (03/09)
 
 1. 🔒 **DEUX DM ATTENDENT DAVID**, tous deux rédigés ce run, tous deux réponses en fil actif : **John Omari Baso (FR)** et **Julien Tuba (FR)**. Textes complets et rapports QA dans `linkedin-contacts.md`, entrée du jour. **Notification push envoyée ce run.**
