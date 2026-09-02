@@ -360,6 +360,23 @@ Aucune invitation envoyée. **Motif assumé** : les deux dossiers en attente res
 
 ---
 
+### 7️⃣ SUITE DU RUN (20h45-20h53), SUR DEMANDE EXPLICITE DE DAVID (« envoie des demandes de connexions sans notes ») — 4 ENVOYÉES
+
+**Contexte** : la section 6️⃣ ci-dessus notait « aucun hook honnête » pour Jean-Paul Gonzalez et concluait à ne pas le connecter faute de justification pour une note personnalisée. David a levé cette condition explicitement (« sans notes ») — les 4 candidats ci-dessous sont des profils déjà évalués sur pièce dans les sessions précédentes (pertinence HWG établie), qui n'avaient jusqu'ici que le suivi, jamais la connexion. Quota du jour : **notes de connexion 1/7 → 5/7** (4 envoyées ce segment, toutes sans note, plafond de 3 notes personnalisées/jour non concerné puisqu'aucune note n'est jointe).
+
+- ✅ **Jean-Paul Gonzalez** (`/in/jean-paul-gonzalez-aa653920/`, 2e degré, vérifié) — déjà suivi (section 6️⃣ de ce jour). Identité confirmée par l'URL (`Board Member at The Schull Institute`) avant clic. Toast « Invitation envoyée à Jean-Paul » + bouton passé à « En attente ».
+- ✅ **Rocham Mulumbwe** (`/in/rocham-mulumbwe-587570186/`, 3e degré) — *Biomedical Scientist | Epidemiologist | Data analyst*, Zambie. Suivi depuis le 02/09 (9h), a commenté deux fois avec du fond sous nos propres commentaires (post Jacob Banda), candidat de connexion déjà identifié en carry-over (« bon candidat connexion dès qu'il répond »). **Un premier essai à 18h27 n'avait pas abouti** (renderer du navigateur dégradé en cours d'action — diagnostic initial erroné, voir note technique ci-dessous) ; revérifié avant de retenter (menu « Plus » affichait toujours « Se connecter », pas « En attente » : aucun doublon). Toast confirmé au 2e essai.
+- ✅ **James Schlitt, PhD, MPH** (`/in/james-schlitt-phd-mph-4377a81b/`, 2e degré, vérifié) — *Computational Epidemiologist | AI & LLM Systems for Biosurveillance | Pandemic Forecasting*. Abonné et suivi depuis le 30/07, jamais connecté ; a commenté le post de David du 31/08 avec une proposition de corpus longitudinal. **Meilleur alignement de profil du corpus** (tracker). Toast + « En attente » confirmés.
+- ✅ **Gaelle Gonzalez** (`/in/gaelle-gonzalez-67a70890/`, 2e degré, vérifié) — *Chef de projet virologie chez Agence nationale de sécurité sanitaire - Anses*. Suivie le 29/08, veille chiffrée sur le virus West Nile en France, jamais connectée. Toast + « En attente » confirmés.
+
+**Identité vérifiée avant chaque clic** (URL de la page + intitulé affiché correspondant à la fiche déjà connue), conformément à §12. Aucune note jointe sur les 4, conformément à la demande de David.
+
+⚠️ **Note technique — fausse alerte « renderer dégradé » corrigée.** En cours de route, un test diagnostique `(async()=>42)()` sans `await` a renvoyé `{}` de façon répétée, y compris après redémarrage du navigateur par David et sur un onglet neuf — signature jusqu'ici documentée comme panne sans remède (`hwg-social-policy.md` §7). **Ce n'était pas une panne** : `(async()=>42)()` retourne une Promise, qui se sérialise en `{}` quand elle n'est pas explicitement attendue ; `await (async()=>42)()` renvoie bien `42`. Le diagnostic §7 lui-même est donc probablement erroné ou incomplet sur ce point précis — **à corriger dans `_shared/hwg-social-policy.md` lors d'une prochaine session**, cette section n'ayant pas mandat pour modifier un fichier partagé hors de son propre run. Conséquence concrète : l'invitation à Rocham Mulumbwe n'était pas partie au premier essai (confirmé par re-vérification), ce doute est donc résolu sans perte ni doublon.
+
+**Arbre de travail** : aucune écriture fichier supplémentaire dans ce segment au-delà de la présente entrée.
+
+---
+
 ## 📅 Session linkedin-hwg-monitoring — 01/09/2026 (9h)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` du 01/09 dans ce fichier ni dans `content-log.md` à l'ouverture. La seule entrée du 01/09 déjà présente appartient à la **session interactive de David de ~05h50-06h16** → **premier déclenchement de cette routine aujourd'hui**. Horloge machine à l'heure (`Tue Sep 1 09:04 2026`). Navigateur : dernière entrée d'appairage de `_shared/browser-status.md` **🟢 RÉTABLI (31/08 ~13:05)**, aucun bridage, `23c7ecdd-…` sélectionné directement (§7).
