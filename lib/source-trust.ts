@@ -130,6 +130,15 @@ const AUTHORITATIVE_SOURCE_DOMAINS: ReadonlySet<string> = new Set([
   "doh.gov.ph",          // Philippines DOH — NOT gov.ph as a whole: pna.gov.ph is the state
                          // news agency, a wire service, and belongs in the press tier below
   "moph.go.th",          // Thailand MOPH
+  // Tanzania Ministry of Health (moh.go.tz) — found 2026-09-02 via data-quality's
+  // provenance section the same way mspas.gob.gt was on 2026-08-28: a Rotavirus/
+  // Tanzania row citing the ministry's own PDF sitrep was demoted to "unverified"
+  // for lacking an allowlist entry, not for any real trust issue. .go.tz is
+  // Tanzania's official government TLD, same national-ministry shape as
+  // moph.go.th above. Verified via SQL against the live `outbreaks` table that
+  // no other row's source contains "moh.go.tz" before adding it, per this
+  // file's own check-source-trust.mjs precedent.
+  "moh.go.tz",
   "mysa.gov.my",         // Malaysia iDengue (idengue.mysa.gov.my) — sync-malaysia-dengue
   "health.gov.lk",       // Sri Lanka MoH National Dengue Control Unit (dengue.health.gov.lk)
   "health.gov.ws",       // Samoa Ministry of Health dengue sitreps
@@ -299,6 +308,7 @@ export function sourceName(source: string | null | undefined): string {
   if (src.includes("reliefweb.int"))     return "ReliefWeb";
   if (src.includes("doh.gov.ph"))        return "PH DOH";
   if (src.includes("moph.go.th"))        return "Thailand MOPH";
+  if (src.includes("moh.go.tz"))         return "Tanzania MoH";
   if (src.includes("idengue.mysa.gov.my")) return "Malaysia iDengue";
   if (src.includes("epicentro.iss.it") || src.includes("iss.it")) return "ISS Italy";
   if (src.includes("health.gov.lk"))     return "Sri Lanka MoH";
