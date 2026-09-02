@@ -2558,3 +2558,43 @@ if (!run) {
 
 **Risque/inconnue :** relâcher cette branche pourrait masquer un cron ajouté à `CRON_WINDOWS` mais oublié dans `vercel.json`, qui ne tournerait jamais. Traité en donnant une **échéance** et non une exemption : voir la construction ci-dessous.
 
+### Construction — idée 2 livrée, idée 1 délibérément non construite
+
+**Idée 2 — ✅ CONSTRUITE, commit `8cb6acaf`** (`app/api/cron/health-check/route.ts`).
+
+Le rapport pose lui-même la date de première observation d'un nom de `CRON_WINDOWS` sans passage (clé `site_config` `health-check:cron-first-seen`, **aucune migration** — la valeur est purement dérivée, et perdue elle se reconstruit au passage suivant) et n'ouvre l'alerte qu'une fois la **fenêtre du cron écoulée depuis cette date**.
+
+Trois choix de conception, chacun contre un mode de panne précis :
+
+- **Une date, pas un booléen « déjà toléré ».** Un booléen ne périmerait jamais : le cron oublié dans `vercel.json` se tairait pour toujours. La date, elle, arrive à échéance.
+- **La date n'est jamais repoussée** tant que le cron n'a pas tourné. La remettre à « maintenant » à chaque passage du rapport reculerait l'échéance indéfiniment — c'est la même faille que le booléen, écrite autrement.
+- **Une date illisible tranche vers l'alerte.** `NaN > windowH` est faux, donc la lecture naïve aurait rendu le cron silencieux pour toujours ; `!Number.isFinite(waitedH)` le force dans `overdue`.
+
+La carte est réécrite avec les seuls noms encore sans passage, donc elle se purge d'elle-même quand un cron finit par tourner ou sort de `CRON_WINDOWS` ; un échec d'écriture est journalisé sans faire tomber le rapport. Le libellé du tableau distingue désormais les deux états — `jamais` contre `jamais (fenêtre en cours, 12h/200h)` — pour que la tolérance reste **visible** et non silencieuse.
+
+**Rejoué contre la prod avant livraison :**
+
+```
+CRON_WINDOWS                       : 51 entrées
+crons ayant déjà tourné            : 50
+sans aucun passage enregistré      :  1  → check-wer-cholera (fenêtre 200 h)
+crons qui tournent hors CRON_WINDOWS: 0
+```
+
+Une seule entrée concernée, exactement celle qui rougissait le rapport. `npx tsc --noEmit` et `npx eslint` propres ; `check-cron-schedule` (21 commentaires `Schedule:`) et `check-migrations-applied` (88 migrations) passent au pre-push.
+
+Effet attendu au prochain passage (07h05 UTC) : `check-wer-cholera` sort de `overdue`, et l'objet du rapport perd `· 1 cron(s) en retard`. Le rapport **peut rester en `error`** pour l'autre motif déjà présent (`plus 1 incident(s) Sentry`) — c'est un signal distinct, non touché ici, et le prétendre corrigé serait faux.
+
+**Idée 1 — ⛔ NON CONSTRUITE, garde-fou 3.** Elle modifie le contenu d'e-mails partant à des clients réels (14 essais actifs, dont trois pilotes institutionnels). Le garde-fou de cette routine réserve ce domaine à une demande explicite de David en session. La conception est complète et chiffrée ci-dessus — trois gabarits, cinq langues, ~3,5 Ko pour le pire cas — et ne demande qu'un feu vert.
+
+### Ce qui reste chez David
+
+1. **Idée 1** — un mot suffit pour la faire construire. C'est la seule des deux qui répond à l'utilisateur du 31/08.
+2. **Trois essais expirent aujourd'hui 02/09** : `shepil.maxim99@gmail.com`, `shereenabdelmesseh@gmail.com`, `bego@guiacan.com` (ce dernier étant un hébergeur espagnol, pas un prospect santé — cf. mémoire dédiée). Deux autres le 03/09 : `etienneg83@yahoo.fr` et `aasoumah24@gmail.com`, ce dernier avec `email_blocked_at` posé, donc injoignable. Relevé au passage, pas une idée produit.
+3. **`sync-drc-sitrep` et `check-mpox-sitrep` en `no_data`** depuis leur dernier passage — état d'inactivité légitime par conception, signalé seulement pour mémoire.
+
+### Fichiers modifiés par d'autres, laissés intacts (AGENTS.md)
+
+`marketing/qa/product-claims.manual.json` (modifié), `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis) étaient déjà là au début du run. `package-lock.json` porte une normalisation de lockfile (retrait d'une entrée `@swc/helpers` transitive, un `dev: true` sur `fsevents`) apparue pendant le run, vraisemblablement un effet de bord de mes appels `npx` — laissée telle quelle et signalée plutôt que committée ou annulée. Aucun de ces quatre fichiers n'est entré dans mes deux commits.
+
+Une autre session a commité pendant ce run (`fix(wer-cholera): echapper les donnees interpolees dans l'e-mail d'alerte`) — sans recoupement avec les fichiers touchés ici.
