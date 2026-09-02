@@ -171,16 +171,18 @@ export async function activateTrial(
       if (qualifying.length > 0) {
         const locale = (profile.alert_locale as string | null) ?? "en";
         const DIGEST_DISPLAY_CAP = 10;
-        const topOutbreaks = [...qualifying]
-          .sort((a, b) => (RISK_RANK[b.risk_level ?? ""] ?? 0) - (RISK_RANK[a.risk_level ?? ""] ?? 0))
-          .slice(0, DIGEST_DISPLAY_CAP);
+        const sortedQualifying = [...qualifying]
+          .sort((a, b) => (RISK_RANK[b.risk_level ?? ""] ?? 0) - (RISK_RANK[a.risk_level ?? ""] ?? 0));
+        const topOutbreaks = sortedQualifying.slice(0, DIGEST_DISPLAY_CAP);
+        const overflowOutbreaks = sortedQualifying.slice(DIGEST_DISPLAY_CAP);
 
         const { subject, html } = buildSignupDigestEmail(
           locale,
           topOutbreaks,
           qualifying.length,
           `${APP_URL}/${locale}`,
-          `${APP_URL}/${locale}/account#regional-alerts`
+          `${APP_URL}/${locale}/account#regional-alerts`,
+          overflowOutbreaks
         );
 
         // Send BEFORE writing outbreak_alert_log. If sendEmail throws, the

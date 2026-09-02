@@ -473,12 +473,16 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
           return (b.cases ?? 0) - (a.cases ?? 0);
         });
         const shown = sorted.slice(0, MAX_DIGEST_ITEMS_PER_EMAIL);
-        const overflowCount = sorted.length - shown.length;
-        if (overflowCount > 0) {
-          console.log(`[regional-alerts] digest for ${profile.email} capped: ${shown.length} shown, ${overflowCount} summarized`);
-          digestItemsCapped += overflowCount;
+        const overflow = sorted.slice(MAX_DIGEST_ITEMS_PER_EMAIL);
+        if (overflow.length > 0) {
+          console.log(`[regional-alerts] digest for ${profile.email} capped: ${shown.length} shown, ${overflow.length} summarized`);
+          digestItemsCapped += overflow.length;
         }
-        ({ subject, html } = buildOutbreakDigestEmail(locale, shown, dashboardUrl, unsubUrl, overflowCount, coverageNote));
+        ({ subject, html } = buildOutbreakDigestEmail(
+          locale, shown, dashboardUrl, unsubUrl,
+          overflow.map((o) => ({ disease: o.disease, country: o.country })),
+          coverageNote
+        ));
         digestEmailsSent++;
       }
       if (isRealProduction) {

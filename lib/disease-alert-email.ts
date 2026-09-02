@@ -9,6 +9,17 @@ function esc(s: string): string {
   return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
+// Voir le même helper dans lib/alert-emails.ts : les foyers coupés par
+// MAX_DIGEST_ITEMS_PER_EMAIL sont journalisés (donc éteints pour l'avenir)
+// qu'ils soient nommés dans l'e-mail ou non — les nommer en texte nu remplace
+// le renvoi "consultez le tableau de bord" pour qui ne peut pas l'ouvrir.
+const OVERFLOW_LABEL_MAX = 60;
+
+function overflowLabel(disease: string, country: string): string {
+  const label = `${disease} · ${country}`;
+  return label.length > OVERFLOW_LABEL_MAX ? label.slice(0, OVERFLOW_LABEL_MAX - 1) + "…" : label;
+}
+
 const TIER_LABELS: Record<string, Record<string, string>> = {
   immediate: { fr: "IMMÉDIAT · NOTIFIABLE RSI", en: "IMMEDIATE · IHR NOTIFIABLE", es: "INMEDIATO · NOTIFICABLE RSI", ar: "فوري · إخطار إلزامي", id: "SEGERA · WAJIB LAPOR IHR" },
   rapid:     { fr: "RÉPONSE RAPIDE", en: "RAPID RESPONSE", es: "RESPUESTA RÁPIDA", ar: "استجابة سريعة", id: "RESPONS CEPAT" },
@@ -76,7 +87,7 @@ const COPY: Record<string, {
     digestCta:       "Gérer mes alertes →",
     digestUnsubNote: "Vous recevez cet email car vous surveillez ces maladies sur healthwatch-global.com. Gérez vos alertes dans votre compte.",
     itemLinkLabel:   "Détails →",
-    overflowNote:    (n) => `+ ${n} autres alertes maladies — consultez le tableau de bord complet.`,
+    overflowNote:    (n) => `+ ${n} autres alertes maladies :`,
   },
   en: {
     subject:         (d) => `🔴 Disease alert: ${d} detected`,
@@ -97,7 +108,7 @@ const COPY: Record<string, {
     digestCta:       "Manage my alerts →",
     digestUnsubNote: "You receive this email because you're monitoring these diseases on healthwatch-global.com. Manage your alerts from your account.",
     itemLinkLabel:   "Details →",
-    overflowNote:    (n) => `+ ${n} more disease alerts — see the full dashboard.`,
+    overflowNote:    (n) => `+ ${n} more disease alerts:`,
   },
   es: {
     subject:         (d) => `🔴 Alerta de enfermedad: ${d} detectado`,
@@ -118,7 +129,7 @@ const COPY: Record<string, {
     digestCta:       "Gestionar mis alertas →",
     digestUnsubNote: "Recibe este correo porque monitorea estas enfermedades en healthwatch-global.com. Gestiona tus alertas desde tu cuenta.",
     itemLinkLabel:   "Detalles →",
-    overflowNote:    (n) => `+ ${n} alertas de enfermedades más — consulta el panel completo.`,
+    overflowNote:    (n) => `+ ${n} alertas de enfermedades más:`,
   },
   ar: {
     subject:         (d) => `🔴 تنبيه مرض: تم اكتشاف ${d}`,
@@ -139,7 +150,7 @@ const COPY: Record<string, {
     digestCta:       "← إدارة تنبيهاتي",
     digestUnsubNote: "تتلقى هذا البريد لأنك تراقب هذه الأمراض على healthwatch-global.com. أدر تنبيهاتك من حسابك.",
     itemLinkLabel:   "← التفاصيل",
-    overflowNote:    (n) => `+ ${n} تنبيهات أمراض أخرى — راجع لوحة التحكم الكاملة.`,
+    overflowNote:    (n) => `+ ${n} تنبيهات أمراض أخرى:`,
   },
   id: {
     subject:         (d) => `🔴 Peringatan penyakit: ${d} terdeteksi`,
@@ -160,7 +171,7 @@ const COPY: Record<string, {
     digestCta:       "Kelola peringatan saya →",
     digestUnsubNote: "Anda menerima email ini karena memantau penyakit-penyakit ini di healthwatch-global.com. Kelola peringatan Anda dari akun Anda.",
     itemLinkLabel:   "Detail →",
-    overflowNote:    (n) => `+ ${n} peringatan penyakit lainnya — lihat dasbor lengkap.`,
+    overflowNote:    (n) => `+ ${n} peringatan penyakit lainnya:`,
   },
 };
 
@@ -348,13 +359,13 @@ export function buildDiseaseAlertDigestEmail(
   locale: string,
   items: DiseaseDigestItem[],
   accountUrl: string,
-  overflowCount = 0
+  overflowItems: { disease: string; country: string }[] = []
 ): { subject: string; html: string } {
   const c = COPY[locale] ?? COPY.en;
   const isRtl = locale === "ar";
   const dir = isRtl ? "rtl" : "ltr";
   const numLocale = locale === "ar" ? "ar-SA" : (locale || "en");
-  const totalCount = items.length + overflowCount;
+  const totalCount = items.length + overflowItems.length;
 
   const rows = items
     .map((item) => {
@@ -406,8 +417,9 @@ export function buildDiseaseAlertDigestEmail(
 
     <table width="100%" cellpadding="0" cellspacing="0">${rows}</table>
 
-    ${overflowCount > 0
-      ? `<p style="margin:14px 0 0;font-size:12px;color:#94a3b8;font-family:Arial,Helvetica,sans-serif;">${c.overflowNote(overflowCount)}</p>`
+    ${overflowItems.length > 0
+      ? `<p style="margin:14px 0 4px;font-size:12px;color:#94a3b8;font-family:Arial,Helvetica,sans-serif;">${c.overflowNote(overflowItems.length)}</p>
+    <p style="margin:0;font-size:11px;line-height:1.6;color:#94a3b8;font-family:Arial,Helvetica,sans-serif;">${overflowItems.map((o) => esc(overflowLabel(o.disease, o.country))).join("; ")}</p>`
       : ""}
 
     <table cellpadding="0" cellspacing="0" style="margin-top:20px;">

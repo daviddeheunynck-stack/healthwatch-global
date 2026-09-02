@@ -5,6 +5,24 @@ function esc(s: string): string {
   return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
+// Les foyers coupés par MAX_DIGEST_ITEMS_PER_EMAIL étaient jusqu'ici jetés
+// dans une phrase "+N autres — consultez le tableau de bord", alors qu'ils
+// sont déjà tous journalisés dans outbreak_alert_log et donc éteints pour
+// l'avenir (voir regional-alerts/route.ts). Pour un utilisateur qui ne peut
+// pas atteindre le tableau de bord (retour du 31/08), ce renvoi est une perte
+// sèche. On les nomme donc en texte nu à la place — voir buildOverflowList.
+//
+// Plafond par libellé : la colonne `disease` porte parfois un intitulé
+// d'événement de sécurité alimentaire allant jusqu'à 146 caractères en base,
+// contre 30 en moyenne pour un foyer normal. Sans plafond, un seul de ces
+// intitulés dans un lot de 105 ferait un mur de texte illisible.
+const OVERFLOW_LABEL_MAX = 60;
+
+function overflowLabel(disease: string, country: string): string {
+  const label = `${disease} · ${country}`;
+  return label.length > OVERFLOW_LABEL_MAX ? label.slice(0, OVERFLOW_LABEL_MAX - 1) + "…" : label;
+}
+
 interface OutbreakData {
   disease: string;
   country: string;
@@ -66,7 +84,7 @@ const CONTENT: Record<string, {
     newBadge: "Nouveau",
     updateBadge: "Mise à jour",
     itemLinkLabel: "Détails →",
-    overflowNote: (count) => `+ ${count} autres foyers actifs — consultez le tableau de bord complet.`,
+    overflowNote: (count) => `+ ${count} autres foyers actifs :`,
     escalatedLabel: (from, to) => `Risque relevé de ${from} à ${to} depuis votre dernière alerte`,
     surgeLabel: (casesStr, deltaStr, pct) => `${casesStr} cas (${deltaStr} depuis votre dernière alerte, +${pct}%)`,
   },
@@ -94,7 +112,7 @@ const CONTENT: Record<string, {
     newBadge: "New",
     updateBadge: "Update",
     itemLinkLabel: "Details →",
-    overflowNote: (count) => `+ ${count} more active outbreaks — see the full dashboard.`,
+    overflowNote: (count) => `+ ${count} more active outbreaks:`,
     escalatedLabel: (from, to) => `Risk raised from ${from} to ${to} since your last alert`,
     surgeLabel: (casesStr, deltaStr, pct) => `${casesStr} cases (${deltaStr} since your last alert, +${pct}%)`,
   },
@@ -122,7 +140,7 @@ const CONTENT: Record<string, {
     newBadge: "Nuevo",
     updateBadge: "Actualización",
     itemLinkLabel: "Detalles →",
-    overflowNote: (count) => `+ ${count} brotes activos más — consulta el panel completo.`,
+    overflowNote: (count) => `+ ${count} brotes activos más:`,
     escalatedLabel: (from, to) => `Riesgo elevado de ${from} a ${to} desde tu última alerta`,
     surgeLabel: (casesStr, deltaStr, pct) => `${casesStr} casos (${deltaStr} desde tu última alerta, +${pct}%)`,
   },
@@ -150,7 +168,7 @@ const CONTENT: Record<string, {
     newBadge: "جديد",
     updateBadge: "تحديث",
     itemLinkLabel: "← التفاصيل",
-    overflowNote: (count) => `+ ${count} حالات تفشٍّ نشطة أخرى — راجع لوحة التحكم الكاملة.`,
+    overflowNote: (count) => `+ ${count} حالات تفشٍّ نشطة أخرى:`,
     escalatedLabel: (from, to) => `رُفع مستوى الخطر من ${from} إلى ${to} منذ آخر تنبيه`,
     surgeLabel: (casesStr, deltaStr, pct) => `${casesStr} حالة (${deltaStr} منذ آخر تنبيه، +${pct}%)`,
   },
@@ -178,7 +196,7 @@ const CONTENT: Record<string, {
     newBadge: "Baru",
     updateBadge: "Pembaruan",
     itemLinkLabel: "Detail →",
-    overflowNote: (count) => `+ ${count} wabah aktif lainnya — lihat dasbor lengkap.`,
+    overflowNote: (count) => `+ ${count} wabah aktif lainnya:`,
     escalatedLabel: (from, to) => `Risiko dinaikkan dari ${from} ke ${to} sejak peringatan terakhir Anda`,
     surgeLabel: (casesStr, deltaStr, pct) => `${casesStr} kasus (${deltaStr} sejak peringatan terakhir Anda, +${pct}%)`,
   },
@@ -341,13 +359,13 @@ export function buildOutbreakDigestEmail(
   items: DigestItem[],
   dashboardUrl: string,
   unsubUrl?: string,
-  overflowCount = 0,
+  overflowItems: { disease: string; country: string }[] = [],
   // Voir buildOutbreakAlertEmail : même ligne de couverture, même raison.
   coverageNote?: string
 ): { subject: string; html: string } {
   const c = CONTENT[locale] ?? CONTENT.en;
   const numLocale = locale === "ar" ? "ar-SA" : (locale || "en");
-  const totalCount = items.length + overflowCount;
+  const totalCount = items.length + overflowItems.length;
 
   const cards = items
     .map((item) => {
@@ -396,8 +414,9 @@ export function buildOutbreakDigestEmail(
 
       ${cards}
 
-      ${overflowCount > 0
-        ? `<p style="color:#9ca3af;font-size:13px;margin:0 0 20px">${c.overflowNote(overflowCount)}</p>`
+      ${overflowItems.length > 0
+        ? `<p style="color:#9ca3af;font-size:13px;margin:0 0 6px">${c.overflowNote(overflowItems.length)}</p>
+      <p style="color:#6b7280;font-size:12px;line-height:1.6;margin:0 0 20px">${overflowItems.map((o) => esc(overflowLabel(o.disease, o.country))).join("; ")}</p>`
         : ""}
 
       <!-- CTA -->

@@ -287,12 +287,15 @@ async function runDiseaseAlerts(_req: NextRequest, supabase: SupabaseClient) {
           date:       o.date,
           diseaseUrl: `${APP_URL}/${locale}/disease/${diseaseToSlug(o.disease_en)}`,
         }));
-        const overflowCount = sorted.length - shown.length;
-        if (overflowCount > 0) {
-          console.log(`[disease-alerts] digest for ${profile.email} capped: ${shown.length} shown, ${overflowCount} summarized`);
-          digestItemsCapped += overflowCount;
+        const overflow = sorted.slice(MAX_DIGEST_ITEMS_PER_EMAIL);
+        if (overflow.length > 0) {
+          console.log(`[disease-alerts] digest for ${profile.email} capped: ${shown.length} shown, ${overflow.length} summarized`);
+          digestItemsCapped += overflow.length;
         }
-        ({ subject, html } = buildDiseaseAlertDigestEmail(locale, shown, `${APP_URL}/${locale}/account#disease-alerts`, overflowCount));
+        ({ subject, html } = buildDiseaseAlertDigestEmail(
+          locale, shown, `${APP_URL}/${locale}/account#disease-alerts`,
+          overflow.map((o) => ({ disease: o.disease, country: o.country }))
+        ));
         digestEmailsSent++;
       }
       if (isRealProduction) {

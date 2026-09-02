@@ -13,6 +13,14 @@ function esc(s: string): string {
   return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
+// Voir le même helper dans lib/alert-emails.ts.
+const OVERFLOW_LABEL_MAX = 60;
+
+function overflowLabel(disease: string, country: string): string {
+  const label = `${disease} · ${country}`;
+  return label.length > OVERFLOW_LABEL_MAX ? label.slice(0, OVERFLOW_LABEL_MAX - 1) + "…" : label;
+}
+
 interface DigestOutbreak {
   disease: string;
   disease_en: string | null;
@@ -39,7 +47,7 @@ const CONTENT: Record<string, {
     subject: (n) => `🌍 ${n} foyers actifs déjà suivis dans vos régions`,
     headline: (n) => `${n} foyers épidémiques sont déjà actifs dans les régions que vous suivez.`,
     intro: "Voici un état des lieux au moment de votre inscription :",
-    more: (n) => `+ ${n} autres foyers actifs, consultables dans votre tableau de bord.`,
+    more: (n) => `+ ${n} autres foyers actifs :`,
     futureNote: "Vous recevrez un email dès qu'un nouveau foyer apparaît ou que l'un de ceux-ci s'aggrave — pas besoin de tout revoir ici à chaque fois.",
     ctaLabel: "Voir le tableau de bord complet →",
     closing: "Restez vigilants,\nL'équipe HealthWatch Global",
@@ -51,7 +59,7 @@ const CONTENT: Record<string, {
     subject: (n) => `🌍 ${n} active outbreaks already tracked in your regions`,
     headline: (n) => `${n} disease outbreaks are already active in the regions you're tracking.`,
     intro: "Here's the state of play at the moment you signed up:",
-    more: (n) => `+ ${n} more active outbreaks, viewable in your dashboard.`,
+    more: (n) => `+ ${n} more active outbreaks:`,
     futureNote: "You'll get an email the moment a new outbreak appears or one of these gets worse — no need to revisit this list otherwise.",
     ctaLabel: "View full dashboard →",
     closing: "Stay vigilant,\nThe HealthWatch Global team",
@@ -63,7 +71,7 @@ const CONTENT: Record<string, {
     subject: (n) => `🌍 ${n} brotes activos ya monitoreados en sus regiones`,
     headline: (n) => `${n} brotes de enfermedades ya están activos en las regiones que sigue.`,
     intro: "Este es el estado actual en el momento de su inscripción:",
-    more: (n) => `+ ${n} brotes activos más, disponibles en su panel.`,
+    more: (n) => `+ ${n} brotes activos más:`,
     futureNote: "Recibirá un correo en cuanto aparezca un nuevo brote o alguno de estos empeore, no hace falta revisar esta lista de nuevo.",
     ctaLabel: "Ver el panel completo →",
     closing: "Permanezca alerta,\nEl equipo de HealthWatch Global",
@@ -75,7 +83,7 @@ const CONTENT: Record<string, {
     subject: (n) => `🌍 ${n} تفشيات نشطة تتم متابعتها بالفعل في مناطقك`,
     headline: (n) => `${n} تفشياً وبائياً نشطاً بالفعل في المناطق التي تتابعها.`,
     intro: "إليك الوضع الحالي لحظة تسجيلك:",
-    more: (n) => `+ ${n} تفشياً نشطاً إضافياً، يمكن الاطلاع عليها في لوحة التحكم.`,
+    more: (n) => `+ ${n} تفشياً نشطاً إضافياً:`,
     futureNote: "ستتلقى بريداً إلكترونياً فور ظهور تفشٍّ جديد أو تفاقم أحد هذه التفشيات، لا حاجة لمراجعة هذه القائمة مجدداً.",
     ctaLabel: "← عرض لوحة التحكم الكاملة",
     closing: "ابقوا يقظين،\nفريق HealthWatch Global",
@@ -87,7 +95,7 @@ const CONTENT: Record<string, {
     subject: (n) => `🌍 ${n} wabah aktif yang sudah dipantau di wilayah Anda`,
     headline: (n) => `${n} wabah penyakit sudah aktif di wilayah yang Anda pantau.`,
     intro: "Berikut kondisi terkini pada saat Anda mendaftar:",
-    more: (n) => `+ ${n} wabah aktif lainnya, dapat dilihat di dasbor Anda.`,
+    more: (n) => `+ ${n} wabah aktif lainnya:`,
     futureNote: "Anda akan menerima email begitu wabah baru muncul atau salah satu dari ini memburuk, tidak perlu meninjau ulang daftar ini.",
     ctaLabel: "Lihat dasbor lengkap →",
     closing: "Tetap waspada,\nTim HealthWatch Global",
@@ -105,7 +113,8 @@ export function buildSignupDigestEmail(
   topOutbreaks: DigestOutbreak[],
   totalCount: number,
   dashboardUrl: string,
-  unsubUrl?: string
+  unsubUrl?: string,
+  overflowOutbreaks: DigestOutbreak[] = []
 ): { subject: string; html: string } {
   const c = CONTENT[locale] ?? CONTENT.en;
   const numLocale = locale === "ar" ? "ar-SA" : (locale || "en");
@@ -113,6 +122,9 @@ export function buildSignupDigestEmail(
     (a, b) => (RISK_RANK[b.risk_level] ?? 0) - (RISK_RANK[a.risk_level] ?? 0)
   );
   const remaining = totalCount - sorted.length;
+  const overflowSorted = [...overflowOutbreaks].sort(
+    (a, b) => (RISK_RANK[b.risk_level] ?? 0) - (RISK_RANK[a.risk_level] ?? 0)
+  );
 
   const rows = sorted
     .map((o) => {
@@ -154,7 +166,10 @@ export function buildSignupDigestEmail(
         </table>
       </div>
 
-      ${remaining > 0 ? `<p style="color:#9ca3af;font-size:13px;margin:0 0 24px">${c.more(remaining)}</p>` : `<div style="margin-bottom:24px"></div>`}
+      ${remaining > 0
+        ? `<p style="color:#9ca3af;font-size:13px;margin:0 0 6px">${c.more(remaining)}</p>
+      <p style="color:#6b7280;font-size:12px;line-height:1.6;margin:0 0 24px">${overflowSorted.map((o) => esc(overflowLabel(getLocalizedDisease(o, locale), getLocalizedCountry(o, locale)))).join("; ")}</p>`
+        : `<div style="margin-bottom:24px"></div>`}
 
       <a href="${dashboardUrl}"
          style="display:inline-block;background:#dc2626;color:#ffffff;font-weight:700;font-size:14px;padding:12px 24px;border-radius:10px;text-decoration:none;margin-bottom:20px">
