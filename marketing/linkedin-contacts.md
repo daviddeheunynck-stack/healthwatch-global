@@ -177,7 +177,7 @@ Fil relu intégralement (§4) : **18 messages depuis le 27/08**, recopiés verba
 
 > C'est net, et c'est exactement ce que je ne pouvais pas deviner depuis les publications : la semaine 35 restera ce qu'elle est, elle ne sera pas rouverte quand les 62 tomberont.
 >
-> Ça me fait une deuxième question, sur le cumul cette fois. Les 55 poliovirus détectés en PFA et ENV, les 8 provinces et 22 zones de santé affectées de votre tableau, ils sont recalculés depuis la base du laboratoire, ou additionnés à partir des semaines déjà publiées ? Selon le cas, le cumul et la somme des hebdomadaires peuvent finir par ne plus dire la même chose, et de mon côté je ne vois que le cumul.
+> Ça me fait une deuxième question, sur le cumul cette fois. Les 55 poliovirus détectés en PFA et ENV, ils sont recalculés depuis la base du laboratoire, ou additionnés à partir des semaines déjà publiées ? La question ne vaut pas pour les 8 provinces et 22 zones de santé affectées, qui se réécrivent au lieu de s'additionner, et c'est justement ce qui me gêne : vus de loin, les deux se présentent comme un seul et même total.
 
 #### 🔒 DM 2 — **Julien Tuba** (`/in/julien-tuba-a31abb143/`), FR, vouvoiement, fil actif, SANS CTA — **EN FILE**
 
@@ -194,7 +194,7 @@ Fil relu intégralement (§4) : 3 messages, recopiés verbatim dans `tmp/thread-
 
 `QA : mécanique FAIL sur le seul faux positif context.too-soon après correction (553 car., limite 1300, 3 paragraphes, fr/fr, 0 chiffre, 0 lien, 0 CTA, 0 tiret cadratin) — 1 blocker ngram.history apparu en cours de correction, levé | relecteur VERDICT: REECRIRE 4, 9 au 1er jet, les deux corrigés — 10 PASS sur 12 par ailleurs, dont attribution verbatim vérifiée et apport reconnu distinct | faits cités : aucun | registre du 02/09 (13:03) | statut : en file de validation`
 
-> Je relis votre réponse deux fois, et c'est un point de votre liste qui m'arrête : la zone qui cesse soudainement de notifier. C'est le seul de vos signaux faibles qui devrait, en théorie, se voir aussi depuis l'extérieur.
+> Je relis votre réponse deux fois, et c'est un point de votre liste qui m'arrête : la zone qui cesse soudainement de notifier. C'est celui de vos signaux faibles qui a l'air, vu de loin, le plus facile à repérer depuis l'extérieur.
 >
 > En pratique presque jamais, ou alors pas de là où je lis. Une zone qui décroche ne m'arrive pas sous la forme d'un zéro, elle ne m'arrive pas du tout. À cette distance, le silence et l'absence de cas se lisent pareil, et je n'ai pas de quoi les séparer.
 >
@@ -214,11 +214,28 @@ Fil relu intégralement (§4) : 5 messages depuis le 31/08, recopiés verbatim d
 
 > Bonjour Paul, votre franchise vaut mieux qu'une réponse assurée, et elle appelle une correction de mon côté. Je ne viens pas du terrain non plus : je n'ai jamais participé à une riposte, ni construit un système de surveillance. Je lis des bulletins déjà publiés et j'en tiens une base à jour, tout en bout de chaîne.
 >
-> C'est pour ça que votre paragraphe sur la littérature m'intéresse plus que le reste. Vous auriez une référence en tête sur ces données de terrain qui ne sont jamais versées dans un dépôt accessible ? C'est à peu près le seul chemin par lequel je peux documenter ce trou sans l'inventer.
->
 > Sur les opportunités, je n'ai rien à proposer aujourd'hui, je travaille seul sur ce projet.
+>
+> En revanche votre paragraphe sur la littérature m'intéresse plus que le reste. Vous auriez une référence en tête sur ces données de terrain qui ne sont jamais versées dans un dépôt accessible ? C'est à peu près le seul chemin par lequel je peux documenter ce trou sans l'inventer.
 
 ⚠️ **Rappel du piège de re-vérification (27/08)** : ces trois textes sont maintenant cités mot pour mot dans ce fichier. Les repasser au contrôle mécanique après cet archivage renverra un `ngram.history` **contre eux-mêmes**. Ce n'est pas un gabarit recyclé, c'est leur propre citation.
+
+---
+### 🔁 DOUBLE-CHECK DES 3 DM — demandé par David en session, 02/09 après le run de 13h
+
+Relecture à froid des trois brouillons, en revérifiant les sources plutôt qu'en relisant le raisonnement de rédaction. **Les trois fils ont d'abord été rouverts : aucun n'a bougé** (John 11h20, Dossa Paul 11h01, Julien 10h50, horodatages inchangés), les brouillons restent d'actualité.
+
+**Trois corrections appliquées, dont deux défauts factuels que ni le contrôle mécanique ni les relecteurs n'avaient attrapés.**
+
+1. 🔴 **John Omari Baso — l'alternative posée ne s'appliquait pas à deux des trois chiffres cités.** Le brouillon demandait si « *les 55 poliovirus, les 8 provinces et 22 zones de santé affectées* » étaient « *recalculés depuis la base du laboratoire, ou additionnés à partir des semaines déjà publiées* ». Un compte de poliovirus s'additionne ; **une liste de provinces et de zones de santé est une union, pas une somme** — l'additionner d'une semaine à l'autre double-compterait. La question était donc mal formée pour deux tiers de ce qu'elle citait, devant un épidémiologiste qui produit ce tableau lui-même. **Corrigé en restreignant la question au 55, et en faisant de la différence l'argument** : les deux totaux ne se dérivent pas de la même façon mais se présentent identiquement vus de l'aval. L'échange y gagne, la question est plus juste.
+
+2. 🔴 **Julien Tuba — « le seul de vos signaux faibles » était faux.** Sa liste en compte cinq, dont « *un changement inhabituel dans la répartition géographique des cas* » et « *une rupture dans la complétude des données* », qui sont eux aussi visibles de l'extérieur dès lors que le bulletin publie une ventilation. Affirmer « le seul » exposait à une réfutation immédiate par le mieux placé pour la faire. **Corrigé en « celui qui a l'air, vu de loin, le plus facile à repérer depuis l'extérieur »** — défendable, et la suite du message le contredit volontairement, ce qui est le ressort du texte.
+
+3. 🟡 **Dossa Paul YAOÏTCHA — ordre des paragraphes (relecture éditoriale, item 8).** Le brouillon se terminait sur le refus (« *je n'ai rien à proposer aujourd'hui* »), ce qui refermait l'échange sur une fin de non-recevoir et enterrait la seule vraie demande, la référence bibliographique. **Refus remonté en 2e paragraphe, question en dernier** : le message se clôt maintenant sur ce qu'on attend de lui. Aucun mot du refus n'a changé, il reste franc.
+
+**Recontrôle mécanique après correction** : les trois repassent, avec pour seuls blockers `context.too-soon` (faux positif déjà documenté et confirmé par les trois relecteurs) et `ngram.history`. ⚠️ **Ce `ngram.history` est le piège de re-vérification du 27/08, vérifié sur pièce et non supposé** : chacune des séquences citées (« la semaine 35 restera ce », « rouverte quand les 62 tomberont », « votre franchise vaut mieux qu », « votre liste qui m'arrête ») n'a **qu'une seule occurrence** dans ce fichier, dans le bloc « 🔒 en file de validation » écrit par le run de 13h lui-même. Aucune collision avec un message réellement envoyé à un autre destinataire.
+
+**Les trois textes ci-dessus sont les versions corrigées, à jour. Statut inchangé : en file de validation, aucun envoyé.**
 
 ---
 
