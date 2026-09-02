@@ -41,19 +41,19 @@ Fil relu intégralement (§4) : **16 messages depuis le 27/08**, recopiés verba
 
 ⚠️ **Faux positif mécanique documenté, écarté sur pièce** : `context.too-soon` (« dernier message il y a 2 j, minimum 3 j »). La règle mesure l'écart entre deux **envois de David** sans voir les messages entrants ; les trois derniers messages du fil sont de John. **C'est une réponse en fil actif, pas une relance** — même classe de faux positif que celle déjà consignée pour John et Rodrigo. Le relecteur l'a confirmé indépendamment.
 
-`QA : mécanique FAIL sur le seul faux positif context.too-soon (565 car., limite 1300, 2 paragraphes, fr/fr, 0 lien, 0 CTA, 0 tiret cadratin ; 62 et 35 tracés from-thread) — 1 blocker ngram.history antérieur corrigé avant le relecteur (« existe-t-il quelque part », formule déjà servie) | relecteur VERDICT: REECRIRE 5, 7 au 1er jet, corrigés — 10 PASS sur 12 par ailleurs, dont CTA non resservi et registre vous confirmé | faits cités : aucun de la base, 62 et 35 viennent de la diapositive du fil | registre du 02/09 (09:03) | statut : en file de validation`
+`QA : mécanique FAIL sur le seul faux positif context.too-soon (565 car., limite 1300, 2 paragraphes, fr/fr, 0 lien, 0 CTA, 0 tiret cadratin ; 62 et 35 tracés from-thread) — 1 blocker ngram.history antérieur corrigé avant le relecteur (« existe-t-il quelque part », formule déjà servie) | relecteur VERDICT: REECRIRE 5, 7 au 1er jet, corrigés — 10 PASS sur 12 par ailleurs, dont CTA non resservi et registre vous confirmé | faits cités : aucun de la base, 62 et 35 viennent de la diapositive du fil | registre du 02/09 (09:03) | statut : envoyé le 02/09, sur ordre explicite de David (« envoie les DM », session interactive) — texte relu caractère pour caractère et destinataire revérifié dans le même appel JS que le clic sur Envoyer, confirmé côté fil après coup`
 
 > Bonjour John, merci, et ce n'est pas une formule : c'est exactement ce que je vous avais demandé, un signal de votre côté quand quelque chose bouge. Retrouver ce qui en ressort publiquement, c'est mon travail, pas le vôtre.
 >
 > Une ligne de votre tableau m'arrête : les 62 isolats encore en attente de séquençage. Si une partie revient positive plus tard, le décompte de la semaine 35 est-il repris rétroactivement, ou le résultat est-il porté à la semaine où il tombe ? Selon la réponse, un chiffre hebdomadaire ne veut pas dire la même chose quand on le lit de loin.
 
-#### 🔒 RAPPEL — 3 DM TOUJOURS EN FILE DEPUIS LE 01/09 (1 jour)
+#### ✅ 3 DM EN FILE DEPUIS LE 01/09 — ENVOYÉS CE RUN, SUR ORDRE EXPLICITE DE DAVID
 
-Les créneaux de 13h et 17h du 01/09 n'ayant pas tourné, ces trois textes n'ont jamais été présentés à David. **Vérifiés en direct ce run dans la messagerie** : dans les trois cas notre côté n'a rien envoyé, l'état de la file est exact. Textes complets et rapports QA : entrée du 01/09 de ce fichier.
+Les créneaux de 13h et 17h du 01/09 n'ayant pas tourné, ces trois textes n'avaient jamais été présentés à David avant le double-check de ce run. **David a tapé « envoie les DM » en session interactive** (convention commune sur ce qui compte comme validation explicite) → les 4 DM en file (les 3 ci-dessous + John Omari Baso, section 2) ont été **envoyés dans la foulée**, chacun avec relecture caractère pour caractère et vérification du destinataire dans le même appel JS que le clic sur Envoyer, puis confirmation de l'apparition dans le fil. Textes complets et rapports QA : entrée du 01/09 de ce fichier.
 
-1. **Dossa Paul YAOÏTCHA** (FR) — réponse à son échange de coordonnées.
-2. ⭐⭐ **Isaias Fernandes Co** (EN) — *AI & Technologies Officer, OMS AFRO, pilote PDX sur 47 États membres*. **Il accepte le principe d'un appel** à partir de la semaine du 14 septembre. Signal de traction le plus fort du dossier.
-3. **Julien Tuba** (FR) — message de bienvenue, *AVoHC at Africa CDC*, RDC.
+1. **Dossa Paul YAOÏTCHA** (FR) — réponse à son échange de coordonnées. **Envoyé le 02/09.**
+2. ⭐⭐ **Isaias Fernandes Co** (EN) — *AI & Technologies Officer, OMS AFRO, pilote PDX sur 47 États membres*. **Il accepte le principe d'un appel** à partir de la semaine du 14 septembre. Signal de traction le plus fort du dossier. **Envoyé le 02/09.**
+3. **Julien Tuba** (FR) — message de bienvenue, *AVoHC at Africa CDC*, RDC. **Envoyé le 02/09.**
 
 ---
 
@@ -127,7 +127,7 @@ Fil relu intégralement (§4) : 3 messages, recopiés verbatim dans `tmp/thread-
 
 🔴 **Le relecteur a fait échouer le 1er jet sur la question 4, et il avait raison.** Le brouillon écrivait « *les bulletins publics que compile HealthWatch Global* » — formulation **non couverte par le registre produit** : ce qu'il couvre, c'est la ligne publique de foyer (maladie, pays, cas, décès, une date, la source), pas une description de HWG comme compilateur de bulletins. Corrigé en remplaçant par l'objet réellement couvert, la ligne de foyer et ses champs. Deux blockers `ngram.history` avaient par ailleurs été corrigés avant le relecteur (« les bulletins que j'agrège », « une fois la riposte close », formules déjà servies).
 
-`QA : mécanique PASS après correction (554 car., limite 1300, 2 paragraphes, fr/fr, 0 chiffre, 0 lien, 0 CTA, 0 tiret cadratin) — 2 passages FAIL antérieurs sur ngram.history, corrigés | relecteur VERDICT: REECRIRE 4 au 1er jet (affirmation produit non couverte), corrigé par remplacement — 11 PASS sur 12 par ailleurs | faits cités : aucun | registre du 01/09 (09:04) | statut : en file de validation`
+`QA : mécanique PASS après correction (554 car., limite 1300, 2 paragraphes, fr/fr, 0 chiffre, 0 lien, 0 CTA, 0 tiret cadratin) — 2 passages FAIL antérieurs sur ngram.history, corrigés | relecteur VERDICT: REECRIRE 4 au 1er jet (affirmation produit non couverte), corrigé par remplacement — 11 PASS sur 12 par ailleurs | faits cités : aucun | registre du 01/09 (09:04) | statut : envoyé le 02/09, sur ordre explicite de David (« envoie les DM », session interactive)`
 
 > Bonjour Paul, enchanté également. Merci pour vos coordonnées, je reste plutôt sur LinkedIn pour ce type d'échange, c'est là que je suis le plus régulier.
 >
@@ -141,7 +141,7 @@ Fil relu intégralement (§4) : 8 messages depuis le 18/08, recopiés verbatim d
 
 **Arbitrage CTA.** Le lien healthwatch-global.com et l'essai Pro **ont déjà été envoyés dans ce fil**, le 18/08 à 20h26. Anti-répétition appliquée : **rien n'est resservi**, le brouillon ne contient ni lien, ni nom de produit, ni offre.
 
-`QA : mécanique PASS au 1er passage (154 car., limite 1300, 2 paragraphes, en/en, 0 blocker, 0 warn, 0 review) | relecteur VERDICT: ENVOYER, 12 PASS au 1er jet, aucune réserve — vérifie nommément l'absence de date calculée et la non-répétition du CTA du 18/08 | faits cités : aucun | registre du 01/09 (09:04) | statut : en file de validation`
+`QA : mécanique PASS au 1er passage (154 car., limite 1300, 2 paragraphes, en/en, 0 blocker, 0 warn, 0 review) | relecteur VERDICT: ENVOYER, 12 PASS au 1er jet, aucune réserve — vérifie nommément l'absence de date calculée et la non-répétition du CTA du 18/08 | faits cités : aucun | registre du 01/09 (09:04) | statut : envoyé le 02/09, sur ordre explicite de David (« envoie les DM », session interactive)`
 
 > After next week is fine, and good luck with the event.
 >
@@ -158,7 +158,7 @@ Langue : **FR**, choisi sur la géographie (RDC) et sur ses republications franc
 - **(9) Terrain politique.** La question posée était « *qu'est-ce qui se perd en route* » entre remontée de terrain et bulletin — elle **présuppose une perte** et demande, dès le premier message, à un agent en poste de commenter la chaîne de remontée de sa propre institution. Remplacée par une question sans présupposé, qui porte sur **notre** côté : ce qu'un lecteur de bulletin ne voit pas et que lui voit.
 - Un blocker `ngram.history` a été corrigé au passage sur « senior laboratory and surveillance officer » — **faux positif de citation obligatoire** (c'est son intitulé, archivé dans nos fichiers), contourné en ne le recopiant pas mot pour mot.
 
-`QA : mécanique PASS après correction (605 car., limite 1300, 3 paragraphes, fr, 0 chiffre, 0 lien, 0 CTA) — threadLang null (aucun fil, premier contact), 1 review hwg.claim couverte par coverage.sourceHosts (africacdc.org, afro.who.int) et la copie publique du site | relecteur VERDICT: REECRIRE 6, 9 au 1er jet, corrigés — 10 PASS sur 12 par ailleurs | faits cités : aucun | registre du 01/09 (09:04) | statut : en file de validation`
+`QA : mécanique PASS après correction (605 car., limite 1300, 3 paragraphes, fr, 0 chiffre, 0 lien, 0 CTA) — threadLang null (aucun fil, premier contact), 1 review hwg.claim couverte par coverage.sourceHosts (africacdc.org, afro.who.int) et la copie publique du site | relecteur VERDICT: REECRIRE 6, 9 au 1er jet, corrigés — 10 PASS sur 12 par ailleurs | faits cités : aucun | registre du 01/09 (09:04) | statut : envoyé le 02/09, sur ordre explicite de David (« envoie les DM », session interactive)`
 
 > Bonjour Julien, merci d'avoir accepté l'invitation. Elle était partie sans un mot, je répare.
 >
