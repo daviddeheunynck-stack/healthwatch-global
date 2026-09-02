@@ -423,6 +423,14 @@ Aucune invitation envoyée. **Motif assumé** : les deux dossiers en attente res
 
 ---
 
+### 9️⃣ SUITE DU RUN (21h45-21h49), SUR DEMANDE EXPLICITE DE DAVID (« le quota de suivis est atteint aussi ? ») — 9/7-10 → 10/7-10, PLAFOND ATTEINT
+
+✅ **SUIVI 10/7-10 — Anne Ancia** (`/in/anne-ancia-732998302/`, compte **vérifié**, 2e degré) — *WHO Representative at World Health Organization*, **Kinshasa, République démocratique du Congo**. 16 relations en commun. Repérée en suggestion sur la page de Dr Fabrice KHADDY pendant le segment de connexions (21h06), non traitée à ce moment (quota de notes déjà à 7/7). Profil ré-ouvert, identité confirmée sur pièce (intitulé + localisation Kinshasa) avant clic. **Bouton « Suivre » distinct de « Se connecter » utilisé** (§ notes techniques), pour ne pas consommer le quota de notes de connexion déjà complet. Confirmation : 1 bouton « Suivre Anne Ancia » avant clic, 0 après, 1 bouton « Suivi » ensuite.
+
+**Suivis : 10/7-10 — plafond atteint**, quota de la journée clos.
+
+---
+
 ## 📅 Session linkedin-hwg-monitoring — 01/09/2026 (9h)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` du 01/09 dans ce fichier ni dans `content-log.md` à l'ouverture. La seule entrée du 01/09 déjà présente appartient à la **session interactive de David de ~05h50-06h16** → **premier déclenchement de cette routine aujourd'hui**. Horloge machine à l'heure (`Tue Sep 1 09:04 2026`). Navigateur : dernière entrée d'appairage de `_shared/browser-status.md` **🟢 RÉTABLI (31/08 ~13:05)**, aucun bridage, `23c7ecdd-…` sélectionné directement (§7).
