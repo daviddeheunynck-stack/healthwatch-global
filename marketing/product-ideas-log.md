@@ -2968,3 +2968,19 @@ data-quality     HTTP 200  success:true  129 lignes actives, 0 anomalie, 0 erreu
 ```
 
 Les quatre sont propres — la correction partagée de `fetchWHODONList()` est confirmée fonctionner pour ses deux appelants (`sync-outbreaks` ET `check-new-don`), sans qu'aucun des deux fichiers n'ait eu besoin d'être touché.
+
+### Suite du même soir (02/09, session interactive) — garde-fou de budget construit sur `data-quality`
+
+David a demandé la construction du garde-fou pour `data-quality` (« construis le garde-fou de budget pour data-quality »), suite au risque documenté lors du rollout retry sur le reste des crons. Verrou de code réacquis, édition faite, relâché après le push.
+
+**✅ CONSTRUIT, commit `40798edd`** (`app/api/cron/data-quality/route.ts`). Même patron que `TARGET_LOOP_BUDGET_MS` dans `sync-who-regional` (`5a235b75`), adapté à la structure particulière de ce cron : **deux boucles** (section 4, correctifs d'anomalies ; section 4e, résolution/containment) puisent toutes deux dans `verifyFromDON()`, un **seul chronomètre partagé** (`donVerifyStart`) entre les deux — cohérent avec le fait qu'elles consomment le même budget de vérification DON, pas deux budgets indépendants.
+
+- `DON_VERIFY_BUDGET_MS = 70_000` (70s sur un `maxDuration` de 120s — 50s de marge pour les sections 1-3, 4b-4d, 4f-4n, 5, l'envoi d'e-mail).
+- Section 4 : vérifié au début de chaque itération, sortie propre avec le nombre d'anomalies restantes journalisé dans `needsReview`. Les anomalies non vérifiées restent signalées comme anomalies (rien ne les efface silencieusement).
+- Section 4e : vérifié juste avant l'appel `verifyFromDON` (après les filtres bon marché `is_seed`/`DON_RE`/`anomalyIds`/`source_priority`, pour ne pas gaspiller le budget à re-checker l'horloge sur des lignes qui auraient de toute façon été ignorées gratuitement) — un seul signal `needsReview` plutôt qu'une entrée par ligne, cette boucle pouvant filtrer beaucoup de lignes avant d'en trouver une qui qualifie.
+
+`npx tsc --noEmit` et `npx eslint` propres sur le fichier touché.
+
+**Vérifié en prod après déploiement** : `HTTP 200, success:true`, `activeRows:129, anomaliesDetected:0, needsReview:4` — identique au comportement d'avant le garde-fou (aucun déclenchement, comme attendu vu que 0 ligne correspond aujourd'hui au filtre strict de la section 4e et 0 anomalie existe).
+
+**Bilan de la soirée : les deux crons identifiés avec ce défaut structurel (boucle de fetch sans garde-fou de budget) ont maintenant l'un et l'autre leur garde-fou** — `sync-who-regional` (`5a235b75`) et `data-quality` (`40798edd`).
