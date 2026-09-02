@@ -2831,3 +2831,27 @@ David a demandé la construction du garde-fou en premier (« construis le garde-
 **Ce que ça change concrètement** : avant ce soir, une panne systémique d'un seul jour sur `xmart-api-public.who.int` (27 cibles dengue+mpox) pouvait déjà pousser ce cron à 270s sans aucune erreur de code — collé au plafond de 300s, sans marge. Le garde-fou ne réduit pas ce risque de dépassement en soi (il existait déjà), mais **change ce qui se passe quand ça arrive** : un dépassement devient une sortie propre et journalisée plutôt qu'une troncature brutale au milieu d'écritures DB.
 
 **Ce que ça ouvre, pas construit ce soir** : avec ce filet en place, ajouter `fetchWithRetry` (`lib/fetch-retry.ts`) aux fetchers de ce cron redevient sûr — un dépassement dû au retry dégraderait désormais proprement au lieu d'être fatal. Le retry lui-même reste à construire, sur nouvelle demande explicite de David s'il le souhaite : ce soir portait spécifiquement sur le garde-fou, pas sur le rollout complet qui en dépendait.
+
+### Suite du même soir (02/09, session interactive) — retry construit sur les fetchers GHO/xmart/ArcGIS de `sync-who-regional`
+
+David a demandé le retry sur ce sous-ensemble précis (« ajoute le retry sur les fetchers GHO/xmart/ArcGIS »), maintenant que le garde-fou de budget (commit `5a235b75`) absorbe un dépassement au lieu de le rendre fatal. Verrou de code réacquis, édition faite, relâché après le push.
+
+**✅ CONSTRUIT, commit `6399da3b`.** `fetchWithRetry` appliqué aux **8 fetchers par-cible** (46 cibles au total, 10 sites de fetch — 2 des 8 fetchers, dengue et choléra, ont chacun un site principal + un site de repli) :
+
+| fetcher | hôte | cibles | sites de fetch |
+|---|---|---|---|
+| `fetchMeaslesGHO`, `fetchPolioGHO`, `fetchYellowFeverGHO`, `fetchLeishmaniasisGHO`, `fetchDiphtheriaGHO` | `ghoapi.azureedge.net` | 21 | 1 chacun |
+| `fetchDengueGlobalSurveillance` | xmart | 22 | 2 (`sumYear` + repli `latestUrl`) |
+| `fetchMpoxGlobalSurveillance` | xmart | 5 | 1 |
+| `fetchCholeraGlobalSurveillance` | ArcGIS | 18 | 2 (`sumYear` + repli `probeUrl`) |
+
+**Calibrage délibérément différent du reste du rollout de ce soir** : 2 tentatives × **5s** (au lieu de 2×10-15s pour les 14 crons précédents). Choix motivé par les chiffres de l'investigation précédente : le pire cas par appel (~10,5s avec ce calibrage) reste très proche du timeout original à tentative unique (10s) — donc une panne totale d'un hôte n'allonge quasiment pas le temps consommé dans `TARGET_LOOP_BUDGET_MS` par rapport à avant ce commit, alors qu'un incident bref (le cas que le retry est censé servir) se rattrape désormais au lieu de coûter la cible pour la journée.
+
+**Volontairement pas touché, avec raison distincte pour chacun** :
+- `fetchPolioGPEIThisWeek` et `fetchWNVEcdc` — refetchent la **même URL partagée** par plusieurs cibles (13× et 7× par run, sans mise en cache). Y ajouter du retry multiplierait un gaspillage déjà présent sans le corriger ; la vraie solution est la mise en cache, pas le retry. Signalé comme trouvaille distincte dans l'entrée précédente, pas construit ce soir.
+- Le fetcher méningite — déjà résilient par construction (boucle de candidats semaines × dossiers), même famille que les crons à chaîne de secours laissés de côté dans le rollout précédent (`sync-usda-aphis`, `sync-who-emro`, `sync-spf`).
+- `queryReliefWeb` — code mort (`reliefWebOk = false`), rien à envelopper.
+
+`npx tsc --noEmit` et `npx eslint` propres sur le fichier touché.
+
+**Bilan cumulé fetch-retry, trois commits ce soir (`bb2a707b`, `07493f46`, `6399da3b`) : 14 crons entiers + 8 fetchers ciblés d'un 15e (`sync-who-regional`, 46 cibles sur ses 139) couverts.** Reliquat inchangé pour le reste : `sync-usda-aphis`, `sync-who-emro`, `sync-spf`, `sync-endemic-data` (chaînes de secours / helper générique partagé), et pour `sync-who-regional` spécifiquement, `fetchPolioGPEIThisWeek`/`fetchWNVEcdc` (nécessitent une mise en cache avant qu'un retry ait du sens) et la méningite (déjà résiliente).
