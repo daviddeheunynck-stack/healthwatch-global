@@ -20,6 +20,7 @@ import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { normalizeDisease } from "@/lib/disease-data";
 import { findCountry } from "@/lib/geo-data";
 import { errorMessage } from "@/lib/error";
+import { fetchWithRetry } from "@/lib/fetch-retry";
 import { scrapeAphisTableauCsv, parseCrosstabCsv, aggregateCrosstabByState } from "@/lib/aphis-tableau-scraper";
 import { truncateAtSentence } from "@/lib/truncate-text";
 import { dateFloorGuard, spikeGuard, collapseGuard, zeroCaseGuard, lockedRowRegressionGuard, lockedRowIsFreezing } from "@/lib/outbreak-guards";
@@ -358,13 +359,14 @@ async function runUsdaAphis(_req: NextRequest, supabase: SupabaseClient) {
   try {
     // Try each CSV candidate until one succeeds
     for (const url of APHIS_CSV_CANDIDATES) {
-      let res: Response;
-      try {
-        res = await fetch(url, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(8_000) });
-      } catch {
-        continue; // network error / timeout on this candidate — try next
-      }
-      if (!res.ok) continue; // 404 / 4xx — try next
+      // fetchWithRetry: 2 attempts, 4s each — safe on a candidate-URL
+      // fallback list: fetchWithRetry never retries a 4xx, so a candidate
+      // that's genuinely gone still falls through to the next one at
+      // roughly the original 8s single-attempt pace. Only a transient
+      // network blip on a preferred candidate now gets a fair second try.
+      // See lib/fetch-retry.ts (2026-09-02).
+      const { response: res } = await fetchWithRetry(url, { headers: FETCH_HEADERS }, { attempts: 2, timeoutMs: 4000, backoffMs: [500] });
+      if (!res || !res.ok) continue; // network error, or 404/4xx — try next
       const ct = res.headers.get("content-type") ?? "";
       const body = await res.text();
       if (ct.includes("text/html") || body.trimStart().startsWith("<")) {
@@ -380,11 +382,13 @@ async function runUsdaAphis(_req: NextRequest, supabase: SupabaseClient) {
     if (!csvSource) {
       // No CSV worked — try HTML table page
       console.warn("[usda-aphis] All CSV candidates failed — trying HTML page");
-      let htmlRes: Response;
-      try {
-        htmlRes = await fetch(APHIS_HTML_URL, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(15_000) });
-      } catch (e) {
-        const msg = `[usda-aphis] APHIS unreachable (all CSV + HTML failed): ${errorMessage(e)}`;
+      // fetchWithRetry: 2 attempts, 7.5s each (worst case ~16s, close to the
+      // original single 15s attempt).
+      const { response: htmlRes, error: htmlFetchErr, attemptsMade } = await fetchWithRetry(
+        APHIS_HTML_URL, { headers: FETCH_HEADERS }, { attempts: 2, timeoutMs: 7500, backoffMs: [1000] },
+      );
+      if (!htmlRes) {
+        const msg = `[usda-aphis] APHIS unreachable (all CSV + HTML failed): ${errorMessage(htmlFetchErr)} (${attemptsMade} tentative(s))`;
         console.warn(msg);
         if (isRealProduction) Sentry.captureMessage(msg, { level: "warning", tags: { cron: "sync-usda-aphis" } });
         await logCronRun(supabase, "sync-usda-aphis", "error", 0, "aphis_unreachable");

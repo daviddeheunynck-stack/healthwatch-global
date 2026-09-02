@@ -17,6 +17,7 @@ import { sendBrevoEmail } from "@/lib/brevo-send";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { extractNumbers } from "@/lib/outbreak-parser";
 import { errorMessage } from "@/lib/error";
+import { fetchWithRetry, type FetchRetryOptions } from "@/lib/fetch-retry";
 import { dateFloorGuard, spikeGuard, collapseGuard, zeroDeathGuard, lockedRowRegressionGuard, lockedRowIsFreezing } from "@/lib/outbreak-guards";
 
 export const dynamic   = "force-dynamic";
@@ -60,21 +61,25 @@ function todayYMD(): string {
 
 // ── Fetch helpers ────────────────────────────────────────────────────────────
 
-async function fetchHtml(url: string): Promise<string | null> {
-  try {
-    const res = await fetch(url, {
-      headers: FETCH_HEADERS,
-      signal: AbortSignal.timeout(12000),
-    });
-    if (!res.ok) {
-      console.log(`[endemic] ${url} → HTTP ${res.status}`);
-      return null;
-    }
-    return await res.text();
-  } catch (e) {
-    console.log(`[endemic] fetch error ${url}:`, errorMessage(e));
+// `retry` is opt-in and defaults to a single attempt (today's behavior,
+// unchanged) — this helper is shared by 6 call sites with very different
+// retry-safety profiles: a bounded loop over a handful of genuinely distinct
+// listing/candidate URLs is safe to retry (fetchWithRetry never retries a
+// 4xx, so a candidate that's genuinely absent still falls through at the
+// original pace), but a per-discovered-article detail loop (up to 5-6 items,
+// found only after the listing succeeds) is not — see the call sites below.
+// See lib/fetch-retry.ts (2026-09-02).
+async function fetchHtml(url: string, retry?: FetchRetryOptions): Promise<string | null> {
+  const { response: res, error } = await fetchWithRetry(url, { headers: FETCH_HEADERS }, retry ?? { attempts: 1, timeoutMs: 12000 });
+  if (!res) {
+    console.log(`[endemic] fetch error ${url}:`, errorMessage(error));
     return null;
   }
+  if (!res.ok) {
+    console.log(`[endemic] ${url} → HTTP ${res.status}`);
+    return null;
+  }
+  return await res.text();
 }
 
 function htmlToText(html: string): string {
@@ -145,7 +150,9 @@ async function fetchPhilippinesDengue(currentDate: string): Promise<Found | null
   // Step 1: collect candidate article URLs from RSS items mentioning dengue
   const candidates: string[] = [];
   for (const feedUrl of RSS_FEEDS) {
-    const xml = await fetchHtml(feedUrl);
+    // Retry: 2 attempts, 6s each — a bounded loop over 3 genuinely distinct
+    // feeds, safe since fetchWithRetry never retries a 4xx.
+    const xml = await fetchHtml(feedUrl, { attempts: 2, timeoutMs: 6000, backoffMs: [500] });
     if (!xml) { await delay(300); continue; }
 
     for (const m of xml.matchAll(/<item>([\s\S]*?)<\/item>/g)) {
@@ -254,7 +261,8 @@ async function findLatestCholeraUpdate(): Promise<CholeraUpdateRef | null> {
     "$filter":  "contains(Title,'outbreak of cholera')",
     "$format":  "json",
   });
-  const json = await fetchHtml(`https://www.who.int/api/news/meetingreports?${params}`);
+  // Retry: 2 attempts, 6s each — single API call, safe.
+  const json = await fetchHtml(`https://www.who.int/api/news/meetingreports?${params}`, { attempts: 2, timeoutMs: 6000, backoffMs: [500] });
   if (!json) return null;
 
   try {
@@ -300,8 +308,12 @@ async function tryWHOGlobalCholeraUpdate(currentDate: string): Promise<Found | n
     const pdfUrl = `https://cdn.who.int/media/docs/default-source/documents/emergencies/situation-reports/${yyyymmdd}_multi-country_outbreak-of-cholera_epidemiological_update_${updateNum}.pdf`;
 
     try {
-      const res = await fetch(pdfUrl, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(20_000) });
-      if (res.ok) {
+      // Retry: 2 attempts, 10s each (worst case ~21s, close to the original
+      // single 20s attempt) — a bounded 3-candidate date guess, safe since
+      // most misses are a deliberate 404 (wrong offset day) that
+      // fetchWithRetry never retries.
+      const { response: res } = await fetchWithRetry(pdfUrl, { headers: FETCH_HEADERS }, { attempts: 2, timeoutMs: 10_000, backoffMs: [1000] });
+      if (res?.ok) {
         const pdfParse = (await import("pdf-parse/lib/pdf-parse.js" as string)).default as
           (buf: Buffer, opts?: object) => Promise<{ text: string }>;
         const { text } = await pdfParse(Buffer.from(await res.arrayBuffer()), { max: 20 });
@@ -388,7 +400,9 @@ async function tryNationThailand(currentDate: string): Promise<Found | null> {
   const candidates: string[] = [];
 
   for (const listing of searchUrls) {
-    const html = await fetchHtml(listing);
+    // Retry: 2 attempts, 6s each — a bounded loop over 3 genuinely distinct
+    // search listings, safe since fetchWithRetry never retries a 4xx.
+    const html = await fetchHtml(listing, { attempts: 2, timeoutMs: 6000, backoffMs: [500] });
     if (!html) { await delay(300); continue; }
 
     // Nation Thailand article URLs: /news/SECTION/NNNNNNN or /health-wellness/NNNNNNN
@@ -439,7 +453,10 @@ async function tryWHOSEAROBulletin(currentDate: string): Promise<Found | null> {
     const year = new Date().getFullYear();
     const url = `https://cdn.who.int/media/docs/default-source/searo/whe/wherepib/${year}_${ww}_searo_epi_bulletin.pdf`;
     await delay(400);
-    const html = await fetchHtml(url);
+    // Retry: 2 attempts, 6s each — a bounded candidate-week search (8
+    // guesses), safe since most misses are a deliberate 404 (bulletin not
+    // out yet) that fetchWithRetry never retries.
+    const html = await fetchHtml(url, { attempts: 2, timeoutMs: 6000, backoffMs: [500] });
     if (!html) continue;
     const text = htmlToText(html);
     if (!/leptospirosis/i.test(text) || !/thailand/i.test(text)) continue;
