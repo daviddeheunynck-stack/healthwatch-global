@@ -2598,3 +2598,21 @@ Effet attendu au prochain passage (07h05 UTC) : `check-wer-cholera` sort de `ove
 `marketing/qa/product-claims.manual.json` (modifié), `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis) étaient déjà là au début du run. `package-lock.json` porte une normalisation de lockfile (retrait d'une entrée `@swc/helpers` transitive, un `dev: true` sur `fsevents`) apparue pendant le run, vraisemblablement un effet de bord de mes appels `npx` — laissée telle quelle et signalée plutôt que committée ou annulée. Aucun de ces quatre fichiers n'est entré dans mes deux commits.
 
 Une autre session a commité pendant ce run (`fix(wer-cholera): echapper les donnees interpolees dans l'e-mail d'alerte`) — sans recoupement avec les fichiers touchés ici.
+
+### Suite du même soir (02/09) — idée 1 construite sur ordre explicite de David
+
+David a demandé la construction en session interactive (« Construis l'idée 1 »), ce qui satisfait explicitement le garde-fou 3 de cette routine (« à traiter au cas par cas si David le demande explicitement en session »).
+
+**✅ CONSTRUITE, commit `2048f6a9`** — les trois gabarits (`lib/alert-emails.ts`, `lib/disease-alert-email.ts`, `lib/signup-digest-email.ts`) nomment désormais les foyers coupés en texte nu sous les cartes, à la place du seul renvoi « consultez le tableau de bord ». L'arbitrage du 25/08 sur le plafond de **cartes** reste inchangé — c'était uniquement le renvoi vers une surface inatteignable qui posait problème.
+
+**Ce qui a été construit, exactement comme conçu ce matin :**
+- Signatures des trois builders changées : `overflowCount: number` → `overflowItems: { disease, country }[]`. Un seul appelant chacune, mis à jour dans le même commit (`regional-alerts/route.ts`, `disease-alerts/route.ts`, `activate-trial.ts`).
+- Plafond de **60 caractères par libellé** (troncature + `…`) — le risque signalé ce matin sur les intitulés d'événement de sécurité alimentaire (jusqu'à 146 caractères) est traité, pas seulement noté.
+- Séparateur `; ` entre entrées, distinct du ` · ` interne à chaque libellé — pas d'ambiguïté visuelle.
+- `buildSignupDigestEmail` gagne un paramètre optionnel en 6ᵉ position : les deux scripts historiques `send-signup-digest-backfill-2026-07-2[67].mts` l'appellent avec 5 arguments et restent valides sans modification.
+
+**Vérifié avant commit** : rendu réel par transpilation (pas seulement `tsc`) — entrées correctement échappées, séparateur sans ambiguïté, troncature confirmée à exactement 60 caractères sur un intitulé de 146. `npx tsc --noEmit` et `npx eslint` propres sur les six fichiers touchés.
+
+**Non fait, et volontairement** : le regroupement par maladie (« Choléra — 7 pays ») évoqué ce matin comme piste de lisibilité pour un très gros lot (105 foyers) n'a pas été construit — hors du périmètre chiffré à David ce matin, et une extension de scope non demandée. Le texte plat construit répond à l'utilisateur du 31/08 (26 foyers coupés sur son plus gros lot), pas nécessairement à un lot de 100+.
+
+**Effet réel au prochain envoi** : un utilisateur dont le lot dépasse 10 foyers verra désormais la liste complète des maladies/pays coupés, plus un e-mail de quelques centaines d'octets à quelques Ko selon la taille du lot (mesuré ce matin : ~3,5 Ko de texte pour 105 foyers).
