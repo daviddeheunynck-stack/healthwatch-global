@@ -259,6 +259,95 @@ Aucune invitation envoyée. **Motif assumé** : aucun candidat neuf franchissant
 
 ---
 
+## 📅 Session linkedin-hwg-followup-check-2 — 02/09/2026 (17h, 2e des 2 créneaux après-midi)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` du 02/09 dans ce fichier ni dans `content-log.md` à l'ouverture → **premier déclenchement de cette routine aujourd'hui**. Les entrées du 02/09 déjà présentes appartiennent à `linkedin-hwg-content-proposal`, `linkedin-hwg-monitoring` (9h) et `linkedin-hwg-followup-check` (13h). Horloge machine à l'heure (`Wed Sep 2 17:08 2026`). Branche vérifiée avant écriture : **master**.
+
+**🖥️ Navigateur** : `23c7ecdd-…` sélectionné directement (§7), **seul navigateur listé ce run**. Aucun incident de pont, contrairement aux créneaux de 9h et 13h.
+
+**Registre de faits régénéré ce run** (17:09) : 226 faits citables sur 110 lignes affichées.
+
+---
+
+### 1️⃣ 💬 MESSAGERIE — 2 FILS ONT BOUGÉ, LES DEUX TRAITÉS
+
+**Liste des 10 conversations lue en entier, triée par récence.** **Deux messages entrants** depuis le run de 13h, tous deux des réponses aux DM envoyés à 13h59-14h01 sur ordre explicite de David — **arrivées en 12 et 15 minutes**.
+
+- ⭐⭐ **John Omari Baso — 14h11, entrant.** Répond aux deux questions du DM de 13h59 : « *Les 55 c'est le cumul depuis le début de l'année jusqu'à la SE 35. Quant au zones de santé et provinces, c sont les mêmes auquels s'ajoutent la province du lualaba avec 1 cas et le nord ubangi avec 1 cas* ». **Deux provinces affectées que nous n'avions nulle part** (voir `content-log.md`, section 3). Traité en section 2.
+- ⭐⭐ **Julien Tuba — 14h15, entrant, 2 311 caractères.** Répond en profondeur à la question du DM de 14h00 (« *comment repérez-vous, vous, qu'une zone a décroché ?* ») : il donne raison sur le fond (« *sur un bulletin, un zéro et un silence peuvent être impossibles à distinguer* »), puis détaille sa méthode — continuité de la notification d'abord, puis recoupement avec les notifications des structures, les rapports hebdomadaires, la supervision, **DHIS2**, les alertes communautaires, les laboratoires, les mouvements de population et les équipes provinciales ; cohérence avec ce qu'on sait de la zone ; comparaison aux zones voisines (« *Est-ce que cette zone ne voit réellement rien, ou est-ce qu'elle ne regarde plus ?* »). Conclusion : « *le décrochage se repère moins par l'absence de données que par l'incohérence entre ce que le système devrait normalement produire et ce qu'il produit effectivement […] le signal le plus important n'est pas ce qui est écrit dans le tableau, mais ce qui devrait être écrit et qui ne l'est plus.* » Traité en section 2.
+- **Isaias Fernandes Co** — notre réponse de 10h19 reste **le dernier message du fil**, il n'a pas renvoyé de créneau. Rien de dû.
+- **Dossa Paul YAOÏTCHA** — notre message de 14h01 reste le dernier, pas de retour depuis. Il a en revanche **consulté le profil de David** dans l'après-midi (notification).
+- **Inchangés, rien n'est dû** : Harvey Basivikidi · Buno Tona · SOUAD BELKACEMI. · Bobossam Cissoko · Summer Galloway, Ph.D. · **Abou A. SOUMAH** (« *Merci beaucoup David* », 29/08) · **Dr. Siaka Condé** (« *Let me look at this for a moment* », 29/08, 4e jour).
+
+---
+
+### 2️⃣ 🔒 DM — 2 RÉDIGÉS, **LES DEUX EN FILE DE VALIDATION, AUCUN ENVOYÉ**
+
+**Règle du 23/07 appliquée : la routine ne les envoie pas.** Les deux sont des **réponses en fil actif**, donc hors quota froid ([[feedback_reply_quota_cold_outreach_only]]) ; un DM en file ne consomme rien tant qu'il n'est pas envoyé. Quota du jour à la clôture : **7 envoyés sur 8** (4 froids + 3 réponses), inchangé par ce run. **Notification push envoyée en fin de run.**
+
+#### 🔒 DM 1 — **John Omari Baso** (`/in/john-omari-baso-84500b1b0/`), FR, vouvoiement, fil actif, SANS CTA — **EN FILE DE VALIDATION**
+
+Fil relu intégralement (§4) : 20 messages depuis le 27/08, recopiés verbatim dans `tmp/thread-john-full-17h.txt`. *langue du fil = fr ; langue du brouillon = fr.* Vouvoiement maintenu.
+
+**Arbitrage CTA** : le lien healthwatch-global.com et l'essai de deux semaines **ont déjà été envoyés dans ce fil** le 27/08. Anti-répétition appliquée, **rien n'est resservi**, ni lien, ni offre, ni nom de produit.
+
+**L'angle, après réécriture** : sa réponse **corrige une erreur de notre message de 13h59**. Nous y affirmions que « *les 8 provinces et 22 zones de santé affectées se réécrivent au lieu de s'additionner* » ; il montre l'inverse, puisque Lualaba et Nord-Ubangi **s'ajoutent** aux précédentes. Conséquence qu'il est seul à pouvoir trancher : si la liste s'accumule sur l'année, « huit provinces » est un cumul annuel et non une photo de la semaine, et rien en aval ne dit combien transmettent encore.
+
+🔴 **Le relecteur a fait échouer le 1er jet sur deux points réels, tous deux fondés, corrigés par réécriture complète de l'angle.**
+- **(7) Formule rejouée pour la 3e fois dans le fil, dont la 2e fois dans la journée.** Le 1er jet écrivait « *C'est exactement le cas de figure que j'évoquais : vous voyez passer une chose avant qu'elle sorte* » — déjà écrit le 31/08 (« *Quand quelque chose bouge chez vous avant de sortir, dites-le moi* ») **et** le matin même à ~10h. Le relecteur a aussi relevé que le 1er jet **ne traitait pas** le point réellement répondu en dernier, le statut cumulatif des 55.
+- **(12) Question déjà posée trois fois et explicitement déclinée par lui.** « *quel document les portera* » avait été demandé sous trois formulations ; John avait répondu « *moi je ne travaille pas ave le GPEI central* », et cette insistance avait déjà été lue une fois comme de la méfiance, qu'il avait fallu désamorcer. La reposer une 4e fois était le vrai risque du brouillon.
+- ⚠️ **Un troisième point, non signalé par le relecteur, a écarté sa propre suggestion de correction.** Il proposait de reposer la question de la fabrication du cumul (recalculé depuis la base du laboratoire, ou additionné). Vérifié contre le fil : John a déjà dit le 02/09 à 11h20 qu'un résultat tardif est **porté à la semaine où il tombe**, jamais rétroactivement — auquel cas les deux modes de calcul donnent le même total, et la question n'a plus d'objet. Angle abandonné, remplacé par celui ci-dessus.
+
+`QA : mécanique PASS au 1er jet (406 car.) puis PASS après réécriture (467 car., 2 paragraphes, fr/fr, 0 blocker, 0 warn, 0 chiffre hors fil) | relecteur VERDICT: REECRIRE 7, 12 au 1er jet, les deux corrigés par changement d'angle — 10 PASS sur 12 par ailleurs, dont attribution vérifiée verbatim et terrain politique tenu (le grief de John sur le retard du GPEI n'est ni repris ni contesté) | faits cités : aucun de la base, tous du fil (8 provinces, Lualaba, Nord-Ubangi) | registre du 02/09 (17:09) | statut : en file de validation`
+
+> Je m'étais trompé, et votre réponse le montre : je croyais que la liste des provinces se réécrivait chaque semaine. Si Lualaba et Nord Ubangi s'ajoutent aux précédentes, elle s'accumule comme le reste.
+>
+> Ce qui veut dire que huit provinces, c'est un cumul annuel, pas une photo de la semaine, et de loin je ne peux pas savoir combien en transmettent encore. Vous, comment faites-vous la part entre celles qui ont déclaré cette année et celles qui sont encore actives ?
+
+#### 🔒 DM 2 — **Julien Tuba** (`/in/julien-tuba-a31abb143/`), FR, vouvoiement, fil actif, SANS CTA — **EN FILE DE VALIDATION**
+
+Fil relu intégralement (§4) : 5 messages, tous du 02/09, recopiés verbatim dans `tmp/thread-julien-full-17h.txt`. *langue du fil = fr ; langue du brouillon = fr.*
+
+**Arbitrage CTA** : le nom HealthWatch Global a été servi ce matin dans ce fil, aucun lien ni essai n'a jamais été envoyé. Anti-répétition appliquée : **le nom n'est pas resservi**, et un CTA commercial au 3e échange d'un fil ouvert le matin même reste prématuré. **CTA vérifié puis délibérément omis.**
+
+**L'angle, après réécriture** : sur les huit recoupements qu'il énumère, un seul survit au trajet vers l'aval, la continuité de la notification lue dans les numéros antérieurs du bulletin. Chez lui elle ne vaut jamais seule. La question, qu'il est seul à pouvoir trancher, porte donc sur son **taux d'erreur employée seule**, sans DHIS2, sans supervision, sans alertes communautaires.
+
+🔴 **Le relecteur a fait échouer le 1er jet sur deux points réels, corrigés tous les deux.**
+- **(11) Gabarit de structure, deux messages de suite dans le même fil.** Le message de 14h00 ouvrait par « *Je relis votre réponse deux fois, et c'est un point de votre liste qui m'arrête : …* » ; le 1er jet ouvrait par « *Votre dernière phrase est celle qui me reste : …* ». Même charpente exacte — désignation d'un fragment de son message, verbe d'accrochage, deux-points, citation. **Cas type de [[feedback_anti_template_check_structure_not_just_wording]]**, invisible au contrôle mécanique. Ouverture entièrement refaite.
+- **(7) Deux ruptures de continuité.** (a) Le 1er jet présentait l'attente documentaire comme neuve, alors que Julien nomme la continuité de la notification **en premier** dans le message auquel on répond. (b) À 14h00 David écrivait « *je n'ai pas de quoi les séparer* » ; le brouillon affirmait le contraire sans marquer le revirement. **Les deux corrigés explicitement** : la continuité lui est attribuée, et le changement d'avis est écrit noir sur blanc (« *à la relecture c'est un peu court* »).
+
+`QA : mécanique PASS au 1er jet (534 car.) puis PASS après réécriture (625 car., limite 1300, 2 paragraphes, fr/fr, 0 blocker, 0 warn ; seul info : le « 2 » de DHIS2, tracé from-thread) | relecteur VERDICT: REECRIRE 7, 11 au 1er jet, les deux corrigés — 10 PASS sur 12 par ailleurs, dont apport reconnu non trivial (le taux d'erreur du signal documentaire employé seul, qu'il n'a pas traité) | faits cités : aucun | registre du 02/09 (17:09) | statut : en file de validation`
+
+> La continuité de la notification, c'est votre premier réflexe, et c'est aussi le seul de vos recoupements qui me soit accessible. Je vous disais tout à l'heure que je n'avais pas de quoi séparer un zéro d'un silence ; à la relecture c'est un peu court, il me reste les numéros précédents du bulletin, ce que cette zone déclarait les semaines d'avant.
+>
+> Sauf que chez vous cette continuité ne vaut jamais seule, elle passe par DHIS2, la supervision, les alertes communautaires, les équipes provinciales. Employée sans rien de tout ça, elle se trompe à quelle fréquence ? C'est ce qui déciderait si j'ai le droit de m'en servir.
+
+⚠️ **Rappel du piège de re-vérification (27/08)** : ces deux textes sont maintenant cités mot pour mot dans ce fichier. Les repasser au contrôle mécanique après cet archivage renverra un `ngram.history` **contre eux-mêmes**. Ce n'est pas un gabarit recyclé, c'est leur propre citation.
+
+---
+
+### 3️⃣ ✅ INVITATIONS REÇUES — 0 NOUVELLE, 2 TOUJOURS EN ATTENTE
+
+Compteur inchangé à **2**, vérifié sur `/mynetwork/invitation-manager/`. Toujours **Zachariah G. Houdari** (*Financial Services Professional*) et **OLAOLUWA PHILIP** (*GIScientist | Climate Action Researcher*). Décisions du 31/08 non rejugées, **aucun élément neuf** — laissées en attente.
+
+---
+
+### 4️⃣ 👤 SUIVIS ET FOLLOW-BACK — 1 SUIVI EXÉCUTÉ, 0 FOLLOW-BACK DÛ
+
+✅ **SUIVI 9/7-10 — Jean-Paul Gonzalez** (`/in/jean-paul-gonzalez-aa653920/`, compte **vérifié**, 2e degré) — *Board Member at The Schull Institute*, Alexandria (Virginie), Université de Bordeaux II Faculty of Medicine ; LinkedIn affiche *School of Medicine, Medical Center, Georgetown University, Washington DC* sous son commentaire. 1 257 abonnés, 5 relations en commun. **Il est entré de lui-même dans un fil de commentaire HWG** en répondant à notre question de clôture sous le post Shuni. Barre de pertinence de §10 franchie sur pièce (virologie / émergences, profil vérifié, position institutionnelle). Identité vérifiée dans le **même appel JS que le clic** (`location.pathname` contenant le slug + `aria-label="Suivre Jean-Paul Gonzalez"`). **Confirmation : 4 boutons « Suivre Jean-Paul Gonzalez » avant clic, 0 après, 4 boutons « Suivi » ensuite** ; l'état « Suivi » est également visible à côté de son nom dans le fil de commentaires après rechargement. ⚠️ **À ne pas confondre avec Gaelle Gonzalez** (`/in/gaelle-gonzalez-67a70890/`, ANSES), déjà suivie le 29/08 — profils distincts, slugs distincts (§12).
+
+- **Abonnés : 404**, strictement identique aux relevés de 9h et de 13h. **Aucun nouvel abonné, aucun follow-back dû.**
+- **Relations : 289**, triées par ajouts récents, **inchangées**. Les deux acceptations les plus récentes datent du 02/09 au matin (Ghayyoor Sultan, Jacob Banda). **La note de connexion envoyée ce matin au Dr. Malachie MANAOUDA n'est toujours pas acceptée** — aucun message de bienvenue dû.
+- **Quota suivis : 9/7-10** après ce run. Marge restante : 1.
+
+---
+
+### 5️⃣ 🧾 NOTES DE CONNEXION — 0 CE RUN
+
+Aucune invitation envoyée. **Motif assumé** : les deux dossiers en attente restent bloqués pour des raisons connues et documentées (Mohammad Ilias Hossain : note rédigée et QA-validée, **volontairement non retentée** conformément au carry-over du 31/08 ; Dr. Ibrahima Socé Fall : **toujours aucun hook honnête**, §10). Le seul candidat neuf du run, **Jean-Paul Gonzalez**, a été suivi mais **pas invité** : son activité propre n'a pas été ouverte ce run, donc aucun hook vérifiable sur pièce, et une note adossée au seul fil de commentaire aurait été mince. Reporté au prochain créneau. Quota du jour inchangé : **1/7**.
+
+---
+
 ## 📅 Session linkedin-hwg-monitoring — 01/09/2026 (9h)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` du 01/09 dans ce fichier ni dans `content-log.md` à l'ouverture. La seule entrée du 01/09 déjà présente appartient à la **session interactive de David de ~05h50-06h16** → **premier déclenchement de cette routine aujourd'hui**. Horloge machine à l'heure (`Tue Sep 1 09:04 2026`). Navigateur : dernière entrée d'appairage de `_shared/browser-status.md` **🟢 RÉTABLI (31/08 ~13:05)**, aucun bridage, `23c7ecdd-…` sélectionné directement (§7).

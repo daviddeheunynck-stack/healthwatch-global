@@ -438,6 +438,102 @@ Rouverts **sur le post, pas sur la notification**. Les trois commentaires publi�
 
 ---
 
+## 📅 Session linkedin-hwg-followup-check-2 — 02/09/2026 (17h, 2e des 2 créneaux après-midi)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` du 02/09 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture. Les entrées du 02/09 déjà présentes appartiennent à `linkedin-hwg-content-proposal` (8h35 + reprise interactive), `linkedin-hwg-monitoring` (9h) et `linkedin-hwg-followup-check` (13h) → **premier déclenchement de cette routine aujourd'hui**. Horloge machine à l'heure (`Wed Sep 2 17:08 2026`). Branche vérifiée avant écriture : **master**.
+
+**🖥️ Navigateur** : `_shared/browser-status.md` lu avant ouverture, dernière entrée d'appairage **🟢 RÉTABLI (31/08)**, aucune entrée `🔴` du jour → aucun bridage. `list_connected_browsers` ne liste qu'un seul navigateur ce run, `23c7ecdd-…`, sélectionné directement (§7). **Aucun incident de pont sur tout le run**, contrairement aux créneaux de 9h et 13h.
+
+**Registre de faits régénéré ce run** (17:09) : **226 faits citables sur 110 lignes affichées**, 81 lignes `is_seed` exclues, 9 faits périmés.
+
+**Quotas à la clôture** : commentaires **4/7**, **inchangé — 1 candidat rédigé, QA passée, puis abandonné avant publication** (Jean-Paul Gonzalez, voir section 2) · **DM : 2 rédigés ce run, les 2 en file de validation, aucun envoyé** (John Omari Baso, Julien Tuba) · suivis **9/7-10** (**+1 ce run** : Jean-Paul Gonzalez) · notes de connexion **1/7**, inchangée · invitations reçues **2 en attente**, inchangées · **0 écriture en base**. Textes complets des 2 DM en file : `linkedin-contacts.md`, entrée du jour.
+
+---
+
+### 1️⃣ SUIVI DES FILS ACTIFS (§14) — 1 RETOMBÉE NEUVE, MAJEURE
+
+Fils rouverts **sur le post**, pas sur la notification.
+
+- ⭐⭐ **SOUAD BELKACEMI. / post Shuni** — **Jean-Paul Gonzalez a répondu à notre commentaire il y a 2 h.** Seule retombée neuve de la journée sur un fil de commentaire. Traitée en section 2. Profil : *Board Member at The Schull Institute*, Alexandria (Virginie), formé à l'Université de Bordeaux II, Faculty of Medicine ; LinkedIn affiche sous son commentaire *School of Medicine, Medical Center, Georgetown University, Washington DC*. **Compte vérifié**, 2e degré, 1 257 abonnés.
+- **Kyaw Thowai Prue Prince** (`urn:li:activity:7500870581622452224`) — notre commentaire de 13h reste **le seul du fil**, 4 h après publication. Le post est passé à 6 réactions et 2 commentaires ; le second ne s'adresse pas à nous. Aucune réponse.
+- **Oke Ikpekpe** (`urn:li:activity:7500522694187089920`) — notre réponse du matin (8e tour) reste **le dernier message du sous-fil**, 7 h après. Rien de neuf.
+- **Adesoye Emmanuel Tunde** (`urn:li:activity:7500813394892062720`) — notre commentaire toujours le seul, **25 impressions** (contre 20 à 13h). Aucune réponse.
+- **Dr. Jean Kaseya, Mohammad Ilias Hossain, Rocham Mulumbwe / post Jacob Banda, page ECDC, James Schlitt, Melvin Sanicas, Dossa Paul YAOÏTCHA** — aucune notification les concernant depuis 13h, non rouverts un par un ce run.
+
+**Notifications parcourues : 10 cartes distinctes.** Une seule est une réponse à un commentaire HWG (Gonzalez, ci-dessus). Sans action : 2 vues de profil (dont **Dossa Paul YAOÏTCHA**, destinataire d'un DM de 14h01), un post de **Tambe Elvis Akem** (preprint sur la surveillance de laboratoire, **bloqué jusqu'au 05/09**), un post de **Seynudé Jean-Fortune DAGNON** (tribune sur le paludisme en Afrique francophone), un commentaire de Warren Parker sous un post UNAIDS, le post #Hiring de Harvey Basivikidi (hors périmètre), le post d'Ana Bento déjà écarté ce matin, une republication de cours WASH. Deux cartes statistiques : le **post PARTNERS publié ce matin à 09h28 est à 19 impressions**, et un post plus ancien a atteint **213 impressions, 1 vue de profil et 1 abonné**.
+
+---
+
+### 2️⃣ 💬 COMMENTAIRE — 1 CANDIDAT RÉDIGÉ ET QA-VALIDÉ, PUIS **ABANDONNÉ AVANT PUBLICATION**
+
+#### ❌ CANDIDAT ABANDONNÉ — **Jean-Paul Gonzalez** (`/in/jean-paul-gonzalez-aa653920/`), FR, réponse en sous-fil
+
+Sous le post Shuni/SHUV de **SOUAD BELKACEMI.** (`urn:li:activity:7500892564472922112`, **5 j**). ⚠️ **Cet URN est celui servi par les notifications ; nos archives portent le même post sous `urn:li:activity:7499735785110192129`** — même piège que le doublon d'URN d'Oke Ikpekpe, à ne pas traiter comme deux fils.
+
+**Sa réponse (2 h)**, à notre question de clôture du 31/08 (« *Un signal de ce côté-là suffirait-il à relancer un dépistage chez l'Homme, ou les deux surveillances restent-elles trop séparées ?* ») : « *Oui absolument on ne trouve que si on cherche! Maintenant tout est dans 1./ l'hypothese de travail (recehrceh) et 2/la strategie a developper (Santé publique et animale)* ». Il avait aussi laissé, une minute plus tôt, un message ne contenant que la mention « David Deheunynck ».
+
+**Angle rédigé** : ses deux points ne laissent pas la même trace en aval, une hypothèse de travail laisse une publication, une stratégie laisse une série qui revient ; Motlou & Venter relève de la première et c'est pourtant ce que l'EFSA cite ; question finale sur ce qui fait basculer une hypothèse en dépistage régulier.
+
+🔴 **Motif de l'abandon, trouvé après la QA et non par elle.** Le relecteur avait fait échouer le 1er jet sur **5 (adresse ambiguë)**, **7 (point déjà traité)** et **9 (terrain politique)** ; les trois ont été corrigés et le contrôle mécanique repassait **PASS**. C'est en dépliant le fil complet **avant le clic**, pour relire nos propres commentaires en entier, que le vrai défaut est apparu : **notre commentaire du 31/08, dans ce même sous-fil, portait déjà l'argument central du brouillon** — « *Si un agent ne se trouve que lorsqu'on le cherche, l'absence de résultat depuis 2021 ne tranche rien. Ni que rien ne circule, ni que quelque chose circule. **Les deux produisent la même trace, aucune publication.*** » et « *un agent hors panel ne produit pas un zéro, il ne produit aucune ligne* ». La figure « ce que chaque activité laisse comme trace, et ce qui se voit depuis l'aval » n'était donc pas neuve : c'était notre propre argument reservi à un nouvel interlocuteur, dans un fil que les deux lisent.
+
+**Règle des deux essais appliquée (§5 item 6)** : deuxième défaut de même nature (rejouer un point déjà traité) sur ce brouillon, après la correction du point 7 du relecteur. Pour un commentaire, la conduite prévue est d'**abandonner ce candidat** plutôt que de forcer une 3e version — ce qui restait après retrait du cadrage dupliqué était une question nue, sans apport propre, qui n'aurait pas passé la question 12. Éditeur de réponse **vidé, rien publié**, vérifié (`len: 0`).
+
+`QA : mécanique PASS au 1er jet (550 car.) puis PASS après correction (428 car., 2 paragraphes, fr/fr, 0 blocker, 0 warn) | relecteur VERDICT: REECRIRE 5, 7, 9 au 1er jet, les trois corrigés — 9 PASS sur 12 par ailleurs | faits cités : aucun de la base, tous du fil (EFSA 2026, Motlou & Venter, cités par Souad Belkacemi) | registre du 02/09 (17:09) | statut : ABANDONNÉ avant publication, aucun texte publié`
+
+**Texte abandonné, pour mémoire** (la mention « Jean-Paul Gonzalez » était pré-remplie par le bouton Répondre, elle n'a pas été tapée) :
+
+> Jean-Paul Gonzalez Votre point 1 et votre point 2 ne laissent pas la même trace. Une hypothèse de travail laisse une publication ; une stratégie laisse une série qui revient. Vu de l'aval, où je me tiens, seule la seconde se voit.
+>
+> Motlou et Venter relève de la première, et c'est pourtant ce que l'EFSA cite en 2026 sous potentiel zoonotique. D'où ma question : qu'est-ce qui fait basculer une hypothèse en dépistage régulier ?
+
+**Verrou §15/§16 appliqué avant le travail de rédaction** : `git log` en tête sur `672a4bac` à l'ouverture comme à la clôture, md5 des deux journaux relevés, **0 occurrence** de `7500892564472922112` ou de « Jean-Paul Gonzalez » dans les deux journaux, aucune entrée du jour sur cette cible ni sur cet événement.
+
+#### ❌ RECHERCHE DE CANDIDATS NEUFS — aucun retenu
+
+Recherche de contenu triée par date, mots-clés `outbreak surveillance data`, **filtre 24 h**. Le haut de liste ne porte que des contenus hors périmètre : *Northeastern Mechanical & Industrial Engineering* (capstone d'ingénierie), **International Dairy Foods Association** (webinaire promotionnel sur le séquençage en sécurité alimentaire, avec lien d'inscription). Aucun profil de surveillance en santé publique dans la fenêtre. **Quota laissé partiel plutôt que rempli par un commentaire médiocre**, conformément à la consigne de la routine.
+
+---
+
+### 3️⃣ 📊 DONNÉES ÉPIDÉMIOLOGIQUES (§8) — AUCUNE ÉCRITURE, 1 SIGNALEMENT NEUF
+
+🟠 **1. Polio/RDC — deux provinces affectées de plus, connues d'un épidémiologiste de terrain, publiées nulle part à ce stade.** John Omari Baso écrit à 14h11 : « *Quant au zones de santé et provinces, c sont les memes auquels s'ajoutent la province du lualaba avec 1 cas et le nord ubangi avec 1 cas* ». Ce sont **Lualaba** et **Nord-Ubangi**, 1 cas chacune, en plus des 8 provinces et 22 zones de santé de la diapositive qu'il avait transmise. **Aucune écriture, et pas seulement par prudence de routine sociale (§8) : c'est un message privé, pas une source primaire citable**, et rien ne dit encore dans quel document ces deux provinces ressortiront. Il précise par ailleurs que **les 55 poliovirus détectés en PFA et ENV sont le cumul depuis le début de l'année jusqu'à la SE 35**. Notre ligne Polio/RD Congo (`asOf 2026-08-26`, 37 cas confirmés) n'est pas touchée. **Signalé pour `morning-don-check`** : à guetter dans le prochain point hebdomadaire GPEI ou un sitrep du bureau pays.
+
+🔴 **Rappel non résolu, 3e jour** : l'écart de cumul Ebola/RDC (nos 5 794 / 2 786 au 26/08 contre 6 100 / 2 950 attribués aux autorités RDC au 31/08 via OCHA) n'a rien reçu de neuf ce run. Toujours du ressort de `morning-don-check`. Idem pour les trois signalements du créneau de 13h (West Nile/Grèce, ERVEBO/souche Bundibugyo, bulletin hebdomadaire du ministère tanzanien), inchangés.
+
+---
+
+### 4️⃣ 🔁 CARRY-OVER POUR LE CRÉNEAU DE 9h (03/09)
+
+1. 🔒 **DEUX DM ATTENDENT DAVID**, tous deux rédigés ce run, tous deux réponses en fil actif : **John Omari Baso (FR)** et **Julien Tuba (FR)**. Textes complets et rapports QA dans `linkedin-contacts.md`, entrée du jour. **Notification push envoyée ce run.**
+2. ⭐⭐ **Le rythme de réponse tient : les 3 DM envoyés à 13h59-14h01 ont produit 2 réponses en 15 minutes** (John 14h11, Julien 14h15), toutes deux substantielles. Sur la journée, **4 DM froids envoyés le matin ont produit 3 réponses, et les 3 réponses envoyées l'après-midi en ont produit 2 de plus.** C'est le meilleur régime observé sur ce carnet ; le traiter vite.
+3. ⭐⭐ **Jean-Paul Gonzalez** (`/in/jean-paul-gonzalez-aa653920/`) — **nouveau au carnet, suivi ce run**, aucun commentaire publié chez lui donc **aucun blocage hebdomadaire créé**. Il est entré de lui-même dans un fil HWG. **Excellent candidat de note de connexion** dès qu'un hook honnête apparaît sur son activité propre, qui n'a pas été ouverte ce run.
+4. ⭐⭐ **Isaias Fernandes Co** — inchangé depuis 13h : notre réponse de 10h19 reste le dernier message, il n'a pas renvoyé de créneau. Accepte le principe d'un appel **à partir de la semaine du 14 septembre**. Rien à faire tant qu'il n'a pas répondu.
+5. 🗓️ **Ligne d'événement (§16)**
+   - 🔵 **Ebola/RDC, extension à Bas-Uele — ÉVÉNEMENT TOUJOURS OUVERT, aucun support consommé.** **Le press briefing Africa CDC du 3 septembre tombe demain** : page **Africa CDC** libre en commentaire, meilleur porteur suivant, puis **Prof. Mohamed Janabi** (libre) et **Dr. Ibrahima Socé Fall**. BANZA Freddy Mutoka reste écarté. ⚠️ Page **WHO AFRO** toujours inatteignable, ne pas en faire un support.
+   - 🔵 **Polio/RDC, Lualaba et Nord-Ubangi** — nouvel événement ouvert ce run, **pas encore de porteur public** : il n'existe pour l'instant que dans un DM. Ne devient une matière de commentaire que le jour où un document le porte.
+   - 🔵 **Écart de cumul Ebola/RDC** — 3e jour, appartient à `morning-don-check`.
+   - 🔵 **Diphtérie/Nigéria (164 j), Choléra/Tanzanie (66 j), West Nile/Grèce** — inchangés depuis 13h.
+6. ⭐⭐ **Dr. Ibrahima Socé Fall** — inchangé : profil de tout premier plan, 1er degré, aucun échange, **toujours aucun hook honnête**. Meilleure opportunité dormante du carnet.
+7. ⭐ **Rocham Mulumbwe** — bon candidat connexion dès qu'il répond à notre commentaire. Inchangé.
+8. ➖ **Jacob Banda**, **Ghayyoor Sultan**, **Abubakar Sadiq Tahir**, **Alexandre APPROUTSADI YOKSOU** — relations acceptées, toujours pas de welcome DM faute de hook honnête. Inchangés.
+9. ➖ **Yakoza Nyirenda** — invitation sans note du 30/08, toujours en attente.
+10. ⭐⭐ **Dr. Malachie MANAOUDA** — note de connexion envoyée ce matin, **toujours pas acceptée** (relations à 289, strictement inchangées depuis 9h). Si elle est acceptée : welcome DM, en file de validation.
+11. 🔴 **Mohammad Ilias Hossain, note de connexion : toujours non retentée**, conformément au carry-over du 31/08. Note rédigée et QA-validée, **ne pas la réécrire**.
+12. ⭐ **Abou A. SOUMAH** — « *Merci beaucoup David* » du 29/08, toujours le dernier message. Politesse sans fond, rien de dû.
+13. **Dr. Siaka Condé** — « *Let me look at this for a moment* » du 29/08, toujours pas revenu (4e jour). **Ne pas relancer avant le 05/09.**
+14. ❌ **Ne pas reproposer sans élément neuf** : Zachariah G. Houdari (services financiers) et OLAOLUWA PHILIP (géospatial/climat sans santé publique), les **2 invitations reçues toujours en attente**, décisions du 31/08 non rejugées ; Haider Durrani, Kipchirchir Kigen, Victoria Kanana ; Abdulrazaq Tanga (étudiant, écarté le 02/09 comme cible, sa source retenue) ; **Jean-Paul Gonzalez comme cible de commentaire dans ce sous-fil précis** — candidat abandonné ce run, **ne pas rejouer l'angle « trace » chez lui**, il est déjà servi dans le fil.
+15. ⚠️ **Doublons d'URN connus, à ne pas traiter comme deux fils** : `urn:li:activity:7500522694187089920` = `urn:li:activity:7499051354368331776` (post Oke Ikpekpe) ; **`urn:li:activity:7500892564472922112` = `urn:li:activity:7499735785110192129` (post Shuni de SOUAD BELKACEMI., relevé ce run)**. Dans les deux cas l'URN servi par les notifications diffère de celui archivé.
+16. 🔧 **Notes d'outillage, à ne pas rediagnostiquer.** (a) Les commentaires ne se chargent qu'après **deux `computer scroll`** ; `document.querySelector('main').innerText` les rend ensuite. (b) Le bouton de dépliage des réponses n'est **pas** un `button` : le chercher aussi parmi `span[role="button"]`, `div[role="button"]` et `a` sur le texte « réponses précédentes ». (c) Le bouton de réponse à un commentaire porte `aria-label="Répondre"` et **aucun innerText** ; **le nombre de ces boutons change entre deux appels JS** (chargement paresseux des sous-fils), donc **ne jamais sélectionner par index** — sélectionner par le contenu du conteneur parent, et vérifier l'identité dans le **même** appel que le clic (§7). (d) Cliquer « Répondre » **pré-remplit une mention** du destinataire suivie d'un **espace insécable (` `)** : ne pas retaper le nom, ne pas ajouter d'espace — sinon double espace visible à la publication. (e) `execCommand('insertParagraph')` deux fois de suite produit la bonne structure `P / P vide / P`, soit un saut de ligne à la publication.
+17. **Blocages hebdomadaires au 02/09 après ce run** — **inchangés, aucun commentaire publié ce run** : Kyaw Thowai Prue Prince, Adesoye Emmanuel Tunde, Rocham Mulumbwe (09/09) ; Dr. Jean Kaseya, page ECDC, Jacob Banda (08/09) ; Harvey Basivikidi (03/09, top-level) ; Oke Ikpekpe (04/09, top-level seulement, sous-fil ouvert) ; Jason Kindrachuk, Dr Jeeven Kumar (04/09) ; Global Health EDCTP3, French Healthcare Association, Health Policy Watch, Tambe Elvis Akem, SOUAD BELKACEMI (05/09) ; Melvin Sanicas, Dossa Paul YAOÏTCHA, Mohammad Ilias Hossain (07/09, top-level seulement, sous-fils ouverts). **Libres** : Robert Herriman, Patrick AYONGA, Oliver Morgan, Dr Fabrice KHADDY, page Africa CDC, Vital Strategies, Tedros, **Prof. Mohamed Janabi**, INRB, Miriam Mbueshi, Apoorva Wasnik, Johan Verheyden, Gaelle Gonzalez, Lori Peterson, Dr. Malachie MANAOUDA, James Schlitt, Martin Yakum, Ifedayo Adetifa, Julien Harneis, BANZA Freddy Mutoka, **Jean-Paul Gonzalez** (aucun commentaire publié chez lui).
+
+---
+
+### 5️⃣ 🔧 ARBRE DE TRAVAIL
+
+`marketing/qa/product-claims.manual.json` **modifié avant ce run** et **toujours non commité** : il appartient au dispositif QA, pas à cette routine — laissé tel quel, comme aux runs précédents. `marketing/qa/*.json` régénérés, non suivis. **Fichiers n'appartenant pas à cette routine, laissés intacts** (`AGENTS.md`) : `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis, inchangés depuis le 29/08). **Branche vérifiée avant commit : `master`.** `git log` **n'a pas bougé pendant le run** (`672a4bac` en tête à l'ouverture comme à la clôture), aucune session sœur n'a écrit dans l'arbre. Aucun verrou de code (`_shared/code-lock.md`) demandé : cette routine ne touche ni `app/`, ni `lib/`, ni `components/`, ni les dépendances.
+
+---
+
 ## 📅 Session linkedin-hwg-monitoring — 01/09/2026 (9h)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` datée du 01/09 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture (dernière en date : 31/08, 9h). La seule entrée du 01/09 déjà présente appartient à une **session interactive de David vers 05h50-06h16** (envoi des DM Harvey Basivikidi et Dossa Paul YAOÏTCHA sur ordre explicite) — run intentionnellement distinct → **premier déclenchement de cette routine aujourd'hui**. Horloge machine à l'heure : `date` renvoie **Tue Sep 1 09:04 2026**.
