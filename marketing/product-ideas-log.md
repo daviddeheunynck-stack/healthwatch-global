@@ -2815,3 +2815,19 @@ David a demandé le rollout sur `sync-who-regional`. Verrou de code réacquis pu
 **Ce qui rendrait un rollout sûr ici, si David le souhaite comme chantier à part** : ajouter d'abord un garde-fou de budget temporel à la boucle principale de `runSyncWhoRegional` (même patron que `sync-who-afro`, trouvé le 02/09 au soir dans l'exploration d'hier — sortir proprement avant que Vercel tue la fonction, journaliser les cibles non traitées). Une fois ce filet posé, un retry devient sûr : le pire cas dégrade en « certaines cibles sautées, journalisé » plutôt qu'en troncature brutale en pleine écriture DB. Effort moyen (une nouvelle logique de budget + tests contre les ~139 cibles), pas petit — distinct du reste de ce rollout, qui a pu rester mécanique sur les 14 crons précédents précisément parce qu'aucun n'avait ce problème structurel.
 
 **Aucune ligne de code touchée ce soir sur ce fichier.** Verrou de code acquis puis relâché sans écriture, une fois la conclusion établie.
+
+### Suite du même soir (02/09, session interactive) — garde-fou de budget construit sur `sync-who-regional`
+
+David a demandé la construction du garde-fou en premier (« construis le garde-fou de budget en premier »), suite au risque chiffré ci-dessus. Verrou de code réacquis, édition faite, relâché après le push.
+
+**✅ CONSTRUIT, commit `5a235b75`** (`app/api/cron/sync-who-regional/route.ts`). Même patron que `ARTICLE_LOOP_BUDGET_MS` dans `sync-who-afro` (seul cron de cette famille à déjà avoir ce garde-fou) :
+
+- `TARGET_LOOP_BUDGET_MS = 220_000` (220s sur un `maxDuration` de 300s — 80s de marge pour la lecture DB initiale et l'écriture batchée `sourceConfirmed` en fin de boucle).
+- Vérifié au **début de chaque itération** de la boucle sur les 139 cibles : au-delà du budget, sortie propre (`break`) avec le nombre de cibles restantes journalisé dans `log` (`{ label: "budget", status: "skip", detail: "… N target(s) left unprocessed" }`), plutôt qu'un hard-kill Vercel en pleine écriture DB.
+- Les cibles déjà traitées avant le dépassement restent journalisées/écrites normalement ; les autres sont reprises au prochain run (quotidien, 08h05 UTC) — pas de perte définitive, juste un décalage d'un jour pour les cibles en fin de liste en cas de panne systémique.
+
+`npx tsc --noEmit` et `npx eslint` propres sur le fichier touché.
+
+**Ce que ça change concrètement** : avant ce soir, une panne systémique d'un seul jour sur `xmart-api-public.who.int` (27 cibles dengue+mpox) pouvait déjà pousser ce cron à 270s sans aucune erreur de code — collé au plafond de 300s, sans marge. Le garde-fou ne réduit pas ce risque de dépassement en soi (il existait déjà), mais **change ce qui se passe quand ça arrive** : un dépassement devient une sortie propre et journalisée plutôt qu'une troncature brutale au milieu d'écritures DB.
+
+**Ce que ça ouvre, pas construit ce soir** : avec ce filet en place, ajouter `fetchWithRetry` (`lib/fetch-retry.ts`) aux fetchers de ce cron redevient sûr — un dépassement dû au retry dégraderait désormais proprement au lieu d'être fatal. Le retry lui-même reste à construire, sur nouvelle demande explicite de David s'il le souhaite : ce soir portait spécifiquement sur le garde-fou, pas sur le rollout complet qui en dépendait.
