@@ -663,6 +663,14 @@ async function checkAuthFailures(supabase: any): Promise<{ failures: AuthFailure
   return { failures: Array.from(counts.values()).sort((a, b) => b.count - a.count), error: null };
 }
 
+// Horodatage de la première fois que ce rapport a vu un nom de CRON_WINDOWS
+// SANS aucun passage enregistré. Sert au seul classement "jamais passé" plus
+// bas — voir le commentaire de la boucle de classification pour le pourquoi.
+// Une clé site_config plutôt qu'une colonne : aucune migration, et la valeur
+// est purement dérivée (perdue, elle se reconstruit au run suivant en donnant
+// simplement une fenêtre de grâce de plus au cron concerné).
+const CRON_FIRST_SEEN_KEY = "health-check:cron-first-seen";
+
 const BUNDLE_SECRET_PATTERNS = ["sb_secret_", "service_role", "sk_live_", "rk_live_", "whsec_", "xkeysib-", "sntrys_"];
 const BUNDLE_SCAN_PAGES = ["/en", "/en/signup", "/en/pricing", "/en/account"];
 const APP_URL = (process.env.NEXT_PUBLIC_APP_URL || "https://healthwatch-global.com").trim();
@@ -743,7 +751,7 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
   const sevenDaysAgo = new Date(Date.now() - 7 * 86_400_000).toISOString();
 
   const [
-    [{ count: total }, { count: high }, { count: pheic }, { data: configRows }],
+    [{ count: total }, { count: high }, { count: pheic }, { data: configRows }, { data: firstSeenRow }],
     sentryCheck,
     audienceCounts,
     zeroRegionResult,
@@ -766,6 +774,7 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
         supabase.from("outbreaks").select("*", { count: "exact", head: true }).eq("active", true).eq("risk_level", "high"),
         supabase.from("outbreaks").select("*", { count: "exact", head: true }).eq("active", true).eq("is_pheic", true),
         supabase.from("site_config").select("key,value").like("key", "cron:run:%"),
+        supabase.from("site_config").select("value").eq("key", CRON_FIRST_SEEN_KEY).maybeSingle(),
       ]),
       fetchSentryIssues(),
       // "subscriptions" (weekly-digest/weekly-signal) only counts active=true —
@@ -915,19 +924,69 @@ async function runHealthCheck(_req: NextRequest, supabase: any) {
   // instead of relying on someone thinking to check.
   const unmonitored = Object.keys(cronMap).filter((name) => !(name in CRON_WINDOWS)).sort();
 
+  // Un cron qui n'a JAMAIS tourné était compté "en retard" sur-le-champ. C'est
+  // faux le jour où on en ajoute un : `check-wer-cholera` a été enregistré le
+  // 2026-09-01 à 04h49 UTC, son premier passage est le lundi suivant 08h30, et
+  // le rapport de 07h05 le même matin est parti rouge — objet compris — pour
+  // un cron dont l'heure n'était simplement pas encore venue. Six jours de
+  // rouge permanent, plus un avertissement Sentry par jour, pour rien : c'est
+  // exactement ce qui apprend à ne plus lire l'alerte.
+  //
+  // Le discriminant manquant est "depuis quand devrait-il avoir tourné ?".
+  // Faute de date d'enregistrement, ce rapport pose la sienne la première fois
+  // qu'il voit un nom sans passage, et n'ouvre l'alerte qu'une fois la fenêtre
+  // du cron écoulée depuis cette date. Le filet reste donc entier — un cron
+  // ajouté à CRON_WINDOWS mais oublié dans `vercel.json` finit signalé, avec
+  // au plus une fenêtre de décalage — mais il ne crie plus avant l'heure.
+  //
+  // Volontairement une DATE et non un booléen "déjà toléré" : un booléen ne
+  // périmerait jamais et rendrait le silence définitif.
+  let firstSeen: Record<string, string> = {};
+  try {
+    const parsed = JSON.parse((firstSeenRow?.value as string) ?? "{}");
+    if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) firstSeen = parsed;
+  } catch { /* valeur illisible : on repart d'une carte vide, cf. ci-dessus */ }
+
+  const nowISO = new Date().toISOString();
+  const nextFirstSeen: Record<string, string> = {};
+
   // Classify each cron against its expected window
   const overdue: string[] = [];
   const cronStatuses = Object.entries(CRON_WINDOWS).map(([name, windowH]) => {
     const run = cronMap[name];
     if (!run) {
-      overdue.push(name);
-      return { name, ageH: null, windowH, ok: false, label: "jamais" };
+      // Reconduite telle quelle si elle existe : la remettre à `nowISO` à
+      // chaque passage repousserait l'échéance indéfiniment et le cron ne
+      // serait jamais signalé.
+      const seenAt = firstSeen[name] ?? nowISO;
+      nextFirstSeen[name] = seenAt;
+      const waitedH = (Date.now() - new Date(seenAt).getTime()) / 3_600_000;
+      // Une date illisible donnerait NaN, et `NaN > windowH` est faux : le
+      // cron resterait silencieux pour toujours. On tranche vers l'alerte.
+      const due = !Number.isFinite(waitedH) || waitedH > windowH;
+      if (due) overdue.push(name);
+      return {
+        name, ageH: null, windowH, ok: false,
+        label: due ? "jamais" : `jamais (fenêtre en cours, ${Math.round(waitedH)}h/${windowH}h)`,
+      };
     }
     const ageH = Math.round(run.ageH);
     const ok   = run.ageH <= windowH;
     if (!ok) overdue.push(name);
     return { name, ageH, windowH, ok, label: `${ageH}h`, rows: run.rows, status: run.status };
   });
+
+  // Réécrit seulement sur changement, et uniquement avec les noms encore sans
+  // passage : un cron qui finit par tourner, ou qui sort de CRON_WINDOWS, perd
+  // son entrée au lieu de laisser la carte grossir indéfiniment. Un échec
+  // d'écriture ne doit pas faire tomber le rapport — au pire le prochain
+  // passage réoffre une fenêtre de grâce.
+  if (JSON.stringify(nextFirstSeen) !== JSON.stringify(firstSeen)) {
+    const { error: seenErr } = await supabase
+      .from("site_config")
+      .upsert({ key: CRON_FIRST_SEEN_KEY, value: JSON.stringify(nextFirstSeen) }, { onConflict: "key" });
+    if (seenErr) console.error("[health-check] écriture de", CRON_FIRST_SEEN_KEY, "échouée :", seenErr.message);
+  }
 
   const hasOverdue    = overdue.length > 0;
   const hasUnmonitored = unmonitored.length > 0;
