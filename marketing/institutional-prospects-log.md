@@ -3639,3 +3639,90 @@ Le message est rédigé sur le modèle « cas particulier » : il **demande expl
 - **Délivrés : 9 sur les 10 de ce lot.** Le total de délivrabilité du canal est recalculé par `daily-relance-check-healthwatch`, porteur unique du bilan cumulé.
 - **Profondeur de file en fin d'addendum : 1 brouillon** — le remplacement Antigua, non envoyé.
 - **Relance J+10** : le lot du 01/09 devient éligible le **11/09**, sur **9 contacts** ; `contact@health.gov.ag` est **écarté définitivement** (domaine sans MX, aucune relance possible).
+
+---
+
+## 📇 NOUVEAUX CONTACTS TROUVÉS — 2026-09-02, run `daily-institutional-prospecting-healthwatch`
+
+**10 contacts neufs, 10 brouillons créés, 0 envoyé.** Frein de file **levé** : `list_drafts` appelé deux fois en tête de run (métadonnées puis vue complète, consigne du 16/08) → **`{}` les deux fois, file à 0 brouillon**. Le brouillon de remplacement Antigua (`r-936228195664858120`, créé hier ~07:15 UTC) n'y figure plus : **David l'a envoyé hors session**, profil « relecture humaine » du tableau de discrimination du 16/08 — aucun incident, aucune escalade.
+
+### Tableau du jour
+
+| Institution | Pays/Région | Segment | Contact | Email | Source | Vérifié | Brouillon Gmail |
+|---|---|---|---|---|---|---|---|
+| Sydney Infectious Diseases Institute (Univ. de Sydney) | Australie / WPRO | Académique | boîte de l'institut | `infectious.diseases@sydney.edu.au` | `sydney.edu.au/infectious-diseases-institute/` (HTTP 200, section « Contact us ») | ✅ lecture directe + MX | oui — `r7315077965461535329` |
+| PGIMER Chandigarh — Dept. of Community Medicine & School of Public Health | Inde / SEARO | Académique | Dr Arun K. Aggarwal, Professor & Head | `aggarwal.arunkumar@pgimer.edu.in` | annuaire de département sur `pgimer.edu.in` (HTTP 200, 15 adresses nominatives) | ✅ lecture directe + MX | oui — `r-4700072149152859298` |
+| Faculty of Medicine, Ain Shams University — Vice Dean's Office for Graduate Studies & Research | Égypte / EMRO | Académique | boîte du bureau | `viced.research@med.asu.edu.eg` | `med.asu.edu.eg/home/en/contact-us/` (HTTP 200) | ✅ lecture directe + MX | oui — `r-3694773437624118401` |
+| Difäm — Institut allemand pour la mission médicale (Tübingen) | Allemagne / terrain multi-régions | ONG | boîte institutionnelle | `info@difaem.de` | `difaem.de/en/contact/` (HTTP 200) | ✅ lecture directe + MX | oui — `r925255829495202495` |
+| OMS — Bureau pays Népal | Népal / SEARO | Gouvernement/OMS | boîte du bureau | `senepwr@who.int` | `who.int/nepal/footer/help` (**page lue directement**) | ✅ lecture directe + MX, `@who.int` | oui — `r4735448963303019506` |
+| OMS — Bureau pays Cambodge | Cambodge / WPRO | Gouvernement/OMS | boîte du bureau | `wpkhmwr@who.int` | `who.int/cambodia/footer/help` (**page lue directement**) | ✅ lecture directe + MX, `@who.int` | oui — `r8774932370880164691` |
+| National Department of Health | Papouasie-Nouvelle-Guinée / WPRO | Gouvernement | boîte du ministère | `health_ministry@health.gov.pg` | `health.gov.pg` (HTTP 200, contact + pied de page) | ✅ lecture directe + MX | oui — `r3356788017672852496` |
+| PharmAccess Foundation | Pays-Bas / terrain Afrique (KE, TZ, NG, GH) | ONG | boîte institutionnelle | `info@pharmaccess.org` | `pharmaccess.org/contact/` (HTTP 200) | ✅ lecture directe + MX | oui — `r7078086511385088243` |
+| Department of Health and Social Affairs | États fédérés de Micronésie / WPRO | Gouvernement | boîte du département | `health@fsmhealth.fm` | `hsa.gov.fm/contact/` **et** `hsa.gov.fm` (HTTP 200, deux pages) | ✅ lecture directe + MX | oui — `r-6976369492695583320` |
+| Wemos | Pays-Bas / plaidoyer santé mondiale | ONG | boîte institutionnelle | `info@wemos.org` | `wemos.org/en/contact/` (HTTP 200) | ✅ lecture directe + MX | oui — `r4254158042444791598` |
+
+### Anti-doublon — grep domaine ET organisation, contact par contact (consigne du 23/08)
+
+Exécuté en **chemin absolu** sur les 3641 lignes du journal, plus contrôle `linkedin-contacts.md`.
+
+| Contact | grep domaine | grep organisation | Verdict |
+|---|---|---|---|
+| Sydney ID Institute | `sydney.edu.au` → **0** | `Sydney` → **0** (journal) | Neuf |
+| PGIMER Chandigarh | `pgimer.edu.in` → **0** | `pgimer` / `Chandigarh` → **1 chacun** | **Neuf — voir note** |
+| Ain Shams | `asu.edu.eg` → **0** | `Ain Shams` → **0** | Neuf |
+| Difäm | `difaem` → **0** | `Difäm` → **0** | Neuf |
+| OMS Népal | `senepwr` → **0** | `Nepal` → **1** (NHRC, `nhrc.gov.np`, autre institution) | Neuf |
+| OMS Cambodge | `wpkhmwr` → **0** | `Cambodge` → **8** (NIPH `niph.org.kh` retenu ; Institut Pasteur du Cambodge écarté ×4 ; mentions contextuelles) | Neuf |
+| NDoH PNG | `health.gov.pg` → **0** | `Papua` / `Papouasie` → **3** (PNGIMR `pngimr.org.pg` ; OMS PNG `wppngwr@who.int`) | **Neuf — voir note** |
+| PharmAccess | `pharmaccess` → **0** | `PharmAccess` → **0** | Neuf |
+| DHSA Micronésie | `fsmhealth` → **0** | `Micronesia` / `Micronésie` → **0** | Neuf |
+| Wemos | `wemos` → **0** | `Wemos` → **0** | Neuf |
+
+**Note PGIMER — le grep par domaine a levé un écart antérieur, il n'en a pas créé un.** PGIMER Chandigarh figure l. 2089 comme **écarté** (jamais contacté) : la seule adresse alors trouvée était `pgimer-chd@nic.in`, et `nic.in` était déjà consommé. L'annuaire du **département de médecine communautaire** publie 15 adresses nominatives sur `pgimer.edu.in`, **domaine jamais contacté**. L'institution est donc bien neuve — c'est exactement le gisement « cible à reprendre » signalé par les runs des 28-31/08.
+
+**Note PNG — trois institutions distinctes, aucune répétition d'employeur.** Le pays a déjà été approché via **PNGIMR** (institut de recherche) et le **bureau pays OMS**. Le National Department of Health est le **ministère lui-même**, troisième entité, jamais contactée. Le plafond du 25/08 porte sur l'organisation faîtière, pas sur le pays — il n'est pas franchi. Signalé pour que David puisse en juger autrement.
+
+**Contrôle `linkedin-contacts.md` : une adjacence, non bloquante.** Un profil **suivi** (Alastair Donachie, *Senior Epidemiologist, Surveillance & Outbreak Response*, Sydney, l. 1422) est basé à Sydney et avait republié une étude co-signée University of Sydney. Suivi seul, aucune conversation ouverte, et la cible de ce lot est la boîte institutionnelle du Sydney ID Institute, pas cette personne. **Retenu**, adjacence signalée.
+
+### ✅ Nouveau contrôle appliqué pour la première fois : MX avant rédaction
+
+Leçon du bounce Antigua d'hier (`health.gov.ag`, aucun MX, 550 en 14 s) : **`nslookup -type=mx` a été exécuté sur les 10 domaines avant création des brouillons.** Résultat : **10/10 valides.**
+
+| Domaine | MX |
+|---|---|
+| `sydney.edu.au` | ✅ Mimecast AU (×2) |
+| `pgimer.edu.in` | ✅ `mx.mgovcloud.in` (×3) |
+| `med.asu.edu.eg` | ✅ Microsoft 365 (sous-domaine propre) |
+| `difaem.de` | ✅ Microsoft 365 |
+| `who.int` | ✅ Microsoft 365 |
+| `health.gov.pg` | ✅ Microsoft 365 |
+| `pharmaccess.org` | ✅ Microsoft 365 |
+| `fsmhealth.fm` | ✅ Barracuda ESS (×2) |
+| `wemos.org` | ✅ Microsoft 365 |
+
+### Décisions et écarts documentés
+
+- **Plafond de concentration respecté** : 9 organisations faîtières distinctes ; **OMS à 2 contacts** (Népal, Cambodge), soit **exactement le plafond du 25/08**, pas au-delà. Aucun 3e bureau pays retenu.
+- **Répartition par segment** : 4 gouvernement/OMS / 3 académique / 3 ONG.
+- **⚠️ Déséquilibre géographique assumé et signalé : aucun contact AFRO ni AMRO dans ce lot.** WPRO ×4, SEARO ×2, EMRO ×1, EURO ×3 (dont Difäm et PharmAccess, qui opèrent en Afrique, et Wemos en plaidoyer global). Ce n'est pas un choix de facilité : les 9 pistes AFRO/AMRO testées ce run ont toutes échoué en lecture directe (détail ci-dessous). Le vivier facilement vérifiable sur ces deux régions est signalé comme épuisé depuis les 21 et 24/08 ; ce run le confirme.
+- **Écartés pour adresse masquée sur la page officielle** (critère du 18/08 — l'adresse ne venant plus que du snippet moteur) : **PSI** (`psi.org/contact-us/`, 6 adresses en `[email protected]`), **Sightsavers** (11 adresses masquées), **Cordaid** (12 adresses masquées), **Memisa** (masquée), **Terre des hommes** (masquée sur `tdh.org`, mentions légales en 403), **Ministère de la Santé de la Grenade** (`gov.gd/index.php/health` : 7 adresses masquées, dont toutes les boîtes de Secrétaire permanent).
+- **Écartés faute d'adresse publiée (formulaire seul ou aucune adresse)** : **FIND** (Genève), **The Union / UICTMR** (Paris), **ESCMID** (Bâle, 2e échec depuis le 24/08), **Heart to Heart International**, **IntraHealth International**, **Direct Relief** (3e échec depuis le 02/08), **Comité sanitaire-épidémiologique d'Ouzbékistan** (`gov.uz/en/sanepid/contacts` : téléphone et hotline seulement), **Ministère de la Santé des Îles Cook**, **Ministère de la Santé de Bolivie** (`minsalud.gob.bo`, pied de page sans email), **Ministère de la Santé du Burkina Faso** (`sante.gov.bf/contact` : page « Contact » sans aucune adresse), **Ministère de la Santé publique du Tchad** (`sante.gouv.td` « En construction », portail `sante.imedia235.net` sans adresse), **JIHS/NIID Japon** (3e échec depuis le 06/08 : `jihs.go.jp/en/contact_en.html` en 404 ; la seule adresse trouvée, `jjid@nih.go.jp`, est la rédaction d'une revue — mauvaise unité).
+- **Écartés pour page inaccessible** : **BOG Suriname** (403), **Ministère de la Santé de la Dominique** (`health.gov.dm` et `dominica.gov.dm/government-directory`, 403 tous les deux), **INS El Salvador** (403, 2e échec depuis le 06/08), **MINSAL El Salvador** (403), **ISP Chili** (`ispch.cl` et `ispch.gob.cl`, **ECONNRESET sur 3 tentatives** — 2e échec depuis le 24/08), **Ministère de la Santé des Palaos** (`palauhealth.org`, ECONNRESET en HTTPS et en HTTP), **Americares** (403), **Johanniter International Assistance** (404, 2e échec depuis le 06/08), **Ministère de la Santé de la Grenade** (`health.gov.gd`, échec de négociation TLS).
+- **Écarté par l'anti-doublon en cours de recherche** : **CORDS — Connecting Organisations for Regional Disease Surveillance**. Cible thématiquement idéale, mais sa seule adresse publiée est `cords@endingpandemics.org`, et **`endingpandemics.org` est déjà consommé** dans ce journal. Cas identique au rejet PGIMER/`nic.in` du 24/08 : invisible au grep par nom, attrapé par le grep par domaine.
+- **Écartés pour profil d'adresse ou pertinence** : **KDCA Corée** (seule adresse trouvée, `csh9731@korea.kr`, boîte nominative d'un service de presse, vue sur une page tierce de l'ECDC — double motif de rejet), **Simavi** (le domaine redirige désormais vers WaterAid, l'organisation ne publie plus d'adresse propre), **arche noVa** (`info [at] arche-nova.org`, lisible et valide, mais mandat WASH/urgence sans composante de surveillance épidémiologique — écarté par pertinence, pas par vérification).
+- **Adresses en `(at)` / `[at]` : lues comme vérifiées, pas comme masquées.** Difäm publie `info(at)difaem.de` en clair sur sa page contact lue en HTTP 200. À la différence de `[email protected]` (rendu Cloudflare qui *supprime* l'adresse), la notation `(at)` la conserve intégralement et sans ambiguïté. Distinction posée ici pour les runs futurs.
+
+### Conformité des brouillons
+
+**10 brouillons, 0 envoi.** Vérification post-création par `list_drafts` : les 10 portent `labelIds: ["DRAFT"]`, **aucun n'est passé en `SENT`** — contrôle du bug d'envoi instantané du connecteur (incident du 15/08) : **négatif**. Aucun `htmlBody`, **aucune balise `<a>`, aucun lien cliquable, aucune URL avec un `.` littéral** : le domaine est écrit « healthwatch-global dot com » dans les 10 messages. Objets tous ≤ 60 caractères (le plus long : 52). Chaque message se termine par une question explicite, puis la signature.
+
+**Langues** : anglais pour les 10 (aucune organisation manifestement francophone ni hispanophone dans ce lot). **Salutations** : « Hi Arun, » pour PGIMER (seul nom réel trouvé), « Hi team, » pour les 9 autres.
+
+### Totaux au 2026-09-02, après ce run
+
+- **Prospectés : 327** = 317 + 10 de ce lot.
+- **Envoyés : 317** — inchangé, ce run n'envoie rien.
+- **Profondeur de file en fin de run : 10 brouillons** (les 10 de ce lot), contre 0 à l'ouverture. **Sous le seuil de ~25.**
+- **Bounces du jour : aucun** sur ce lot — aucun envoi n'a eu lieu depuis sa création. *(Bilan cumulé non retotalisé ici : porteur unique `daily-relance-check-healthwatch`, consigne du 16/08.)*
+
+**⚠️ Fichiers modifiés non touchés par cette routine, laissés tels quels** (règle `AGENTS.md`) : `marketing/qa/product-claims.manual.json` (modifié), `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis).
