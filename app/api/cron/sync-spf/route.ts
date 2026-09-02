@@ -19,6 +19,7 @@ import { normalizeDisease } from "@/lib/disease-data";
 import { COUNTRIES, findCountry, isAggregateCountry } from "@/lib/geo-data";
 import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
 import { errorMessage } from "@/lib/error";
+import { fetchWithRetry } from "@/lib/fetch-retry";
 import { truncateAtSentence } from "@/lib/truncate-text";
 import { dateFloorGuard, spikeGuard, collapseGuard, zeroCaseGuard, zeroDeathGuard, lockedRowRegressionGuard, lockedRowIsFreezing } from "@/lib/outbreak-guards";
 import { stampSourceConfirmed } from "@/lib/source-confirmed";
@@ -539,9 +540,15 @@ async function runSyncSpf(_req: NextRequest, supabase: SupabaseClient) {
   let feedSource = "none";
 
   for (const rssUrl of SPF_RSS_URLS) {
+    // fetchWithRetry: 2 attempts, 6s each — safe on a candidate-URL fallback
+    // list: fetchWithRetry never retries a 4xx, so a candidate that's
+    // genuinely gone still falls through at roughly the original 12s
+    // single-attempt pace. Only a transient network blip on a preferred
+    // candidate now gets a fair second try. See lib/fetch-retry.ts
+    // (2026-09-02).
+    const { response: res } = await fetchWithRetry(rssUrl, { headers: FETCH_HEADERS }, { attempts: 2, timeoutMs: 6000, backoffMs: [1000] });
+    if (!res || !res.ok) continue;
     try {
-      const res = await fetch(rssUrl, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(12_000) });
-      if (!res.ok) continue;
       const text = await res.text();
       if (!text.includes("<item>") && !text.includes("<entry>")) continue;
       items = parseRSSFeed(text);
@@ -553,20 +560,29 @@ async function runSyncSpf(_req: NextRequest, supabase: SupabaseClient) {
   }
 
   if (items.length === 0) {
-    try {
-      const res = await fetch(SPF_NEWS_URL, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(12_000) });
-      if (res.ok) {
-        items = parseHTMLItems(await res.text());
-        feedSource = "html:" + SPF_NEWS_URL;
-      }
-    } catch (e) {
-      console.error("[spf] HTML fallback failed:", errorMessage(e));
-      Sentry.captureException(e, { tags: { cron: "sync-spf" } });
+    const { response: res, error: htmlFetchErr, attemptsMade } = await fetchWithRetry(
+      SPF_NEWS_URL, { headers: FETCH_HEADERS }, { attempts: 2, timeoutMs: 6000, backoffMs: [1000] },
+    );
+    if (!res) {
+      const msg = `${errorMessage(htmlFetchErr)} (${attemptsMade} tentative(s))`;
+      console.error("[spf] HTML fallback failed:", msg);
+      Sentry.captureException(htmlFetchErr ?? new Error(msg), { tags: { cron: "sync-spf" } });
       // This is a `return`, not a `throw` — GET()'s try/catch wrapper never sees
       // it, so without an explicit log here this failure was as silent as a
       // missed tick to the monitoring dashboard. Found 2026-07-17.
       await logCronRun(supabase, "sync-spf", "error", 0, "SPF unreachable (RSS + HTML fallback both failed)");
       return NextResponse.json({ error: "SPF unreachable" }, { status: 502 });
+    }
+    if (res.ok) {
+      try {
+        items = parseHTMLItems(await res.text());
+        feedSource = "html:" + SPF_NEWS_URL;
+      } catch (e) {
+        console.error("[spf] HTML fallback parse failed:", errorMessage(e));
+        Sentry.captureException(e, { tags: { cron: "sync-spf" } });
+        await logCronRun(supabase, "sync-spf", "error", 0, "SPF unreachable (RSS + HTML fallback both failed)");
+        return NextResponse.json({ error: "SPF unreachable" }, { status: 502 });
+      }
     }
   }
 

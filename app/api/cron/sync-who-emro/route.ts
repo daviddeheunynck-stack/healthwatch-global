@@ -22,6 +22,7 @@ import { findMentionedCountries } from "@/lib/geo-data";
 import { extractNumbers, assessRisk } from "@/lib/outbreak-parser";
 import { logCronRun } from "@/lib/cron-monitor";
 import { errorMessage } from "@/lib/error";
+import { fetchWithRetry } from "@/lib/fetch-retry";
 import { truncateAtSentence } from "@/lib/truncate-text";
 import { dateFloorGuard, spikeGuard, collapseGuard, zeroCaseGuard, zeroDeathGuard, lockedRowRegressionGuard, lockedRowIsFreezing } from "@/lib/outbreak-guards";
 import { stampSourceConfirmed } from "@/lib/source-confirmed";
@@ -252,9 +253,16 @@ async function runWhoEmro(_req: NextRequest, supabase: SupabaseClient) {
   let pageEntries: PageEntry[] = [];
 
   for (const listUrl of EMRO_LIST_URLS) {
+    // fetchWithRetry: 2 attempts, 8s each — safe on a candidate-URL fallback
+    // list (only 2 entries here): fetchWithRetry never retries a 4xx, so a
+    // candidate that's genuinely gone still falls through to the next one at
+    // roughly the original 15s single-attempt pace. Only a transient network
+    // blip on the PREFERRED candidate now gets a fair second try instead of
+    // silently falling back to the weaker one. See lib/fetch-retry.ts
+    // (2026-09-02).
+    const { response: res } = await fetchWithRetry(listUrl, { headers: FETCH_HEADERS }, { attempts: 2, timeoutMs: 8000, backoffMs: [1000] });
+    if (!res || !res.ok) continue;
     try {
-      const res = await fetch(listUrl, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(15_000) });
-      if (!res.ok) continue;
       const html = await res.text();
       pageEntries = extractOutbreakLinks(html, listUrl);
       if (pageEntries.length > 0) break;
