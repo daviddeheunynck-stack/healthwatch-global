@@ -542,6 +542,17 @@ Recherche de contenu triée par date, mots-clés `outbreak surveillance data`, *
 Le bouton de soumission d'une **réponse imbriquée** (reply à un commentaire existant) porte le texte « Répondre » sans `aria-label`, et non « Commenter » comme pour un commentaire de premier niveau — à chercher par `innerText === 'Répondre'` dans le sous-arbre de l'éditeur, pas par `aria-label`.
 
 ---
+
+### 2️⃣ter SUITE DU RUN (21h06-21h31), SUR DEMANDE EXPLICITE DE DAVID (« remplis les quotas ») — COMMENTAIRES 5/7 → 7/7, QUOTA COMPLET
+
+**Textes complets, rapports QA et verdicts détaillés : `linkedin-contacts.md`, section 8️⃣ de l'entrée du jour** (non dupliqués ici pour éviter la divergence entre les deux fichiers).
+
+- ✅ **COMMENTAIRE 6/7 — Adesoye Emmanuel Tunde**, EN, 3e tour du même sous-fil (`urn:li:activity:7500940452578320384`). Il a répondu une 2e fois à notre commentaire de 17h58, reconnaissant ne pas vouloir « assume without seeing the underlying surveillance data » et introduisant lui-même un triptyque classification/validation/reporting. Relecteur : REECRIRE 9, 12 au 1er jet (clôture implicitement ancrée sur le système Katsina/Nigeria, réponse non forcée à venir de son vécu propre), corrigé par ancrage explicite sur son expérience professionnelle (« *in your own experience running lab diagnostics* ») — PASS au 2e jet. Publié ~21h20.
+- ✅ **COMMENTAIRE 7/7 — Dr. Rashi Bhardwaj**, EN, top-level, premier contact (`urn:li:activity:7500961203263959040`). *Veterinarian | Veterinary Public Health & Epidemiology | One Health*, 1er degré. Post sur un webinaire régional zoonose/One Health (Asie-Pacifique), non politique, premier commentaire du post. Angle : qui a l'autorité de déclencher une réponse conjointe entre trois secteurs sans hiérarchie commune (sa Priority 4). Relecteur : REECRIRE 11 au 1er jet (clôture binaire « Is that A, or B ? », moule fermé massivement recyclé dans le corpus, dizaines d'occurrences dont une vieille de 18h), corrigé en question ouverte simple — PUBLIER au 2e jet. Une tournure non idiomatique signalée par le relecteur (« hold that call ») corrigée avant publication (« *Whose call is that?* »). Publié ~21h30.
+
+**Quotas à la clôture définitive du run (21h31)** : commentaires **7/7 — quota complet** · notes de connexion **7/7 — quota complet** (détail : `linkedin-contacts.md` §8) · suivis **9/7-10**, inchangé · DM : file vide, rien en attente.
+
+---
 ### 3️⃣ 📊 DONNÉES ÉPIDÉMIOLOGIQUES (§8) — AUCUNE ÉCRITURE, 3 SIGNALEMENTS NEUFS DONT DEUX RÉSOLVANT L'ÉCART DE CUMUL SIGNALÉ DEPUIS 3 JOURS
 
 🟠 **1. Polio/RDC — deux provinces affectées de plus, connues d'un épidémiologiste de terrain, publiées nulle part à ce stade.** John Omari Baso écrit à 14h11 : « *Quant au zones de santé et provinces, c sont les memes auquels s'ajoutent la province du lualaba avec 1 cas et le nord ubangi avec 1 cas* ». Ce sont **Lualaba** et **Nord-Ubangi**, 1 cas chacune, en plus des 8 provinces et 22 zones de santé de la diapositive qu'il avait transmise. **Aucune écriture, et pas seulement par prudence de routine sociale (§8) : c'est un message privé, pas une source primaire citable**, et rien ne dit encore dans quel document ces deux provinces ressortiront. Il précise par ailleurs que **les 55 poliovirus détectés en PFA et ENV sont le cumul depuis le début de l'année jusqu'à la SE 35**. Notre ligne Polio/RD Congo (`asOf 2026-08-26`, 37 cas confirmés) n'est pas touchée. **Signalé pour `morning-don-check`** : à guetter dans le prochain point hebdomadaire GPEI ou un sitrep du bureau pays.

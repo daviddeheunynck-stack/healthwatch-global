@@ -377,6 +377,52 @@ Aucune invitation envoyée. **Motif assumé** : les deux dossiers en attente res
 
 ---
 
+### 8️⃣ SUITE DU RUN (21h06-21h31), SUR DEMANDE EXPLICITE DE DAVID (« remplis les quotas ») — COMMENTAIRES 7/7, NOTES DE CONNEXION 7/7
+
+**Notes de connexion — 3 supplémentaires envoyées, quota 6/7 → 7/7 (COMPLET) :**
+
+- ✅ **Miriam Mbueshi** (`/in/miriam-mbueshi-83b3a2199/`, 2e degré) — *Communicologue et éco-épidémiologiste*, RDC, déjà commentée le 22/08 (blocage hebdomadaire depuis expiré). Identifiée en carry-over comme « bon candidat suivi/connexion à la réouverture du quota ». Toast + « En attente » confirmés.
+- ✅ **Dr Fabrice KHADDY** (`/in/dr-fabrice-khaddy-8b805527a/`, 2e degré, vérifié) — *Field Coordinator Ebola Outbreak MVE17 at Ministry of Health DRC*, déjà commenté le 23/08. Toast + « En attente » confirmés.
+- ⚠️ **Candidat repéré mais non traité, quota atteint avant de l'évaluer** : **Anne Ancia**, *WHO Representative at World Health Organization*, 2e degré, vérifiée — apparue en suggestion sur la page de Dr Fabrice KHADDY. Bon candidat pour un prochain créneau.
+
+**Commentaires — 2 supplémentaires publiés, quota 5/7 → 7/7 (COMPLET) :**
+
+#### ✅ COMMENTAIRE 6/7 — **Adesoye Emmanuel Tunde**, EN, 3e tour du même sous-fil (§14, ne crée pas de nouveau blocage — top-level déjà bloqué jusqu'au 09/09)
+
+`urn:li:activity:7500940452578320384`. Il a répondu une 2e fois (il y a 2h au moment de la rédaction) à notre commentaire de 17h58 : « *From the reports I referenced, the Katsina figure is explicitly being reported as suspected cases […] I'd rather not assume without seeing the underlying surveillance data. It actually highlights an important point: good outbreak response doesn't only depend on collecting data, but also on how accurately, consistently and promptly that data is classified, validated and reported.* »
+
+🔴 **Le relecteur a fait échouer le 1er jet sur deux points réels (9, 12), tous deux liés.** La clôture « *When capacity is limited somewhere* » restait implicitement ancrée sur le système Katsina/Nigeria du fil (aucun autre référent disponible pour le lecteur), et rien ne forçait la réponse à venir du vécu propre d'Adesoye plutôt que d'un savoir de manuel. **Correction** : ajout de « *in your own experience running lab diagnostics* », qui déplace grammaticalement la question vers son parcours professionnel général plutôt que vers un diagnostic du système nigérian dans cette flambée précise — confirmé PASS au 2e jet.
+
+`QA : mécanique PASS aux deux jets (155 puis 192 car., 1 paragraphe, en/en, 0 blocker) | relecteur VERDICT: REECRIRE 9, 12 au 1er jet, corrigés — 10 PASS sur 12 par ailleurs (attribution vérifiée : « classified, validated, reported » reprend littéralement sa propre formule) | faits cités : aucun | registre du 02/09 (17:09) | statut : publié le 02/09 (~21h20)`
+
+> Adesoye Emmanuel Tunde Classified, validated, reported: three separate steps that produce one number. In your own experience running lab diagnostics, which of the three tends to break first when capacity is limited?
+
+**Publication confirmée** : identité (URL + destinataire pré-rempli par le bouton Répondre) et comparaison texte tapé/attendu dans le même appel JS que le clic sur « Répondre ». Après rechargement : occurrence confirmée dans le fil.
+
+#### ✅ COMMENTAIRE 7/7 — **Dr. Rashi Bhardwaj**, EN, top-level, PREMIER CONTACT
+
+`urn:li:activity:7500961203263959040`, post publié il y a ~2h, 0 commentaire avant nous. *Veterinarian | Veterinary Public Health & Epidemiology | One Health • Zoonoses • AMR • Disease Surveillance • Environmental Health*, 1er degré. Repérée par recherche de contenu (`epidemiological surveillance`, 24h) — post de fond sur une conférence régionale One Health/grippe zoonotique (Asie-Pacifique), non politique, 5 priorités listées dont un webinaire assisté personnellement.
+
+**Angle** : sa Priority 4 (« *Prepare a joint response before an outbreak: Clear triggers, roles, information flows and surge capacity should already be in place* ») laisse ouverte la question de l'autorité de déclenchement entre trois secteurs (humain/animal/environnemental) sans hiérarchie commune.
+
+🔴 **Le relecteur a fait échouer le 1er jet sur un point réel (11).** La clôture « *Is that pre-assigned to a role, or negotiated each time a signal comes in?* » reproduisait le moule binaire fermé « Is that A, or B? »/« Does X, or does it Y? », **documenté comme massivement recyclé dans le corpus** (dizaines d'occurrences dans les deux journaux, dont une utilisée il y a 18h à peine dans un autre fil). **Corrigé** en question ouverte simple (« *Who's meant to hold that call?* »), confirmée PASS au 2e jet sans aucune collision (littérale ou structurelle). ⚠️ Note du relecteur, non bloquante : « hold that call » est une collocation un peu moins idiomatique que « make that call » — **corrigée avant publication** (« *Whose call is that?* »), correction triviale hors grille des 12 questions.
+
+`QA : mécanique PASS aux trois jets (284, 240, 229 car., 2 paragraphes, en/en, 0 blocker) | relecteur VERDICT: REECRIRE 11 au 1er jet, corrigé et confirmé PUBLIER au 2e jet — 11 PASS sur 12 dès le 1er jet par ailleurs | faits cités : aucun | registre du 02/09 (17:09) | statut : publié le 02/09 (~21h30), premier commentaire du post`
+
+> Priority four is the one I'd ask about directly: who actually pulls the trigger? A joint response needs someone with standing to say this is now that, across three sectors that don't share a chain of command.
+>
+> Whose call is that?
+
+**Publication confirmée** : identité (URL contenant `7500961203263959040`) et texte relu dans le même appel JS que le clic sur « Commenter ». Après rechargement : occurrence confirmée, premier et seul commentaire du post.
+
+**Verrou §15/§16 appliqué avant chaque publication** : `git log` inchangé sur `efad3702` tout au long, 0 occurrence antérieure des deux cibles dans les deux journaux avant rédaction.
+
+**Suivis** : inchangé, 9/7-10 (aucun candidat neuf traité ce segment, 404 abonnés toujours stable).
+
+**Arbre de travail** : aucun commit encore poussé pour ce segment au moment de la rédaction de cette entrée — à faire dans la foulée.
+
+---
+
 ## 📅 Session linkedin-hwg-monitoring — 01/09/2026 (9h)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` du 01/09 dans ce fichier ni dans `content-log.md` à l'ouverture. La seule entrée du 01/09 déjà présente appartient à la **session interactive de David de ~05h50-06h16** → **premier déclenchement de cette routine aujourd'hui**. Horloge machine à l'heure (`Tue Sep 1 09:04 2026`). Navigateur : dernière entrée d'appairage de `_shared/browser-status.md` **🟢 RÉTABLI (31/08 ~13:05)**, aucun bridage, `23c7ecdd-…` sélectionné directement (§7).
