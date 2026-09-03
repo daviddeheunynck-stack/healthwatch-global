@@ -1399,9 +1399,25 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
   // fraîcheur (staleAfterDays, calé sur la fréquence que /methodology
   // annonce pour chaque source).
   {
+    // `.limit()` explicite plutôt que le plafond implicite : PostgREST tronque
+    // une lecture sans borne à 1000 lignes SANS erreur (voir la mémoire
+    // reference_supabase_caps_queries_at_1000_rows), et une troncature ici ne
+    // se verrait pas — elle produirait un « zéro ligne active » pour une source
+    // dont les lignes tombent au-delà de la coupure, c'est-à-dire une fausse
+    // alerte de provenance. 295 lignes en base au 2026-09-03, la marge est
+    // large, mais un contrôle qui échoue doit le dire au lieu de se taire.
+    const PROVENANCE_ROW_LIMIT = 5000;
     const { data: allSourceRows, error: allSourceErr } = await supabase
       .from("outbreaks")
-      .select("active, source, updated_at");
+      .select("active, source, updated_at")
+      .limit(PROVENANCE_ROW_LIMIT);
+
+    if (!allSourceErr && (allSourceRows?.length ?? 0) >= PROVENANCE_ROW_LIMIT) {
+      needsReview.push({
+        label: "[PROVENANCE] Lecture tronquée, contrôle non concluant",
+        detail: `La lecture des lignes pour la sonde de provenance a rendu exactement ${PROVENANCE_ROW_LIMIT} lignes, soit la limite demandée — le jeu est donc probablement tronqué et un « zéro ligne active » ci-dessous serait un artefact. Paginer cette lecture (.range()) avant de se fier au résultat.`,
+      });
+    }
 
     if (allSourceErr) {
       needsReview.push({
