@@ -186,6 +186,39 @@ if (suspicious.length) {
 // du 05/08 déjà en base, donc rien à écrire, mais la ligne serait ressortie "9j — À VÉRIFIER" le
 // lendemain). Même garde-fou que les deux autres maps : ne bumper une date qu'après avoir
 // réellement consulté la source primaire, jamais pour faire taire une ligne.
+// ⏳ CRÉATIONS EN ATTENTE — AUTORISÉES PAR DAVID EN SESSION LE 03/09, À FAIRE AU PROCHAIN RUN.
+// Deux trous de couverture Somalie repérés le 03/09 en lisant l'Africa CDC Epidemic Intelligence
+// Weekly Report du 23/08/2026 (procédure de lecture : voir la note Choléra/Somalie ci-dessous,
+// section "Comment lire l'EIWR Africa CDC"). David a dit explicitement "crée les deux lignes
+// Somalie au prochain run" — donc à créer AU DÉBUT du prochain run, avant le reste du scan, puis
+// à retirer ce bloc une fois fait (ne pas laisser trainer comme pending indéfiniment).
+//
+// 1) Diphtérie/Somalie — AUCUNE ligne en base à ce jour (vérifié 03/09), alors que la Guinée, le
+//    Nigéria et le Sénégal sont déjà suivis pour cette maladie. Chiffres depuis l'EIWR Africa CDC
+//    du 23/08/2026 (page 8/15 "Corynebacterium diphtheriae in Africa"), tirés du sous-total
+//    Somalie du tableau multi-pays, PAS le compteur "confirmed" en tête de fiche (qui est un total
+//    Afrique) :
+//      cases = 3368 (suspectés — aucun confirmé n'est ventilé par pays dans le tableau),
+//      deaths = 102, date = "2026-08-16" (dernier point cité : "epidemiological week 33"),
+//      source = le PDF EIWR lui-même (voir l'URL dans la note Choléra/Somalie), source_priority=5,
+//      response_phase="monitoring", risk_level à juger (la fiche classe la Somalie "High" pour le
+//      risque humain régional diphtérie, à vérifier avant d'écrire).
+//    Corroborer si possible avec une source somalienne ou EMRO avant d'écrire — l'EIWR seul a
+//    suffi à trancher Choléra/Somalie le 03/09 mais n'était pas encore confirmé deux fois pour
+//    la diphtérie au moment de cette note.
+//
+// 2) Rougeole/Somalie — ligne EXISTANTE mais INACTIVE, à réactiver et rafraîchir, pas à recréer :
+//    "id 1867c/0d" (chercher `disease_en=Measles country_en=Somalia`), actuellement datée du
+//    2025-01-01. Chiffres 2026 depuis le même EIWR (page 10/15 "Measles in Africa") :
+//      cases = 11604 (742 confirmés + 10862 suspectés), deaths = 42, date = "2026-08-16"
+//      (semaine épi. 33), active=true. Vérifier avant d'écrire que `response_phase` n'est pas
+//      resté à "contained" ou autre valeur figée par l'ancienne clôture — sinon la ligne
+//      disparaîtrait à nouveau du site via le court-circuit `contained` de isDisplayActive().
+//
+// Dans les deux cas : régénérer les 5 descriptions (gabarit habituel), lancer `npm run qa:facts`
+// après coup pour que ces deux lignes entrent dans le registre marketing consommé par les
+// routines LinkedIn, et retirer ce bloc de commentaire une fois les deux lignes créées/réactivées.
+
 const FROZEN_ROW_CHECKED = {
   // Choléra/Cameroun : vérifié le 29/08. Aucun SitRep CERPLE-EN postérieur au n°015
   // (13-17/08, 1 342 cas / 36 décès, déjà en base). Le listing officiel
