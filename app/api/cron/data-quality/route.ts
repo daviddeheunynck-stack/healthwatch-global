@@ -7,6 +7,7 @@ import { sendBrevoEmail } from "@/lib/brevo-send";
 import { isCollapse, isSpike, deathsExceedCases, isZeroData } from "@/lib/outbreak-guards";
 import { sourceStatusOf, sourceName, isForbiddenSourceHost, PUBLICLY_CLAIMED_SOURCES } from "@/lib/source-trust";
 import { fetchWithRetry } from "@/lib/fetch-retry";
+import { checkFetcherCoverage } from "@/lib/fetcher-coverage";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 120;
@@ -1447,6 +1448,65 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
           detail: lastWrite
             ? `/methodology annonce « ${claimed.label} » comme l'une des quatre sources officielles, mais aucune ligne active ne lui est sourcée. Dernière écriture (active ou non) : ${lastWrite.slice(0, 10)}, soit ${Math.round(ageDays)}j — au-delà du seuil de ${claimed.staleAfterDays}j retenu pour cette source. Vérifier si le cron d'ingestion correspondant est en erreur (health-check) ou si la source a réellement cessé de publier.`
             : `/methodology annonce « ${claimed.label} » comme l'une des quatre sources officielles, mais aucune ligne — active ou non — n'a jamais été sourcée à cet éditeur. Vérifier le cron d'ingestion correspondant.`,
+        });
+      }
+    }
+  }
+
+  // ── 4o. Couverture des fetchers — des lignes actives que plus aucun cron ne
+  //        revisitera jamais ────────────────────────────────────────────────
+  // Ferme l'entrée de fix-queue du 2026-09-01 (voir _shared/fix-queue.md et
+  // lib/fetcher-coverage.ts pour le détail des deux mécanismes de couverture).
+  // Origine : le 2026-08-22, 11 lignes africaines ont été créées sans qu'aucun
+  // fetcher ne les cible — ni TARGETS, ni domaine dynamique. Aucun contrôle de
+  // fraîcheur existant ne l'a détecté (ils ne mesurent que l'âge d'une ligne
+  // déjà connue, jamais si elle est la cible de quoi que ce soit) ; le trou a
+  // été signalé par un destinataire en DM LinkedIn, pas par le produit.
+  {
+    // Même plafond explicite que 4n, même raison (voir son commentaire) :
+    // PostgREST tronque une lecture sans borne à 1000 lignes sans erreur.
+    const COVERAGE_ROW_LIMIT = 5000;
+    const { data: coverageRows, error: coverageErr } = await supabase
+      .from("outbreaks")
+      .select("id, disease, disease_en, country, country_en, source, is_seed")
+      .eq("active", true)
+      .limit(COVERAGE_ROW_LIMIT);
+
+    if (!coverageErr && (coverageRows?.length ?? 0) >= COVERAGE_ROW_LIMIT) {
+      needsReview.push({
+        label: "[COUVERTURE] Lecture tronquée, contrôle non concluant",
+        detail: `La lecture des lignes actives pour la sonde de couverture des fetchers a rendu exactement ${COVERAGE_ROW_LIMIT} lignes, soit la limite demandée — le jeu est probablement tronqué et les lignes non couvertes ci-dessous seraient incomplètes. Paginer cette lecture (.range()) avant de s'y fier.`,
+      });
+    }
+
+    if (coverageErr) {
+      needsReview.push({
+        label: "[COUVERTURE] Contrôle de couverture des fetchers impossible",
+        detail: `Lecture des lignes actives en échec (${coverageErr.message}) — aucune vérification ce matin qu'un cron cible encore chaque ligne affichée.`,
+      });
+    } else {
+      const uncovered = (coverageRows ?? []).filter(
+        (r) => !checkFetcherCoverage(r.source, r.disease_en, r.country_en).covered
+      );
+
+      // UNE seule entrée agrégée, pas une par ligne : mesuré en prod le 2026-09-03, ~20% des
+      // lignes actives (26/129) sont hors couverture au sens strict de ce contrôle — pour
+      // l'essentiel des lignes sourcées presse/gouvernementales ajoutées à la main
+      // (scripts/add-*.mjs, scripts/fix-*.mjs) ou des clusters à rafraîchissement manuel
+      // documenté ailleurs (Chikungunya via morning-don-check.mjs, Cholera via les e-mails de
+      // check-wer-cholera — voir lib/fetcher-coverage.ts pour le détail), pas des trous
+      // silencieux comme celui du 22/08. 26 entrées needsReview séparées noieraient le
+      // rapport ; le détail complet reste consultable dans ce bloc unique.
+      if (uncovered.length > 0) {
+        const UNCOVERED_SHOWN_MAX = 20;
+        const shown = uncovered.slice(0, UNCOVERED_SHOWN_MAX);
+        const lines = shown.map((r) => {
+          const label = `${r.disease_en ?? r.disease} / ${r.country_en ?? r.country}`;
+          return `${label}${r.is_seed ? " (is_seed)" : ""} — ${r.source || "(source vide)"}`;
+        });
+        needsReview.push({
+          label: `[COUVERTURE] ${uncovered.length} ligne(s) active(s) sans fetcher`,
+          detail: `Aucun cron ne cible ces lignes (ni domaine dynamique reconnu, ni entrée TARGETS) — elles ne seront jamais rafraîchies automatiquement, quel que soit leur âge. Beaucoup sont un profil connu (source presse/gouvernementale ajoutée à la main, ou cluster à rafraîchissement manuel documenté) plutôt qu'un vrai trou comme celui du 22/08 — à trier ligne par ligne, pas à traiter en bloc. ${lines.join(" ; ")}${uncovered.length > shown.length ? ` ; +${uncovered.length - shown.length} autre(s) non affichée(s)` : ""}. Détail de la logique : lib/fetcher-coverage.ts.`,
         });
       }
     }

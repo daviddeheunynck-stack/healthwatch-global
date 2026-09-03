@@ -1621,6 +1621,26 @@ const TARGETS: Target[] = [
   { disease_en: "Hepatitis E", country_en: "Ethiopia",                            minCases:     50 },
 ];
 
+// Exported for the fetcher-coverage probe (data-quality section 4o, lib/fetcher-coverage.ts,
+// 2026-09-03) — a disease+country pair here means SOME cron will re-check this row on its next
+// scheduled run, regardless of whether that run finds anything worth writing. Derived from
+// TARGETS itself rather than duplicated, so it can't drift out of sync with additions/removals.
+//
+// MUST run each entry through normalizeDisease()/findCountry(), the same way the main loop's
+// own dcKey does a few hundred lines below (`diseaseInfo.name_en`/`countryInfo.name_en`, not
+// the raw target.disease_en/country_en strings) — TARGETS deliberately uses shorthand ("Dengue",
+// "DR Congo" would be typed here) that only matches the DB's canonical disease_en/country_en
+// columns AFTER normalization. Skipping this step was tried first and produced 45/129 active
+// rows misreported as uncovered — e.g. every India/Bangladesh/Colombia/... Dengue TARGETS entry,
+// because this array's `disease_en: "Dengue"` normalizes to the DB's stored "Dengue fever".
+export const TARGET_KEYS = new Set(
+  TARGETS.map((t) => {
+    const diseaseInfo = normalizeDisease(t.disease_en);
+    const countryInfo = findCountry(t.country_en);
+    return `${diseaseInfo.name_en.toLowerCase()}|${(countryInfo?.name_en ?? t.country_en).toLowerCase()}`;
+  })
+);
+
 // ── Main handler ──────────────────────────────────────────────────────────────
 
 export async function GET(req: NextRequest) {

@@ -209,6 +209,12 @@ const TARGETS: Target[] = [
   },
 ];
 
+// Exported for the fetcher-coverage probe (data-quality section 4o, lib/fetcher-coverage.ts,
+// 2026-09-03) — see the identical export in sync-who-regional/route.ts for the reasoning.
+export const TARGET_KEYS = new Set(
+  TARGETS.map((t) => `${t.disease_en.toLowerCase()}|${t.country_en.toLowerCase()}`)
+);
+
 // ── Discovery ──────────────────────────────────────────────────────────────
 
 async function findLatestEditionUrl(): Promise<{ itemUrl: string; edition: string }> {
