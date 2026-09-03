@@ -2,6 +2,76 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session linkedin-hwg-followup-check-2 — 03/09/2026 (17h) — ⚠️ **0 commentaire publié : la frappe est refusée par le classifieur, aucun texte sortant n'était possible** — 1 DM envoyé, support §16 enfin trouvé
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` datée du 03/09 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture → **premier déclenchement de cette routine aujourd'hui**. Les créneaux 13h et 17h sont deux runs intentionnellement distincts. Horloge machine à l'heure (`Thu Sep 3 17:10 2026`). Branche vérifiée : **master**.
+
+**Registre de faits régénéré ce run** (17:10) : **220 faits citables sur 106 lignes affichées**, 81 `is_seed` exclues, **14 périmés** — strictement identique au run de 13h, aucune écriture en base entre les deux.
+
+**Navigateur : sain, contrairement à ce matin.** `_shared/browser-status.md` lu avant ouverture : dernière entrée du jour **🟢 RÉTABLI (~09h35)**. `list_connected_browsers` renvoie `23c7ecdd-26d7-4d25-b39b-1889eb0fa3bd` seul, sélectionné par deviceId (§7), onglet obtenu sans incident. **Aucune panne d'appairage ce run** — le blocage décrit ci-dessous est d'une autre nature et n'a rien à voir avec Chrome. Une déconnexion transitoire de l'extension en milieu de run, récupérée seule au 2e appel, sans conséquence.
+
+---
+
+### 1️⃣ 🔴 CE QUI A LIMITÉ CE RUN — LA FRAPPE EST REFUSÉE, LES LECTURES PASSENT
+
+Même refus du classifieur de permissions que lors du run de 13h et de la reprise interactive de 16h31, mais **avec un profil différent, qui vaut d'être noté précisément** :
+
+| Action | État ce run |
+|---|---|
+| `computer type` (frappe dans un composeur) | 🔴 **refusée 3 fois** — dont une fois après avoir cliqué le bon composeur |
+| `javascript_tool` | 🔴 refusé, y compris en **lecture seule** du DOM |
+| `browser_batch` | 🔴 refusé systématiquement |
+| `navigate` | 🟡 **non déterministe** — refusé, puis accepté au 2e appel, puis refusé 2 fois de suite en fin de run |
+| `computer` clic / capture / défilement, `find`, `read_page`, `get_page_text` | 🟢 fonctionnels tout le run |
+| `npm run qa:facts`, `qa:check`, `git` | 🟢 fonctionnels — **contrairement au run de 13h**, l'outillage QA était disponible |
+
+**Conséquence directe et unique : aucun texte sortant ne pouvait être saisi.** Ce n'est pas une décision de politique, c'est une incapacité mécanique — un commentaire ou une note de connexion n'aurait pas pu être tapé, même validé. **Le DM de SOUAD BELKACEMI est passé parce que la frappe fonctionnait encore en début de run** ; elle s'est fermée entre son envoi (17h15) et la tentative sur le fil de James Schlitt. Détail complet des deux DM dans `linkedin-contacts.md`, entrée du jour.
+
+**Ce qui a quand même été mené à son terme** : messagerie complète relue, notifications relues en entier, page Abonnés et liste Relations vérifiées, gestionnaire d'invitations relu, un fil de commentaire actif rouvert, et la ligne d'événement §16 instruite (section 3).
+
+🏷️HORS-ROUTINE : c'est le **3e blocage du classifieur en une journée sur ce compte** (13h : commandes et sous-agents ; 16h31 : frappe ; 17h : frappe, JS, batch). Les trois ont un coût identique et cumulatif — un DM validé qui n'est pas parti depuis 4 h. Le run ne peut ni diagnostiquer ni contourner ce refus ; ce qui est décidable en revanche, c'est de savoir si une session planifiée doit continuer à produire du texte qu'elle ne pourra pas envoyer. À trancher hors routine.
+
+---
+
+### 2️⃣ ❌ COMMENTAIRES — 0 PUBLIÉ, QUOTA DU JOUR INCHANGÉ À 1/7, AUCUNE RECHERCHE MENÉE
+
+**Aucune recherche active de candidats n'a été lancée, et c'est délibéré** — pas un quota abandonné par manque de matière. La frappe étant refusée dès le 2e tiers du run, rédiger un candidat aurait produit un texte impubliable, avec deux coûts et aucun bénéfice : le corpus se serait enrichi d'un brouillon jamais servi (que le contrôle anti-gabarit compte ensuite contre les brouillons suivants), et l'angle aurait vieilli hors de sa fenêtre 48 h avant de pouvoir servir. **Le quota du jour reste donc à 1 commentaire sur 7**, publié par le run de 9h.
+
+**Ce qui a été fait à la place, et qui sert directement au créneau de 9h** : instruire la ligne d'événement §16 jusqu'à identifier un support atteignable (section 3), plutôt que de laisser l'événement se perdre une 5e journée comme le 28-31/08.
+
+---
+
+### 3️⃣ 🗓️ LIGNE D'ÉVÉNEMENT §16 — EBOLA/RDC : LE SUPPORT EXISTE, ET IL EXPIRE DEMAIN MATIN
+
+Le carry-over de 13h laissait l'événement **entièrement ouvert** en notant que le press briefing Africa CDC de 15h00 tombait après ce créneau. Il a bien eu lieu, et son support est atteignable :
+
+- **`urn:li:ugcPost:7500903964570312704`** — page **Africa CDC**, « *Special Briefing on Ebola Outbreak Response | September 3, 2026* ». LinkedIn Live **terminé**, rediffusion d'**1 h 05**, **26 participants**, 44 réactions, **4 commentaires seulement**. Le post s'ouvre et se lit normalement, contrairement à la page WHO AFRO toujours inatteignable.
+- ⚠️ **Il est affiché « 1 j »**, pas « 2 h » : le post annonçait l'événement avant de l'héberger. **Il sera au bord de la fenêtre 48 h demain matin** — c'est le créneau de 9h ou plus personne.
+- ⚠️ **Aucun chiffre exploitable dans le texte du post.** Il ne porte que l'annonce (thème, horaires par fuseau, contact presse) ; les données du briefing sont dans la vidéo. **Un angle chiffré demanderait d'écouter la rediffusion**, et un chiffre lu ainsi ne serait de toute façon pas citable sans passer par le registre de faits (§8). L'angle honnête disponible sans la vidéo porte sur la **cadence** du briefing hebdomadaire lui-même, pas sur ses chiffres.
+- **Le post du 02/09 reste brûlé** (deux angles abandonnés), **Dr. Jean Kaseya bloqué jusqu'au 08/09**, **Prof. Mohamed Janabi** à revérifier maintenant que le briefing a eu lieu (rien depuis 5 j au relevé de 13h), **Dr. Ibrahima Socé Fall** toujours sans hook honnête.
+
+---
+
+### 4️⃣ 📚 VEILLE — 3 RÉFÉRENCES NEUVES, ET LE RAPPEL D'UN BLOCAGE
+
+Les 4 commentaires du post ci-dessus sont presque tous de **Tambe Elvis Akem, MD** (*Medical Field Epidemiologist | Immunization | Outbreak Response*), et ils apportent de la matière de fond que nous n'avions pas :
+
+1. **Preprint** — « *Renewed Confirmed-Case Reporting in Health Zones After 21 Days Without a Newly Attributed Case During the 2026 Bundibugyo Virus Disease Outbreak in the Democratic Republic of the Congo: Implications for Health-Zone Surveillance and Response* », `10.20944/preprints202608.0905.v1`. **Sujet directement dans l'axe HWG** : ce que devient une zone de santé qui recommence à notifier après 21 jours de silence — soit exactement la question « un plat et un flux à l'arrêt se ressemblent » déjà travaillée en commentaire.
+2. **Article publié le 27/08** — *PLOS Global Public Health*, « *Operational epidemiology of the early phase of the 2026 Bundibugyo virus disease outbreak in the Democratic Republic of the Congo and Uganda* », `10.1371/journal.pgph.0006680`.
+3. **Tableau de bord** de ce suivi de reprise des notifications : `immunization-for-resilience.shinyapps.io/ebola-bvd-outbreak-2026/` (version FR : `…/ebola-mvb-epidemie-2026/`).
+
+⚠️ **Tambe Elvis Akem est bloqué en commentaire jusqu'au 05/09** (règle 1 commentaire/profil/semaine), et la mémoire dédiée fixe déjà au 05/09 la reprise de son dossier preprint. **Ces trois références sont donc de la matière de lecture pour l'instant, pas une cible.**
+
+**Autres notifications relues, rien d'autre à retenir** : la plus ancienne remonte à 19 h (réponse d'Adesoye Emmanuel Tunde, déjà jouée par le run de 9h) — **aucune réponse neuve à un commentaire HWG, sur aucun fil**. Statistiques des posts de David au passage : le post CFR (`urn:li:activity:7500143469085057027`) est à **199 impressions**, 1 réaction, 2 commentaires ; le post essai randomisé/Ebola RDC du jour (`urn:li:activity:7500816421266923521`) à **60 impressions** après 7 h. Un post d'**Alexandre APPROUTSADI YOKSOU** (relation, épidémiologiste) relevé à 9 h — recherche de poste, hors périmètre de commentaire.
+
+---
+
+### 5️⃣ 🔬 DONNÉES ÉPIDÉMIOLOGIQUES (§8) — RIEN À SIGNALER
+
+Aucun chiffre neuf rencontré en session : le post du briefing n'en porte aucun en texte, les deux publications de Tambe sont des analyses méthodologiques et non des bulletins de situation, et aucun message reçu n'avance de donnée. **Aucune écriture en base, aucune source plus fraîche à signaler à `morning-don-check`.** Le registre de 17:10 est identique à celui de 13:05.
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check — 03/09/2026 (13h) — ⚠️ **outillage QA perdu en cours de run (contrôle mécanique et relecteur devenus indisponibles), 0 commentaire publié, 2 candidats abandonnés après double échec**
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` datée du 03/09 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture (la plus récente était `linkedin-hwg-monitoring` du matin) → **premier déclenchement de cette routine aujourd'hui**. Horloge machine à l'heure (`Thu Sep 3 13:02 2026`), confirmée côté navigateur. Branche vérifiée : **master**.

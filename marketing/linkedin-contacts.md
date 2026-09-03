@@ -1,6 +1,100 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
+## 📅 Session linkedin-hwg-followup-check-2 — 03/09/2026 (17h) — ✅ **1 DM ENVOYÉ (SOUAD BELKACEMI, 17h15)** — 🔴 le 2e DM validé 12/12 reste bloqué, la frappe dans le composeur est refusée par le classifieur
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` du 03/09 dans ce fichier ni dans `content-log.md` à l'ouverture (les plus récentes étaient `linkedin-hwg-monitoring` 9h, `linkedin-hwg-followup-check` 13h, et la reprise interactive de 16h31) → **premier déclenchement de cette routine aujourd'hui**. Les créneaux 13h et 17h sont deux runs intentionnellement distincts, pas un double déclenchement. Horloge machine à l'heure (`Thu Sep 3 17:10 2026`). Branche : **master**. Registre de faits régénéré à 17:10 (220 faits, 106 lignes affichées, 14 périmés — identique au run de 13h).
+
+**État de l'arbre à l'ouverture** : carry-over n°2 du run de 13h **déjà réglé par un tiers** — les trois fichiers d'archive du run de 13h ont été commités à 15h57 (`b6e8f06b`, puis fusion `8215d09f`) et la reprise interactive de 16h31 a poussé `8832d1e6`. `git log origin/master..master` était vide à l'ouverture, rien à rattraper.
+
+---
+
+### 1️⃣ ✅ DM 1/2 — **SOUAD BELKACEMI.** — ENVOYÉ à 17h15, sur la validation explicite de David du 03/09 après-midi
+
+Fil rouvert et **relu en entier avant envoi** (2 messages seulement : notre question du 01/09 à 12h51, sa réponse d'aujourd'hui 13h30) — **inchangé depuis la validation**, sa réponse reste le dernier message entrant, personne d'autre n'était intervenu. *langue du fil = fr ; langue du brouillon = fr ; vouvoiement des deux côtés.* Aucune nouvelle QA refaite, conformément au carry-over (« PAS DE NOUVELLE QA À REFAIRE ») : le texte envoyé est **mot pour mot** celui validé 12/12 à 16h31.
+
+**Texte envoyé, tel qu'il est parti :**
+
+> Merci, et ne vous excusez pas : vous avez répondu à la question que je posais.
+>
+> Ce que vous décrivez garde une place au déclaré, mais en deuxième position. Il faut bien savoir où un virus circule ailleurs avant de se demander s'il trouverait ici de quoi s'installer. Je m'en occupe justement au quotidien : une carte par pays des maladies actives en ce moment, tirée de ce que les agences publient. Créer un compte donne accès au niveau complet pendant quatorze jours, sans qu'aucun moyen de paiement soit demandé à l'inscription.
+>
+> Il me reste une ambiguïté sur laquelle je sèche : ce « présent ailleurs », le voulez-vous à jour, ou une aire de répartition connue suffit-elle ? Les deux ne se cherchent pas au même endroit.
+
+**Contrôles avant le clic** (§5 items 3 et 4) : en-tête du composeur relu (`SOUAD BELKACEMI.`), URL du fil vérifiée (`2-YmRjYmRkNWQt…`), contenu du composeur relu dans le DOM (729 caractères, 3 paragraphes) **et** rendu vérifié à la capture — un point non trivial ici, car `innerText` comptait 4 lignes vides entre les paragraphes alors que le rendu réel n'en affiche qu'une ; c'est la capture qui a tranché, pas le texte tapé. **Envoi confirmé après coup** : composeur vidé, message présent dans le fil sous « David Deheunynck · 17:15 », accusé de remise affiché, aperçu de la liste de conversations passé à « Vous : Merci, et ne vous excusez pas… ». Rendu relu une dernière fois après envoi : 3 paragraphes, aucune troncature.
+
+`QA : aucune relance du dispositif (texte validé 12/12 par le relecteur à 16h31, ordre d'envoi explicite de David) | faits cités : « quatorze jours », vérifié le 03/09 dans lib/activate-trial.ts et pricing.faq4_a | registre du 03/09 (17:10) | statut : envoyé le 03/09 à 17h15, sur ordre explicite de David (session interactive du 03/09 après-midi)`
+
+---
+
+### 2️⃣ 🔴 DM 2/2 — **James Schlitt, PhD, MPH** — TOUJOURS PAS ENVOYÉ, 3e session consécutive, et **le texte validé contenait un défaut réel que j'ai corrigé**
+
+Fil rouvert et **relu en entier** (5 messages du jour, verbatim recopié dans `tmp/thread-schlitt-0309c.txt`) : sa question de 13h06 reste le dernier message, rien n'a bougé. *langue du fil = en ; langue du brouillon = en.*
+
+**⚠️ Défaut trouvé dans le texte validé 12/12, et corrigé avant toute tentative d'envoi.** Le brouillon validé à 16h31 ouvrait son 2e paragraphe par « *On the canonical value: almost nothing here works by rank **the way I described it before*** ». **Cette rétro-référence ne renvoie à rien que James ait reçu** : la description par rang appartenait au jet 1, celui qui décrivait le mécanisme à l'envers et qui n'a **jamais** été envoyé. Vérifié plutôt que supposé — les 5 messages du fil ont été relus un par un, aucun ne parle de rang ni de priorité de source, et un `grep` sur `rank`/`outrank` dans `content-log.md` et `linkedin-contacts.md` ne trouve aucun texte de nous vers lui sur ce point (son seul antécédent public est notre commentaire du 31/08 sous le post de David, qui parle de doubles historiques, pas de rang). C'est un résidu d'itération : le relecteur avait le jet 1 en contexte et a pu lire la référence comme valide.
+
+**Correction appliquée, minimale et sans toucher au fond** : la clause fautive est remplacée par « *there is barely any ranking involved* ». Aucune affirmation sur le produit n'est modifiée — le mécanisme (écrasement libre entre sources, verrou uniquement sur une ligne vérifiée à la main, égalité du même jour tranchée par la dernière écriture acceptée, aucun rôle du consensus) reste celui vérifié dans `lib/outbreak-guards.ts` et `lib/outbreaks.ts` à 16h31.
+
+**🔒 Texte final, prêt à envoyer, non envoyé :**
+
+> No, nothing formal. I read what each source publishes myself, no partnership on either side.
+>
+> On the canonical value: there is barely any ranking involved. Any of my sources can generally overwrite any other, and the only real lock is on a row a person has manually verified against a primary source. Nothing can lower that figure automatically, only raise it, until someone checks by hand. On a same-day tie, whichever accepted write lands last is what stands. Agreement plays no part in any of it, so three concurring reports don't outweigh one that disagrees.
+>
+> Your vetting cluster gives repetition a vote. Mine gives it none: a single verified source ends the question outright. When your cluster and a lone dissenting source disagree, what actually happens to the number?
+
+**🔴 Pourquoi il n'est pas parti : la frappe dans le composeur LinkedIn est refusée par le classifieur de permissions**, exactement comme lors du run de 13h et de la reprise de 16h31. **Trois refus** ce run : un `browser_batch` complet, puis deux appels `computer type` isolés, dont un après avoir cliqué le composeur du bon fil. Le refus est explicite (« se reproduira pour le reste de la session, ne pas chercher à contourner »), et le carry-over de 13h demandait nommément de ne pas insister : **arrêté au 3e refus**. Le composeur de James est resté vide, aucun demi-message laissé dans le fil. À noter que le SOUAD, lui, est passé — la frappe fonctionnait encore en début de run et s'est fermée entre les deux, ce n'est donc pas le fil ni le texte qui posent problème.
+
+`QA : mécanique relancée sur la version corrigée — FAIL sur 2 blockers, les deux des faux positifs documentés et vérifiés sur pièce : context.too-soon « 0 j » (il a répondu il y a une heure, c'est une réponse en fil actif, pas une relance à froid) et ngram.history « 97 formules » (auto-citation — le brouillon est cité verbatim dans ce fichier même, dans l entrée du run de 13h, depuis le commit de 16h31 ; grep de contrôle : « no partnership on either side » n'a QUE cette occurrence, et la nouvelle clause « barely any ranking involved » n'a aucun antécédent dans le corpus) | relecteur non relancé : édition de 6 mots ne touchant aucune affirmation, sur un texte déjà validé 12/12, David ayant demandé de ne pas refaire la QA | faits cités : aucun de la base | registre du 03/09 (17:10) | statut : NON ENVOYÉ, frappe refusée par le classifieur — texte prêt, à envoyer à la main ou dès qu'une session peut taper`
+
+---
+
+### 3️⃣ 💬 MESSAGERIE — AUCUN MESSAGE ENTRANT NOUVEAU DEPUIS 13h30
+
+Liste des 10 conversations relue, triée par récence. **Le message le plus récent avant le nôtre était celui de SOUAD à 13h30**, déjà traité par le run de 13h : aucun fil n'a bougé entre 13h30 et 17h10.
+
+- **John Omari Baso** — toujours « Bonjour David. » de 11h36, **rien depuis presque 6 h**. Le carry-over n°5 de 13h prévoyait qu'un mot bref serait légitime s'il n'avait rien envoyé en fin de journée. **Aucun brouillon rédigé** : la frappe étant refusée, un texte n'aurait pu être ni envoyé ni même saisi ; et notre question de 09h56 reste la question ouverte de son côté. À reprendre demain matin.
+- **Dr. Malachie MANAOUDA** — inchangé, **décision maintenue : pas de welcome DM avant le 05/09**, il n'a ni répondu ni publié depuis son acceptation de 11h12.
+- **Inchangés, rien n'est dû** : Julien Tuba (notre message de 11h56 est le dernier) · Isaias Fernandes Co (« 👍 » de 06h35) · Dossa Paul YAOÏTCHA · Harvey Basivikidi · Buno Tona · Bobossam Cissoko · **Dr. Siaka Condé** (6e jour, ne pas relancer avant le 05/09, carry-over honoré).
+
+**Quota DM du jour : 1 envoi froid sur 8** (James Schlitt à 09h59), inchangé — le DM de SOUAD est une réponse en fil actif, hors quota froid ([[feedback_reply_quota_cold_outreach_only]]).
+
+---
+
+### 4️⃣ ✅ RÉSEAU — 0 FOLLOW-BACK DÛ, 1 INVITATION REÇUE NEUVE, DÉCIDÉE MAIS NON CLIQUÉE
+
+- **Abonnés : 407, inchangé depuis le run de 13h.** Les 10 premiers de la liste « Abonnés » sont tous déjà en « Suivi » (Malachie MANAOUDA, Kevin S., Rocham Mulumbwe, Ghayyoor Sultan, Jacob Banda, Abubakar Sadiq Tahir, Julien Tuba, Jean-Baptiste Ferrand, Dossa Paul YAOÏTCHA, Alexandre APPROUTSADI YOKSOU). **Aucun follow-back dû, quota du jour inchangé à 9/7-10.** Aucune recherche active de suivis supplémentaires : la marge est de 1 profil au mieux, et le run n'avait plus de capacité d'action fiable.
+- **Relations : 293** (292 hier). Liste « Ajouts récents » relue : les 3 acceptations du jour sont **Dr. Malachie MANAOUDA, Kevin S. et Rocham Mulumbwe**, toutes déjà instruites par les runs de 9h et 13h. **Aucune acceptation neuve depuis 13h.**
+- ⭐ **Invitation reçue neuve : Yuda Sule Paschal** (`/in/yuda-sule-paschal-8a0490257/`, identifié par son lien §12) — *Global Health Leader Enthusiast || One Health Leadership || Digital Skills || Youth Leader || SDG 3 & 6*, **39 relations en commun** dont Kevin S., PhD. **Activité propre ouverte et vérifiée** (20 posts) : écosystème One Health / MTN tanzanien réel — republications de One Health Society-Tanzania et du 9e World One Health Congress (Lisbonne, 4-7/09), promotion du Tanzania Health Summit 2026, aucune trace de spam ni d'outreach freelance. Profil de plaidoyer et d'événementiel plus que de surveillance, mais **dans le domaine et légitime**. **Décision : à accepter.** ❌ **Clic non exécuté** : le classifieur a refusé deux navigations consécutives vers le gestionnaire d'invitations juste après, run arrêté là plutôt que d'insister. **En carry-over.**
+- **Invitations reçues, les 2 autres inchangées** : **Zachariah G. Houdari** (services financiers) et **OLAOLUWA PHILIP** (géospatial/climat sans santé publique) — décisions du 31/08 non rejugées, aucun élément neuf.
+- **Notes de connexion : 0/7.** Aucune rédigée : la frappe étant refusée, aucune n'aurait pu être publiée.
+
+---
+
+### 5️⃣ 🔁 SUIVI DES FILS ACTIFS (§14) — 1 FIL ROUVERT, INCHANGÉ
+
+- **Oke Ikpekpe** (`urn:li:activity:7500522694187089920`) — rouvert directement, post lu en entier avec ses 4 commentaires : **notre réponse du 8e tour (1 j) reste le dernier message du sous-fil**, 3 impressions, aucune réponse de lui. Rien de neuf depuis le run de 13h.
+- **Les 4 autres fils actifs n'ont pas été rouverts un par un** (Rocham Mulumbwe / post Jacob Banda, Dr. Rashi Bhardwaj, Adesoye Emmanuel Tunde, SOUAD BELKACEMI / post Shuni). **Motif assumé, à ne pas lire comme un oubli** : les notifications ont été relues en entier et **aucune** ne concerne ces fils — la plus ancienne remonte à 19 h (la réponse d'Adesoye, déjà jouée par le run de 9h) ; et une réponse trouvée n'aurait de toute façon pas pu être publiée, la frappe étant refusée. **À rouvrir un par un au run de 9h demain.**
+
+---
+
+### 6️⃣ 🔁 CARRY-OVER POUR LE CRÉNEAU DE 9h (04/09)
+
+1. 🔴 **LE DM JAMES SCHLITT EST PRÊT ET N'EST TOUJOURS PAS PARTI — 3e session consécutive.** Texte final en section 2 ci-dessus (**version corrigée**, pas celle du commit de 16h31 : la clause « the way I described it before » a été retirée, elle renvoyait à un jet jamais envoyé). Contrôle mécanique repassé, deux faux positifs documentés seulement. **Rien à réécrire, rien à revalider : il ne manque que la capacité de taper.** Son fil est chaud depuis 13h06 et son dernier message pose deux questions directes.
+2. ⭐ **Yuda Sule Paschal** (`/in/yuda-sule-paschal-8a0490257/`) — invitation reçue, **décision prise : accepter**, activité vérifiée ce run (One Health / MTN Tanzanie, 39 relations communes). Clic non exécuté. Ne pas réinstruire le dossier, juste cliquer.
+3. 🗓️ **Ligne d'événement (§16) — Ebola/RDC : LE SUPPORT EXISTE ENFIN, ET IL VIEILLIT.** Le press briefing Africa CDC a bien eu lieu, et son post est atteignable : **`urn:li:ugcPost:7500903964570312704`**, « *Special Briefing on Ebola Outbreak Response | September 3, 2026* », rediffusion d'1 h 05, 26 participants, 44 réactions, **4 commentaires seulement**. ⚠️ **Le post est affiché « 1 j »** (il annonçait l'événement avant de l'héberger) : il sera **au bord de la fenêtre 48 h demain matin**, c'est donc le créneau de 9h ou personne. Les chiffres du briefing sont dans la vidéo, **pas dans le texte du post** — aucun angle chiffré ne peut être tiré du post seul sans écouter la rediffusion.
+4. ⭐⭐ **Trois références neuves trouvées sous ce post, toutes postées par Tambe Elvis Akem, MD** (bloqué en commentaire jusqu'au 05/09, voir la mémoire dédiée) : le **preprint** « Renewed Confirmed-Case Reporting in Health Zones After 21 Days Without a Newly Attributed Case During the 2026 Bundibugyo Virus Disease Outbreak in the DRC » (`10.20944/preprints202608.0905.v1`) ; l'article **PLOS Global Public Health du 27/08** « Operational epidemiology of the early phase of the 2026 Bundibugyo virus disease outbreak in the DRC and Uganda » (`10.1371/journal.pgph.0006680`) ; et un **tableau de bord** du suivi de reprise des notifications (`immunization-for-resilience.shinyapps.io/ebola-bvd-outbreak-2026/`, versions EN et FR). Matière de fond, pas encore exploitée.
+5. ⭐ **John Omari Baso** — « Bonjour David. » de 11h36, rien depuis 6 h. Notre question de 09h56 reste ouverte de son côté. Un mot bref est légitime demain s'il n'a toujours rien envoyé.
+6. **Inchangés, à reporter tels quels** : ⭐⭐ **Dr. Malachie MANAOUDA** (welcome DM prêt côté angle, **pas avant le 05/09** sauf réponse ou publication de sa part) ; ⭐⭐ Gail Carson (ISARIC) et Seynudé Jean-Fortune DAGNON (Gates Foundation), déjà suivis, activité propre toujours non ouverte, meilleurs candidats de note de connexion ; ⭐⭐ Dr. Ibrahima Socé Fall, toujours sans hook honnête ; 🔴 Mohammad Ilias Hossain, **ne pas réécrire la note** ; ➖ Yakoza Nyirenda, invitation sans note du 30/08 toujours en attente ; ⭐⭐ Isaias Fernandes Co, rien à faire avant la semaine du 14/09 ; **Dr. Siaka Condé, ne pas relancer avant le 05/09** ; ⭐⭐ **Jacques Delors TOUMANSIE MFONKOU** (série « INSIDE THE FIELD », épisode 2 annoncé — bon support futur, **ne pas y contester sa thèse en premier contact**) et ⭐⭐ **Ofelia CAZACU** (OMS/ICG), suivis le 03/09, aucun blocage hebdomadaire créé chez eux ; ⭐ **Catherine Linard** (Université de Namur, géographie de la propagation des maladies infectieuses) — **toujours non évaluée**, reportée une 1re fois ; ✅ **clos, ne pas rouvrir** : Kevin S. (aucun hook honnête) et Rocham Mulumbwe (question publique en attente de sa part) ; ❌ ne pas reproposer sans élément neuf : Zachariah G. Houdari, OLAOLUWA PHILIP, Haider Durrani, Kipchirchir Kigen, Victoria Kanana, Abdulrazaq Tanga, Herve Chatue kamga.
+7. ⚠️ **La famille d'arguments interdite du jour reste interdite** (5 candidats perdus le 03/09). Aucun nouveau candidat commentaire n'a été produit ce run, elle n'a donc rien coûté de plus.
+8. **Blocages hebdomadaires au 03/09, inchangés** (aucun commentaire publié ce run, donc aucun nouveau blocage) : Adesoye Emmanuel Tunde, Kyaw Thowai Prue Prince, Rocham Mulumbwe, Dr. Rashi Bhardwaj, Dr Fabrice KHADDY, Miriam Mbueshi (09/09) ; Dr. Jean Kaseya, page ECDC, Jacob Banda (08/09) ; Melvin Sanicas, Dossa Paul YAOÏTCHA, Mohammad Ilias Hossain (07/09, top-level, sous-fils ouverts) ; Global Health EDCTP3, French Healthcare Association, Health Policy Watch, **Tambe Elvis Akem**, SOUAD BELKACEMI (05/09) ; Oke Ikpekpe (04/09, top-level, sous-fil ouvert), Jason Kindrachuk, Dr Jeeven Kumar (04/09). **Harvey Basivikidi libre.**
+
+### 7️⃣ 🔧 ARBRE DE TRAVAIL
+
+Fichiers modifiés par moi et commités ce run : `marketing/linkedin-contacts.md`, `marketing/content-log.md`. Fichiers modifiés **par d'autres et laissés intacts** (`AGENTS.md`) : `marketing/qa/product-claims.manual.json`, `scripts/audit-alert-day.mjs`, `scripts/probe-alert-lock.mjs` (les deux derniers non suivis, inchangés depuis le 29/08). `marketing/qa/*.json` régénérés, non suivis. **Branche : master.** Aucun verrou de code demandé : cette routine ne touche ni `app/`, ni `lib/`, ni `components/`, ni les dépendances.
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check — 03/09/2026 (13h) — 🔴 **PREMIER RUN SOUS L'EXCEPTION D'AUTOMATION, ET AUCUN DM N'A PU ÊTRE ENVOYÉ** — 3 brouillons, aucun n'a passé son contrôle, et l'outillage QA est tombé en cours de run
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` du 03/09 dans ce fichier ni dans `content-log.md` à l'ouverture → premier déclenchement de cette routine aujourd'hui. Horloge à l'heure (`Thu Sep 3 13:02 2026`). Branche : **master**. Registre de faits régénéré à 13:05 (220 faits, 106 lignes affichées, **14 périmés contre 3 ce matin** — détail et explication dans `content-log.md`).
