@@ -1,6 +1,131 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
+## 📅 Session linkedin-hwg-followup-check — 03/09/2026 (13h) — 🔴 **PREMIER RUN SOUS L'EXCEPTION D'AUTOMATION, ET AUCUN DM N'A PU ÊTRE ENVOYÉ** — 3 brouillons, aucun n'a passé son contrôle, et l'outillage QA est tombé en cours de run
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` du 03/09 dans ce fichier ni dans `content-log.md` à l'ouverture → premier déclenchement de cette routine aujourd'hui. Horloge à l'heure (`Thu Sep 3 13:02 2026`). Branche : **master**. Registre de faits régénéré à 13:05 (220 faits, 106 lignes affichées, **14 périmés contre 3 ce matin** — détail et explication dans `content-log.md`).
+
+### ⚠️ CE QU'IL FAUT LIRE EN PREMIER — POURQUOI ZÉRO DM ENVOYÉ AU RUN D'ESSAI
+
+L'exception d'automation du 03/09 (`CLAUDE.md`) demande qu'un DM soit **retravaillé jusqu'à un verdict propre, puis envoyé par la routine elle-même**. Ce run n'a envoyé aucun DM, et ce n'est ni un oubli ni un retour à la file d'attente d'avant :
+
+1. **Trois brouillons ont été rédigés, trois ont échoué à leur contrôle.** Aucun n'a atteint le verdict propre que l'exception exige avant l'envoi. Les motifs sont détaillés ci-dessous, et l'un d'eux est un **fait faux sur notre propre produit**, rattrapé par le relecteur.
+2. **Le dispositif QA est devenu indisponible vers 13h30**, en plein run : le classifieur de permissions a refusé l'exécution de commandes et le lancement de sous-agents pour tout le reste de la session. Plus de contrôle mécanique, plus de relecteur. **Sans eux, aucun texte sortant ne part** — la politique commune §5 ne prévoit aucune dérogation, et l'exception du 03/09 porte sur *qui décide* d'envoyer, pas sur le fait de contrôler avant d'envoyer.
+3. **Conséquence pour le test d'automation** : ce run ne dit rien de la question que David voulait trancher (« est-ce que la routine sait envoyer seule un DM correct ? »), parce qu'aucun brouillon n'est arrivé au bout de la chaîne. **Le test reste à faire.** Ce qu'il montre en revanche, et qui est utile : le dispositif a refusé de laisser partir trois textes défectueux, dont un factuellement faux — l'automation ne rendait pas ce filtre plus permissif.
+
+---
+
+### 1️⃣ 💬 MESSAGERIE — 10 CONVERSATIONS LUES, 3 FILS ONT BOUGÉ DEPUIS LE RUN DE 9h
+
+- ⭐⭐ **James Schlitt, PhD, MPH — 13h06, entrant, substantiel.** Répond au message de 11h57. Décrit sa méthode de vérification par grappes (« *report A today says 100 cases, then report B tomorrow says similar… tomorrow's report allows me to tag B as vetted while also noting its membership in a vetting cluster containing A and B* ») et pose **deux questions directes** : « *What if multiple values are reported by multiple sources on a singular day, how do you select a canonical value, and is there a case where three concurring sources may lose to two?* » et « *Are you currently working with any WHO/ECDC bodies in this?* ». Brouillon rédigé, **échoué** (section 2).
+- ⭐⭐ **SOUAD BELKACEMI. — 13h30, entrant.** Répond enfin à la question du 01/09 sur la façon de construire une liste de virus « à conditions réunies » pour l'Europe. S'excuse du délai, précise « *je ne suis pas épidémiologiste* », et propose de partir non d'une liste de virus mais de l'environnement : « *changement climatique, extension des vecteurs, déplacements d'animaux, modifications des écosystèmes…puis voir quels virus présents ailleurs pourraient trouver en Europe des conditions favorables* ». Brouillon rédigé, **non contrôlable** (section 2).
+- **John Omari Baso — 11h36, entrant : « Bonjour David. » et rien d'autre.** ⚠️ **Aucune réponse rédigée, décision assumée.** C'est une salutation seule, dans un fil où **notre question de 09h56 reste la question ouverte** : c'est à lui de répondre. Son habitude, vérifiée sur le fil (mardi 01/09), est d'ouvrir par « Bonjour David » puis d'envoyer sa matière dans la foulée ; deux heures plus tard rien n'est venu. Même traitement que le « 👍 » d'Isaias ce matin : une politesse n'est pas un dialogue engagé (§3). **À reprendre au créneau de 17h si sa suite est arrivée d'ici là.**
+- **Dr. Malachie MANAOUDA — 11h12.** Ce n'est pas un message entrant : c'est **notre note de connexion du 02/09, qui apparaît dans la messagerie parce qu'il vient d'accepter l'invitation**. Voir section 3.
+- **Inchangés, rien n'est dû** : Isaias Fernandes Co (« 👍 » de 06h35, déjà traité ce matin, toujours en attente d'un créneau à partir de la semaine du 14/09) · Julien Tuba (notre message de 11h56 est le dernier) · Dossa Paul YAOÏTCHA · Harvey Basivikidi · Buno Tona · Bobossam Cissoko · **Dr. Siaka Condé** (6e jour, **ne pas relancer avant le 05/09**, carry-over honoré).
+
+---
+
+### 2️⃣ 🔴 TROIS BROUILLONS DE DM, AUCUN ENVOYÉ — TEXTES COMPLETS ET MOTIFS
+
+#### 🔴 DM 1 — **James Schlitt, PhD, MPH** (`/in/james-schlitt-phd-mph-4377a81b/`), EN, fil actif — **NON ENVOYÉ, contient un fait faux sur notre propre produit**
+
+Fil relu intégralement (§4), 5 messages, recopiés verbatim dans `tmp/thread-schlitt-0309b.txt`. *langue du fil = en ; langue du brouillon = en.* Arbitrage CTA : **omis délibérément**, et le relecteur a confirmé que c'était le bon choix — sa question porte sur une affiliation institutionnelle, la réponse honnête est une négation, et y accrocher une offre reviendrait à compenser un aveu de faiblesse par un argumentaire.
+
+**Le texte tel qu'il a été rédigé, à ne pas envoyer en l'état :**
+
+> No, none. I read what WHO, ECDC, PAHO and Africa CDC publish, and that is the whole of it.
+>
+> On the canonical value, I do not count sources, I rank them. A row is owned by the rank of whatever wrote it, and a source can only overwrite a row at or below its own rank, so three concurring reports lose to one better ranked report every time. Agreement carries no weight in the selection at all.
+>
+> That makes my failure mode the mirror of yours. Your clusters can vet a number that three outlets copied from each other; mine keeps a number nobody else agrees with, because the source that wrote it outranks the ones that disagree.
+
+🔴 **Le relecteur a trouvé une erreur de fait que j'aurais envoyée à un épidémiologiste computationnel — c'est le point le plus important de ce run.** J'avais décrit le mécanisme de sélection **à l'envers**. Le brouillon affirme « *a source can only overwrite a row at or below its own rank* » ; le relecteur est allé lire les sites d'écriture eux-mêmes et a établi que **17 des 19 passent `.lte("source_priority", 10)`**, donc écrivent **au-dessus** de leur propre rang — `sync-who-afro` écrit au rang 5 et peut réécrire une ligne verrouillée à 10, avec le commentaire du fichier qui le dit en toutes lettres (« *source_priority is ownership by SOURCE TIER, not a freeze* »). **C'est exactement la mémoire `project_source_priority_is_ownership_not_freeze_2026_08_19`, que j'avais en tête et que le brouillon contredit quand même.** Deux autres faux sur la même phrase : le rang n'est pas le seul arbitre (la date via `dateFloorGuard`, l'amplitude via `spikeGuard`/`collapseGuard`, et `lockedRowRegressionGuard` tranchent aussi), et « *that is the whole of it* » est faux — le pipeline lit une vingtaine de sources de plus (UKHSA, SpF, US CDC, USDA APHIS, Taiwan, Malaisie, SPC…). Seul « *Agreement carries no weight* » est exact : aucun mécanisme de consensus n'existe dans le code.
+
+**Deux autres échecs, tous deux réels :** **(5)** le 3e paragraphe lui prête un mode d'échec qu'il n'a pas concédé, alors qu'il a nommé l'indépendance comme critère (« *If they both arrive independently on the same day…* ») ; **(11)** ce même paragraphe est une **4e déclinaison de la famille interdite du jour** (trois copies d'un même papier indiscernables de trois rapports concordants), le miroir n'étant qu'un habillage, et l'énumération d'agences en ouverture reprend du copy de marque (`J0-playbook.md:17`, `content-log.md:11905`).
+
+⚠️ **Pas de 2e jet possible** : la panne d'outillage est survenue avant qu'un texte corrigé puisse repasser au contrôle. **Ce qu'il faut retenir pour le créneau de 17h ou pour David** : la réponse à sa question est réelle et vaut d'être écrite, mais elle doit être **refaite sur le code** (arbitrage par rang *et* par date *et* par gardes d'amplitude, cas du même jour à rang égal non traité), et sans le paragraphe miroir.
+
+`QA : mécanique FAIL sur 2 blockers, les deux écartés sur pièce (context.too-soon « 0 j » — il vient de répondre il y a une heure, classe de faux positif documentée ; ngram.history sur l'énumération d'agences, remontée jusqu'à J0-playbook.md:17 et content-log.md:11905, donc du copy de marque et non une phrase servie à un autre destinataire — mais le relecteur, lui, la retient comme gabarit, et il a raison) | relecteur VERDICT: REECRIRE 4, 5, 11 — 9 PASS sur 12, le 4 portant sur une description factuellement fausse du produit, vérifiée dans le code par le relecteur | faits cités : aucun de la base | registre du 03/09 (13:05) | statut : NON ENVOYÉ, brouillon défectueux, aucune correction possible faute d'outillage`
+
+#### 🔴 DM 2 — **Dr. Malachie MANAOUDA** (`/in/dr-malachie-manaouda-11893aa0/`), FR, vouvoiement, premier message après acceptation — **NON ENVOYÉ, l'occasion ne tient pas**
+
+⭐⭐ **Il a accepté aujourd'hui à 11h12 la note de connexion du 02/09.** *Ministre de la Santé Publique du Cameroun.* Le fil ne contient que notre note ; il n'y a jamais écrit. Fil et post source recopiés dans `tmp/thread-manaouda-0309.txt`. *langue du fil = fr ; langue du brouillon = fr.* Arbitrage CTA : **interdit**, aucun échange de fond n'a eu lieu.
+
+**L'angle**, et il reste bon : son compte rendu d'Addis-Abeba mentionne la lutte contre la polio **dans le Bassin du Lac Tchad**, un objet transfrontalier — or les lignes polio que nous tenons pour ce bassin ne s'arrêtent pas de compter à la même date (Nigeria au 26 août, Tchad et Niger au 18), parce que la même page hebdomadaire du GPEI se rafraîchit par blocs. Un état du bassin à une date unique n'existe donc nulle part dans ce qui est lisible.
+
+> Docteur, votre compte rendu d'Addis-Abeba mentionne aussi la poliomyélite dans le Bassin du Lac Tchad. C'est la partie que je n'arrive pas à suivre correctement.
+>
+> Les lignes que je tiens pour les pays du bassin s'arrêtent de compter à des dates différentes : le Nigeria au 26 août, le Tchad et le Niger au 18. Elles sortent pourtant de la même page hebdomadaire, dont les blocs ne se rafraîchissent pas ensemble. Un état du bassin à une date unique n'existe donc nulle part dans ce que je lis.
+>
+> La coordination régionale dispose-t-elle d'une photo arrêtée à une seule date, ou faut-il l'y recomposer aussi ?
+
+**Relecteur : REECRIRE 4 et 7, les deux réels.** **(4)** « *les lignes que je tiens pour les pays du bassin* » revendique une couverture que le registre ne porte pas : **aucune ligne Polio/Cameroun n'existe en base** — et le Cameroun est le seul pays du bassin qu'il vérifierait. Correction évidente : nommer les trois pays réellement tenus. **(7)** le brouillon rouvre **le post d'Addis-Abeba, qui est déjà le hook de la note de connexion du 02/09**, un jour plus tard, dans un fil où il n'a encore rien écrit ; le contrôle mécanique le dit aussi à sa façon (« dernier message il y a 1 j, minimum 3 j »).
+
+⚠️ **Décision : ne pas envoyer, et ne pas corriger pour envoyer quand même.** Le point 4 se corrige en une clause, mais le point 7 ne se corrige pas par une réécriture : **c'est l'occasion qui ne tient pas**, pas le texte. Écrire une deuxième fois le même jour à un ministre en exercice, sur le même post que la note qu'il vient d'accepter, alors qu'il n'a pas encore répondu, c'est de la pression — et sa seule activité publique récente est précisément ce post, donc il n'existe aujourd'hui aucun hook neuf. **L'angle est conservé tel quel pour plus tard** (à partir du 05/09 au titre du plancher de 3 jours, ou plus tôt s'il répond ou publie), avec la correction du point 4 déjà identifiée.
+
+`QA : mécanique FAIL sur 2 blockers écartés sur pièce (context.too-soon — l'acceptation d'une invitation n'est pas un message, mais voir la décision ci-dessus qui lui donne raison sur le fond ; ngram.history sur « le bassin du lac tchad », nom propre issu de son propre post, remonté jusqu'à linkedin-contacts.md:307/:6066/:10562, tous des notes internes ou descriptifs de profil, jamais un texte envoyé) + 1 warn faux positif (facts.unsourced sur « 26 », qui est une date d'arrêté et non une valeur) | relecteur VERDICT: REECRIRE 4, 7 — 10 PASS sur 12 | faits cités : dates d'arrêté Polio Nigeria 2026-08-26, Tchad et Niger 2026-08-18 | registre du 03/09 (13:05) | statut : NON ENVOYÉ, occasion reportée, angle conservé`
+
+#### 🔴 DM 3 — **SOUAD BELKACEMI.** (`/in/souad-belkacemi`), FR, vouvoiement, fil actif, **AVEC CTA** — **NON ENVOYÉ, non contrôlable**
+
+Fil recopié dans `tmp/thread-souad-0309.txt`. *langue du fil = fr ; langue du brouillon = fr.* **Arbitrage CTA : servi, et c'est un choix.** Le nom, le lien et l'essai n'ont **jamais** été envoyés dans ce fil, un aller-retour de fond vient d'avoir lieu, et surtout sa méthode a besoin d'un « où ce virus circule-t-il ailleurs » qui est exactement ce que HWG agrège : le CTA part d'un point déjà présent dans l'échange, il n'est pas plaqué.
+
+> Merci, et ne vous excusez pas : vous avez répondu à la question que je posais.
+>
+> Ce que vous décrivez garde une place au déclaré, mais en deuxième position. Il faut bien savoir où un virus circule ailleurs avant de se demander s'il trouverait ici de quoi s'installer. Cette moitié-là, c'est mon travail quotidien : HealthWatch Global recense les foyers actifs pays par pays à partir des bulletins publics, et le site s'ouvre en Pro quatorze jours sans carte bancaire si vous voulez y regarder.
+>
+> Il me reste une ambiguïté sur laquelle je sèche : ce « présent ailleurs », le voulez-vous à jour, ou une aire de répartition connue suffit-elle ? Les deux ne se cherchent pas au même endroit.
+
+⚠️ **Ce brouillon est déjà la correction d'un premier jet que le contrôle mécanique avait bloqué à juste titre** : **8 des 9 collisions de n-gramme portaient sur la seule phrase de CTA**, qui reprenait quasi mot pour mot la formule bannie le 18/08 (« *sur healthwatch-global.com, avec un essai Pro de 14 jours sans carte* »). Le contrôle a fait exactement son travail. La 9e (« *n'arrive pas à trancher* ») a été reformulée aussi.
+
+🔴 **Mais la version corrigée n'a pu être ni recontrôlée ni relue** : la panne d'outillage est tombée entre les deux. **Envoyer un texte dont la phrase la plus à risque vient d'être réécrite, sans repasser le contrôle qui l'avait justement attrapée, serait la seule vraie faute possible ici.** Non envoyé. **Le fil est chaud et elle attend une réponse** : c'est le brouillon à traiter en priorité au créneau de 17h, ou avec David.
+
+`QA : mécanique FAIL sur la version antérieure (2 blockers — context.too-soon « 2 j », faux positif classique puisqu'elle vient de répondre ; ngram.history 9 formules, dont 8 sur la phrase de CTA : blocage réel, corrigé) + 1 review hwg.claim sur la phrase produit, non tranché | contrôle mécanique NON RELANCÉ sur la version corrigée, relecteur NON LANCÉ — outillage indisponible | faits cités : « quatorze jours » et « sans carte », sourcés côté produit (pricing.faq4_a, messages/fr.json), reconnus par le contrôle sur la version antérieure | registre du 03/09 (13:05) | statut : NON ENVOYÉ, QA incomplète`
+
+---
+
+### 3️⃣ ✅ RÉSEAU — 1 ACCEPTATION MAJEURE, 2 SUIVIS, 0 NOTE DE CONNEXION
+
+- ⭐⭐⭐ **Dr. Malachie MANAOUDA a accepté notre invitation à 11h12** — *Ministre de la Santé Publique du Cameroun*, note de connexion envoyée le 02/09. **Abonnés passés de 406 à 407, il est le seul nouvel abonné du jour et il est déjà suivi**, donc aucun follow-back dû. Welcome DM rédigé et non envoyé, voir section 2.
+- ✅ **2 suivis exécutés** (quota du jour porté à **9/7-10**, les 7 du matin plus ces 2). Chaque clic vérifié dans le même appel JS (slug comparé avant le clic, état du bouton relu après) :
+  1. ⭐ **Jacques Delors TOUMANSIE MFONKOU** (`/in/jacques-delors-toumansie-mfonkou-019241273/`) — *Medical & Public Health Microbiologist | Frontline Field Epidemiologist (FETP) | CDC PHEM Expert | Senior Medical Laboratory Scientist*. Cœur de cible, écrit lui-même sur la surveillance de terrain. Bouton passé à « Suivi ».
+  2. ⭐⭐ **Ofelia CAZACU** (`/in/ofeliacazacu/`) — *Technical Officer at WHO, International Coordinating Group (ICG) on vaccine provision*. Profil OMS opérationnel sur l'accès aux vaccins d'urgence. Bouton passé à « Suivi », vérifié sur l'`aria-label` (« *Suivi, cliquez pour ne plus suivre Ofelia CAZACU* ») pour écarter les boutons voisins de la sidebar.
+- **Invitations reçues : 2 en attente, inchangées.** **Zachariah G. Houdari** (services financiers) et **OLAOLUWA PHILIP** (géospatial/climat sans santé publique) — décisions du 31/08 non rejugées, **aucun élément neuf**, laissées telles quelles.
+- **Notes de connexion : 0/7, motif assumé.** Aucun candidat neuf ne franchissait la barre avec un hook vérifiable, et les deux profils suivis ce run l'ont été sur la base d'un post précis, pas d'une activité explorée en entier. Les dossiers en attente restent bloqués pour les raisons connues (Mohammad Ilias Hossain : ne pas réécrire ; Dr. Ibrahima Socé Fall : toujours aucun hook honnête).
+
+### 4️⃣ 🔎 DEUX CARRY-OVER DU MATIN INSTRUITS ET TRANCHÉS, SANS DM
+
+- **Kevin S., PhD** (`/in/kevin-s-phd-0b38902/`) — carry-over n°5 du matin : « ouvrir son activité propre d'abord ». ✅ **Fait, et ça tranche la question : ses 20 dernières publications sont toutes des republications dans son groupe « ActivEpi Users Group »** — statistiques et méthodes (écart-type contre erreur-type, régression, corrélation, données manquantes, IQR), toutes signées d'autres personnes, **aucun texte de lui, rien sur la surveillance ni sur les flambées**. **Aucun hook honnête disponible** (§10) : lui écrire à propos du post d'un tiers serait artificiel, et le seul rapprochement naturel avec HWG (le contenu du jour sur MCAR/MAR/MNAR, un blanc n'étant pas un zéro) est **précisément la 4e variante de l'argument déjà servi trois fois aujourd'hui**, interdite par le carry-over n°3. **Welcome DM non rédigé, décision documentée : ne pas rechercher son activité une 3e fois**, elle est connue maintenant.
+- **Rocham Mulumbwe** (`/in/rocham-mulumbwe-587570186/`) — carry-over n°4 du matin : welcome DM dû, hook vérifié, « vérifier qu'un DM ne doublonne pas la conversation publique ». ✅ **Vérifié en rouvrant le post de Jacob Banda** (`urn:li:activity:7500293159126761472`) : **notre réponse en sous-fil reste le dernier message, et elle se termine par une question ouverte qui lui est adressée**, à laquelle il n'a pas répondu. **DM non rédigé, délibérément** : lui écrire en privé pendant qu'une question publique de notre part l'attend serait un double contact. Son activité propre a été ouverte au passage : dernier post personnel vieux d'une semaine (formation « AI-assisted Data Analysis »), hook faible. **À reprendre quand il répond publiquement, ou après quelques jours de silence.**
+
+### 5️⃣ 🔁 SUIVI DES FILS DE COMMENTAIRE ACTIFS (§14) — 4 FILS ROUVERTS DIRECTEMENT, AUCUNE RÉPONSE NEUVE
+
+Rouverts un par un, sans se fier aux seules notifications, comme §14 l'exige :
+- **Oke Ikpekpe** (`urn:li:activity:7500522694187089920`) — notre réponse du 8e tour (1 j) reste le dernier message du sous-fil. Rien de neuf. ⚠️ **C'est cette relecture qui a fait abandonner un commentaire déjà validé 12/12 par le relecteur** (voir `content-log.md`, candidat Mfonkou).
+- **Rocham Mulumbwe / post de Jacob Banda** — notre réponse reste la dernière, aucune réponse de lui ni de l'auteur.
+- **Dr. Rashi Bhardwaj** (`urn:li:activity:7500961203263959040`) — notre commentaire d'hier ~21h30 est **le seul du post**, 8 impressions, aucune réponse.
+- **Adesoye Emmanuel Tunde** — a **aimé** notre commentaire du 02/09 et répondu ce matin ; le tour a été joué par le run de 9h, rien de neuf depuis.
+- **SOUAD BELKACEMI. / post Shuni** (`urn:li:activity:7499735785110192129`) — la réponse de **Jean-Paul Gonzalez** d'hier 19h reste le dernier message du sous-fil. **Non repris ce run**, conformément à la décision du matin : le seul angle honnête disponible est la variante interdite du jour. Reste ouvert.
+
+### 6️⃣ 🔁 CARRY-OVER POUR LE CRÉNEAU DE 17h (03/09)
+
+1. 🔴 **TROIS BROUILLONS DE DM EN SOUFFRANCE, AUCUN ENVOYÉ, ET ILS NE SONT PAS ÉQUIVALENTS.** Par ordre d'urgence : **(a) SOUAD BELKACEMI.** — texte prêt, fil chaud, elle attend ; il ne manque qu'un passage au contrôle mécanique et au relecteur, à refaire **sur la version corrigée** (la phrase de CTA a été réécrite après un blocage justifié). **(b) James Schlitt** — à **refaire sur le code**, le brouillon actuel décrit le mécanisme `source_priority` à l'envers ; ne pas le reprendre tel quel. **(c) Dr. Malachie MANAOUDA** — angle bon, **à ne pas envoyer avant le 05/09** sauf s'il répond ou publie autre chose. Textes complets en section 2.
+2. 🔴 **RIEN N'A ÉTÉ COMMITÉ PAR CE RUN.** `git` était inaccessible. Les entrées de `content-log.md`, `linkedin-contacts.md` et `linkedin-candidates-tracker.md` sont **écrites dans l'arbre de travail et non commitées**. Le créneau de 17h doit **committer et pousser ces trois fichiers** en même temps que les siens, en vérifiant `git log origin/master..master` vide avant de clore. ⚠️ **Ne pas toucher** `marketing/qa/product-claims.manual.json` (modifié par une autre session, non commité, `AGENTS.md`) ni `scripts/audit-alert-day.mjs` / `scripts/probe-alert-lock.mjs` (non suivis, inchangés depuis le 29/08).
+3. 🗓️ **Ligne d'événement (§16) — Ebola/RDC, Bas-Uele : le press briefing Africa CDC de 15h00 (Paris) est tombé APRÈS ce créneau, c'est le 17h qui l'ouvre.** L'événement est **entièrement ouvert, aucun support consommé**. Porteurs : **page Africa CDC** — mais **le post du 02/09 (6 206 confirmés / 3 009 décès au 01/09) est brûlé**, deux angles y ont déjà été abandonnés, il faut un post neuf issu du briefing ; **Prof. Mohamed Janabi** — vérifié ce run, **rien depuis 5 jours**, à revérifier après le briefing ; **Dr. Ibrahima Socé Fall** — toujours sans hook honnête. **Dr. Jean Kaseya bloqué jusqu'au 08/09**, il a republié le même point que la page. Page WHO AFRO toujours inatteignable.
+4. ⚠️ **La famille d'arguments interdite du jour a maintenant coûté cinq candidats** (Jean-Paul Gonzalez ce matin, Mfonkou ×2 et Cazacu ×2 ce run). Ne pas en produire une sixième variante. Voir le 🏷️HORS-ROUTINE de `content-log.md` : le problème n'est plus la rédaction, c'est le stock d'angles.
+5. ⭐ **John Omari Baso** — a écrit « Bonjour David. » à 11h36 et rien depuis. **Vérifier si sa suite est arrivée** ; s'il n'a toujours rien envoyé en fin de journée, un mot bref est légitime, mais pas avant.
+6. ⭐⭐ **Deux nouvelles cibles de commentaire suivies ce run, à rouvrir plus tard** : **Jacques Delors TOUMANSIE MFONKOU** (série « INSIDE THE FIELD », l'épisode 2 est annoncé — bon support futur, à condition de ne pas y contester sa thèse en premier contact) et **Ofelia CAZACU** (OMS/ICG). **Aucun blocage hebdomadaire créé chez eux** : aucun commentaire n'a été publié.
+7. ⭐ **Catherine Linard** (`Université de Namur`, géographie de la propagation des maladies infectieuses, mandat Francqui-Collen) — profil neuf repéré ce run, **non encore évalué ni suivi**. Sujet directement connexe au fil ouvert avec SOUAD BELKACEMI.
+8. **Inchangés du matin, à reporter tels quels** : ⭐⭐ Gail Carson (ISARIC) et Seynudé Jean-Fortune DAGNON (Gates Foundation), déjà suivis, activité propre toujours non ouverte, meilleurs candidats de note de connexion ; ⭐⭐ Dr. Ibrahima Socé Fall, toujours sans hook ; 🔴 Mohammad Ilias Hossain, note non retentée, **ne pas la réécrire** ; ➖ Yakoza Nyirenda, invitation sans note du 30/08 toujours en attente ; ⭐⭐ Isaias Fernandes Co, rien à faire tant qu'il n'a pas renvoyé de créneau ; **Dr. Siaka Condé, ne pas relancer avant le 05/09** ; ❌ ne pas reproposer sans élément neuf : Zachariah G. Houdari, OLAOLUWA PHILIP, Haider Durrani, Kipchirchir Kigen, Victoria Kanana, Abdulrazaq Tanga, Herve Chatue kamga.
+9. ✅ **Deux carry-over du matin sont clos, ne pas les rouvrir** : **Kevin S.** (activité ouverte, aucun hook honnête, ne pas re-chercher) et **Rocham Mulumbwe** (question publique en attente de sa part, DM reporté). Détail en section 4.
+10. **Blocages hebdomadaires au 03/09, inchangés depuis le matin** : Adesoye Emmanuel Tunde, Kyaw Thowai Prue Prince, Rocham Mulumbwe, Dr. Rashi Bhardwaj, Dr Fabrice KHADDY, Miriam Mbueshi (09/09) ; Dr. Jean Kaseya, page ECDC, Jacob Banda (08/09) ; Melvin Sanicas, Dossa Paul YAOÏTCHA, Mohammad Ilias Hossain (07/09, top-level, sous-fils ouverts) ; Global Health EDCTP3, French Healthcare Association, Health Policy Watch, Tambe Elvis Akem, SOUAD BELKACEMI (05/09) ; Oke Ikpekpe (04/09, top-level, sous-fil ouvert), Jason Kindrachuk, Dr Jeeven Kumar (04/09). **Harvey Basivikidi libre depuis aujourd'hui.**
+
+### 7️⃣ 🔧 ARBRE DE TRAVAIL
+
+**Aucun commit possible ce run** (voir carry-over n°2). Fichiers modifiés par moi et laissés non commités : `marketing/content-log.md`, `marketing/linkedin-contacts.md`, `marketing/linkedin-candidates-tracker.md`. Fichiers modifiés **par d'autres et laissés intacts** (`AGENTS.md`) : `marketing/qa/product-claims.manual.json`, `scripts/audit-alert-day.mjs`, `scripts/probe-alert-lock.mjs`. `marketing/qa/*.json` régénérés, non suivis. **Aucune autre session n'a poussé pendant ce run** (`d2b33284` en tête tout du long). **Branche : master.** Aucun verrou de code demandé : cette routine ne touche ni `app/`, ni `lib/`, ni `components/`, ni les dépendances.
+
+---
+
+
 ## 📅 Session linkedin-hwg-monitoring — 03/09/2026 (9h) — ⚠️ **run bloqué 30 min au démarrage (Chrome fermé), puis mené à son terme**
 
 **Vérification double déclenchement** : aucune entrée datée du 03/09 dans ce fichier ni dans `content-log.md` à l'ouverture → **premier déclenchement du jour, toutes routines confondues**. Horloge machine à l'heure (`Thu Sep 3 09:03 2026`). Branche vérifiée avant écriture : **master**.

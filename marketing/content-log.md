@@ -2,6 +2,81 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session linkedin-hwg-followup-check — 03/09/2026 (13h) — ⚠️ **outillage QA perdu en cours de run (contrôle mécanique et relecteur devenus indisponibles), 0 commentaire publié, 2 candidats abandonnés après double échec**
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` datée du 03/09 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture (la plus récente était `linkedin-hwg-monitoring` du matin) → **premier déclenchement de cette routine aujourd'hui**. Horloge machine à l'heure (`Thu Sep 3 13:02 2026`), confirmée côté navigateur. Branche vérifiée : **master**.
+
+**Registre de faits régénéré ce run** (13:05) : **220 faits citables sur 106 lignes affichées**, 81 `is_seed` exclues — chiffres identiques au run de 9h à un détail près : **14 faits périmés contre 3 ce matin**. Vérifié sur pièce : les 11 nouveaux sont **exactement les 11 lignes Polio** portant `updatedAt 2026-08-23T10:45` (Tchad, Somalie, Éthiopie, Togo, Mali, Madagascar, Angola, Soudan du Sud, Soudan, RCA, Niger) ; les 3 autres sont Diphtérie/Guinée (`updatedAt 2026-08-22T05:48`). **Ce n'est pas une anomalie** : le seuil des 10 jours se compte en jours pleins et il a été franchi entre les deux runs. Conséquence pratique : **11 des 13 lignes Polio ne sont plus citables qu'avec leur date**.
+
+---
+
+### 1️⃣ 🔴 CE QUI A CASSÉ CE RUN — LE DISPOSITIF QA À TROIS ÉTAGES EST DEVENU INDISPONIBLE À MI-PARCOURS
+
+À partir de ~13h30, **l'exécution de commandes et le lancement de sous-agents ont été refusés par le classifieur de permissions**, avec un message explicite : le refus porte sur le contexte de la conversation, pas sur l'action, il se reproduira pour tout le reste de la session, et il ne faut pas chercher à le contourner. Les lectures de fichiers continuent de fonctionner.
+
+**Ce que ça retire, concrètement :**
+- `npm run qa:check` (contrôle mécanique, étage b de la politique commune §5) ;
+- le **relecteur indépendant en sous-agent** (étage c) ;
+- `git add` / `git commit` / `git push`.
+
+**Conséquences assumées pour ce run**, dans cet ordre de priorité :
+1. **Aucun texte sortant ne part sans ses deux étages de contrôle.** La politique commune §5 est explicite : aucun étage n'est sauté, sur aucun canal. Un brouillon rédigé après la panne reste donc un brouillon, quelle que soit l'exception d'automation du 03/09 — celle-ci porte sur *qui* décide d'envoyer, pas sur le fait de contrôler avant.
+2. **Les entrées d'archive de ce run ne peuvent pas être commitées.** Elles sont écrites dans l'arbre de travail et **restent non commitées**. C'est une entorse à `_shared/report-conventions.md` (« une routine qui committe pousse dans le même run ») que la session ne peut pas réparer elle-même : elle ne committe pas du tout, plutôt que de laisser un commit local en attente. À reprendre par la session suivante ou par David.
+3. Le run n'a pas été interrompu pour autant : tout ce qui ne demandait pas ces outils (lecture de la messagerie, suivi des fils actifs, suivis, veille) a été mené à son terme.
+
+---
+
+### 2️⃣ ❌ DEUX CANDIDATS COMMENTAIRE RÉDIGÉS, DEUX FOIS CHACUN, LES DEUX ABANDONNÉS
+
+**Quota commentaires : 1/7 pour la journée, inchangé depuis le run de 9h.** Les deux candidats trouvés étaient bons ; ce sont les textes qui n'ont pas tenu, sur le même défaut de fond, deux fois de suite chacun. Conduite appliquée : politique commune §5 item 6 — **deux corrections ratées sur le même défaut, abandon du candidat**, pas de 3e tentative. L'exception d'automation du 03/09 ne change rien ici : elle demande de continuer tant qu'un nouveau jet corrige un défaut *réel et différent*, et prévoit explicitement l'abandon quand les jets tournent en rond sur le même.
+
+#### ❌ Candidat 1 — **Jacques Delors TOUMANSIE MFONKOU** (`/in/jacques-delors-toumansie-mfonkou-019241273/`), EN, premier contact
+
+`urn:li:activity:7501202013825925120`, post de 2 h, **0 commentaire avant nous**. *Medical & Public Health Microbiologist | Vaccine & Infectious Disease Researcher | Frontline Field Epidemiologist (FETP) | CDC PHEM Expert*. Série personnelle « INSIDE THE FIELD — EPISODE 1 », sur ce qu'un point focal de surveillance apprend à repérer : hausse soudaine, baisse inattendue, concentration géographique, trou de rapportage, retard de notification, cluster atypique. Clôt sur son principe de carrière : « *A good surveillance system does not merely describe yesterday's problem. It helps us anticipate tomorrow's problem.* »
+
+- **Jet 1** (la ligne de base est ce qui porte toute la lecture, et la partie la moins écrite ; où réside-t-elle pour un point focal ?). Contrôle mécanique **PASS** (381 car., 3 paragraphes, en/en, 0 blocker) après correction d'un tiret cadratin ; relecteur **VERDICT: ENVOYER, 12 PASS sur 12**, avec vérification explicite qu'il ne s'agissait pas d'une 4e déclinaison de la famille du jour. **Écarté quand même, par le rédacteur, contre l'avis du relecteur** : en rouvrant le fil Oke Ikpekpe pour le suivi §14, j'ai retrouvé notre propre commentaire publié la veille, qui tient exactement la même figure — « *the expectation sits in the calendar rather than in anyone remembering a check was due* », clôturé sur « *does it usually come with a cadence of its own, or does it arrive only when someone asks for it?* ». Le relecteur ne pouvait pas le voir, ce texte ne lui avait pas été donné.
+- **Jet 2**, mécanisme changé (tous ses signaux sont rétrospectifs, donc « anticiper demain » revient en pratique à décrire hier assez vite). Contrôle mécanique **PASS** (494 car.). Relecteur, cette fois nourri des deux points de vigilance : **VERDICT: REECRIRE 9, 11**, les deux réels et bien argumentés. **9 (ton)** : sous un post testimonial de 2 h sans aucun commentaire, en premier contact absolu, le texte ouvre par une négation frontale de son cadrage et met sous pression le principe qu'il présente comme l'acquis central de sa carrière ; le seul commentaire visible sous son post serait la réfutation publique de sa thèse par un inconnu. **11** : la réécriture a changé le mécanisme mais gardé la charpente d'Oke Ikpekpe (verdict déclaratif → justification mécanique → question binaire noble/dégradé), **et** rejoué le mouvement de collapse « X n'est en pratique que Y » — 4e déclinaison de la famille interdite du jour.
+- **Abandon.** Le profil reste excellent et **suivi ce run** ; à reprendre sur un autre post, avec un angle qui ne parte pas de la position d'observateur aval.
+
+#### ❌ Candidat 2 — **Ofelia CAZACU** (`/in/ofeliacazacu/`), EN, premier contact
+
+`urn:li:activity:7501227622882844672`, post de 44 min, 2 commentaires, tous deux des félicitations. *Technical Officer at WHO — International Coordinating Group (ICG) on vaccine provision*. Annonce le lancement, le 27 août 2026, du **Global ICG Mpox Vaccine Stockpile**, financé par Gavi, et rappelle que l'ICG couvre depuis 1997 le choléra, la méningite, la fièvre jaune et Ebola.
+
+- **Jet 1** (sur quel document repose une allocation « *based on public health need and impact* »). **Bloqué par le contrôle mécanique**, et le blocage était juste : `ngram.history` sur « *i have never worked out* », remonté jusqu'à `linkedin-contacts.md:5507` — un message déjà envoyé à **Nirmal Kandel** qui pose **le même argument**, pas seulement la même formule : « *whether the published bulletin is also your analytical input, or whether it is what remains of an assessment that mostly lives in material I will never see* ». Exactement le cas où une collision de n-gramme remontée à sa source révèle une vraie redite, comme le 02/09.
+- **Jet 2**, angle changé (les quatre maladies historiques de l'ICG ont un moment déclencheur ; le mpox est réparti sur plusieurs régions à la fois). Contrôle mécanique **PASS** (349 car.). Relecteur : **VERDICT: REECRIRE 5, 9, 11(c)**. **5** : le brouillon affirme la mécanique de déclenchement de l'ICG comme un fait établi — devant l'officier technique de l'ICG — alors que ni son post ni le registre ne l'établissent. **9** : sous une annonce de lancement, à 44 minutes, à côté de deux félicitations, le texte se lit comme le signalement d'un trou d'activation dans le dispositif qu'elle vient d'annoncer. **11(c)** : et surtout, **le même argument Nirmal Kandel revient**, dépouillé de sa forme binaire mais intact sur le fond.
+- **Abandon** : deux jets, même défaut de fond au second qu'au premier. Profil **suivi ce run**, à reprendre avec un angle qui ne repose pas sur la position d'observateur extérieur.
+
+#### 🏷️HORS-ROUTINE — le corpus a saturé sa posture principale, et ça se voit maintenant sur quatre candidats en une journée
+
+Le run de 9h avait déjà écarté **Jean-Paul Gonzalez** parce que le seul angle honnête disponible était la 3e variante du jour de « deux choses indiscernables vues d'ici ». Ce run en ajoute quatre jets sur deux cibles, tous morts sur la même racine : soit la famille du jour, soit la charpente de la veille, soit un argument déjà servi nommément à un autre contact il y a plusieurs semaines. **Ce n'est plus un problème de rédaction, c'est un problème de stock d'angles** — le même constat que `linkedin-hwg-content-proposal` a posé le 02/09 pour le contenu de marque (« le stock d'angles de la routine est épuisé, et ce n'est pas un problème de données »), qui se vérifie maintenant côté prospection. À trancher avec David : le corpus HWG argumente presque toujours depuis la position d'observateur aval, et cette position est arrivée au bout de ce qu'elle peut produire sans se répéter.
+
+---
+
+### 3️⃣ 👀 VEILLE PASSIVE ET MATIÈRE POUR DE FUTURS POSTS
+
+- 🔵 **Ebola/RDC — la page Africa CDC et Dr. Jean Kaseya ont publié le même point à ~19 h** (donc le 02/09 en soirée) : « *On 1st Sep, 6 provinces and 60 health zones are affected representing an area of 240,000 km²… In total, we have 6,206 confirmed cases and 3,009 deaths.* » **Ce n'est pas un post neuf** : c'est celui que le créneau de 17h du 02/09 avait déjà traité et abandonné après deux jets (terrain politique + gabarit), et **Kaseya reste bloqué jusqu'au 08/09**. Aucune 3e tentative sur cette cible, conformément à son carry-over.
+- 🔵 **Le press briefing Africa CDC de 16h00 EAT (15h00 Paris) n'avait pas encore eu lieu à la clôture de ce run.** L'événement Ebola/RDC reste **entièrement ouvert, aucun support consommé**, et c'est bien le créneau de 17h qui est le premier à tomber après. **Prof. Mohamed Janabi vérifié ce run : son post le plus récent a 5 jours**, donc hors fenêtre 48 h — il n'est pas un porteur disponible aujourd'hui tant qu'il n'a pas republié.
+- ⭐ **Ofelia CAZACU (OMS, ICG)** : le **Global ICG Mpox Vaccine Stockpile** a été lancé le 27 août 2026 et l'annonce conjointe publiée le 02 septembre. Le mpox rejoint un mécanisme qui ne couvrait jusqu'ici que choléra, méningite, fièvre jaune et Ebola. **Matière de post original disponible et non servie** : le registre porte 6 foyers mpox actifs dont les dates d'arrêté s'échelonnent du 05/04 au 02/08.
+- **Tambe Elvis Akem, MD** : son préprint premier auteur sur la surveillance de laboratoire pendant la flambée Bundibugyo est de nouveau remonté en notification. **Toujours bloqué en commentaire jusqu'au 05/09**, comme noté ce matin.
+- **John Omari Baso** a publié il y a 1 h un certificat TEPHINET (webinaire CDC-FETP). Pas de matière analytique, non retenu comme cible.
+- **Catherine Linard** (Université de Namur, géographie de la propagation des maladies infectieuses) a reçu le mandat Francqui-Collen. Post de remerciement, pas d'angle exploitable, mais **profil à retenir** : ses travaux portent sur l'influence des changements environnementaux sur la propagation, exactement le sujet du fil ouvert avec SOUAD BELKACEMI.
+- **Aucun signal de traction institutionnelle nouveau au sens de §13**, donc aucune notification push à ce titre. La seule acceptation notable du jour est traitée dans `linkedin-contacts.md`.
+
+---
+
+### 4️⃣ 📊 DONNÉES ÉPIDÉMIOLOGIQUES (§8) — AUCUNE ÉCRITURE, AUCUN SIGNALEMENT NEUF
+
+L'écart de cumul Ebola/RDC reste ce qu'il était : notre ligne porte **5 794 cas / 2 786 décès arrêtés au 26/08** (DON616), les reprises secondaires vues aujourd'hui portent 6 206 confirmés / 3 009 décès au 01/09. **Déjà signalé et corroboré trois fois le 02/09**, toujours du ressort de `morning-don-check` pour l'écriture. Rien de neuf à ajouter, et rien d'écrit en base par ce run.
+
+### 5️⃣ 🗓️ LIGNE D'ÉVÉNEMENT (§16)
+
+🔵 **Ebola/RDC, extension à Bas-Uele — ÉVÉNEMENT TOUJOURS OUVERT, aucun support consommé.** Le briefing Africa CDC tombe après ce créneau. Porteurs par ordre pour le créneau de 17h : **page Africa CDC** (le post du 02/09 est brûlé, il faut un post neuf issu du briefing), **Prof. Mohamed Janabi** (rien depuis 5 j, à revérifier après le briefing), **Dr. Ibrahima Socé Fall** (toujours sans hook honnête). **Dr. Jean Kaseya bloqué jusqu'au 08/09.** Page WHO AFRO toujours inatteignable.
+
+🔵 **Polio/RDC, Lualaba et Nord-Ubangi** — inchangé, toujours aucun porteur public, n'existe que dans un DM.
+
+---
+
+
 ## 📅 Session linkedin-hwg-monitoring — 03/09/2026 (9h) — ⚠️ **run bloqué 30 min au démarrage (Chrome fermé), puis mené à son terme**
 
 **Vérification double déclenchement** : aucune entrée datée du 03/09 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture → premier déclenchement du jour, toutes routines confondues. Horloge machine à l'heure (`Thu Sep 3 09:03 2026`). Branche vérifiée avant écriture : **master**.
