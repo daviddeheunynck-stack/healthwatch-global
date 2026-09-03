@@ -13,7 +13,8 @@
 //
 // 1. DOMAIN COVERAGE — a fixed-page/fixed-feed cron (WHO DON, Africa CDC, ECDC, PAHO, CDC
 //    HAN/notices, UKHSA, WHO AFRO/EMRO, SPF, USDA APHIS, Taiwan CDC, Malaysia dengue, Samoa
-//    dengue, check-mpox-sitrep) re-fetches the SAME url/feed every run and writes whatever
+//    dengue, check-mpox-sitrep, and — added 2026-09-03 — Tanzania MoH's weekly bulletin and
+//    the SPC Pacific dashboard) re-fetches the SAME url/feed every run and writes whatever
 //    it finds there under that same domain. A row whose `source` cites that domain WILL be
 //    re-examined on the cron's next run, whether or not that run finds anything new to write
 //    — that is what "coverage" means for these. Substrings reuse the exact ownership-guard
@@ -22,11 +23,14 @@
 //    new ones, so this file can't quietly diverge from what the guards already treat as
 //    canonical. Deliberately excludes: reliefweb.int (ingestion disabled repo-wide, see
 //    legal_reliefweb_noncommercial), ncdc.gov.ng (sync-ncdc suspended 2026-09-02, see
-//    legal_ncdc_nigeria_confidential_sitreps), and every domain in
+//    legal_ncdc_nigeria_confidential_sitreps), and every remaining domain in
 //    lib/source-trust.ts's AUTHORITATIVE_SOURCE_DOMAINS that exists ONLY for trust-scoring a
-//    manually-entered row (gov.br, mohfw.gov.in, moph.go.th, moh.go.tz, cidrap.umn.edu,
+//    manually-entered row (gov.br, mohfw.gov.in, moph.go.th, cidrap.umn.edu,
 //    info.dengue.mat.br, …) — no cron in this repo ever re-fetches those, so listing them here
 //    would silently hide exactly the kind of orphaned row this probe exists to surface.
+//    moh.go.tz and spc.int used to be in that same "trust-only" bucket until
+//    sync-tanzania-rotavirus / sync-spc-pacific-dengue were built the same day this probe
+//    first ran and found the gap — see their own file headers for the legal check on each.
 //
 // 2. TARGET-KEY COVERAGE — sync-who-regional and sync-wpro-dengue-update instead loop over a
 //    fixed TARGETS: {disease_en, country_en}[] list and call a PER-TARGET fetcher (which may
@@ -45,11 +49,13 @@
 // therefore correctly reported as uncovered below — there genuinely is no cron that writes
 // them, only a human-in-the-loop nudge, which is exactly the "who refreshes this?" gap this
 // probe exists to surface, not a false positive to suppress. sync-pacific-surveillance is
-// deliberately not modeled either, for the same reason noted next to the who.int/westernpacific
-// domain entry above: it doesn't write the country-level case-count rows this probe is about.
-// sync-drc-sitrep is excluded outright: its discovery step was disabled for legal reasons in
-// 2026 (ReliefWeb ToS, see the file's own comment) and unconditionally returns null, so it
-// contributes no coverage today regardless.
+// deliberately not modeled either, for the reason noted next to the who.int/westernpacific
+// domain entry above: it parses a syndromic (ILI/DLI) surveillance table and never writes the
+// country-level dengue case-count rows this probe is about — those 4 rows now have their OWN
+// dedicated cron instead (sync-spc-pacific-dengue, 2026-09-03), modeled via the spc.int domain
+// entry above. sync-drc-sitrep is excluded outright: its discovery step was disabled for legal
+// reasons in 2026 (ReliefWeb ToS, see the file's own comment) and unconditionally returns null,
+// so it contributes no coverage today regardless.
 //
 // This probe's job is to prompt a manual look (see the fix-queue entry's own "journalise le
 // résultat, ne tranche rien"), not to auto-correct anything — an occasional false positive a
@@ -82,11 +88,9 @@ export const DYNAMIC_COVERAGE_DOMAINS: ReadonlyArray<{ substring: string; cron: 
   { substring: "aphis.usda.gov",                             cron: "sync-usda-aphis" },
   { substring: "mysa.gov.my",                                cron: "sync-malaysia-dengue" },
   { substring: "health.gov.ws",                              cron: "sync-samoa-dengue" },
-  // NOT sync-pacific-surveillance: that cron parses a syndromic (ILI/DLI) surveillance table
-  // and never writes country-level dengue case counts itself (confirmed 2026-09-03 — it only
-  // reads existing active dengue rows to decide whether to raise a signal). Wallis & Futuna /
-  // Marshall Islands / Vanuatu / American Samoa dengue rows sourced from spc.int are therefore
-  // correctly reported as uncovered below, not a bug in this file. Kept for
+  // NOT sync-pacific-surveillance, which parses a WHO WPRO syndromic (ILI/DLI) surveillance
+  // table and never writes country-level dengue case counts itself (confirmed 2026-09-03 — it
+  // only reads existing active dengue rows to decide whether to raise a signal). Kept for
   // sync-wpro-dengue-update defense-in-depth only: harmless overlap with its TARGET_KEYS
   // coverage today, in case a future TARGETS-less row it discovers cites this path.
   { substring: "who.int/westernpacific",                     cron: "sync-wpro-dengue-update" },
@@ -95,6 +99,14 @@ export const DYNAMIC_COVERAGE_DOMAINS: ReadonlyArray<{ substring: string; cron: 
   // re-checked" shape as the crons above, just a single row instead of a whole feed. Confirmed
   // against the row's actual `source` value in production 2026-09-03.
   { substring: "who.int/publications/m/item/multi-country-outbreak-of-mpox", cron: "check-mpox-sitrep" },
+  // Tanzania MoH weekly community bulletin ("Jarida la Jamii") — the one existing row it
+  // covers (Rotavirus infection / Tanzania) cites a PDF under this path directly.
+  { substring: "moh.go.tz",                                  cron: "sync-tanzania-rotavirus" },
+  // SPC's epidemic-alert dashboard — covers Wallis and Futuna / Marshall Islands / Vanuatu /
+  // American Samoa Dengue rows only (see sync-spc-pacific-dengue's own TARGETS); the domain
+  // substring alone can't distinguish those from any other PICT/disease SPC also tracks, but
+  // that's fine here — this probe cares whether SOME cron revisits the row, not which one.
+  { substring: "spc.int",                                    cron: "sync-spc-pacific-dengue" },
 ];
 
 export interface CoverageResult {

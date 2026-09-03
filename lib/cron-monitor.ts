@@ -658,6 +658,15 @@ export const CRON_WINDOWS: Record<string, number> = {
   // sync-wpro-dengue-update and sync-samoa-dengue each ran unmonitored until
   // health-check's own unmonitored-crons diff caught them.
   "check-wer-cholera":         200,  // Schedule: 30 8 * * 1
+  // Added 2026-09-03 alongside the fetcher-coverage probe (data-quality section 4o,
+  // lib/fetcher-coverage.ts) that found both gaps the same day. Weekly Mon 08:35, same
+  // 1.5x-interval rationale as the four Monday crons above — registered in the same commit
+  // that creates the route, per the lesson in the comment above (pilot-closing-reminder /
+  // sync-pacific-surveillance et al. each ran unmonitored for a while before someone noticed).
+  "sync-tanzania-rotavirus":   200,  // Schedule: 35 8 * * 1
+  // Daily 06:10 — a live dashboard API, not a periodic bulletin (contrast the weekly entry
+  // just above), same cadence class as sync-taiwan-cdc/sync-malaysia-dengue.
+  "sync-spc-pacific-dengue":   26,   // Schedule: 10 6 * * *
   // ── Enterprise & infra crons ──────────────────────────────────────────────────
   "trigger-webhooks":          2,    // every 30min — enterprise webhook delivery
   // ── Trigger & coverage crons ──────────────────────────────────────────────────

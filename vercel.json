@@ -197,6 +197,14 @@
       "schedule": "30 8 * * 1"
     },
     {
+      "path": "/api/cron/sync-tanzania-rotavirus",
+      "schedule": "35 8 * * 1"
+    },
+    {
+      "path": "/api/cron/sync-spc-pacific-dengue",
+      "schedule": "10 6 * * *"
+    },
+    {
       "path": "/api/cron/sync-taiwan-cdc",
       "schedule": "0 5 * * *"
     },
