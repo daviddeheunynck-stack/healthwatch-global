@@ -3111,3 +3111,156 @@ aucune écriture en prod hors ce que le cron écrit déjà de lui-même.
 compromis déjà accepté deux fois : mieux vaut ce qui a été traité, journalisé et
 persisté, que le rien d'un hard-kill. Les items non traités reviennent au run
 suivant, le flux les sert 45 jours.
+
+### Construction — les deux idées sont livrées
+
+Verrou de code acquis avant la première édition (`code-lock.mjs acquire`), relâché
+après le push. `npx tsc --noEmit` et `npx eslint` propres sur les quatre fichiers
+touchés.
+
+**Idée 1 — ✅ CONSTRUITE, commit `9347d8b2`**, `lib/disease-data.ts` +
+`lib/outbreaks.ts` + `components/DiseaseAlertPicker.tsx`.
+
+`localizedDiseaseLabel(rawName, locale, diseaseAr?)` devient **le seul point de
+décision** du nommage localisé d'une maladie ou d'un événement, et il vit dans
+`lib/disease-data.ts` — module à **0 import**, donc importable depuis un composant
+`"use client"`. `getLocalizedDisease()` dans `lib/outbreaks.ts` n'est plus qu'un
+emballage qui déballe une ligne `Outbreak` et délègue : les six surfaces qui en
+dépendent (carte, tableau, modale, e-mails de digest, PDF, page de détail) ne sont
+pas touchées et ne peuvent pas diverger du sélecteur. C'était exactement le motif
+du défaut : la règle existait, elle était simplement enfermée dans un module
+serveur.
+
+Dans le composant :
+- `value={disease_en}` / `label={localizedDiseaseLabel(disease_en, locale)}`,
+  séparation explicite. La clé métier de `user_alert_diseases` ne bouge pas, donc
+  l'abonnement existant (*Measles*) reste valide.
+- Le `<select>` est retrié sur le **libellé affiché** (`localeCompare(…, locale)`) :
+  l'API trie sur la clé anglaise, ce qui cesse d'être un ordre alphabétique dès que
+  le lecteur voit autre chose.
+- L'infobulle du compteur (`"3 active outbreak(s)"`, codée en dur en anglais) rejoint
+  le dictionnaire `COPY` avec ses 5 traductions.
+
+**Vérifié avant commit sur les 17 `disease_en` réellement actifs, dans les 5
+locales.** Le titre du DON596 sort bien traduit (« Événement de sécurité alimentaire
+international : préparations pour nourrissons… », et ses équivalents es/ar/id), et
+les 16 autres aussi — *Dengue fever* → « Dengue », *Diphtheria* → « Diphtérie »,
+*Measles* → « Rougeole », *Avian Influenza* → « Grippe aviaire », l'arabe complet.
+Les rares noms rendus identiques (Chikungunya, Mpox, MERS-CoV, *Meningitis* en
+es/id) le sont parce qu'ils sont réellement identiques dans ces langues, pas par
+défaut de traduction — vérifié entrée par entrée.
+
+Effet de bord assumé et voulu : en anglais aussi le libellé passe désormais par la
+normalisation, donc la ligne héritée *« Crimean-Congo Hemorrhagic Fever »* s'affiche
+sous sa forme canonique *« Crimean-Congo haemorrhagic fever »*, comme partout
+ailleurs dans le produit.
+
+**Limite connue, non corrigée, dite plutôt que tue :** si deux `disease_en` distincts
+normalisaient vers le même libellé, le `<select>` afficherait deux options visuellement
+identiques pointant sur deux clés d'abonnement différentes. Ça n'arrive pas
+aujourd'hui (les crons insèrent tous `diseaseInfo.name_en` déjà canonique ; la seule
+forme non canonique active est la ligne CCHF héritée, et aucune ligne canonique
+concurrente n'existe). Masquer un doublon rendrait une clé non-abonnable, ce qui est
+pire : le vrai remède serait de normaliser la donnée, décision qui appartient à
+David. Signalé, pas contourné.
+
+**Idée 2 — ✅ CONSTRUITE, commit `d47eb99d`**, `app/api/cron/sync-africa-cdc/route.ts`,
+un seul fichier.
+
+- `ITEM_LOOP_BUDGET_MS = 40_000`, mesuré depuis le **début du run** et non depuis la
+  boucle : un fetch RSS lent consomme le même budget de fonction que la boucle, les
+  mesurer séparément laisserait les deux déborder ensemble. Contrôle avant chaque
+  item, donc le dépassement maximal est d'un fetch d'article (12 s) plus ses
+  écritures — ~53 s sur les 60 s de `maxDuration`.
+- Les items non atteints sont comptés dans `results.unprocessed`, **à part de
+  `results.skipped`** : un skip est une décision prise sur un item qu'on a regardé,
+  un item non traité n'a pas été regardé. Confondre les deux ferait passer une
+  troncature pour un run normal.
+- Un run tronqué reste en statut `ok` — les items reviennent au run suivant, le flux
+  les sert 45 jours — mais son heartbeat porte désormais « budget de boucle dépassé :
+  N item(s) non traité(s) ». Sans ça, un flux qui grossirait au-delà du budget tous
+  les jours cesserait silencieusement de couvrir sa queue.
+- Timeout RSS restauré de 8 s à **15 s**, sa valeur d'origine, avec la mesure du jour
+  écrite dans le commentaire (663 / 680 / 1 744 ms, 0 échec sur 10). Le commentaire
+  dit aussi ce que la mesure **ne** prouve pas : les deux tentatives de ce matin ont
+  avorté à 8 s à une seconde d'intervalle, ce qui ressemble à une indisponibilité vue
+  depuis Vercel plutôt qu'à de la latence, et 15 s n'est pas présenté comme un
+  correctif de ça.
+
+### Vérification en production après déploiement
+
+`sync-africa-cdc` appelé contre `https://healthwatch-global.com` une fois le
+déploiement effectif (présence du champ `unprocessed`, absent de la version
+précédente — c'est ce qui a servi de marqueur de déploiement) :
+
+```
+HTTP 200  t=11,7 s
+success:true  items:10  inserted:0  updated:0  skipped:10  errors:0  unprocessed:0
+parseStats: articlesFetched:6  bodySelectorMisses:0
+```
+
+Lecture : **11,7 s de bout en bout**, très en deçà des 40 s de budget — le garde-fou
+ne se déclenche pas, ce qui est le comportement attendu un jour normal. Il est là
+pour le jour où plusieurs pages d'article traînent, pas pour tous les jours.
+
+`articlesFetched:6` pour `items:10` n'est pas un écart : `extractItemData` sort
+avant tout fetch quand ni le titre ni les `<category>` ne donnent une maladie connue
+(`return []`, ligne 10 de la fonction). Les 4 items concernés sont exactement les 4
+articles institutionnels du flux du jour (task force sur la réforme de
+l'architecture sanitaire mondiale, pré-conférence jeunesse, réunion ministérielle
+ReSCO, réunion des ministres d'Afrique de l'Est). Vérifié dans le `log` de la
+réponse, pas déduit.
+
+**Le fetch RSS a réussi à ce run**, alors qu'il avait avorté deux fois à 8 s à
+09h10 UTC. L'indisponibilité de ce matin était donc transitoire côté source ou côté
+réseau Vercel, pas une panne installée — ce qui confirme au passage que le
+diagnostic ci-dessus était juste de ne pas conclure que 8 s en était la cause.
+
+**Ce que ce run ne corrige pas :** `skipped:10`, donc toujours **0 ligne écrite**.
+Les 6 items porteurs d'une maladie connue sont tous des articles Ebola sans chiffres
+(`0 cases and 0 deaths — likely non-surveillance article`). Le compteur
+`lastNonZero` d'Africa CDC reste au **2026-08-11**, soit 23 jours. La source est
+réellement silencieuse en chiffres, et la sonde `data-quality` 4n construite hier
+continuera — à juste titre — de flaguer Africa CDC comme annoncée publiquement mais
+non alimentante. Voir « ce qui reste chez David » ci-dessous.
+
+### Ce qui reste chez David — aucune écriture de données en prod n'a été faite ce soir
+
+Les deux constructions sont du code. Le seul appel en prod est un run de
+`sync-africa-cdc`, c'est-à-dire ce que ce cron fait de lui-même chaque jour à 09h10,
+et il n'a rien écrit (`inserted:0 updated:0`).
+
+1. **Les 10 lignes du DON596 sont actives depuis 174 jours.** `is_seed=true`,
+   `date=2026-03-13`, jamais mises à jour, aucune `source_confirmed_at`. Elles pèsent
+   **10 des 129 lignes actives (7,8 %)** — donc 7,8 % du compteur « foyers actifs »
+   affiché en page d'accueil est un rappel de préparations pour nourrissons de mars.
+   Les désactiver est une écriture de données en prod, hors de ce que cette routine
+   se permet seule. À trancher : les clore, ou assumer qu'un événement de sécurité
+   alimentaire reste « actif » tant que l'OMS ne l'a pas clos.
+
+2. **Africa CDC : 23 jours sans une ligne, et le silence est réel.** Le correctif de
+   ce soir supprime un risque de hard-kill, il ne fait pas parler une source muette.
+   Les deux causes possibles restent ouvertes et se distinguent par de la lecture
+   humaine du flux, pas par du code : soit Africa CDC ne publie effectivement plus de
+   bulletins chiffrés depuis le 11/08, soit le seuil « 0 cas et 0 décès = article non
+   épidémiologique » rejette des articles qui portent des chiffres sous une forme que
+   `extractNumbers` ne voit pas. Les 6 articles Ebola du jour permettraient de
+   trancher en les ouvrant.
+
+3. **Deux autres crons en `no_data` prolongé**, relevés en passant et non traités ce
+   soir : `check-mpox-sitrep` (33,4 jours depuis le dernier `lastNonZero`,
+   `status=no_data` — à distinguer du correctif du 31/08 qui portait sur la
+   *journalisation*, pas sur le fond) et `sync-drc-sitrep` (`no_sitrep_found`).
+   Ni l'un ni l'autre n'est en `error`, donc rien ne les remonte aujourd'hui.
+
+4. **Doublon de libellé possible dans le sélecteur d'alertes** — voir la limite connue
+   de l'idée 1 ci-dessus. Ne se produit pas avec les données actuelles ; le remède
+   propre est de normaliser la ligne CCHF héritée en base, décision de données.
+
+### Fichiers modifiés par d'autres, laissés intacts (AGENTS.md)
+
+- `marketing/qa/product-claims.manual.json` — modifié, non commité par ce run.
+- `scripts/audit-alert-day.mjs`, `scripts/probe-alert-lock.mjs` — non suivis, laissés
+  en place.
+
+Aucun n'a été stagé, stashé ni annulé.
