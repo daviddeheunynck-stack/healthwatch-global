@@ -33,20 +33,33 @@ build-claimable-facts.mjs        les chiffres citables sont figés AVANT la réd
         ↓
 rédacteur (agent)                écrit le brouillon, ne cite que le registre
         ↓
-check-outreach-message.mjs       contrôle mécanique, UNE fois : forme, chiffres, gabarits, contexte
+check-outreach-message.mjs       contrôle mécanique, chiffres/gabarits/contexte
         ↓  (le verdict est une note jointe, pas un couperet)
-relecteur (agent, contexte neuf) 12 questions, UNE fois, réponse justifiée par une citation
+relecteur (agent, contexte neuf) 12 questions, réponse justifiée par une citation
         ↓  (ses 12 réponses sont une note jointe, pas un couperet)
         ↓
-   DM ────────────────────────────┐        commentaire / note de connexion
-   ↓                              │                    ↓
-file de validation                │        l'agent tranche seul à partir des
-(linkedin-contacts.md),           │        deux rapports : corrige ce qui est
-jamais envoyé par la routine      │        réel, publie, ou renonce si le
-   ↓                              │        fond ne tient pas — publié direct
-David corrige avec l'agent,       │        (content-log.md), jamais mis en file
-puis décide seul d'envoyer ──────┘
+   DM, session interactive ──┐   DM, run automatisé ──┐   commentaire / note ──┐
+   ↓                         │   ↓ (exception 03/09,   │   ↓                   │
+file de validation           │   à l'essai, voir       │   l'agent tranche     │
+(linkedin-contacts.md),      │   CLAUDE.md)            │   seul à partir des   │
+jamais envoyé par la routine │   retravaillé jusqu'à   │   deux rapports :     │
+   ↓                         │   verdict propre, PUIS  │   corrige, publie,    │
+David corrige avec l'agent,  │   envoyé par la routine │   ou renonce si le    │
+puis décide seul d'envoyer ──┘   elle-même, sans       │   fond ne tient pas   │
+                                  validation préalable ─┘   — publié direct ───┘
+                                                             (content-log.md),
+                                                             jamais mis en file
 ```
+
+⚠️ **La branche « DM, run automatisé » n'existe que depuis le 2026-09-03, décidée
+par David en session interactive et tracée dans `CLAUDE.md`, présentée par lui
+comme un essai (« on teste l'automation au run de 13h aujourd'hui »).** Avant
+d'appliquer cette branche, vérifier que `CLAUDE.md` la confirme toujours — elle
+peut être révoquée ou confirmée définitive après ce premier run. La règle des
+deux essais (item 6 des huit exigences plus bas) ne s'y applique pas telle
+quelle : en automation, retravailler tant qu'un nouveau jet corrige un défaut
+réel et différent du précédent ; ne renoncer au candidat que si des jets
+successifs tournent en rond sur le **même** défaut sans converger.
 
 ---
 ## 0. Périmètre — quelles routines sont couvertes

@@ -96,7 +96,7 @@ Fil relu intégralement (§4) : 7 messages, recopiés verbatim dans `tmp/thread-
 
 ---
 
-### 🔒 SUITE DU RUN (11h) — 2 RÉPONSES REÇUES, 2 DM DE SUITE RÉDIGÉS, EN FILE DE VALIDATION
+### 🔒→✅ SUITE DU RUN (11h) — 2 RÉPONSES REÇUES, 2 DM RETRAVAILLÉS JUSQU'À CONVERGENCE, PUIS LES 2 ENVOYÉS SUR ORDRE EXPLICITE DE DAVID
 
 Les deux DM envoyés à 09h56/09h57/09h59 ont produit une réponse en moins d'une heure chacun — le meilleur régime observé sur ce carnet.
 
@@ -108,7 +108,7 @@ Les deux DM envoyés à 09h56/09h57/09h59 ont produit une réponse en moins d'un
 
 **L'angle retenu (8e jet)** : la clause conditionnelle de Julien — « si c'est ça que vous suivez en ce moment » — n'a jamais été creusée. La question porte sur la coordination pratique entre eux deux, pas sur l'efficacité de la chaîne institutionnelle : faut-il prévenir avant de documenter, ou la fiche suffit-elle seule à identifier de quoi il s'agit ?
 
-`QA : mécanique PASS (212 car., limite 1300, fr/fr, 0 lien, 0 CTA, 0 tiret cadratin, 0 chiffre) — seul blocker résiduel le faux positif context.too-soon | relecteur 8e jet VERDICT: ENVOYER, 12 PASS sur 12 — attribution vérifiée mot pour mot sur la citation guillemetée, terrain politique confirmé neutre (coordination personnelle, pas évaluation institutionnelle), apport reconnu réel (timing jamais abordé) | faits cités : aucun | registre du 03/09 (09:03) | statut : en file de validation`
+`QA : mécanique PASS (212 car., limite 1300, fr/fr, 0 lien, 0 CTA, 0 tiret cadratin, 0 chiffre) — seul blocker résiduel le faux positif context.too-soon | relecteur 8e jet VERDICT: ENVOYER, 12 PASS sur 12 — attribution vérifiée mot pour mot sur la citation guillemetée, terrain politique confirmé neutre (coordination personnelle, pas évaluation institutionnelle), apport reconnu réel (timing jamais abordé) | faits cités : aucun | registre du 03/09 (09:03) | statut : envoyé le 03/09 à 11h56, sur ordre explicite de David (« Envoie les Dms », session interactive) — texte relu caractère pour caractère et destinataire revérifié dans le même appel JS que le clic sur Envoyer, apparition dans le fil confirmée après coup`
 
 > Vous conditionniez l'Incident Manager à « si c'est ça que vous suivez en ce moment ». En pratique, je préviens avant de documenter quoi que ce soit, ou la fiche elle-même dit assez pour savoir de quoi il s'agit ?
 
@@ -118,12 +118,14 @@ Les deux DM envoyés à 09h56/09h57/09h59 ont produit une réponse en moins d'un
 
 **Angle demandé par David, appliqué** : prise de position pour les données futures imparfaites (« un système d'alarme n'a pas besoin d'avoir raison, il doit être précoce »). **Changement d'angle au 6e jet** : la méthode par analogues a été abandonnée comme sujet — toute formulation, même totalement abstraite, gardait un référent reconstituable vers le terrain sensible posé par James lui-même. Pivot vers son point UX du tout premier message (10h29, jamais traité depuis) : le risque qu'une révision détectée par un utilisateur brise la confiance. Relié à la propre situation de HWG (donnée corrigée après coup, aucun champ ne distingue une correction d'une progression normale), avec transition explicite reconnaissant la valeur de son idée de collecte de récits avant de la reporter.
 
-`QA : mécanique PASS (615 car., 2 paragraphes, en/en, 0 blocker hors faux positifs documentés) — auto-citation confirmée sur le 1er paragraphe (inchangé depuis le 1er jet, déjà archivé aujourd'hui en file de validation, jamais envoyé à un autre destinataire, écartée conformément à docs/outreach-qa.md §2) | relecteur 8e jet VERDICT: ENVOYER, 12 PASS sur 12 — affirmation produit vérifiée mot pour mot contre le registre (cas et décès sous une seule date, aucun champ de correction), silence politique total confirmé, transition jugée honnête et respectueuse | faits cités : aucun | registre du 03/09 (09:03) | statut : en file de validation`
+`QA : mécanique PASS (615 car., 2 paragraphes, en/en, 0 blocker hors faux positifs documentés) — auto-citation confirmée sur le 1er paragraphe (inchangé depuis le 1er jet, déjà archivé aujourd'hui en file de validation, jamais envoyé à un autre destinataire, écartée conformément à docs/outreach-qa.md §2) | relecteur 8e jet VERDICT: ENVOYER, 12 PASS sur 12 — affirmation produit vérifiée mot pour mot contre le registre (cas et décès sous une seule date, aucun champ de correction), silence politique total confirmé, transition jugée honnête et respectueuse | faits cités : aucun | registre du 03/09 (09:03) | statut : envoyé le 03/09 à 11h57, sur ordre explicite de David (« Envoie les Dms », session interactive) — texte relu caractère pour caractère et destinataire revérifié dans le même appel JS que le clic sur Envoyer, apparition dans le fil confirmée après coup`
 
 > Future imperfect data, then. An alarm does not need to be right, it needs to be early, and a paper that is right about last year's outbreak is neither.
 >
 > The narrative-collecting idea deserves more than a quick reply, so I want to sit with it properly before I say anything useful. What I can answer now is the UX point from your first message: my own series gets corrected too, and the public page carries a case count and a death count under one date, nothing that marks a given update as a fix rather than routine progress. Does your corpus carry any signal that separates a true revision from a first appearance?
 
+
+⚠️ **Changement de politique du 03/09, décidé par David en session interactive après ce run — voir `CLAUDE.md` et `_shared/hwg-social-policy.md` pour le texte qui fait foi.** Pour les runs automatisés (David absent), un DM n'est plus laissé en file d'attente indéfinie : il doit être retravaillé jusqu'à passer le double-check complet, puis **envoyé par la routine elle-même**, sans attendre de validation. Mis à l'essai dès le créneau de 13h aujourd'hui. Ne pas se fier à cette seule ligne pour appliquer la règle — relire les fichiers cités.
 
 ### 3️⃣ ✅ INVITATIONS REÇUES — 1 ACCEPTÉE, 2 LAISSÉES
 
