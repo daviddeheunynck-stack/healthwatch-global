@@ -96,6 +96,42 @@ Fil relu intégralement (§4) : 7 messages, recopiés verbatim dans `tmp/thread-
 
 ---
 
+### 🔒 SUITE DU RUN (11h) — 2 RÉPONSES REÇUES, 2 DM DE SUITE RÉDIGÉS, EN FILE DE VALIDATION
+
+Les deux DM envoyés à 09h57 et 09h59 ont produit une réponse en moins d'une heure chacun — le meilleur régime observé sur ce carnet.
+
+#### 🔒 Julien Tuba (`/in/julien-tuba-a31abb143/`), FR, vouvoiement, fil actif, SANS CTA — EN FILE
+
+**Sa réponse (10h09)** : instruction opérationnelle concrète pour documenter et faire remonter une observation — zone, semaines observées, écart à l'historique, comparaison aux zones voisines, source et date — puis la partager directement avec l'Incident Manager de la riposte MVE sur le terrain, ou via le coordonnateur du COUSP/RDC.
+
+**L'angle** : la procédure suppose qu'il y a quelque chose à porter, or aucune anomalie réelle n'existe côté David aujourd'hui — tout l'échange était méthodologique. La question qui en découle, jamais posée dans ce fil : ce canal (Incident Manager/COUSP) est-il propre à la riposte MVE en cours, ou la même porte vaut-elle pour tout ce que Julien couvre, polio compris ?
+
+🔴 **Règle des deux essais déclenchée sur la question 11 (charpente), défaut nommé, pas de 3e brouillon.** Deux jets rejetés pour la même raison structurelle : ce serait le **5e message consécutif de David dans ce fil bâti sur le même schéma en trois temps** — un énoncé de manque/limite personnelle, puis une question. Le 1er jet ouvrait par une validation explicite de la réponse de Julien avant le repli ; retirée au 2e jet, mais le relecteur a montré que le repli-puis-question survit à l'identique, avec même un écho lexical à deux replis précédents (« je n'ai pas de quoi les séparer », « je n'avais pas de quoi séparer un zéro d'un silence » → « je n'ai encore rien à envoyer »). Le fond est solide (11 PASS sur 12 aux deux jets, apport reconnu réel).
+
+`QA : mécanique PASS (411 car., limite 1300, 2 paragraphes, fr/fr, 0 lien, 0 CTA, 0 tiret cadratin, 0 chiffre) — seul blocker résiduel le faux positif context.too-soon | relecteur 2 jets, VERDICT: REECRIRE 11 les deux fois, même défaut — 11 PASS sur 12 aux deux jets par ailleurs | faits cités : aucun | registre du 03/09 (09:03) | statut : en file de validation`
+
+> Je n'ai encore rien à envoyer, en réalité : cet échange partait d'une question de méthode, pas d'une anomalie sur mon écran aujourd'hui. Le canal que vous décrivez suppose que j'ai quelque chose à porter.
+>
+> Une question annexe pendant que la réponse est fraîche : ce chemin, Incident Manager ou COUSP, il est propre à la riposte MVE en cours, ou c'est la même porte pour tout ce que vous couvrez, polio compris ?
+
+#### 🔒 James Schlitt, PhD, MPH (`/in/james-schlitt-phd-mph-4377a81b/`), EN, fil actif, SANS CTA — EN FILE
+
+**Ses réponses (10h29 puis 10h46)** : il pose une dichotomie — aligner le corpus sur des données futures parfaites (« a highly cited R package ») ou imparfaites (« a highly sensitive alarm system ») — puis donne un exemple concret (un abattoir de volaille au Texas, maladie mystérieuse, contexte de grippe aviaire déjà active) et détaille une méthode par analogues testée pendant le Covid (aligner une flambée en cours sur les épisodes historiques les plus proches).
+
+**Angle demandé par David et appliqué** : prendre parti pour les données futures imparfaites — un système d'alarme n'a pas besoin d'avoir raison, il doit être précoce. L'exemple de l'abattoir marche justement parce qu'il n'a pas encore de chiffres. La question qui en découle, absente de ce que James a écrit : sa méthode classe-t-elle les analogues par similarité de résultat, ou par les conditions qui les ont produits ?
+
+🔴 **Règle des deux essais déclenchée sur la question 9 (terrain politique), défaut nommé, pas de 3e brouillon.** James avait explicitement posé un terrain sensible (structure réglementaire, travail migrant, accès aux soins, incitations contre un rapportage honnête) que la consigne interdisait de reprendre, **même en écho**. 1er jet : « a plant with weak reporting and mobile labor », rejeté sur pièce. 2e jet, reformulé sans ces mots (« no numbers exist yet, only a fact sitting next to a pattern you already recognize ») : **rejeté quand même**, le relecteur montrant que « pattern you already recognize » n'a aucun autre référent dans ce fil que le paquet causal complet posé par James, et que « no numbers exist yet » restitue fonctionnellement son « incentives... stacked against honest and timely reporting ». Le fond reste solide par ailleurs (11 PASS sur 12 aux deux jets, prise de position fidèlement attribuée, apport réel).
+
+`QA : mécanique PASS (623 car., 3 paragraphes, en/en, 0 blocker, 0 warn, 0 collision) — seul blocker résiduel le faux positif context.too-soon | relecteur 2 jets, VERDICT: REECRIRE 9 les deux fois, même terrain sous deux formulations différentes — 11 PASS sur 12 aux deux jets par ailleurs, dont attribution du choix vérifiée (David ne fait pas dire à James un choix qu'il n'a pas tranché) | faits cités : aucun | registre du 03/09 (09:03) | statut : en file de validation`
+
+> Future imperfect data, then. An alarm does not need to be right, it needs to be early, and a paper that is right about last year's outbreak is neither.
+>
+> The poultry plant works as an example precisely for what it lacks: no numbers exist yet, only a fact sitting next to a pattern you already recognize. If your corpus surfaces it before it has numbers, the alarm rang on the analogue, not the count.
+>
+> What the COVID method leaves open for me: does it rank analogues by how they turned out, or by what set them in motion? Two outbreaks can look identical once they are over and still have nothing in common at the start.
+
+---
+
 ### 3️⃣ ✅ INVITATIONS REÇUES — 1 ACCEPTÉE, 2 LAISSÉES
 
 Compteur passé de **3 à 2**, vérifié après coup.
