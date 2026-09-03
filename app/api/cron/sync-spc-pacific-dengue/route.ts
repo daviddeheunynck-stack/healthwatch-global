@@ -250,6 +250,14 @@ async function runSyncSpcPacificDengue(supabase: SupabaseClient) {
       description: desc.en, description_fr: desc.fr, description_es: desc.es,
       description_ar: desc.ar, description_id: desc.id,
       risk_level: riskLevel, active: true, source_priority: Math.max(5, existingRow.source_priority ?? 0),
+      // The SPC dashboard is country/PICT-level only — no sub-national breakdown (see file
+      // header). A pre-existing admin1 from this row's prior source (e.g. Vanuatu's row
+      // carried "Shefa Province") stops being backed by anything once this cron overwrites
+      // the description with country-level-only text, and data-quality's admin1 check
+      // flags exactly that mismatch (found 2026-09-03, Dengue/Vanuatu). Same "don't display
+      // a province the current source doesn't confirm" convention as
+      // sync-ukhsa/sync-spf/sync-who-afro/sync-who-emro's insert paths.
+      admin1: null, admin1_lat: null, admin1_lng: null,
     }).eq("id", existingRow.id).lte("source_priority", 10).select("id");
 
     if (error) { results[target.countryKey] = `error: ${error.message}`; errors++; continue; }
