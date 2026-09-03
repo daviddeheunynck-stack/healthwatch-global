@@ -1200,10 +1200,25 @@ const STALE_CRON_ROW_CHECKED = {
   // Niger 2456→78, Afrique du Sud 404→43 : ce serait un changement de cadrage déguisé en mise à
   // jour, pas une correction. Même famille de piège que le « 209 cas » tchadien (sous-total) et
   // que le « 53 cas » mauritanien ci-dessous.
-  // 🔎 Au prochain passage : la seule édition à guetter est une v.3 du RRA. Si le cadrage
-  // 2025+2026 du RRA devient définitivement orphelin, c'est un arbitrage de cadrage à poser à
-  // David (garder un cumul figé au 01/03 vs basculer les 4 lignes sur le suivi 2026 d'Africa CDC),
-  // pas une écriture à faire en autonomie.
+  // 🔎 Au prochain passage : la seule édition à guetter est une v.3 du RRA.
+  // ✅ ARBITRAGE TRANCHÉ PAR DAVID LE 2026-09-03 (session interactive, groupe 3 de la sonde de
+  // couverture des fetchers) : cumul RRA figé conservé, PAS de bascule vers le suivi 2026 seul
+  // d'Africa CDC/NY DOH. Motifs, pour référence si la question ressurgit :
+  //   1. Pas la même donnée fraîchie : le RRA cumule depuis le début de l'épidémie (2025+2026),
+  //      Africa CDC/NY DOH ne compte que 2026. Basculer ferait chuter Mali/Niger/Afrique du Sud
+  //      sans que l'épidémie recule réellement — un changement de cadrage déguisé en mise à jour,
+  //      cassant la convention "cumul depuis l'apparition" que suit le reste du produit (c'est
+  //      précisément pour ça que Taïwan/Malaisie ont un garde anti-régression dédié au reset
+  //      calendaire annuel — cadrage que ce cluster n'a pas).
+  //   2. Le Tchad (le plus gros foyer, 5 227 cas) n'a aucune ligne dans le tableau Africa CDC —
+  //      basculer les 3 autres et geler le Tchad créerait un cluster à deux vitesses.
+  //   3. Le tableau Africa CDC est une citation indirecte dans un bulletin NY DOH, pas un flux
+  //      structuré stable — basculer ne fermerait de toute façon pas le vrai trou de couverture
+  //      (rien à automatiser derrière, juste une autre source à revérifier à la main).
+  // Ne pas rouvrir cet arbitrage sans fait nouveau (ex. Africa CDC publie un cumul depuis 2025
+  // avec le Tchad inclus, ou une source équivalente à la RRA mais plus fraîche). Si une v.3 du
+  // RRA paraît un jour, la remplacer normalement (nouveaux chiffres cumulés + 5 descriptions),
+  // ce n'est pas ce point qui est tranché ici — seul le NON-basculement vers Africa CDC l'est.
   "4d51097f-05e2-458d-a61b-a2f67be82bf2": "2026-09-01",
   "d2a504ac-84bc-4c21-bcb3-88f09654efea": "2026-09-01",
   "fb90624d-9d33-436b-977e-08695135bd78": "2026-09-01",
