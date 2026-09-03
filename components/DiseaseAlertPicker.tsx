@@ -3,16 +3,18 @@
 import { useEffect, useState } from "react";
 import { Biohazard, Plus, X, Loader2 } from "lucide-react";
 import LockedUpgradeButton from "@/components/LockedUpgradeButton";
+import { localizedDiseaseLabel } from "@/lib/disease-data";
 
 const COPY: Record<string, {
   title: string; sub: string; add: string; remove: string;
   empty: string; max: string; locked: string; upgrade: string; loading: string; error: string;
+  activeOutbreaks: string;
 }> = {
-  fr: { title: "Alertes par maladie", sub: "Recevez un email dès qu'un foyer est détecté pour ces pathogènes, partout dans le monde.", add: "Ajouter", remove: "Retirer", empty: "Aucune maladie surveillée.", max: "Maximum 10 maladies.", locked: "Alertes par maladie — disponible avec les plans Pro et Team.", upgrade: "Débloquer Pro", loading: "Chargement…", error: "Erreur." },
-  en: { title: "Disease alerts", sub: "Get an email as soon as an outbreak is detected for these pathogens, anywhere in the world.", add: "Add", remove: "Remove", empty: "No diseases monitored.", max: "Maximum 10 diseases.", locked: "Disease alerts — available on the Pro and Team plans.", upgrade: "Unlock Pro", loading: "Loading…", error: "Error." },
-  es: { title: "Alertas por enfermedad", sub: "Reciba un email cuando se detecte un brote de estos patógenos en cualquier parte del mundo.", add: "Agregar", remove: "Quitar", empty: "Sin enfermedades monitoreadas.", max: "Máximo 10 enfermedades.", locked: "Alertas por enfermedad — disponible en los planes Pro y Team.", upgrade: "Desbloquear Pro", loading: "Cargando…", error: "Error." },
-  ar: { title: "تنبيهات الأمراض", sub: "احصل على بريد إلكتروني فور اكتشاف تفشٍّ لهذه الأمراض في أي مكان بالعالم.", add: "إضافة", remove: "إزالة", empty: "لا توجد أمراض مراقبة.", max: "الحد الأقصى 10 أمراض.", locked: "تنبيهات الأمراض — متاح في خطط Pro و Team.", upgrade: "فتح Pro", loading: "جارٍ التحميل…", error: "خطأ." },
-  id: { title: "Peringatan penyakit", sub: "Dapatkan email segera saat wabah terdeteksi untuk patogen ini, di mana saja.", add: "Tambah", remove: "Hapus", empty: "Tidak ada penyakit yang dipantau.", max: "Maksimal 10 penyakit.", locked: "Peringatan penyakit — tersedia di paket Pro dan Team.", upgrade: "Buka Pro", loading: "Memuat…", error: "Error." },
+  fr: { title: "Alertes par maladie", sub: "Recevez un email dès qu'un foyer est détecté pour ces pathogènes, partout dans le monde.", add: "Ajouter", remove: "Retirer", empty: "Aucune maladie surveillée.", max: "Maximum 10 maladies.", locked: "Alertes par maladie — disponible avec les plans Pro et Team.", upgrade: "Débloquer Pro", loading: "Chargement…", error: "Erreur.", activeOutbreaks: "foyer(s) actif(s)" },
+  en: { title: "Disease alerts", sub: "Get an email as soon as an outbreak is detected for these pathogens, anywhere in the world.", add: "Add", remove: "Remove", empty: "No diseases monitored.", max: "Maximum 10 diseases.", locked: "Disease alerts — available on the Pro and Team plans.", upgrade: "Unlock Pro", loading: "Loading…", error: "Error.", activeOutbreaks: "active outbreak(s)" },
+  es: { title: "Alertas por enfermedad", sub: "Reciba un email cuando se detecte un brote de estos patógenos en cualquier parte del mundo.", add: "Agregar", remove: "Quitar", empty: "Sin enfermedades monitoreadas.", max: "Máximo 10 enfermedades.", locked: "Alertas por enfermedad — disponible en los planes Pro y Team.", upgrade: "Desbloquear Pro", loading: "Cargando…", error: "Error.", activeOutbreaks: "brote(s) activo(s)" },
+  ar: { title: "تنبيهات الأمراض", sub: "احصل على بريد إلكتروني فور اكتشاف تفشٍّ لهذه الأمراض في أي مكان بالعالم.", add: "إضافة", remove: "إزالة", empty: "لا توجد أمراض مراقبة.", max: "الحد الأقصى 10 أمراض.", locked: "تنبيهات الأمراض — متاح في خطط Pro و Team.", upgrade: "فتح Pro", loading: "جارٍ التحميل…", error: "خطأ.", activeOutbreaks: "تفشٍّ نشط" },
+  id: { title: "Peringatan penyakit", sub: "Dapatkan email segera saat wabah terdeteksi untuk patogen ini, di mana saja.", add: "Tambah", remove: "Hapus", empty: "Tidak ada penyakit yang dipantau.", max: "Maksimal 10 penyakit.", locked: "Peringatan penyakit — tersedia di paket Pro dan Team.", upgrade: "Buka Pro", loading: "Memuat…", error: "Error.", activeOutbreaks: "wabah aktif" },
 };
 
 interface Props {
@@ -30,6 +32,11 @@ export default function DiseaseAlertPicker({ locale, isPaid }: Props) {
   const [saving,     setSaving]     = useState(false);
   const [error,      setError]      = useState("");
   const maxReached = subscribed.length >= 10;
+
+  // `disease_en` stays the value sent to the API — it is the business key of
+  // user_alert_diseases, and translating it would orphan every existing
+  // subscription. Only the label the user reads is localized (2026-09-03).
+  const label = (diseaseEn: string) => localizedDiseaseLabel(diseaseEn, locale);
 
   useEffect(() => {
     if (!isPaid) return;
@@ -102,11 +109,11 @@ export default function DiseaseAlertPicker({ locale, isPaid }: Props) {
               <p className="text-gray-600 text-xs italic">{c.empty}</p>
             ) : subscribed.map((d) => (
               <span key={d} className="inline-flex items-center gap-1.5 text-xs bg-red-900/30 border border-red-800/40 text-red-300 px-3 py-1 rounded-full">
-                {d}
+                {label(d)}
                 {(counts[d] ?? 0) > 0 && (
                   <>
                     <span className="text-red-700" aria-hidden>·</span>
-                    <span className="text-[10px] text-red-400/60 tabular-nums" title={`${counts[d]} active outbreak${counts[d] === 1 ? "" : "s"}`}>{counts[d]}</span>
+                    <span className="text-[10px] text-red-400/60 tabular-nums" title={`${counts[d]} ${c.activeOutbreaks}`}>{counts[d]}</span>
                   </>
                 )}
                 <button onClick={() => remove(d)} disabled={saving} className="hover:text-white transition-colors">
@@ -128,8 +135,12 @@ export default function DiseaseAlertPicker({ locale, isPaid }: Props) {
               >
                 {available
                   .filter((d) => !subscribed.includes(d))
+                  // The API sorts alphabetically on the English key; once the
+                  // labels are localized that order is no longer alphabetical
+                  // for the reader, so re-sort on what is actually displayed.
+                  .sort((a, b) => label(a).localeCompare(label(b), locale))
                   .map((d) => (
-                    <option key={d} value={d}>{d}</option>
+                    <option key={d} value={d}>{label(d)}</option>
                   ))}
               </select>
               <button

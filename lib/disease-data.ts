@@ -712,6 +712,49 @@ export function matchEventNameTranslation(rawName: string): { fr: string; es: st
   return EVENT_NAME_TRANSLATIONS.find((e) => lower.includes(e.pattern)) ?? null;
 }
 
+/**
+ * THE single decision point for turning a raw disease/event name into a display
+ * label in a given locale. `getLocalizedDisease()` in lib/outbreaks.ts is a thin
+ * wrapper over it that unpacks an Outbreak row.
+ *
+ * It lives here, and not there, because lib/outbreaks.ts imports
+ * @supabase/supabase-js and next/cache — server-only, so a "use client"
+ * component cannot reach it. That is exactly why DiseaseAlertPicker used to
+ * render raw English `disease_en` inside a UI otherwise translated into five
+ * languages, including the 126-character DON596 food-safety headline whose
+ * translations sit right above in EVENT_NAME_TRANSLATIONS (found 2026-09-03).
+ * This module has zero imports, so it is client-safe.
+ *
+ * `diseaseAr` is the row's stored Arabic override when there is one; callers
+ * that only hold a name (a picker listing distinct disease_en values, say)
+ * omit it and fall back to the catalogued Arabic name.
+ */
+export function localizedDiseaseLabel(
+  rawName: string,
+  locale: string,
+  diseaseAr?: string | null
+): string {
+  // Normalize through the same DISEASE_MAP the parser uses, so "Dengue" and
+  // "Dengue fever" resolve to the same canonical names.
+  const info = normalizeDisease(rawName);
+  // Non-infectious "events" (food-safety recalls, toxin contaminations…) are
+  // intentionally absent from DISEASE_MAP — see matchEventNameTranslation's doc comment.
+  // Their headline still deserves a real translation instead of the raw-English fallback.
+  const evt = matchEventNameTranslation(rawName);
+  if (evt) {
+    if (locale === "fr") return evt.fr;
+    if (locale === "ar") return diseaseAr || evt.ar;
+    if (locale === "es") return evt.es;
+    if (locale === "id") return evt.id;
+    return info.name_en;
+  }
+  if (locale === "fr") return info.name_fr;
+  if (locale === "ar") return diseaseAr || info.name_ar;
+  if (locale === "es") return info.name_es;
+  if (locale === "id") return info.name_id;
+  return info.name_en;
+}
+
 /** "Rift Valley fever" → "rift-valley-fever" */
 export function diseaseToSlug(name: string): string {
   return name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");

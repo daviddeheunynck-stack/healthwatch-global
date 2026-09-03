@@ -1,7 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { unstable_cache } from "next/cache";
 import * as Sentry from "@sentry/nextjs";
-import { normalizeDisease, matchEventNameTranslation } from "./disease-data";
+import { normalizeDisease, localizedDiseaseLabel } from "./disease-data";
 import { findCountry, isAggregateCountry } from "./geo-data";
 import { sourceStatusOf, type SourceStatus } from "./source-trust";
 import { CONFIRMATION_MAX_AGE_DAYS } from "./source-confirmed";
@@ -247,28 +247,11 @@ type LocalizedDiseaseFields = Pick<Outbreak, "disease" | "disease_en" | "disease
 type LocalizedCountryFields = Pick<Outbreak, "country" | "country_en" | "country_ar">;
 
 export function getLocalizedDisease(outbreak: LocalizedDiseaseFields, locale: string): string {
-  // Normalize through the same DISEASE_MAP the parser uses.
   // disease_en is the preferred key (English, already normalized).
   // Fallback: disease column (French for new records, English for legacy).
-  // This ensures "Dengue" and "Dengue fever" resolve to the same canonical names.
-  const raw = outbreak.disease_en || outbreak.disease;
-  const info = normalizeDisease(raw);
-  // Non-infectious "events" (food-safety recalls, toxin contaminations…) are
-  // intentionally absent from DISEASE_MAP — see matchEventNameTranslation's doc comment.
-  // Their headline still deserves a real translation instead of the raw-English fallback.
-  const evt = matchEventNameTranslation(raw);
-  if (evt) {
-    if (locale === "fr") return evt.fr;
-    if (locale === "ar") return outbreak.disease_ar || evt.ar;
-    if (locale === "es") return evt.es;
-    if (locale === "id") return evt.id;
-    return info.name_en;
-  }
-  if (locale === "fr") return info.name_fr;
-  if (locale === "ar") return outbreak.disease_ar || info.name_ar;
-  if (locale === "es") return info.name_es;
-  if (locale === "id") return info.name_id;
-  return info.name_en;
+  // The naming rules themselves live in lib/disease-data.ts so that client
+  // components can reach them too — this module is server-only (2026-09-03).
+  return localizedDiseaseLabel(outbreak.disease_en || outbreak.disease, locale, outbreak.disease_ar);
 }
 
 // ── Description localization ──────────────────────────────────────────────────
