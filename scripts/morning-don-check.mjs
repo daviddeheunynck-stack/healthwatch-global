@@ -247,36 +247,41 @@ const FROZEN_ROW_CHECKED = {
   // vaccins typhoïdiques) et le 101-33 (signaux + rétrospective Bundibugyo/RDC) — ni l'un ni
   // l'autre ne porte le « Multi-country outbreak of cholera ». Le 101-31 (arrêté 28/06) reste donc
   // la donnée la plus récente pour la Tanzanie. Rien à écrire.
-  "5db4495e-0615-434d-b5ca-5af99de2e5e8": "2026-08-26",
-  // Choléra/Somalie : vérifié le 18/08, ligne laissée inchangée (233 cas / 0 décès, WER 101-31,
-  // cumul au 28/06) — mais ⚠️ ÉCART NON RÉSOLU À ARBITRER, voir le rapport du 18/08.
-  // L'aperçu mensuel choléra de l'ECDC donne pour la Somalie « Since 1 January 2026 and as of
-  // 12 July 2026, 2 168 cases have been reported » (dont 962 nouveaux cas entre le 14/06 et le
-  // 12/07), attribués à l'Africa CDC Epidemic Intelligence Weekly Report — soit ~9x le chiffre du
-  // WER, sur une fenêtre où le WER dit au contraire « aucun cas dans les 28 derniers jours ».
-  // Les deux hypothèses restent ouvertes et n'ont pas pu être départagées :
-  //  (a) différence de cadrage — la surveillance somalienne publie une série « AWD/cholera »
-  //      combinée (cf. le titre même de la série « Weekly Cholera/AWD Situation Report - Somalia »
-  //      et le Health Cluster Bulletin mars-avril 2026, qui parle systématiquement d'« AWD/cholera
-  //      »), donc 2 168 = AWD+choléra et 233 = choléra seul. Écrire 2 168 par-dessus mélangerait
-  //      deux cadrages : exactement le piège documenté pour Rougeole/États-Unis (CDC vs OPS) ;
-  //  (b) trou de déclaration à l'OMS — le WER porte lui-même la note « Missing data in this report
-  //      do not imply the absence of cholera or AWD cases or deaths in the respective country ».
-  // Argument pour (a) : le tableau 1 du WER note explicitement les pays qui déclarent en AWD
-  // (Afghanistan, Myanmar, Yémen, Pakistan) et la Somalie n'a PAS cette note de bas de page.
-  // Argument pour (b) : « 0 cas sur 28 jours » est difficilement tenable pour la Somalie.
-  // Sources primaires inaccessibles ce jour, d'où la non-résolution : emro.who.int → 502 (deux
-  // URL testées), africacdc.org → certificat expiré en WebFetch, et son EIWR du 02/08 lu via le
-  // Browser pane est un PDF SANS TEXTE EXTRACTIBLE (15 pages, pdf.js renvoie 0 caractère — il
-  // faudrait le lire en capture d'écran page à page). La série hebdo « Cholera/AWD Situation
-  // Report - Somalia » sur reliefweb s'arrête en 2024, aucune édition 2026.
-  // 🔎 Au prochain passage : viser l'EIWR Africa CDC le plus récent en capture d'écran (le seul
-  // moyen connu de lire ce PDF), ou une édition 2026 du sitrep somalien, pour trancher (a) vs (b).
-  // Revérifiée le 26/08 : pas de nouvel update choléra du WER (101-32 = typhoïde, 101-33 =
-  // Bundibugyo), donc rien de neuf côté OMS et l'écart (a)/(b) ci-dessus reste ouvert — il ne peut
-  // être tranché que par une source somalienne ou Africa CDC, pas par une nouvelle édition du WER.
-  // Ligne laissée à 233/0. La piste EIWR Africa CDC en capture d'écran n'a pas été tentée ce jour.
-  "6296cad0-8fdb-4b26-a670-c23c541e2c43": "2026-08-26",
+  // Revérifiée le 03/09 — et cette fois CORROBORÉE par une source indépendante de l'OMS :
+  // l'EIWR Africa CDC du 23/08/2026 (« Cholera in Africa ») liste « Tanzania (113; 2) », soit
+  // exactement les chiffres du WER 101-31 déjà en base. L'aperçu mensuel choléra de l'ECDC
+  // (arrêté 26/08) confirme de son côté « Since 27 July 2026, no updates have been reported by:
+  // […] United Republic of Tanzania ». Deux sources concordantes, aucune donnée neuve : rien à
+  // écrire, et la `date` reste au 28/06 — l'absence de mise à jour est une NON-DÉCLARATION du
+  // pays, pas une confirmation active de la donnée ; réaligner la date d'arrêté ferait passer
+  // pour fraîche une ligne que personne n'a rafraîchie (c'est la différence avec le cas
+  // « chiffres identiques » de la section 4e, où la source publie bien une édition nouvelle).
+  // ⚠️ Cette coïncidence exacte Africa CDC ↔ WER sur la Tanzanie est ce qui a permis de trancher
+  // l'écart Somalie ci-dessous : les deux sources ont le MÊME cadrage.
+  "5db4495e-0615-434d-b5ca-5af99de2e5e8": "2026-09-03",
+  // Choléra/Somalie : ✅ ÉCART RÉSOLU LE 03/09 — ligne corrigée de 233/0 à 2 657 cas / 1 décès
+  // (arrêté 09/08/2026), re-sourcée vers l'aperçu mensuel choléra de l'ECDC. NE PAS ROUVRIR.
+  // Rappel de l'énigme : le WER 101-31 donnait 233 cas / 0 décès (cumul au 28/06) avec « aucun cas
+  // dans les 28 derniers jours », quand l'ECDC annonçait ~9x plus. Deux hypothèses s'affrontaient
+  // depuis le 18/08 : (a) différence de cadrage — la surveillance somalienne publie une série
+  // « AWD/cholera » combinée, donc 2 657 = AWD+choléra et 233 = choléra seul ; (b) trou de
+  // déclaration de la Somalie à l'OMS.
+  // ✅ Tranché en faveur de (b) par l'EIWR Africa CDC du 23/08/2026, enfin lisible (voir plus bas
+  // comment) : sa section « Cholera in Africa » liste côte à côte « Somalia (2,657; 1) » ET
+  // « Tanzania (113; 2) ». Or 113/2 est EXACTEMENT le chiffre du WER pour la Tanzanie. Si Africa
+  // CDC comptait l'AWD et le WER le choléra seul, la Tanzanie ne pourrait pas coïncider au cas
+  // près — les deux sources ont donc le même cadrage, et l'écart somalien n'est pas un artefact de
+  // définition mais un défaut d'alimentation du WER. L'ECDC (arrêté 26/08) donne le même 2 657/1,
+  // avec 489 nouveaux cas entre le 12/07 et le 09/08.
+  // 🔑 Comment lire l'EIWR Africa CDC, après trois échecs (18/08, 26/08) : télécharger le PDF
+  // depuis africacdc.org/download/africa-cdc-epidemic-intelligence-weekly-report-<mois>-<année>/
+  // en DÉCODANT les `&amp;` de l'URL en `&` (sinon on récupère 18 Mo de HTML qui n'est pas un
+  // PDF), puis le lire avec l'outil Read en rendu visuel page à page — c'est un PDF image,
+  // pdftotext et pdf.js renvoient ~0 caractère, ce qui avait fait conclure à tort qu'il était
+  // illisible. La section « Cholera in Africa » est en page 8 sur 15 ; « Measles in Africa » p. 10.
+  // Prochaine vérification : rechercher un EIWR plus récent (hebdomadaire) ou une reprise du WER
+  // si la Somalie recommence à déclarer à l'OMS.
+  "6296cad0-8fdb-4b26-a670-c23c541e2c43": "2026-09-03",
 };
 console.log("\n=== Lignes actives à source_priority=10, hors clusters de seeds connus (>7j = à vérifier) ===");
 const frozenNonSeed = active.filter((o) => o.source_priority === 10 && !o.is_seed);
@@ -1017,7 +1022,14 @@ const MANUAL_ROW_CHECKED = {
   // mot pour mot les chiffres de #751 (73 828 cas et neuf décès de janvier à juillet 2026). La
   // date d'arrêté de la ligne (31/07) est donc toujours la bonne — ce n'est pas un cas de
   // section 4 sexies, la source n'a pas avancé son propre arrêté. Rien à écrire.
-  "d5aa229f-0568-45db-b223-747d25014718": "2026-08-26",
+  // Dengue/Viêt Nam : vérifié le 03/09 sur le « Dengue Situation Update 752 » du WHO WPRO
+  // (20/08), édition la plus récente de la série (page de listing
+  // who.int/westernpacific/wpro-emergencies/surveillance/dengue, aucun #753). Elle dit mot pour
+  // mot « There was no update in this reporting period » pour le Viêt Nam et répète les chiffres
+  // déjà en base : 73 828 cas cumulés / 9 décès de janvier à juillet 2026 (15 940 cas en juillet,
+  // +18,5 % sur un mois, ×1,3 vs 2025). Rien à écrire — et `source` reste le #751, qui est
+  // l'édition qui PORTE réellement la donnée ; le #752 ne fait que confirmer sans la republier.
+  "d5aa229f-0568-45db-b223-747d25014718": "2026-09-03",
   // Dengue/Vanuatu : vérifiée le 26/08 sur le Tableau 1 (« Confirmed Cases and Deaths as Reported
   // in National Situation Report, EW 1-32 2026 ») du rapport WHO/SPC « Dengue in the Pacific »
   // du 14/08 — déjà l'édition citée en base, et toujours la plus récente de la série (recherche

@@ -40,7 +40,7 @@ if (!SUPABASE_URL || !SERVICE_KEY) {
 }
 
 const select =
-  "id,disease,disease_en,country,country_en,cases,deaths,date,source,active,source_priority,updated_at,source_confirmed_at,is_seed";
+  "id,disease,disease_en,country,country_en,cases,deaths,date,source,active,source_priority,updated_at,source_confirmed_at,is_seed,response_phase";
 const res = await fetch(`${SUPABASE_URL}/rest/v1/outbreaks?select=${select}&limit=5000`, {
   headers: { apikey: SERVICE_KEY, Authorization: `Bearer ${SERVICE_KEY}` },
 });
@@ -97,10 +97,23 @@ const confirmedAt = (o) => {
 // (les anciennes lignes UNVERIFIED). Elle peut rester affichée sur le site sans
 // être défendable dans un message à un épidémiologiste.
 const sixtyDaysAgo = new Date(now - 60 * 86_400_000).toISOString().split("T")[0];
+// `response_phase === "contained"` est un signal de clôture explicite (l'autorité
+// compétente a déclaré l'événement terminé), à distinguer du « pas encore de
+// bulletin frais » que couvre la fenêtre de grâce de 60 j ci-dessous. Le site
+// l'applique depuis le 02/08 dans isDisplayActive() (lib/outbreaks.ts), mais ce
+// registre — écrit après — ne l'avait jamais repris : il était donc PLUS permissif
+// que le site et exposait comme « citables » des foyers que le site n'affiche
+// plus. Trouvé le 03/09 sur exactement les lignes que le correctif du 02/08
+// nommait déjà : Ebola/Ouganda (clos le 28/07, Ouganda certifié exempt par l'OMS
+// le 26/08), Ebola/Allemagne et Nipah/Inde. Une routine LinkedIn pouvait citer
+// comme en cours un foyer clos depuis plus d'un mois.
 const isDisplayed = (o) =>
   o.is_seed !== true &&
   (o.active === true ||
-    ((o.source_priority ?? 0) >= 3 && (confirmedAt(o) ?? "") >= sixtyDaysAgo && (o.date ?? "") >= sixtyDaysAgo));
+    (o.response_phase !== "contained" &&
+      (o.source_priority ?? 0) >= 3 &&
+      (confirmedAt(o) ?? "") >= sixtyDaysAgo &&
+      (o.date ?? "") >= sixtyDaysAgo));
 
 // Ligne fantôme trouvée le 28/08 : ce filtre reprend l'éligibilité par ligne
 // mais pas la règle de sœurs de filterDisplayActive() (lib/outbreaks.ts) — celle
