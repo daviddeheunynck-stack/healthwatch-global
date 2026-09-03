@@ -2984,3 +2984,130 @@ David a demandé la construction du garde-fou pour `data-quality` (« construis 
 **Vérifié en prod après déploiement** : `HTTP 200, success:true`, `activeRows:129, anomaliesDetected:0, needsReview:4` — identique au comportement d'avant le garde-fou (aucun déclenchement, comme attendu vu que 0 ligne correspond aujourd'hui au filtre strict de la section 4e et 0 anomalie existe).
 
 **Bilan de la soirée : les deux crons identifiés avec ce défaut structurel (boucle de fetch sans garde-fou de budget) ont maintenant l'un et l'autre leur garde-fou** — `sync-who-regional` (`5a235b75`) et `data-quality` (`40798edd`).
+
+---
+
+## 2026-09-03 — Proposition du jour
+
+Contexte lu avant d'idéer : `product-ideas-log.md` en entier, `product-feedback.md`
+(dernière entrée : lepapapericles5, 31/08, accessibilité), `ROADMAP.md`, `git log -25`.
+Sondes lecture seule contre la prod (`tqznwmpkokdzrszysbcm`) : 129 foyers actifs,
+53 heartbeats de cron, latence réelle du flux Africa CDC.
+
+### 1. 🟠 Le sélecteur d'alertes par maladie a son habillage traduit en 5 langues et sa **liste** en anglais brut — dont un « nom de maladie » de 126 caractères
+
+**Constat, mesuré en base avant d'être écrit.** `/api/alert-diseases` renvoie les
+`disease_en` distincts des foyers actifs, tels quels. `DiseaseAlertPicker.tsx` les
+affiche verbatim, dans le `<select>` comme dans les pastilles d'abonnement. Or ce
+composant a un dictionnaire `COPY` complet en fr/en/es/ar/id pour son titre, son
+sous-titre, ses boutons — tout sauf son contenu. Un utilisateur Pro francophone
+lit donc « Alertes par maladie / Ajouter » autour d'une liste qui dit *Dengue
+fever, Diphtheria, Meningitis, West Nile fever*. En arabe, la liste anglaise
+s'affiche dans une interface RTL.
+
+**17 `disease_en` distincts sur les 129 lignes actives**, dont un qui n'est pas un
+nom de maladie du tout :
+
+```
+126 car | 10 lignes | International food safety event: Infant formula and products
+                      containing arachidonic acid oil contaminated with cereulide toxin
+ 31 car |  2 lignes | Crimean-Congo Hemorrhagic Fever
+ 21 car |  1 ligne  | Marburg virus disease
+ …
+ 12 car | 30 lignes | Dengue fever
+```
+
+Ces 126 caractères sont le titre d'un DON de mars 2026 (DON596). Le produit **sait
+déjà** les traduire : `EVENT_NAME_TRANSLATIONS` dans `lib/disease-data.ts` contient
+la version fr/es/ar/id de cette exacte chaîne, précisément parce qu'un événement de
+sécurité alimentaire n'est pas une maladie catalogable (décision produit du
+2026-07-05, documentée dans le code). `getLocalizedDisease()` la consulte pour
+**toutes** les surfaces — carte, tableau, e-mails de digest, PDF, page de détail.
+Le sélecteur d'alertes est la seule qui ne passe pas par là, parce qu'il est
+`"use client"` et que `lib/outbreaks.ts` (où vit `getLocalizedDisease`) importe
+`@supabase/supabase-js` et `next/cache` : impossible à importer côté client.
+Le contournement a été d'afficher la chaîne brute.
+
+**Ampleur réelle du signal business, dite honnêtement :** `user_alert_diseases`
+compte **1 seule ligne** dans toute la base (un abonnement à *Measles*), pour
+140 lignes dans `user_alert_regions`. Ce n'est donc pas un défaut qui coûte des
+conversions aujourd'hui, et je ne prétends pas que la localisation explique
+l'écart 1 vs 140 — le sélecteur est réservé aux plans Pro/Team, ce qui suffit à
+l'expliquer. Ce qui le rend quand même prioritaire : c'est une **fonctionnalité
+payante** dont la surface visible est cassée dans 4 des 5 langues du produit, la
+logique de correction existe déjà et est testée, et le coût est d'un fichier pur
+plus deux points d'appel.
+
+**Effort : petit.** Aucune migration, aucun e-mail, aucune écriture en prod.
+Extraction de la logique de nommage de `getLocalizedDisease` vers le module pur
+`lib/disease-data.ts` (0 import, donc client-safe), délégation depuis
+`lib/outbreaks.ts` pour que le point de décision reste unique, puis lecture depuis
+le composant. La valeur envoyée à l'API reste `disease_en` — c'est la clé
+métier de `user_alert_diseases`, elle ne doit pas bouger.
+
+**Risque :** faible. Le seul piège est de traduire la *valeur* et pas seulement le
+*libellé*, ce qui casserait les abonnements existants. Séparation explicite
+`value={disease_en}` / `label=localisé`.
+
+### 2. 🔴 `sync-africa-cdc` est en erreur ce matin, et sa boucle d'articles peut à elle seule dépasser le `maxDuration` de la fonction — 120 s de fetchs pour une limite de 60 s
+
+**Constat, relevé dans les heartbeats de prod (`site_config`, `cron:run:*`) :**
+
+```
+sync-africa-cdc | status=error | run 09:10 UTC ce jour
+                | error: The operation was aborted due to timeout (2 tentative(s))
+                | lastNonZero = 2026-08-11  → 23,3 jours sans une seule ligne écrite
+```
+
+C'est la **cause** du constat posé hier soir (entrée du 02/09, idée 1) : « Africa
+CDC est annoncée comme l'une des quatre sources du produit sur toute la surface
+publique et n'alimente aucune des 128 lignes actives ». Hier a été construit le
+détecteur (sonde `data-quality` 4n, commit `bb2a707b`) ; il flague bien Africa CDC.
+Aujourd'hui on tient le pourquoi.
+
+**Deux défauts distincts, à ne pas confondre.**
+
+**(a) La boucle d'articles n'a aucun garde-fou de budget.** `runAfricaCdc` lit le
+flux RSS puis, pour **chaque** item, va chercher la page d'article complète —
+`AbortSignal.timeout(12_000)`, ligne 247. `parseRSSFeed` ne plafonne pas le nombre
+d'items (seul un filtre d'âge à 45 jours s'applique) ; le flux en sert **10**
+aujourd'hui. Pire cas : **10 × 12 s = 120 s** de fetchs seuls, contre
+`maxDuration = 60`. Quand Vercel tue la fonction à 60 s, `logCronRun` n'est jamais
+atteint : **aucun heartbeat n'est écrit du tout**, et le cron ne se lit pas comme
+« en panne » mais comme « n'a pas tourné ». Même défaut structurel exactement que
+`sync-who-regional` (corrigé le 02/09, `5a235b75`) et `data-quality` (idem,
+`40798edd`) — ce troisième cas n'avait pas été identifié ces soirs-là.
+
+**(b) Le timeout du fetch RSS a été raccourci de 15 s à 8 s hier soir, sans mesure —
+et le premier run sous ce réglage échoue sur un timeout.** Le commentaire du code
+dit pourquoi : « capped at 2 attempts / 8s each … the per-article loop below has no
+time-budget guard of its own against maxDuration=60, so the retry can't eat much of
+it ». Le raccourcissement était donc une **compensation** du défaut (a).
+
+**Latence réelle mesurée aujourd'hui avant d'écrire quoi que ce soit**, 10 appels
+consécutifs sur `https://africacdc.org/news-item/feed/` avec l'en-tête exact du
+cron :
+
+```
+min 663 ms | médiane 680 ms | max 1 744 ms | 0 échec sur 10 | 87 206 o, 10 <item>
+```
+
+**Ce que je ne prétends pas.** Ces mesures viennent de la machine de David, pas du
+réseau de Vercel. Elles ne prouvent pas que 8 s a causé l'échec de ce matin : deux
+tentatives ont dépassé 8 s à une seconde d'intervalle, ce qui ressemble davantage à
+une indisponibilité réelle ou à un filtrage d'IP côté Africa CDC qu'à de la latence
+ordinaire — et dans ce cas 15 s n'aurait rien changé non plus. Ce qu'elles
+établissent, c'est que **8 s n'a été choisi ni sur une mesure ni sur une contrainte
+de la source**, mais pour tenir dans un budget que (a) rend indéterminé. C'est
+littéralement la leçon tirée le 02/09 même du faux `aphis_unreachable` (`6ba10a5a`)
+— « pas de raccourcissement de timeout sans avoir mesuré la latence réelle de la
+source » — appliquée à l'envers deux heures plus tard, dans le même rollout.
+
+**Effort : petit/moyen.** Le patron du garde-fou de budget existe déjà, écrit deux
+fois cette semaine dans ce dépôt. Un seul fichier. Aucune migration, aucun e-mail,
+aucune écriture en prod hors ce que le cron écrit déjà de lui-même.
+
+**Risque :** un run partiel écrit moins de lignes qu'un run complet. C'est le
+compromis déjà accepté deux fois : mieux vaut ce qui a été traité, journalisé et
+persisté, que le rien d'un hard-kill. Les items non traités reviennent au run
+suivant, le flux les sert 45 jours.
