@@ -3994,3 +3994,89 @@ Toutes en réponse dans le fil d'origine (`replyToMessageId`), objet « Re: … 
 - **Le lot du 24/08 comptait 11 contacts, pas 10.** Le tableau de la section du 24/08 en liste 10 ; le remplacement ADELF (`adelf.ftb@gmail.com`), créé le matin même et parti dans le même envoi de 12:14:50, n'y figure pas. Il est bien traité ici (relance n° 10). **À garder en tête pour les lots suivants : un remplacement de bounce créé le jour J part avec le lot et arrive à J+10 avec lui**, sans apparaître dans le tableau du lot.
 - **Un seul déclenchement de la routine aujourd'hui**, comme le 02/09. Le doublon du 01/09 ne s'est pas reproduit sur deux jours consécutifs.
 - **⚠️ Fichiers modifiés non touchés par cette routine, laissés tels quels** (règle `AGENTS.md`) : `marketing/qa/product-claims.manual.json` (modifié), `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis). Inchangés depuis le signalement du 02/09 — 2e run consécutif à les voir en attente.
+
+### 2026-09-03 — 16/20 trouvés (run automatique `daily-institutional-prospecting-healthwatch`, 1er lot au volume remonté à 20)
+
+**Objectif non atteint : 16 contacts nets vérifiables sur 20 visés.** Pas de remplissage : ~95 URL testées en lecture directe (curl, User-Agent navigateur), le vivier restant est nettement plus pauvre qu'aux runs précédents — 509 adresses déjà journalisées couvrent l'essentiel des institutions qui publient une adresse en clair. Détail des échecs plus bas.
+
+**Frein de file — non déclenché.** `list_drafts` appelé **deux fois** en début de run (vues `METADATA_ONLY` puis `FULL`) : **0 brouillon** les deux fois. Le brouillon CAPRISA laissé en file hier a été **envoyé par David le 02/09 à 13:19:03 UTC**, soit ~2 min après sa création en session interactive où David était présent et donnait ses instructions — profil « relecture humaine », pas le bug d'envoi instantané du connecteur (tableau de discrimination du 16/08). Aucun bounce sur CAPRISA (balayage `mailer-daemon`/`postmaster`/`Delivery Status Notification`/`Address not found`, `after:2026/09/02`, corbeille incluse : **1 seul fil**, celui de PNG d'hier, déjà traité).
+
+#### Contacts retenus
+
+| Institution | Pays/Région | Segment | Contact | Email | Source (lue en direct, HTTP 200) | Vérifié | Brouillon Gmail |
+|---|---|---|---|---|---|---|---|
+| APHRC — African Population and Health Research Center | Kenya / AFRO | Académique | — (générique siège) | `info@aphrc.org` | aphrc.org/contact-us | Oui | oui — `r8359552183608146780` |
+| Tulane SPHTM — Dept. of Tropical Medicine and Infectious Disease | États-Unis / AMRO | Académique | — (générique département) | `tropmed@tulane.edu` | sph.tulane.edu/contact-us | Oui | oui — `r-2356111447728313360` |
+| UNC Gillings — Department of Epidemiology | États-Unis / AMRO | Académique | — (générique département) | `epidemiology@unc.edu` | sph.unc.edu/epid/epidemiology-landing | Oui | oui — `r-4503196182932079460` |
+| UC Berkeley SPH — Division of Epidemiology | États-Unis / AMRO | Académique | — (générique division) | `epi_div@berkeley.edu` | publichealth.berkeley.edu/about/contact | Oui | oui — `r-6545557473213842265` |
+| University of Washington — Department of Global Health | États-Unis / AMRO | Académique | — (bureau du chair, boîte de fonction) | `dgh-chair@uw.edu` | globalhealth.washington.edu/contact | Oui | oui — `r5058745240120621508` |
+| AIGHD — Amsterdam Institute for Global Health and Development | Pays-Bas / EURO | Académique | — (générique institut) | `aighd-info@amsterdamumc.nl` | aighd.org/contact | Oui | oui — `r-596005246174406700` |
+| ISPM — Institute of Social and Preventive Medicine, Universität Bern | Suisse / EURO | Académique | — (générique institut) | `info.ispm@unibe.ch` | ispm.unibe.ch/about_us/contact | Oui | oui — `r-1476795693810404310` |
+| University of Glasgow — School of Health and Wellbeing | Royaume-Uni / EURO | Académique | — (administration de l'école) | `shw-admin@glasgow.ac.uk` | gla.ac.uk/schools/healthwellbeing/contact | Oui | oui — `r-2398265807653121497` |
+| CIDRZ — Centre for Infectious Disease Research in Zambia | Zambie / AFRO | Académique/recherche | — (générique centre) | `info@cidrz.org` | cidrz.org | Oui | oui — `r2302003627102752698` |
+| OMS — bureau pays Ouzbékistan | Ouzbékistan / EURO | Gouvernement/OMS | — (générique bureau) | `eurowhouzb@who.int` | who.int/uzbekistan/about-us | Oui | oui — `r8990608860652654691` |
+| OMS — bureau pays Kirghizistan | Kirghizistan / EURO | Gouvernement/OMS | — (générique bureau) | `eukgz@who.int` | who.int/kyrgyzstan/about-us | Oui | oui — `r-4830895879047193917` |
+| OMS — bureau pays Sri Lanka | Sri Lanka / SEARO | Gouvernement/OMS | — (registre du bureau) | `sesrlregistry@who.int` | who.int/srilanka/about-us | Oui | oui — `r412826687637853437` |
+| OMS — bureau pays Malaisie | Malaisie / WPRO | Gouvernement/OMS | — (générique bureau) | `wpmyswr@who.int` | who.int/malaysia/about-us | Oui | oui — `r-7232592220745910444` |
+| eHealth Africa | Nigeria / AFRO | ONG | — (générique) | `info@ehealthafrica.org` | ehealthafrica.org/contact | Oui | oui — `r-3195456814521817602` |
+| Living Goods | Kenya-Ouganda / AFRO | ONG | — (générique) | `info@livinggoods.org` | livinggoods.org/contact-us | Oui | oui — `r-8619346319876008290` |
+| Medic (Community Health Toolkit) | Kenya/États-Unis / global | ONG | — (générique) | `hello@medic.org` | medic.org/contact | Oui | oui — `r-6816372047130622557` |
+
+#### Anti-doublon — grep par domaine ET par organisation, contact par contact
+
+Consigne du 23/08 appliquée. `grep -ic` sur `institutional-prospects-log.md`, plus `linkedin-contacts.md`.
+
+**Domaine → 0 occurrence pour les 12 domaines hors OMS, sans exception** : `aphrc.org`, `tulane.edu`, `unc.edu`, `berkeley.edu`, `uw.edu`, `amsterdamumc.nl`, `unibe.ch`, `glasgow.ac.uk`, `ehealthafrica.org`, `livinggoods.org`, `medic.org`, `cidrz.org`. Boîtes OMS : `eurowhouzb` → 0, `eukgz` → 0, `sesrlregistry` → 0, `wpmyswr` → 0 (les 16 adresses `@who.int` déjà au journal sont toutes distinctes).
+
+**Organisation → 0 occurrence** : APHRC, Gillings, Berkeley, University of Washington, AIGHD, Amsterdam, Glasgow, eHealth Africa, Living Goods, CIDRZ, Uzbekistan, Kyrgyz.
+
+**Occurrences non nulles, toutes levées après inspection ligne à ligne :**
+- **Tulane → 1** (l. 576). **Ce n'est pas un doublon mais un ré-examen assumé.** Le run du 11/08 avait vu Tulane et l'avait écartée : « uniquement admissions et une administratrice de département ; États-Unis par ailleurs couvert 10 fois ». Ce constat était exact pour la page consultée alors, mais `tropmed@tulane.edu` est la boîte du **Department of Tropical Medicine and Infectious Disease**, publiée sur la même page contact officielle — soit exactement l'« unité opérationnelle nommée » que l'Étape 3 demande de préférer. Aucun email n'a jamais été envoyé à Tulane. Retenue.
+- **Bern → 1** : « Bernhard Nocht Institute » (l. 122), sans rapport avec l'ISPM de l'Université de Berne.
+- **Medic → 92**, **Muso → 2**, **Zambia → 3**, **Sri Lanka → 11**, **Malaysia → 10**, **Global Health → 20** : sous-chaînes (« Medical », « Medicine », « Musole », noms de pays déjà cités). Le grep par domaine, lui, est à 0 dans tous ces cas — c'est le contrôle qui tranche.
+- **Glasgow → 2 dans `linkedin-contacts.md`** : (1) un *Professor of Medical Entomology* de l'University of Glasgow, en statut **« suivi »** — un suivi LinkedIn n'est pas une conversation active, et le contact retenu ici est une boîte administrative d'école, pas cette personne ; (2) **Glasgow Caledonian University**, université distincte. Aucune exclusion.
+- **`ehealth` → 1 dans `linkedin-contacts.md`** : sous-chaîne dans un profil sans lien avec eHealth Africa.
+
+**❌ Muso (Mali) écarté — c'est le grep qui l'a rattrapé.** `partnerships@musohealth.org` avait passé lecture directe et MX, et allait être retenu comme 17e contact. Le grep « Muso » sur le journal a fait remonter la l. 530 : le **run du 10/08 avait déjà examiné Muso et l'avait rejeté sur exactement cette adresse** — « uniquement `partnerships@`, boîte philanthropie ». Rejet documenté et toujours valide (c'est encore la seule adresse publiée) : ne pas le contredire sans motif neuf. Lot ramené de 17 à 16.
+
+#### Contrôle MX (règle du 01/09)
+
+MX valides pour les 13 domaines : `aphrc.org` (Google), `tulane.edu` / `unc.edu` / `livinggoods.org` / `musohealth.org` / `who.int` / `amsterdamumc.nl` (Microsoft), `berkeley.edu` / `ehealthafrica.org` / `medic.org` (Google), `uw.edu` (Proofpoint), `unibe.ch` (mailhub-lb.unibe.ch), `glasgow.ac.uk` (cent.gla.ac.uk), `cidrz.org` (mx1/mx2.cidrz.org).
+
+**Rappel de la limite établie hier : « MX ✅ » n'est pas « adresse délivrable ✅ ».** Le contrôle écarte la classe « domaine mort » (Antigua, 01/09), pas la classe « adresse périmée sur un domaine vivant » (PNG, 02/09). Seul l'envoi la révèle.
+
+#### Équilibre du lot — deux déséquilibres à signaler
+
+**Segments : 9 académique / 4 gouvernement-OMS / 3 ONG.** Le segment académique est surreprésenté. Ce n'est pas un choix mais le résultat du terrain : les départements universitaires publient encore des boîtes de fonction, les ministères non (0 retenu sur 18 ministères testés ce run).
+
+**Régions : AFRO 4, AMRO 4, EURO 5, SEARO 1, WPRO 1, global 1 — EMRO à zéro.** Cibles EMRO testées et perdues : Birzeit ICPH Palestine (403 Cloudflare sur `/contact` et sur la racine), Health Services Academy Pakistan (200, aucune adresse), Université de Khartoum (200, aucune adresse), SPH Téhéran (307), Ministère de la Santé Liban (page servie mais titre « Our Vision / Mission » — soft-404), Dubai Health Authority (404), Université de Jordanie (404), Ministère de la Santé Irak (passerelle de sécurité). L'EMRO est par ailleurs déjà bien couvert au journal (Égypte, Golfe, Jordanie, Oman, Liban, Iran, Libye, Maroc, Tunisie, Algérie, Afghanistan, Pakistan, Somalie).
+
+**⚠️ 4 contacts américains sur 16, sur un pays que le run du 11/08 signalait déjà « couvert 10 fois ».** Le plafond de concentration par organisation faîtière (4 sur 20) n'est **pas** franchi — Tulane, UNC, Berkeley et UW sont quatre universités distinctes, et le plafond porte sur l'employeur, pas sur le pays. Mais la consigne « varie la géographie » est tendue ici. Choix assumé : ces quatre-là sont des **unités opérationnelles nommées** (Tropical Medicine, Epidemiology ×2, Global Health) avec boîte de fonction vérifiée, là où la plupart des cibles non américaines testées ce run n'ont rien publié. **À arbitrer par David** s'il préfère en différer une ou deux.
+
+**Plafond OMS : exactement 4 sur 16, non franchi.** Bureaux disponibles et non retenus faute de place sous le plafond, à reprendre à un prochain run : Azerbaïdjan `eurowhoaze@who.int`, Tadjikistan `eurowhotjk@who.int`, Turkménistan `eurowhotkm@who.int`, Kazakhstan `eurowhokaz@who.int`, Géorgie `eurowhogeo@who.int`, Arménie `eurowhoarm@who.int`, Thaïlande `setharegistry@who.int`, Philippines `wpphlwr@who.int`, Laos `wplaowr@who.int`, Indonésie `wpwhoindonesia@who.int` — toutes lues en direct sur `who.int` en HTTP 200 ce run, toutes en `@who.int`, aucune déjà au journal. **Vivier immédiatement mobilisable pour les prochains lots.**
+
+#### Non retenus faute d'email vérifiable sur source officielle (run du 03/09)
+
+- **Adresse masquée sur la page officielle** (`[email protected]`, page pourtant lisible) : **Sightsavers** (10 adresses régionales, toutes masquées), **Cordaid** (12 adresses, toutes masquées). Traitées comme non vérifiées — même critère que l'index moteur seul.
+- **Page lisible, aucune adresse publiée (formulaire ou téléphone seul)** : IHME (200, titre réel, formulaire), Direct Relief, Columbia Mailman, McGill (épidémiologie/biostatistique), Première Urgence, Terre des hommes (Lausanne **et** Genève), FIND, The Global Fund, The Union (ne publie qu'un `email@email.com` de gabarit), PSI, Orbis, GAIN, arche noVa, The Leprosy Mission, SOS Villages d'Enfants, NUS SPH, PNIPH Palestine, ACTED, Fudan SPH, Université de Khartoum, Health Services Academy Pakistan, Ministère de la Santé Guyana, Department of Health Abu Dhabi, MINSA Nicaragua, ISP Chili.
+- **403 / anti-bot / Cloudflare** : EODY Grèce (403 **même avec User-Agent navigateur**), Americares, WaterAid, HealthNet TPO (« Bot Verification »), Institute of Public Health Irlande, GWU Milken, U-M SPH, Butantan, Ministère de la Santé Israël, Birzeit ICPH, Facultad Nacional de Salud Pública Antioquia (403, 2e échec après le 02/09).
+- **Soft-404 servi en 200** (piège du 18/08, vérifié au `<title>`) : **Thailand DDC** (`ddc.moph.go.th/en/contact.php` → 200 mais titre « Home », aucune adresse — **5e échec consécutif sur la Thaïlande côté gouvernemental**), **Ministère de la Santé Liban** (titre « Our Vision / Mission »), **pages pays EMRO** (`emro.who.int/{iraq,somalia,sudan,pak}/contact/` → 200 mais titre « WHO EMRO - 404 Error »), **Ministère de la Santé Turquie** (« Sayfa Bulunmadı »).
+- **Connexion impossible / TLS / 5xx** : MoHSS Namibie (HTTP 000 en https **et** en http — `public.relations@mhss.gov.na` n'existe que sur Devex et un annuaire tiers, **écartée par la règle du 18/08**), ministères Salvador, Honduras, Trinité-et-Tobago, Koweït, Qatar, Maldives, NCHS Jordanie, Health Systems Trust Afrique du Sud, IRSS Burkina (500), Instituto Adolfo Lutz, CBM, Handicap International, Croissant-Rouge du Qatar, AAR Japan, Caritas Internationalis (520), CUHK SPH, ISPM Zurich, MRC India.
+- **Boîte hors périmètre uniquement** : **Clinton Health Access Initiative** (`development@`, levée de fonds), **Aurum Institute** (`communications@`, site en maintenance), **UMN SPH** (`sphcomm@`/`sphnews@`, communication), **University of Arizona** (admissions, aide informatique, vie étudiante), **DanChurchAid** (adresse relevée sur une page 404), **Plan International** (seules `Safeguarding.Unit@` et `childprotection@`, hors sujet).
+- **Boîte nominative de titulaire de poste, sans adresse fonctionnelle pour ce poste** (règle du 19/08) : **Yale School of Public Health** — la page contact officielle publie 129 adresses, mais les centres y sont représentés par leur directeur nommé (le Center for Infectious Disease Modeling and Analysis n'a que l'adresse personnelle de sa directrice). Écartée.
+- **Doublon de domaine détecté au grep, pas à la lecture** : **CORDS (Connecting Organisations for Regional Disease Surveillance)** — cible idéalement adaptée, page contact lisible, mais l'unique adresse publiée est `cords@endingpandemics.org` et **`endingpandemics.org` est déjà au journal**. CORDS est hébergée par Ending Pandemics. Écartée. *(Cas exactement analogue à HZJZ Croatie du 22/08 : même organisation atteinte par une autre boîte — c'est le grep par domaine, pas la lecture par nom, qui l'attrape.)*
+
+#### ⚠️ Signalement — 10 brouillons d'une AUTRE routine contiennent un lien cliquable
+
+Non touchés, signalés seulement (règle `AGENTS.md`). `list_drafts` en fin de run rend **26 brouillons** : mes 16, plus **10 brouillons « Re: » créés à 06:24:19–06:25:03 UTC**, soit **après** mes deux appels `list_drafts` de début de run — ce sont des relances de `daily-relance-check-healthwatch`, qui a tourné en parallèle. Destinataires : RSTMH, DGEpi, ABRASCO, SFSP, INLASA Bolivie, NCCD Mongolie, OCEAC, KNUST, CUHK, ADELF.
+
+**Les 10 portent `<a href="https://healthwatch-global.com/en" target="_blank">healthwatch-global</a>`** — un lien cliquable **et** un domaine avec un `.` littéral, les deux interdits par le garde-fou du 02/08 (Gmail réécrit systématiquement ce lien en redirection `google.com/url?q=...`, confirmé en DOM réel). Mes 16 brouillons n'en portent aucun (vérifié brouillon par brouillon : `href=` → 0, `https://` → 0, `healthwatch-global.` → 0). **Rien corrigé de mon côté** : ces brouillons appartiennent à l'autre routine et David les relit avant envoi. À trancher par lui ou par un run de cette routine-là.
+
+#### Compteurs
+
+- **Lot du jour : 16 préparés / 20 visés.** Aucun envoi, aucun bounce (rien n'est parti).
+- **Prospectés / envoyés cumulés depuis le 2026-08-02 : 328** (327 au 02/09 + CAPRISA, parti le 02/09 à 13:19 UTC). Les 16 d'aujourd'hui ne s'y ajouteront qu'à l'envoi.
+- **Profondeur de file en fin de run : 26 brouillons** — mes 16 + 10 relances de `daily-relance-check-healthwatch`. Sous le seuil de ~40 ; le prochain run devra recompter via `list_drafts`, pas relire ce chiffre.
+- **⚠️ Cadence à surveiller (consigne du 02/09)** : premier lot au volume remonté à 20. Si ces 16 sont encore en brouillon dans 24-48 h, c'est le symptôme du 04-05/08 et la cadence doit redescendre à 10 — pas insister.
+- **Relance J+10** : le lot du 03/09 deviendra éligible le **13/09**, sur le nombre effectivement envoyé.
+- **⚠️ Fichiers modifiés non touchés par cette routine, laissés tels quels** (règle `AGENTS.md`) : `marketing/qa/product-claims.manual.json` (modifié), `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis).
