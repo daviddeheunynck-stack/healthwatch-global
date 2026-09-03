@@ -1,6 +1,75 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
+## 📅 Session linkedin-hwg-followup-check-2 — 03/09/2026 (18h, reprise interactive sur demande de David « remplis les quotas ») — ✅ **1 note de connexion publiée, 1 invitation acceptée, 1 DM en file de validation**
+
+**Contexte** : suite directe du run de 17h. David a demandé de reprendre les quotas restants (commentaires 1/7, notes de connexion 0/7, suivis 9/10). Session interactive, David présent — tout DM nouveau (hors ceux déjà validés par lui) passe donc en file, conformément à la politique commune §5.
+
+### 1️⃣ ✅ NOTE DE CONNEXION — Seynudé Jean-Fortune DAGNON, MD, MPH — ENVOYÉE, 8 jets
+
+`/in/seynudé-jean-fortune-dagnon-md-mph-seynudedagnon-com-093a5a2a/`, *Malaria Senior Program Officer, Francophone Africa at Bill & Melinda Gates Foundation*, Nigéria, déjà suivi depuis le 03/09 matin (jamais tracké avant), jamais connecté. Hook : sa tribune publiée il y a 1 j sur Le Soleil (Sénégal), « De la lutte à l'élimination : pourquoi l'Afrique francophone doit adapter sa riposte au paludisme », plaidoyer pour l'« adaptation infranationale » (données de granularité district/village plutôt que stratégies nationales standardisées).
+
+**Itération inhabituellement longue (8 jets), chaque jet corrigeant un défaut réel et différent, jamais le même deux fois** :
+1. Fond validé, mais pas assez ancré dans la tribune précise (relecteur, point 11).
+2. « village par village, dites-vous » — **citation fabriquée** : il n'a jamais écrit ça, sa phrase d'ouverture réelle est « élimination délibérée, région par région » (relecteur, point 5, citation à l'appui).
+3. « région par région, dites-vous, alors que je tiens HealthWatch Global au niveau pays » — citation cette fois fidèle, mais ouverture « votre X m'a marqué » identifiée comme **gabarit rhétorique recyclé** (relecteur a grep le corpus : 6 occurrences ailleurs).
+4. Structure changée, angle pivoté du paludisme vers le format général des bulletins — mais « la variation infranationale... y est invisible » est une **généralisation trompeuse** : `admin1` n'est pas absent, il est rare (le relecteur a retrouvé en base 11 lignes sur 110 = 1/10, déjà utilisé dans un DM validé à Michel Eyenga).
+5. « neuf fois sur dix » — chiffre corrigé, contrôle mécanique et relecteur PASS sur les 3 points revérifiés.
+
+**Avant envoi, vérification fraîche du chiffre en base** (pas seulement recopié de l'archive) : requête directe Supabase, `SELECT admin1 FROM outbreaks WHERE active = true` → **115/129 lignes actives sans `admin1` réel (89%)**, cohérent avec le « 9/10 » retenu.
+
+**🔒 Texte final, envoyé (189/200 caractères) :**
+
+> Bonjour Seynudé, votre tribune éclaire un angle mort du mien : mes bulletins s'arrêtent au pays neuf fois sur dix, sans la variation infranationale que vous décrivez. Au plaisir d'échanger.
+
+**Publication confirmée** : bouton passé de « Se connecter » à « En attente », toast « invitation envoyée à Seynudé Jean-Fortune ». **Quota notes de connexion : 1/7.**
+
+`QA : mécanique PASS (0 blocker au jet final) | relecteur, 3 passes ciblées sur les points en échec successifs, verdict final ENVOYER, tous les points PASS | fait produit vérifié fraîchement en base (89% sans admin1) | registre du 03/09 (17:10, aucun chiffre épidémiologique cité) | statut : publié le 03/09 à ~18h30`
+
+🏷️HORS-ROUTINE : ce volume d'itération (8 jets) pour une seule note de connexion illustre bien la règle « corriger tant qu'un défaut réel et différent apparaît » — chaque rejet portait sur un point distinct et vérifiable (citation fausse, gabarit recyclé, généralisation trompeuse), jamais une redite. Cohérent avec l'observation déjà faite ce jour sur les DM Schlitt/Julien Tuba (8 jets chacun).
+
+### 2️⃣ ✅ INVITATION ACCEPTÉE — Yuda Sule Paschal
+
+`/in/yuda-sule-paschal-8a0490257/`, *Global Health Leader Enthusiast || One Health Leadership*, 39 relations en commun dont Kevin S., PhD. Décision prise au run de 17h (activité vérifiée : écosystème One Health tanzanien réel, World One Health Congress, Tanzania Health Summit). Bouton « Accepter » cliqué, confirmé : « Yuda fait désormais partie de vos relations. » **Ne compte pas dans le quota de suivis** (acceptation d'une invitation reçue, pas un suivi actif) — abonnés et relations à revérifier au prochain run.
+
+**Les 2 autres invitations reçues, inchangées** : Zachariah G. Houdari et OLAOLUWA PHILIP, décisions du 31/08 maintenues, aucun élément neuf.
+
+### 3️⃣ 🔒 DM EN FILE DE VALIDATION — James Schlitt, PhD, MPH, réponse technique en fil actif
+
+Il a répondu à 18h15 avec un message substantiel (comparaison des sources COVID divergentes JHU/NIH/BOP/Tencent, méthode de détection statistique par chi carré et test de monotonicité, tie-breakers par médiane/mode). Fil relu en entier depuis le tout premier message. *langue du fil = en ; langue du brouillon = en.*
+
+**🔒 Texte prêt, en file de validation — jamais envoyé par la routine :**
+
+> The stall point lands, and I already run into a version of it: a row that stops updating produces no test statistic, because there is no second observation to compare against, and no dissenting count either. Your tie breakers need at least two live values the same day. I mostly never have more than one accepted write to reconcile.
+>
+> Your France case would show up on my side as whichever single source I happened to be reading that week, with the daily snapshot recording that one number's trajectory but nothing about JHU, NIH or Tencent ever disagreeing with it. Is silent disagreement, the other estimates existing but never reaching you, a failure mode your framework tracks, or only disagreement you can actually see and test?
+
+**Trois affirmations produit vérifiées dans le code avant validation** : (1) absence de test statistique sur un flux muet — confirmé, `lib/outbreak-guards.ts` ne compare jamais qu'une écriture entrante à l'existant, aucun mécanisme ne se déclenche si aucune écriture n'arrive ; (2) une seule valeur active par ligne, jamais de table de valeurs concurrentes — confirmé, `lib/outbreaks.ts` ; (3) un snapshot quotidien existe réellement — confirmé, `lib/outbreak-trend.ts` et `app/api/outbreak-history/route.ts` (table `outbreak_snapshots`).
+
+`QA : mécanique PASS (seul finding : context.too-soon « 0 j », faux positif documenté pour une réponse en fil actif dans l'heure) | relecteur VERDICT: ENVOYER, 12/12 PASS, 3 affirmations produit vérifiées contre le code | faits cités : aucun chiffre | registre du 03/09 (17:10) | statut : en file de validation, jamais envoyé par la routine — session interactive, David présent, DM nouveau non couvert par une validation antérieure`
+
+### 4️⃣ ❌ COMMENTAIRE EBOLA/RDC — CANDIDAT INSTRUIT, NON PUBLIÉ
+
+Post Africa CDC du briefing (`urn:li:ugcPost:7500903964570312704`) revérifié : toujours 3 commentaires, tous de Tambe Elvis Akem (bloqué en commentaire jusqu'au 05/09), aucun chiffre exploitable dans le texte du post (tout est dans la rediffusion vidéo de 1h05, non exploitable par cette session). Son dashboard (lien qu'il a posté en commentaire, `immunization-for-resilience.shinyapps.io`) affiche 6 250 cas / 3 039 décès au 01/09, sourcé DRC MoH SitRep N°110 — **plus frais que la ligne HWG actuelle (6 186/3 007 au 31/08, source ECDC, écrite ce matin même à 09h05)**, mais c'est une **reprise secondaire** (compilation par un tiers), pas la lecture directe du sitrep — donc **non écrit en base par cette session**, signalé ci-dessous pour `morning-don-check`. Aucun angle honnête et neuf trouvé pour un commentaire indépendant de ces contraintes (chiffres indisponibles en texte, meilleure source déjà bloquée en commentaire, famille d'arguments du jour épuisée). **Quota commentaires inchangé : 1/7.** Motif assumé, recherche menée, pas de candidat forcé.
+
+### 5️⃣ 🔬 SIGNAL POUR MORNING-DON-CHECK — Ebola/RDC, source plus fraîche repérée, non ingérée
+
+DRC MoH SitRep N°110 (1er septembre 2026) donnerait 6 250 cas confirmés / 3 039 décès confirmés (CFR 48,6 %), contre les 6 186/3 007 actuellement en base (source ECDC, arrêté au 31/08). Repéré via une compilation tierce (`immunization-for-resilience.shinyapps.io/ebola-bvd-outbreak-2026/`, Dr. Tambe Elvis Akem), **pas lu directement dans le sitrep primaire** — à vérifier contre le PDF du SitRep 110 avant toute écriture. Le dashboard indique aussi : « No new health zone across SitReps 105-110 ; the total holds at 60 of 151 » — signal de plateau de zones touchées, à confirmer également sur pièce.
+
+### 6️⃣ 🔁 CARRY-OVER POUR LE CRÉNEAU DE 9h (04/09)
+
+1. 🔒 **DM James Schlitt en attente de validation de David.** Texte complet section 3.
+2. 🔬 **Source Ebola/RDC plus fraîche à vérifier** (section 5) : SitRep DRC MoH N°110 du 01/09, potentiellement 6 250/3 039, à lire dans le PDF primaire avant toute écriture.
+3. 🗓️ **Événement Africa CDC briefing** : fenêtre 48h expire demain matin, aucun commentaire publié, aucun angle honnête trouvé sans les chiffres de la vidéo. À laisser sortir de la fenêtre si rien de neuf n'apparaît demain matin.
+4. **Quotas du jour à la clôture de cette session** : commentaires 1/7, notes de connexion 1/7, suivis 9/10 (+ 1 invitation acceptée hors quota), DM à froid 1/8.
+5. **Inchangés du run de 17h** : John Omari Baso (rien depuis 11h36, un mot bref légitime demain), Dr. Malachie MANAOUDA (pas avant le 05/09), Gail Carson (activité = républications seules, aucun hook honnête — dossier clos, ne pas rouvrir sans élément neuf), Jacques Delors TOUMANSIE MFONKOU et Ofelia CAZACU (suivis, épisode 2 à surveiller), Catherine Linard (toujours non évaluée), Dr. Siaka Condé (pas avant le 05/09).
+
+### 7️⃣ 🔧 ARBRE DE TRAVAIL
+
+Fichiers modifiés par cette session : `marketing/linkedin-contacts.md`, `marketing/content-log.md`. Fichiers non touchés (`AGENTS.md`) : `marketing/qa/product-claims.manual.json`, `scripts/audit-alert-day.mjs`, `scripts/probe-alert-lock.mjs`. `marketing/qa/*.json` régénérés, non suivis. **Branche : master.**
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check-2 — 03/09/2026 (17h) — ✅ **2 DM ENVOYÉS (SOUAD BELKACEMI 17h15, James Schlitt 17h41 après double-check demandé par David)**
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` du 03/09 dans ce fichier ni dans `content-log.md` à l'ouverture (les plus récentes étaient `linkedin-hwg-monitoring` 9h, `linkedin-hwg-followup-check` 13h, et la reprise interactive de 16h31) → **premier déclenchement de cette routine aujourd'hui**. Les créneaux 13h et 17h sont deux runs intentionnellement distincts, pas un double déclenchement. Horloge machine à l'heure (`Thu Sep 3 17:10 2026`). Branche : **master**. Registre de faits régénéré à 17:10 (220 faits, 106 lignes affichées, 14 périmés — identique au run de 13h).

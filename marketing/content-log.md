@@ -2,6 +2,28 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session linkedin-hwg-followup-check-2 — 03/09/2026 (18h, reprise interactive « remplis les quotas ») — 1 note de connexion publiée, 0 commentaire (aucun candidat honnête trouvé), signal Ebola/RDC pour morning-don-check
+
+Détail des DM/notes/suivis dans `linkedin-contacts.md`, entrée du jour. Cette entrée se limite à la veille et au signal produit.
+
+### 🔬 Signal épidémiologique repéré — Ebola/RDC, source potentiellement plus fraîche que la ligne HWG actuelle
+
+Sous le post Africa CDC du briefing hebdomadaire (`urn:li:ugcPost:7500903964570312704`), **Dr. Tambe Elvis Akem** (Medical Field Epidemiologist, bloqué en commentaire jusqu'au 05/09) a posté le lien d'un tableau de bord de son groupe de recherche (**Immunization for Resilience**) : `immunization-for-resilience.shinyapps.io/ebola-bvd-outbreak-2026/`. Il affiche, daté du **1er septembre 2026** et sourcé **« DRC MoH SitRep N°110, 1 Sep 2026 »** :
+
+- **6 250 cas confirmés** (contre 6 186 actuellement en base)
+- **3 039 décès confirmés** (contre 3 007 actuellement en base)
+- CFR 48,6 % (identique à la valeur en base)
+- 60 zones de santé sur 151 touchées, **inchangé depuis le SitRep 105** (plateau de 6 rapports consécutifs)
+- Taux de suivi des contacts 89,0 %
+
+**La ligne HWG actuelle** (`outbreakId bd1c3a46-a921-49b7-b79e-10ad715c4c38`) porte 6 186/3 007, arrêtée au 31/08, source ECDC, **écrite ce matin même à 09h05** (`marketing/qa/claimable-facts.json`, `sourceConfirmedAt: 2026-09-03T09:05:07`). Les deux chiffres montent (pas de régression), et la date d'arrêt du SitRep 110 (01/09) est plus récente que celle de la ligne en base (31/08) — conforme à la règle §8 de comparer les dates d'arrêt, pas les dates de publication.
+
+**Pourquoi cette session n'écrit pas le chiffre elle-même** : le dashboard est une **reprise secondaire** (compilation par le groupe de recherche de Tambe Elvis Akem), pas le SitRep primaire lui-même — conforme à la règle du 19/08 (« une reprise secondaire n'est jamais une source, même institutionnelle, même récente »). **À vérifier avant toute écriture** : lire directement le SitRep N°110 du Ministère de la Santé de RDC (pas encore localisé par cette session), confirmer 6 250/3 039 sur pièce, puis mettre à jour la ligne si confirmé. Le plateau de zones de santé (60/151 stable depuis 6 rapports) est un signal qualitatif intéressant mais non actionnable sans le même travail de vérification.
+
+### ❌ Commentaire Ebola/RDC — candidat instruit, non publié, motif assumé
+
+Le post du briefing (fenêtre 48h, expire demain matin) reste sans commentaire HWG : 3 commentaires au total, tous de Tambe Elvis Akem (bloqué jusqu'au 05/09, donc pas de réponse possible sous ses commentaires à lui). Le texte du post lui-même ne porte aucun chiffre (tout est dans la rediffusion vidéo de 1h05, non exploitable par cette session). Aucun angle honnête trouvé qui ne s'appuie ni sur des chiffres non vérifiés, ni sur la famille d'arguments interdite du jour (5 candidats déjà perdus ce 03/09), ni sur le seul commentateur présent (bloqué). **Quota commentaires inchangé : 1/7.** Recherche menée, pas de candidat forcé, conformément à la politique de ne jamais publier un texte médiocre pour remplir un quota.
+
 ## 📅 Session linkedin-hwg-followup-check-2 — 03/09/2026 (17h) — ⚠️ **0 commentaire publié : la frappe est refusée par le classifieur, aucun texte sortant n'était possible** — 1 DM envoyé, support §16 enfin trouvé
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` datée du 03/09 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture → **premier déclenchement de cette routine aujourd'hui**. Les créneaux 13h et 17h sont deux runs intentionnellement distincts. Horloge machine à l'heure (`Thu Sep 3 17:10 2026`). Branche vérifiée : **master**.
