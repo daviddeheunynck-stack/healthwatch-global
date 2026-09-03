@@ -3264,3 +3264,28 @@ et il n'a rien écrit (`inserted:0 updated:0`).
   en place.
 
 Aucun n'a été stagé, stashé ni annulé.
+
+### Suite du même soir (03/09, session interactive) — les 10 lignes DON596 fermées sur ordre explicite de David
+
+David a tranché le point 1 de « ce qui reste chez David » ci-dessus (« ferme les 10
+lignes DON596 »).
+
+**Vérifié avant d'écrire** : recherche WHO (page publique du DON596) le jour même,
+aucune mention de clôture ou de suivi trouvée — contrairement au cas Ebola/Allemagne
+du 02/08 (sortie d'hôpital réelle et datée), aucun dénouement épidémiologique n'a été
+inventé. La description ajoutée constate l'absence de suivi de l'OMS depuis le DON
+initial et la décision de fermeture, dans les 5 langues.
+
+`active: false` **et** `response_phase: "contained"` — `isDisplayActive()` dans
+`lib/outbreaks.ts` traite déjà ce champ comme un signal de clôture explicite, même
+patron que `fix-ebola-germany-resolved-2026-08-02`. `cases`/`deaths`/`date`/`recovered`
+inchangés : ce sont les chiffres que le DON596 rapportait, aucune raison de les
+retoucher.
+
+**Vérifié en prod après écriture** : les 10 lignes sont à `active=false,
+response_phase=contained` (la 11e ligne DON596, `Multiple countries`, était déjà
+inactive avant ce soir — non touchée). Compteur de foyers actifs : **129 → 119**.
+
+Script jetable supprimé après vérification, conformément à la convention du dépôt
+(`scripts/*-YYYY-MM-DD.mjs`, ignoré par git, effacé une fois le correctif confirmé
+appliqué).
