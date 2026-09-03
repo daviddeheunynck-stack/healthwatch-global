@@ -397,7 +397,21 @@ async function runAfricaCdc(_req: NextRequest, supabase: SupabaseClient) {
     await logCronRun(supabase, "sync-africa-cdc", "error", 0, msg);
     return NextResponse.json({ error: msg }, { status: 502 });
   }
-  const rssXml = await res.text();
+  // Lecture du corps dans son propre try : AbortSignal.timeout couvre AUSSI le
+  // streaming du corps, pas seulement les en-têtes, donc text() peut lever
+  // après un fetch « réussi ». Avant le passage à fetchWithRetry (2026-09-02)
+  // cette lecture était couverte par le try du fetch et journalisée sous ce
+  // cron ; sans ça elle remonte au wrapper défensif du GET. Restauré 2026-09-03.
+  let rssXml: string;
+  try {
+    rssXml = await res.text();
+  } catch (e) {
+    const msg = `${errorMessage(e)} (lecture du corps)`;
+    console.error("[africa-cdc] read RSS body:", msg);
+    Sentry.captureException(e, { tags: { cron: "sync-africa-cdc" } });
+    await logCronRun(supabase, "sync-africa-cdc", "error", 0, msg);
+    return NextResponse.json({ error: msg }, { status: 502 });
+  }
 
   const items = parseRSSFeed(rssXml);
   console.log(`[africa-cdc] Found ${items.length} recent item(s) within ${MAX_AGE_DAYS} days`);

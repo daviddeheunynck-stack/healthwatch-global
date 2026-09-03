@@ -223,7 +223,18 @@ export async function GET(req: NextRequest) {
     await logCronRun(supabase, "sync-cdc-notices", "error", 0, msg);
     return NextResponse.json({ error: msg }, { status: 502 });
   }
-  const listHtml = await res.text();
+  // Lecture du corps dans son propre try — voir sync-africa-cdc, même cause :
+  // AbortSignal.timeout couvre aussi le streaming du corps. Restauré 2026-09-03.
+  let listHtml: string;
+  try {
+    listHtml = await res.text();
+  } catch (e) {
+    const msg = `${errorMessage(e)} (lecture du corps)`;
+    console.error("[cdc-notices] read listing body:", msg);
+    Sentry.captureException(e, { tags: { cron: "sync-cdc-notices" } });
+    await logCronRun(supabase, "sync-cdc-notices", "error", 0, msg);
+    return NextResponse.json({ error: msg }, { status: 502 });
+  }
 
   // ── 2. Parse notice links ─────────────────────────────────────────────────
   interface Notice { path: string; level: string; title: string }

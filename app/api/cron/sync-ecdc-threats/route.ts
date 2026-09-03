@@ -549,7 +549,18 @@ async function runEcdcThreats(_req: NextRequest, supabase: SupabaseClient) {
     await logCronRun(supabase, "sync-ecdc-threats", "error", 0, msg);
     return NextResponse.json({ error: msg }, { status: 502 });
   }
-  const rssXml = await res.text();
+  // Lecture du corps dans son propre try — voir sync-africa-cdc, même cause :
+  // AbortSignal.timeout couvre aussi le streaming du corps. Restauré 2026-09-03.
+  let rssXml: string;
+  try {
+    rssXml = await res.text();
+  } catch (e) {
+    const msg = `${errorMessage(e)} (lecture du corps)`;
+    console.error("[ecdc] read RSS body:", msg);
+    Sentry.captureException(e, { tags: { cron: "sync-ecdc-threats" } });
+    await logCronRun(supabase, "sync-ecdc-threats", "error", 0, msg);
+    return NextResponse.json({ error: msg }, { status: 502 });
+  }
 
   const entries = parseRSSFeed(rssXml);
   console.log(`[ecdc] Found ${entries.length} recent item(s) within ${MAX_AGE_DAYS} days`);

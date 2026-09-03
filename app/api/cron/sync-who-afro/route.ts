@@ -368,7 +368,19 @@ async function runSyncWhoAfro(_req: NextRequest, supabase: SupabaseClient) {
       await logCronRun(supabase, "sync-who-afro", "error", 0, msg);
       return NextResponse.json({ error: msg }, { status: 502 });
     }
-    pageEntries = extractOutbreakLinks(await res.text());
+    // Lecture du corps dans son propre try : AbortSignal.timeout couvre aussi
+    // le streaming du corps, donc text() peut lever après des en-têtes reçus.
+    // Avant fetchWithRetry (2026-09-02) cette lecture était couverte par le
+    // try du fetch, qui journalisait l'erreur sous ce cron précis ; sans ça
+    // elle remonte au wrapper défensif du GET. Restauré 2026-09-03.
+    try {
+      pageEntries = extractOutbreakLinks(await res.text());
+    } catch (e) {
+      const msg = errorMessage(e);
+      Sentry.captureException(e, { tags: { cron: "sync-who-afro" } });
+      await logCronRun(supabase, "sync-who-afro", "error", 0, msg);
+      return NextResponse.json({ error: msg }, { status: 502 });
+    }
   }
 
   console.log(`[who-afro] ${pageEntries.length} candidate articles`);

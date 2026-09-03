@@ -146,7 +146,19 @@ async function extractFromPdf(pdfUrl: string, num: number): Promise<{ data: Sitr
     console.log(`[drc-sitrep] PDF download → HTTP ${res.status} (${attemptsMade} tentative(s))`);
     return { data: null, text: null };
   }
-  const buffer = Buffer.from(await res.arrayBuffer());
+  // Le corps se lit dans son propre try : AbortSignal.timeout couvre AUSSI le
+  // streaming du corps, pas seulement les en-têtes, donc un PDF qui commence
+  // vite puis cale fait lever arrayBuffer(). Avant le passage à fetchWithRetry
+  // (2026-09-02) cette lecture était dans le try du fetch et rendait
+  // { data: null, text: null } — la dégradation voulue ici (on notifie quand
+  // même le nouveau sitrep). Restauré 2026-09-03.
+  let buffer: Buffer;
+  try {
+    buffer = Buffer.from(await res.arrayBuffer());
+  } catch (e) {
+    console.log("[drc-sitrep] PDF body read:", errorMessage(e));
+    return { data: null, text: null };
+  }
 
   let text: string;
   try {

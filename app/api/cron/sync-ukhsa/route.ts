@@ -297,7 +297,17 @@ async function runUkhsa(_req: NextRequest, supabase: SupabaseClient) {
     await logCronRun(supabase, "sync-ukhsa", "error", 0, msg);
     return NextResponse.json({ error: msg }, { status: 502 });
   }
-  const atomXml = await res.text();
+  // Lecture du corps dans son propre try — voir sync-africa-cdc, même cause :
+  // AbortSignal.timeout couvre aussi le streaming du corps. Restauré 2026-09-03.
+  let atomXml: string;
+  try {
+    atomXml = await res.text();
+  } catch (e) {
+    const msg = `${errorMessage(e)} (lecture du corps)`;
+    Sentry.captureException(e, { tags: { cron: "sync-ukhsa" } });
+    await logCronRun(supabase, "sync-ukhsa", "error", 0, msg);
+    return NextResponse.json({ error: msg }, { status: 502 });
+  }
 
   const entries = parseATOMFeed(atomXml);
   console.log(`[ukhsa] ${entries.length} entries within ${MAX_AGE_DAYS} days`);

@@ -319,7 +319,18 @@ async function runCdcHan(_req: NextRequest, supabase: SupabaseClient) {
     await logCronRun(supabase, "sync-cdc-han", "error", 0, msg);
     return NextResponse.json({ error: msg }, { status: 502 });
   }
-  const searchJson = await res.text();
+  // Lecture du corps dans son propre try — voir sync-africa-cdc, même cause :
+  // AbortSignal.timeout couvre aussi le streaming du corps. Restauré 2026-09-03.
+  let searchJson: string;
+  try {
+    searchJson = await res.text();
+  } catch (e) {
+    const msg = `${errorMessage(e)} (lecture du corps)`;
+    console.error("[cdc-han] read search body:", msg);
+    Sentry.captureException(e, { tags: { cron: "sync-cdc-han" } });
+    await logCronRun(supabase, "sync-cdc-han", "error", 0, msg);
+    return NextResponse.json({ error: msg }, { status: 502 });
+  }
 
   const entries = parseHANSearch(searchJson);
   console.log(`[cdc-han] Found ${entries.length} recent alert(s) within ${MAX_AGE_DAYS} days`);

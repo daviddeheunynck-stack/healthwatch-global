@@ -1307,7 +1307,18 @@ async function runPahoAlerts(_req: NextRequest, supabase: SupabaseClient) {
     await logCronRun(supabase, "sync-paho-alerts", "error", 0, msg);
     return NextResponse.json({ error: msg }, { status: 502 });
   }
-  const listingHtml = await res.text();
+  // Lecture du corps dans son propre try — voir sync-africa-cdc, même cause :
+  // AbortSignal.timeout couvre aussi le streaming du corps. Restauré 2026-09-03.
+  let listingHtml: string;
+  try {
+    listingHtml = await res.text();
+  } catch (e) {
+    const msg = `${errorMessage(e)} (lecture du corps)`;
+    console.error("[paho] read listing body:", msg);
+    Sentry.captureException(e, { tags: { cron: "sync-paho-alerts" } });
+    await logCronRun(supabase, "sync-paho-alerts", "error", 0, msg);
+    return NextResponse.json({ error: msg }, { status: 502 });
+  }
 
   const entries = parseListing(listingHtml);
   console.log(`[paho] Found ${entries.length} recent alert(s) within ${MAX_AGE_DAYS} days`);

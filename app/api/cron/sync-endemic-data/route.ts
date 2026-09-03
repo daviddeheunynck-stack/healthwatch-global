@@ -79,7 +79,17 @@ async function fetchHtml(url: string, retry?: FetchRetryOptions): Promise<string
     console.log(`[endemic] ${url} → HTTP ${res.status}`);
     return null;
   }
-  return await res.text();
+  // Le corps se lit dans son propre try : AbortSignal.timeout couvre aussi le
+  // streaming du corps, donc text() peut lever après des en-têtes reçus. Ce
+  // helper a 6 appelants qui traitent tous `null` comme « candidat suivant » ;
+  // une exception qui remonte casserait la boucle entière au lieu du seul
+  // candidat. Contrat d'avant fetchWithRetry (2026-09-02), restauré 2026-09-03.
+  try {
+    return await res.text();
+  } catch (e) {
+    console.log(`[endemic] body read ${url}:`, errorMessage(e));
+    return null;
+  }
 }
 
 function htmlToText(html: string): string {
