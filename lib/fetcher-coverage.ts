@@ -13,8 +13,9 @@
 //
 // 1. DOMAIN COVERAGE — a fixed-page/fixed-feed cron (WHO DON, Africa CDC, ECDC, PAHO, CDC
 //    HAN/notices, UKHSA, WHO AFRO/EMRO, SPF, USDA APHIS, Taiwan CDC, Malaysia dengue, Samoa
-//    dengue, check-mpox-sitrep, and — added 2026-09-03 — Tanzania MoH's weekly bulletin and
-//    the SPC Pacific dashboard) re-fetches the SAME url/feed every run and writes whatever
+//    dengue, check-mpox-sitrep, check-wer-cholera, and — added 2026-09-03 — Tanzania MoH's
+//    weekly bulletin and the SPC Pacific dashboard) re-fetches the SAME url/feed every run
+//    and writes whatever
 //    it finds there under that same domain. A row whose `source` cites that domain WILL be
 //    re-examined on the cron's next run, whether or not that run finds anything new to write
 //    — that is what "coverage" means for these. Substrings reuse the exact ownership-guard
@@ -42,20 +43,26 @@
 //    export their own `TARGET_KEYS` (derived from TARGETS, not hand-copied) specifically for
 //    this probe to import — see the export next to each TARGETS array.
 //
-// Deliberately NOT modeled: check-wer-cholera doesn't re-fetch a fixed page for a fixed ROW —
-// it checks for a new WHO Weekly Epidemiological Record edition and, on a match, EMAILS David
-// rather than writing to `outbreaks` itself (confirmed 2026-09-03: no `.update()`/`.upsert()`
-// call anywhere in that route). Cholera rows whose figures come from a WER edition are
-// therefore correctly reported as uncovered below — there genuinely is no cron that writes
-// them, only a human-in-the-loop nudge, which is exactly the "who refreshes this?" gap this
-// probe exists to surface, not a false positive to suppress. sync-pacific-surveillance is
-// deliberately not modeled either, for the reason noted next to the who.int/westernpacific
-// domain entry above: it parses a syndromic (ILI/DLI) surveillance table and never writes the
-// country-level dengue case-count rows this probe is about — those 4 rows now have their OWN
-// dedicated cron instead (sync-spc-pacific-dengue, 2026-09-03), modeled via the spc.int domain
-// entry above. sync-drc-sitrep is excluded outright: its discovery step was disabled for legal
-// reasons in 2026 (ReliefWeb ToS, see the file's own comment) and unconditionally returns null,
-// so it contributes no coverage today regardless.
+// Corrected 2026-09-03 (same day, different session): check-wer-cholera WAS wrongly left out
+// of DOMAIN COVERAGE above on the premise that it "never writes to `outbreaks`". That premise
+// was wrong — checked while investigating why Cholera/Congo (Republic, 767/49, dated 28/06)
+// looked neglected next to Cholera/DR Congo (refreshed the same day): both actually got
+// `source_confirmed_at` stamped together on 2026-09-02, via `stampSourceConfirmed` in
+// check-wer-cholera/route.ts — an `.update()` on that one column, which the original comment
+// missed because it only grepped for `.update()`/`.upsert()` literally, not through the shared
+// helper. The route selects EVERY row via `.ilike("source", "%weekly-epidemiological-record%")`
+// (disease-agnostic, not cholera-specific by the query itself — 5 rows matched 2026-09-03, all
+// Cholera today) and confirms all of them when the WER hasn't published anything newer than
+// what they cite. That is exactly what "domain coverage" means for the crons above, so
+// who.int/publications/journals/weekly-epidemiological-record is now in that list too.
+//
+// sync-pacific-surveillance remains deliberately not modeled, for the reason noted next to the
+// who.int/westernpacific domain entry above: it parses a syndromic (ILI/DLI) surveillance table
+// and never writes the country-level dengue case-count rows this probe is about — those 4 rows
+// now have their OWN dedicated cron instead (sync-spc-pacific-dengue, 2026-09-03), modeled via
+// the spc.int domain entry above. sync-drc-sitrep is excluded outright: its discovery step was
+// disabled for legal reasons in 2026 (ReliefWeb ToS, see the file's own comment) and
+// unconditionally returns null, so it contributes no coverage today regardless.
 //
 // This probe's job is to prompt a manual look (see the fix-queue entry's own "journalise le
 // résultat, ne tranche rien"), not to auto-correct anything — an occasional false positive a
@@ -107,6 +114,11 @@ export const DYNAMIC_COVERAGE_DOMAINS: ReadonlyArray<{ substring: string; cron: 
   // substring alone can't distinguish those from any other PICT/disease SPC also tracks, but
   // that's fine here — this probe cares whether SOME cron revisits the row, not which one.
   { substring: "spc.int",                                    cron: "sync-spc-pacific-dengue" },
+  // Added 2026-09-03 (see the long comment above this array for why it was missing): confirms
+  // every row citing a WER edition whenever the listing carries nothing newer, regardless of
+  // disease — disease-agnostic by construction (`.ilike("source", …)`, not filtered by
+  // disease_en in the route itself), so this domain intentionally isn't cholera-specific either.
+  { substring: "who.int/publications/journals/weekly-epidemiological-record", cron: "check-wer-cholera" },
 ];
 
 export interface CoverageResult {
