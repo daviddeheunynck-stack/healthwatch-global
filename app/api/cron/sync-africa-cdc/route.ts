@@ -45,6 +45,25 @@ const CRON_SECRET          = clean(process.env.CRON_SECRET);
 const AFRICA_CDC_RSS = "https://africacdc.org/news-item/feed/";
 const MAX_AGE_DAYS   = 45;
 
+// Bail out of the per-item loop before Vercel hard-kills the function at
+// maxDuration. Every RSS item costs one article-page fetch of up to 12s
+// (ARTICLE_FETCH_TIMEOUT_MS below) and parseRSSFeed caps nothing but age, so a
+// feed serving 10 items — which is what it serves today — is worth up to 120s
+// of fetches against a 60s limit. A hard kill never reaches logCronRun, so the
+// cron reads as "never ran" rather than "failed", and every row not yet
+// upserted is lost, not just the ones the slow articles belonged to. Checked
+// before each item, so the worst overshoot is one article fetch plus its
+// writes (~53s total). Remaining items come back on the next run — the feed
+// keeps serving them for MAX_AGE_DAYS. Same guard family as
+// TARGET_LOOP_BUDGET_MS in sync-who-regional and DON_VERIFY_BUDGET_MS in
+// data-quality (both 2026-09-02); this third case was missed then, found
+// 2026-09-03.
+const ITEM_LOOP_BUDGET_MS = 40_000;
+
+// Timeout of a single article-page fetch, and of one RSS attempt.
+const ARTICLE_FETCH_TIMEOUT_MS = 12_000;
+const RSS_FETCH_TIMEOUT_MS     = 15_000;
+
 const FETCH_HEADERS = {
   "User-Agent":      "HealthWatch-Global/1.0 (health surveillance; contact@healthwatch-global.com)",
   "Accept":          "application/rss+xml,text/html,*/*",
@@ -244,7 +263,7 @@ async function extractItemData(item: RSSItem, stats: ParseStats): Promise<PostDa
   // Fetch article page: needed for case/death numbers and country fallback.
   let articleText = "";
   try {
-    const res = await fetch(item.url, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(12_000) });
+    const res = await fetch(item.url, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(ARTICLE_FETCH_TIMEOUT_MS) });
     if (res.ok) {
       stats.articlesFetched++;
       articleText = htmlToText(extractAfricaCdcBody(await res.text(), stats));
@@ -373,16 +392,29 @@ export async function GET(req: NextRequest) {
 }
 
 async function runAfricaCdc(_req: NextRequest, supabase: SupabaseClient) {
-  const today = new Date().toISOString().substring(0, 10);
+  const today   = new Date().toISOString().substring(0, 10);
+  // Budget clock starts here, not at the loop: a slow RSS fetch spends the same
+  // 60s of function time the loop needs, so measuring from the loop would let
+  // the two overrun together. See ITEM_LOOP_BUDGET_MS.
+  const runStart = Date.now();
 
   // ── 1. Fetch Africa CDC RSS feed ─────────────────────────────────────────
   // fetchWithRetry: a transient network blip used to cost this daily cron a
-  // full 24h cycle (found 2026-09-02 — see lib/fetch-retry.ts). Deliberately
-  // capped at 2 attempts / 8s each (worst case 17s, vs. 15s for the single
-  // original attempt): the per-article loop below has no time-budget guard
-  // of its own against maxDuration=60, so the retry can't eat much of it.
+  // full 24h cycle (found 2026-09-02 — see lib/fetch-retry.ts). That rollout
+  // also cut the per-attempt timeout from 15s to 8s, to keep the retry from
+  // eating a loop that had no budget guard of its own. The guard now exists,
+  // so the cut has no reason left — and it had no measurement behind it
+  // either: 10 consecutive fetches of this feed on 2026-09-03 came back in
+  // 663 / 680 / 1744 ms (min / median / max), 0 failures. Restored to the
+  // original 15s, per this repo's own lesson from the false aphis_unreachable
+  // of 2026-09-02 (6ba10a5a): never shorten a timeout without measuring the
+  // source. NB: the run that failed on 2026-09-03 at 09:10 UTC aborted twice
+  // at 8s one second apart, which looks more like the source being
+  // unreachable from Vercel than like latency — 15s is not claimed to fix
+  // that, only to stop guessing.
   const { response: res, error: rssFetchErr, attemptsMade } = await fetchWithRetry(
-    AFRICA_CDC_RSS, { headers: FETCH_HEADERS }, { attempts: 2, timeoutMs: 8000, backoffMs: [1000] },
+    AFRICA_CDC_RSS, { headers: FETCH_HEADERS },
+    { attempts: 2, timeoutMs: RSS_FETCH_TIMEOUT_MS, backoffMs: [1000] },
   );
   if (!res) {
     const msg = `${errorMessage(rssFetchErr)} (${attemptsMade} tentative(s))`;
@@ -436,7 +468,7 @@ async function runAfricaCdc(_req: NextRequest, supabase: SupabaseClient) {
   for (const row of (existing ?? []) as ExistingRow[]) indexRow(byDC, row);
 
   // ── 3. Process each RSS item ──────────────────────────────────────────────
-  const results = { items: items.length, inserted: 0, updated: 0, skipped: 0, errors: 0 };
+  const results = { items: items.length, inserted: 0, updated: 0, skipped: 0, errors: 0, unprocessed: 0 };
   type LogEntry = { label: string; status: string; detail?: string };
   const log: LogEntry[] = [];
   // Refusals from lockedRowRegressionGuard specifically (identified by its
@@ -456,7 +488,21 @@ async function runAfricaCdc(_req: NextRequest, supabase: SupabaseClient) {
   // quiet source). These two counters are what tells the cases apart.
   const parseStats: ParseStats = { articlesFetched: 0, bodySelectorMisses: 0 };
 
+  let itemsProcessed = 0;
+
   for (const item of items) {
+    // Bail out before the Vercel maxDuration kills the function outright — a
+    // partial run that still logs and upserts what it processed beats a hard
+    // timeout with nothing persisted. See ITEM_LOOP_BUDGET_MS above.
+    if (Date.now() - runStart > ITEM_LOOP_BUDGET_MS) {
+      // Counted apart from results.skipped: these items were never looked at,
+      // whereas a skip is a decision taken about an item that was.
+      results.unprocessed = items.length - itemsProcessed;
+      log.push({ label: "budget", status: "skip", detail: `time budget exceeded, ${results.unprocessed} item(s) left unprocessed` });
+      break;
+    }
+    itemsProcessed++;
+
     let extracted: PostData[] = [];
     try {
       extracted = await extractItemData(item, parseStats);
@@ -697,7 +743,15 @@ async function runAfricaCdc(_req: NextRequest, supabase: SupabaseClient) {
       ? `écriture bloquée par le garde anti-régression : ${lockedGuardBlocked.join(" | ")}`
       : selectorBroken
         ? `sélecteur de corps d'article sans correspondance sur ${parseStats.bodySelectorMisses}/${parseStats.articlesFetched} article(s) — template Africa CDC probablement modifié`
-        : results.errors > 0 ? `${results.errors} écriture(s) en échec` : undefined,
+        : results.errors > 0
+          ? `${results.errors} écriture(s) en échec`
+          // A truncated run is degraded, not broken — it stays status "ok" (the
+          // items come back on the next run), but it must not read as a full
+          // pass either, or a feed that grows past the budget every day would
+          // silently stop covering its tail.
+          : results.unprocessed > 0
+            ? `budget de boucle dépassé : ${results.unprocessed} item(s) non traité(s), repris au prochain run`
+            : undefined,
     // Stamped on every run: without it, "the source published nothing with
     // figures again today" and "this cron stopped running" both read as a
     // rows=0 entry with a stale ts. Same remedy as disease-alerts (2026-08-23).
