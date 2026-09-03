@@ -2,6 +2,74 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session linkedin-hwg-monitoring — 03/09/2026 (9h) — ⚠️ **run bloqué 30 min au démarrage (Chrome fermé), puis mené à son terme**
+
+**Vérification double déclenchement** : aucune entrée datée du 03/09 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture → premier déclenchement du jour, toutes routines confondues. Horloge machine à l'heure (`Thu Sep 3 09:03 2026`). Branche vérifiée avant écriture : **master**.
+
+**Registre de faits du run** (09:03) : **220 faits citables sur 106 lignes affichées**, 81 `is_seed` exclues, **3 faits périmés** (contre 8 au 02/09). ⚠️ **106 lignes affichées contre 110 hier soir**, alors qu'une ligne a été ajoutée entre-temps (Rotavirus/Tanzanie) : **au moins 5 lignes ont été désactivées depuis**, cohérent avec la suspension du cron NCDC et la désactivation de la ligne Lassa/Nigéria du 02/09. Constat de registre, aucune action de cette routine.
+
+**Navigateur** : `Get-Process chrome` → **0 processus** au démarrage, mode de panne distinct d'une perte d'appairage (Chrome tournait lors des pannes du 24/08 et du 31/08). Aucune réparation tentée, l'interdiction de lancer un processus Chrome via PowerShell en cours de run étant absolue hors clôture. Notification push envoyée (desktop ; **poussée mobile non partie, Remote Control inactif**). **Rétabli à ~09h35**, David ayant ouvert Chrome. Détail et les deux entrées `🔴`/`🟢` : `_shared/browser-status.md`.
+
+**Détail complet — messagerie, 3 DM en file de validation avec leurs textes, invitations, 7 suivis, réseau, et carry-over pour le créneau de 13h : `linkedin-contacts.md`, entrée du jour.** Ce fichier ne porte que le commentaire publié, la veille passive et la ligne d'événement.
+
+---
+
+### 1️⃣ ✅ COMMENTAIRE 1/7 — **Adesoye Emmanuel Tunde**, EN, 4e tour du même sous-fil
+
+`urn:li:activity:7500940452578320384`. **Réponse en sous-fil : ne crée aucun nouveau blocage hebdomadaire** (§14), le top-level d'Adesoye reste bloqué jusqu'au **09/09**.
+
+**Ce à quoi il répond.** Il avait été relancé le 02/09 à ~21h20 sur « *which of the three tends to break first when capacity is limited?* ». Sa réponse (11 h) est substantielle : la **validation** est le premier point de pression quand la capacité manque (« *Samples may be processed and results generated, but when there are many results waiting for review, the verification/validation stage can become a bottleneck* »), la classification souffre quand les définitions de cas sont floues, le rapportage quand il reste manuel. Il refuse de généraliser (« *I wouldn't say one always breaks first; it depends on the workflow* ») et conclut sur la distinction qui compte : « *a delay doesn't necessarily mean the data wasn't generated. It may mean the data hasn't yet passed through the next quality-control step.* »
+
+**L'angle publié.** Il s'arrête au constat statique. Ce qu'il ne dit pas, et qui se voit depuis l'aval : quand l'arriéré se vide, le rattrapage arrive **comme une marche dans le cumul**, indiscernable d'une progression réelle de la maladie.
+
+🔴 **Le relecteur a fait échouer deux jets successifs, sur deux défauts distincts, tous deux réels.**
+- **Jet 1, question 11 (gabarit de charpente).** La clôture reproduisait le moule du tour précédent : constat déclaratif côté lecture, puis passe de main interrogative sur sa pratique de laboratoire (« *In your own experience running lab diagnostics, which of the three…* » → « *does the record still carry the original collection date?* »). **Corrigé en supprimant la question finale**, ce qui casse le moule ; confirmé PASS au jet 2.
+- **Jet 2, question 4 (affirmation produit) — le point le plus utile de la journée.** Le brouillon écrivait « *a weekly figure* » et bâtissait tout son mécanisme sur une imputation à une semaine (« *the catch-up lands on the week it cleared in* »). **Faux pour la ligne HWG** : le registre produit décrit une ligne portant **une seule date** (l'arrêté de la source) et un **cumul**, jamais une série hebdomadaire — et la ligne que David avait lui-même citée au 1er tour de ce fil est un cumul de cas suspects arrêté au 22/03. Sur un cumul, un arriéré qui se vide ne se range pas dans une semaine : il monte. **Mécanisme entièrement refait** sur ce que la ligne porte réellement.
+
+⚠️ **Faux positif mécanique documenté, écarté sur pièce** : `context.too-soon` (« dernier message il y a 1 j »). C'est une réponse dans un sous-fil à 4 tours, pas une relance. Confirmé indépendamment par le relecteur.
+
+`QA : mécanique PASS après corrections (370 car., 2 paragraphes, en/en, 0 chiffre, 0 lien, 0 CTA, 0 tiret cadratin) — seul blocker résiduel le faux positif context.too-soon ; 1 ngram.history levé en cours de route (« way to separate the two ») | relecteur VERDICT: REECRIRE 11 au 1er jet puis REECRIRE 4 au 2e, les deux corrigés — 11 PASS sur 12 au 2e jet, dont silence politique total vérifié (ni Nigéria, ni NCDC, ni Katsina) et apport reconnu neuf | faits cités : aucun | registre du 03/09 (09:03) | statut : publié le 03/09`
+
+> Adesoye Emmanuel Tunde The part that reaches me is the timing. What I hold is a cumulative count carrying a single cut-off date, and that date tells me when the source stopped counting, not which results had cleared review by then.
+>
+> So a backlog draining arrives as a step in the total, and from where I sit that looks the same as the disease moving. Nothing in what I read tells them apart.
+
+**Publication confirmée** : identité de la cible (conteneur du commentaire portant « quality-control step » **et** son nom) vérifiée **dans le même appel JS que le clic** sur Répondre, puis texte comparé avant envoi et bouton d'envoi cliqué dans le même appel. Structure de l'éditeur relue avant publication (`P / P vide / P`, soit un saut de ligne réel). **Après rechargement : une seule occurrence, horodatée « maintenant ».** Verrou §15 appliqué juste avant le clic : 0 mention d'Adesoye dans les entrées du 03/09 des deux journaux.
+
+---
+
+### 2️⃣ ❌ UN CANDIDAT COMMENTAIRE ÉCARTÉ VOLONTAIREMENT — **Jean-Paul Gonzalez** (§16)
+
+Il a répondu (19 h) sous notre commentaire du post Shuni de **SOUAD BELKACEMI.** (`urn:li:activity:7499735785110192129`) : « *Oui absolument on ne trouve que si on cherche! Maintenant tout est dans 1./ l'hypothese de travail (recehrceh) et 2/la strategie a developper (Santé publique et animale)* ». Fil actif, donc opportunité réelle au sens de §14.
+
+**Écarté sans rédiger de brouillon.** Le seul angle honnête disponible depuis l'aval — une absence de signal ne se distingue pas d'une absence de recherche — est la **3e variante du même raisonnement dans la même journée** : le commentaire Adesoye ci-dessus (arriéré de validation contre progression réelle) et le DM à Julien Tuba (un zéro contre un silence) le servent déjà. C'est précisément ce que §16 point 1 demande d'éviter : argument identique sous deux supports différents, c'est le gabarit à l'échelle de la journée. **Fil laissé ouvert**, à reprendre avec un angle réellement autre. Le carry-over du 02/09 interdisait déjà de rejouer l'angle « trace » chez lui ; cette décision-ci s'y ajoute.
+
+---
+
+### 3️⃣ 👀 VEILLE PASSIVE
+
+- ⭐⭐ **Adesoye Emmanuel Tunde a aimé notre commentaire précédent** en plus d'y répondre. Engagement soutenu sur 4 tours.
+- **Notre post du 02/09 (essai PARTNERS) a dépassé 50 impressions**, et le post du 31/08 (CFR et taille du dénominateur) est à **394 impressions**, 7 commentaires, 52 réactions, 12 republications.
+- **Alexandre APPROUTSADI YOKSOU** (relation récente) a publié ; **Tambe Elvis Akem, MD** annonce un préprint en premier auteur sur la **surveillance de laboratoire** — sujet en plein périmètre, mais **bloqué en commentaire jusqu'au 05/09**. À rouvrir à cette date, le préprint est un bon support.
+- **Seynudé Jean-Fortune DAGNON** (Gates Foundation) a publié un op-ed sur le **paludisme en Afrique francophone** — repéré par notification, ce qui a révélé qu'il était **déjà suivi sans figurer au tracker**.
+- **betty dipela et 4 autres personnes ont consulté le profil de David** ; profil vu **358 fois**.
+- **Aucun signal de traction institutionnelle nouveau** au sens de §13 (pas de like, follow ou réponse d'un compte institutionnel de référence) → **aucune notification push envoyée à ce titre**.
+
+---
+
+### 4️⃣ 📊 DONNÉES ÉPIDÉMIOLOGIQUES (§8) — AUCUNE ÉCRITURE, AUCUN SIGNALEMENT NEUF
+
+Rien de chiffré et de non couvert n'est apparu dans les fils, les commentaires ou les messages de ce run. **Les signalements ouverts restent ceux du 02/09** et appartiennent à `morning-don-check` : Polio/RDC (Lualaba et Nord-Ubangi, 1 cas chacune, **toujours sans porteur public**, connus seulement par DM) ; Choléra/Tanzanie (68 j, le Jarida de la semaine 35 ne couvre pas le choléra) ; Dengue/Tanzanie (flux hebdomadaire sans date de début, à surveiller avant d'ouvrir une ligne) ; Diphtérie/Nigéria (165 j) ; West Nile/Grèce.
+
+### 5️⃣ 🗓️ LIGNE D'ÉVÉNEMENT (§16)
+
+🔵 **Ebola/RDC, extension à Bas-Uele — ÉVÉNEMENT TOUJOURS OUVERT, aucun support consommé.** **Le press briefing Africa CDC a lieu aujourd'hui à 16h00 EAT, soit 15h00 heure de Paris** : **le créneau de 17h est le premier à tomber après, celui de 13h ne peut pas le traiter.** Porteurs par ordre : page Africa CDC (libre, mais deux angles déjà abandonnés le 02/09), Prof. Mohamed Janabi (libre), Dr. Ibrahima Socé Fall. Page WHO AFRO toujours inatteignable.
+
+🔵 **Polio/RDC, Lualaba et Nord-Ubangi** — ouvert le 02/09, **toujours aucun porteur public**, n'existe que dans un DM. Ne devient une matière de commentaire que le jour où un document le porte.
+
+---
+
+
 ## 📅 Session linkedin-hwg-content-proposal — 02/09/2026 (mercredi MWF, 8h35) — 🔴 **AUCUN POST PROPOSÉ au créneau planifié, 2e créneau consécutif** — un brouillon complet rédigé puis retiré : l'angle avait été publié sur X 2 jours plus tôt. ⚠️ **Mise à jour 09h04-09h28, même run interactif** : David a demandé la rédaction du candidat PARTNERS (§6), puis un double-check, puis a tapé « publie ». ✅ **PUBLIÉ à 09h28**, voir entrée dédiée juste en dessous.
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-content-proposal` datée du 02/09 dans ce fichier à l'ouverture (la plus récente était `linkedin-hwg-monitoring` du 01/09) → premier déclenchement du jour. Horloge machine à l'heure : `date` renvoie **Wed Sep 2 08:38 2026**. Branche vérifiée avant écriture : **master**.

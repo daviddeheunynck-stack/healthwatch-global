@@ -1,6 +1,164 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
+## 📅 Session linkedin-hwg-monitoring — 03/09/2026 (9h) — ⚠️ **run bloqué 30 min au démarrage (Chrome fermé), puis mené à son terme**
+
+**Vérification double déclenchement** : aucune entrée datée du 03/09 dans ce fichier ni dans `content-log.md` à l'ouverture → **premier déclenchement du jour, toutes routines confondues**. Horloge machine à l'heure (`Thu Sep 3 09:03 2026`). Branche vérifiée avant écriture : **master**.
+
+**Registre de faits régénéré ce run** (09:03) : **220 faits citables sur 106 lignes affichées**, 81 lignes `is_seed` exclues, **3 faits périmés** (contre 8 hier). ⚠️ **106 lignes affichées contre 110 hier soir**, alors qu'une ligne a été ajoutée entre-temps (Rotavirus/Tanzanie) : **au moins 5 lignes ont donc été désactivées depuis**, cohérent avec la suspension du cron NCDC et la désactivation de la ligne Lassa/Nigéria du 02/09. Constat de registre, aucune action de cette routine.
+
+---
+
+### 🖥️ NAVIGATEUR — PANNE D'UN TYPE NOUVEAU (CHROME FERMÉ), RÉSOLUE EN ~30 MIN
+
+`_shared/browser-status.md` lu avant ouverture : dernière entrée **🟢 RÉTABLI (31/08)**, aucune `🔴` du jour → séquence de diagnostic complète autorisée.
+
+**Quatre vérifications, dont une qui change le diagnostic** : `list_connected_browsers` vide (2 appels), `tabs_context_mcp` → « Claude in Chrome is not connected », et surtout **`Get-Process chrome` → 0 processus**. Les pannes du 24/08 et du 31/08 avaient la même signature côté outils mais **Chrome tournait** (12 processus) : c'était le pont extension↔Chrome. Ici il n'y avait **aucun navigateur auquel s'appairer** — Chrome était simplement fermé.
+
+**Aucune réparation tentée, délibérément.** `Start-Process chrome` aurait suffi, mais la mémoire `feedback_chrome_connection_troubleshooting` interdit de lancer ou tuer un processus Chrome via PowerShell en cours de run, et `_shared/chrome-end-of-session-restart.md` précise que cette portée est absolue hors clôture de session. Interdiction honorée. **Notification push envoyée** (§7) ; retour de l'outil : *« Mobile push not sent (Remote Control inactive) »* — la notification desktop est partie, **la poussée mobile non**.
+
+**🟢 Rétabli à ~09h35** : David a ouvert Chrome, `23c7ecdd-…` de nouveau listé, sélectionné directement par deviceId (§7). Le reste du run s'est déroulé sans incident, hors **un timeout CDP isolé** sur une boucle de défilement de la messagerie, contourné en découpant l'appel (le test `await (async()=>42)()` a renvoyé `42`, donc **pas un renderer dégradé** — conforme à la correction du 02/09 de `hwg-social-policy.md` §7). Les deux entrées `🔴` puis `🟢` sont dans `_shared/browser-status.md`. **Aucun quota perdu** : la panne est tombée avant toute action.
+
+🏷️HORS-ROUTINE : l'interdiction de lancer un processus Chrome a été écrite contre le fait d'en **tuer** un pour réparer un appairage, avec pour motif le risque de fermer une fenêtre de David. Le cas « Chrome fermé, aucune fenêtre à risque, `Start-Process` suffirait » n'existait pas à sa rédaction et n'est couvert par aucun texte. En l'état, toute routine qui tombe sur un Chrome fermé perd son créneau en attendant David. À trancher hors routine (touche les 4 routines LinkedIn et `daily-health-check`).
+
+---
+
+### 1️⃣ 💬 MESSAGERIE — 3 FILS ONT BOUGÉ, 2 TRAITÉS, 1 SANS OBJET
+
+**Liste des 10 conversations lue en entier, triée par récence.**
+
+- ⭐⭐ **John Omari Baso — 02/09, 22h14, entrant.** Répond à la question de 17h48 : « *Pour cela il faut revenir dans les données de l'année dernière pour précision* ». Traité en section 2.
+- ⭐⭐ **Julien Tuba — 02/09, 18h57, entrant, 1 478 caractères.** Réponse remarquable : il donne raison sur le fond (« *la continuité historique est un bon signal, pas un bon outil de confirmation* »), **construit une règle de lecture externe utilisable telle quelle** (« *Une zone qui passe d'une notification régulière à plusieurs semaines de silence mérite d'être signalée, surtout si les zones voisines continuent à notifier* »), et clôt sur la division du travail : « *depuis l'extérieur, vous pouvez détecter une anomalie dans le signal, mais depuis le terrain, on peut essayer de déterminer si l'anomalie vient de l'épidémiologie ou du système de surveillance.* » Traité en section 2.
+- **Isaias Fernandes Co — 03/09, 06h35, entrant : « 👍 ».** Accusé de réception sans fond, en réponse à notre « *Send a slot once you are back* ». **Rien n'est dû** — un pouce n'est pas un dialogue engagé (politique commune §3). Toujours en attente d'un créneau à partir de la semaine du 14 septembre.
+- **Inchangés, rien n'est dû** : Dossa Paul YAOÏTCHA (notre message du 02/09 reste le dernier) · Harvey Basivikidi · Buno Tona · SOUAD BELKACEMI. · Bobossam Cissoko · Summer Galloway, Ph.D. · Abou A. SOUMAH · **Dr. Siaka Condé** (« *Let me look at this for a moment* », 29/08, 5e jour — **ne pas relancer avant le 05/09**, carry-over honoré, rien ne lui a été écrit).
+
+---
+
+### 2️⃣ 🔒 DM — 3 RÉDIGÉS, LES 3 EN FILE DE VALIDATION, AUCUN ENVOYÉ
+
+**Règle du 23/07 appliquée : la routine n'en envoie aucun.** Quota DM du jour : **0 envoyé sur 8** ; un DM en file ne consomme rien tant qu'il n'est pas envoyé. Deux des trois sont des réponses en fil actif, donc hors quota froid ([[feedback_reply_quota_cold_outreach_only]]). **Notification push envoyée en fin de run.**
+
+⚠️ **Faux positif mécanique commun aux deux réponses en fil actif, écarté sur pièce** : `context.too-soon` (« dernier message il y a 1 j, minimum 3 j »). La règle mesure l'écart entre deux **envois de David** sans voir les messages entrants ; dans les deux fils le dernier message est de l'interlocuteur. Classe déjà consignée plusieurs fois, **confirmée indépendamment par les relecteurs des deux brouillons**.
+
+🔴 **CE QUI DOIT ÊTRE DIT À DAVID SUR CES TROIS TEXTES — la règle des deux essais s'est déclenchée sur deux d'entre eux, pour le même motif.** Les relecteurs ont fait échouer **la question 11 (gabarit de charpente) sur trois jets consécutifs** pour John comme pour Julien, à chaque fois en désignant une charpente différente mais toujours reconnaissable : deux-points de reformulation puis question finale, pivot en « Ce qu… », clôture en alternative binaire, prélèvement nominal d'un élément de la réponse reçue. Conformément à la règle des deux essais (politique commune §5 point 6, version du 26/08), **je n'ai pas tenté de 3e réécriture du même moule : les textes partent en file tels quels, avec le défaut nommé.** Le fond, lui, est validé : 11 PASS sur 12 pour chacun au dernier jet.
+
+**Ce n'est pas un incident isolé de ce run, c'est un motif.** Les 4 textes rédigés aujourd'hui (3 DM + 1 commentaire) ont **tous** échoué au moins une fois sur la question 11, jamais sur le fond. Le contrôle mécanique a rendu « 0 collision de gabarit » à chaque fois : il compare des formulations, pas des charpentes. 🏷️HORS-ROUTINE : l'écart entre ce que le script mesure (n-grammes) et ce qui se répète réellement (la figure rhétorique) est structurel, et il coûte ce run 6 réécritures. À trancher hors routine avec David.
+
+#### 🔒 DM 1 — **John Omari Baso** (`/in/john-omari-baso-84500b1b0/`), FR, vouvoiement, fil actif, SANS CTA — **EN FILE**
+
+Fil relu intégralement (§4) : **20 messages depuis le 27/08**, recopiés verbatim dans `tmp/thread-john-baso-0309.txt`. *langue du fil = fr ; langue du brouillon = fr.* Vouvoiement maintenu (son « toi » unique du 30/08 s'auto-corrige dans la même phrase).
+
+**Arbitrage CTA** : lien et essai **déjà envoyés dans ce fil** le 27/08. Anti-répétition appliquée, **rien n'est resservi**.
+
+**L'angle** : sa réponse déplace le critère hors du document lu. Si l'état « encore active » se lit dans la série de l'année précédente, alors la question jamais posée dans ce fil est celle du **critère de sortie** d'une province de la liste.
+
+**Parcours QA, trois jets.** Jet 1 : REECRIRE 11 (aveu d'erreur en ouverture + clôture en alternative binaire, 3e d'affilée). Jet 2 : REECRIRE 11 de nouveau (charnière « et je crois voir pourquoi » empruntée telle quelle au message du 17h48). Jet 3 : REECRIRE **4 et 11** — le 4 était réel et **corrigé après coup** (« *cette durée ne tient pas dans une semaine de bulletin* » affirmait ce que le bulletin de John peut contenir, sur la base d'une seule diapositive vue une fois ; remplacé par une limite personnelle, et « ce que je lis » précisé en « le point hebdomadaire que je reprends »). Le 11 reste ouvert, deux essais épuisés.
+
+`QA : mécanique PASS après correction (271 car., limite 1300, 2 paragraphes, fr/fr, 0 lien, 0 CTA, 0 tiret cadratin) — seul blocker résiduel le faux positif context.too-soon ; 1 ngram.history levé en cours de route (« du point hebdomadaire du GPEI », nom de source) | relecteur 3e jet VERDICT: REECRIRE 4, 11 — le 4 corrigé depuis, le 11 laissé ouvert au titre de la règle des deux essais, 10 PASS sur 12 par ailleurs | faits cités : aucun de la base, « semaine 35 » et « année dernière » viennent du fil | registre du 03/09 (09:03) | statut : en file de validation`
+
+> Bonjour John. Vous m'envoyez chercher un an en arrière, et je crois voir pourquoi. Une province reste inscrite tant que quelque chose l'y maintient, et cette durée m'échappe.
+>
+> Comment se termine cette inscription ? Je ne sais pas la déduire du point hebdomadaire que je reprends.
+
+#### 🔒 DM 2 — **Julien Tuba** (`/in/julien-tuba-a31abb143/`), FR, vouvoiement, fil actif, SANS CTA — **EN FILE**
+
+Fil relu intégralement (§4) : 7 messages, recopiés verbatim dans `tmp/thread-julien-tuba-0309.txt`. *langue du fil = fr ; langue du brouillon = fr.*
+
+**Arbitrage CTA, explicite.** Le nom HealthWatch Global a été servi une fois dans ce fil (02/09 10h16) ; **le lien et l'essai n'y ont jamais été envoyés**. Un aller-retour de fond a eu lieu, donc la règle CTA de §3 s'applique — **elle est délibérément omise** au titre de l'anti-répétition (option « omettre entièrement le CTA »). Motif : Julien donne gratuitement une expertise longue et structurée ; y greffer une offre au 4e tour transformerait l'échange. ⚠️ **Les deux relecteurs successifs ont validé l'omission mais signalé que c'est le 3e DM d'affilée sans CTA dans ce fil, et que la réponse à la question posée est le point de bascule naturel** : le message suivant devrait en porter un. À arbitrer par David.
+
+**L'angle, après réécriture** : sa dernière phrase attribue à David un rôle borné, détecter l'anomalie sans en déterminer l'origine. Ce que ça implique et qu'il n'a pas dit : un constat produit depuis l'extérieur ne vaut que s'il atteint quelqu'un qui peut aller vérifier. La question porte donc sur le **chemin de remontée** d'un signal externe, ce que lui seul peut trancher.
+
+**Parcours QA, trois jets.** Jet 1 : REECRIRE **4, 7, 9, 11** — le brouillon affirmait la structure des bulletins publiés (« *le bulletin que je lis liste les zones qui ont des cas, pas celles qui ont rapporté* »), non couvert par le registre produit et revenant à commenter la conception d'une publication d'Africa CDC **devant un de ses agents**, et il repartait d'une limite que Julien avait déjà concédée puis explicitement désamorcée. Jet 2 : **4, 7 et 9 confirmés levés** par le relecteur, 11 maintenu. Jet 3 : 11 maintenu une 3e fois. Deux essais épuisés, texte mis en file tel quel.
+
+`QA : mécanique PASS (284 car., limite 1300, 2 paragraphes, fr/fr, 0 lien, 0 CTA, 0 tiret cadratin, 0 chiffre) — seul blocker résiduel le faux positif context.too-soon | relecteur 3e jet VERDICT: REECRIRE 11 seul — 11 PASS sur 12, dont apport reconnu (« Julien, AVoHC à Africa CDC en RDC, est à peu près le seul à pouvoir trancher ce qui arrive concrètement à un signal venu du dehors ») | faits cités : aucun | registre du 03/09 (09:03) | statut : en file de validation`
+
+> Je m'étais donné un rôle trop large, et vous le ramenez à sa taille. Je peux dire qu'il se passe quelque chose, pas ce qui se passe. Encore faut-il que le constat atteigne quelqu'un qui puisse aller vérifier.
+>
+> Comment fait-on remonter une observation venue de l'extérieur, chez vous ?
+
+#### 🔒 DM 3 — **James Schlitt, PhD, MPH** (`/in/james-schlitt-phd-mph-4377a81b/`), EN, **premier DM privé**, SANS lien ni essai — **EN FILE**
+
+⭐⭐ **Il a accepté aujourd'hui l'invitation sans note du 02/09** (constaté sur `/mynetwork/invite-connect/connections/`, « Connexion le 3 septembre 2026 »). **Meilleur alignement de profil du corpus** : *Computational Epidemiologist | AI & LLM Systems for Biosurveillance | Pandemic Forecasting*. Contexte relu : son commentaire du 31/08 sous le post de David, et notre réponse publique du même jour, à laquelle **il n'a jamais répondu** — les deux recopiés dans `tmp/thread-schlitt-0309.txt`.
+
+**Arbitrage CTA** : premier DM, donc **lien et essai Pro interdits** (règle inchangée). HWG n'est même pas nommé. Vérifié par le relecteur : 0 `http`, 0 « healthwatch », 0 « Pro ».
+
+**L'angle** : il proposait un corpus longitudinal de couverture presse pour aligner une flambée future sur des trajectoires candidates. L'objection qu'il n'a pas formulée, et que David n'avait pas écrite publiquement non plus : **la référence d'alignement bouge elle-même**. La question porte sur le statut réel du projet, pas sur la question publique restée sans réponse — vérifié : ce n'est pas de l'insistance.
+
+**Parcours QA, deux jets.** Jet 1 : REECRIRE **4 et 11**. Le 4 était une vraie régression — « *that series is not the outbreak's history, it is the history of what was publishable about it* » sur-portait la mesure du registre (qui ne couvre que les **baisses** du compteur) **et contredisait ce que David avait écrit publiquement à James le 31/08**, où la série contenait les deux histoires. Le 11 relevait deux gabarits maison que le contrôle mécanique n'avait pas vus : « *good/glad to be connected* » et « *Your [X] stayed with me* » (10+ envois, déjà écarté nommément dans une passe QA antérieure). Jet 2 : **4 levé** (l'affirmation est redevenue existentielle et couverte mot pour mot par la claim manuelle sur `outbreak_snapshots`), **ouverture confirmée propre** (0 collision sur 5 formules testées), mais 11 maintenu sur la **clôture** en alternative binaire « A…, or B…? », moule mesuré à **72 occurrences** au corpus et déjà rejeté nommément le 02/09. ➡️ **Correction ciblée appliquée après la relecture** (clôture passée en question ouverte), **non repassée au relecteur** : c'est un changement d'une clause, sur un défaut précisément nommé, et un 3e tour aurait dépassé la règle des deux essais.
+
+`QA : mécanique PASS (348 car., 3 paragraphes, en/en, 0 blocker, 0 warn, 0 collision, 0 chiffre, 0 lien) | relecteur 2e jet VERDICT: REECRIRE 11 sur la seule clôture — corrigée depuis, non re-relue ; 11 PASS sur 12 par ailleurs, dont l'affirmation produit vérifiée mot pour mot contre la claim manuelle #4 | faits cités : aucun | registre du 03/09 (09:03) | statut : en file de validation`
+
+> James, you accepted while I was still turning over your corpus idea, so I will use the opening.
+>
+> Alignment wants both records to hold still, and at least one of them does not. The series I keep gets corrected after the fact, which means a corpus aligned to it is aligned to something still being rewritten.
+>
+> Has that corpus gone anywhere since?
+
+---
+
+### 3️⃣ ✅ INVITATIONS REÇUES — 1 ACCEPTÉE, 2 LAISSÉES
+
+Compteur passé de **3 à 2**, vérifié après coup.
+
+- ⭐ **Kevin S., PhD** (`/in/kevin-s-phd-0b38902/`) — *Senior Epidemiologist, Data Analyst, Epidemiologic Methods, Biostatistics, Nutrition, Complex Surveys, Infectious Diseases, Consultant and Contractor*, **Syra Madad et 65 relations en commun**, compte vérifié. Cœur de cible. Identité vérifiée dans le **même appel JS que le clic** (§7), en excluant explicitement les deux autres cartes.
+- ❌ **Zachariah G. Houdari** (services financiers) et **OLAOLUWA PHILIP** (géospatial/climat sans santé publique) — laissées en attente, décisions du 31/08 non rejugées, **aucun élément neuf**.
+
+**Message de bienvenue à Kevin S. : non rédigé ce run, motif explicite.** Son activité propre n'a pas été ouverte, donc **aucun hook vérifiable sur pièce** (§10), et la file de validation porte déjà 3 textes. Reporté en carry-over, à ne pas re-rechercher.
+
+---
+
+### 4️⃣ 👤 SUIVIS ET RÉSEAU — 7 SUIVIS EXÉCUTÉS (7/7-10), 4 STATUTS PÉRIMÉS CORRIGÉS
+
+Chaque clic vérifié dans le même appel JS (slug comparé, puis comptage des boutons « Suivre » avant/après et présence de « Suivi »). **Détail complet et motifs dans `linkedin-candidates-tracker.md`.**
+
+1. ⭐ **Ninglan Wang** — *Unit head, **Border, Mass Gathering and Health Protection Measures**, WHE, **OMS***, Genève. Périmètre RSI/points d'entrée.
+2. ⭐ **Janet Diaz** — *Unit Head at **World Health Organization***, Genève, **22 relations en commun**.
+3. ⭐ **Samuel Muchiri** — *PhD Fellow, **Spatial Ecology and Epidemiology***, KEMRI-Wellcome Trust / Open University, Kenya.
+4. **Emily Odipo** — *PhD Fellow, Climate and health*, KEMRI-Wellcome Trust / Oxford, Kenya.
+5. **Caroline Museka, MPH** — *Research Scientist, Epidemiology, Biostatistician*, Kenya.
+6. **Bintou KONATE** — *MD MPH, Management de Projets et Programmes de Santé Publique*, Montpellier, 1er degré dont le suivi n'était pas activé.
+7. ⚠️ **Herve Chatue kamga** — *Pediatrician / AI health apply*, France. **Le plus périphérique des sept**, retenu au titre du champ adjacent ; à ne pas remonter comme candidat connexion.
+
+**Le réservoir du 01-02/08 est enfin épuisé profil par profil**, comme sa ligne de tracker le prévoyait depuis un mois. **4 statuts périmés corrigés au passage, aucun ne demandait d'action** : Thierno Abdoulaye BALDE (déjà 1er degré **et** suivi, « à traiter » depuis 33 jours), Gail Carson (**déjà suivie** ; ⭐ ISARIC, bon candidat connexion), Bilal A Mateen (déjà suivi), **Seynudé Jean-Fortune DAGNON** (déjà suivi sans que le tracker le sache ; ⭐⭐ *Malaria Senior Program Officer, Francophone Africa, **Bill & Melinda Gates Foundation***, profil bailleur).
+
+**Réseau :** **abonnés 406** (404 hier), **relations 292** (289 hier). **Trois acceptations aujourd'hui** : Kevin S. (reçue, acceptée par nous), et **deux invitations sans note du 02/09 acceptées par les destinataires — Rocham Mulumbwe et James Schlitt**. Les deux nouveaux abonnés du haut de liste (Kevin S., Rocham Mulumbwe) sont **déjà suivis**, aucun follow-back dû.
+
+---
+
+### 5️⃣ 🧾 NOTES DE CONNEXION — 0 CE RUN
+
+**Motif assumé, pas un oubli.** Aucun candidat neuf ne franchissait la barre avec un hook vérifiable sur pièce : les 7 profils suivis ce run l'ont été **sans ouvrir leur activité propre** (réservoir de slugs), donc aucun hook honnête disponible (§10) ; les deux meilleurs candidats identifiés (**Gail Carson**, ISARIC, et **Seynudé Jean-Fortune DAGNON**, Gates Foundation) sont déjà suivis mais leur activité n'a pas été ouverte non plus. Les dossiers en attente restent bloqués pour des raisons connues : **Mohammad Ilias Hossain** (note rédigée et QA-validée, **volontairement non retentée** conformément au carry-over du 31/08, **ne pas la réécrire**) et **Dr. Ibrahima Socé Fall** (toujours aucun hook honnête, §10). Quota du jour : **0/7**.
+
+---
+
+### 6️⃣ 🔁 CARRY-OVER POUR LE CRÉNEAU DE 13h (03/09)
+
+1. 🔒 **TROIS DM ATTENDENT DAVID**, tous rédigés ce run : **John Omari Baso (FR)**, **Julien Tuba (FR)**, **James Schlitt (EN, premier contact)**. Textes complets et rapports QA en section 2 ci-dessus. **Notification push envoyée ce run.** ⚠️ **Vérifier l'état réel avant de recopier cette ligne** : le carry-over d'hier annonçait 2 DM en attente alors que la section 2 de la même entrée les donnait envoyés à 17h48 et 17h49 — 3e occurrence en dix jours de cette contradiction interne (voir le 🏷️HORS-ROUTINE du point 12).
+2. 🗓️ **Ligne d'événement (§16) — Ebola/RDC, extension à Bas-Uele : le press briefing Africa CDC a lieu AUJOURD'HUI à 16h00 EAT, soit 15h00 heure de Paris.** **Le créneau de 17h est le premier à tomber après ; celui de 13h ne peut pas le traiter.** Porteurs par ordre : page **Africa CDC** (libre, mais deux angles déjà tentés et abandonnés le 02/09 sur le post du 01/09 — il faut un autre post ou un angle radicalement différent), puis **Prof. Mohamed Janabi** (libre), puis **Dr. Ibrahima Socé Fall**. ⚠️ Page **WHO AFRO** toujours inatteignable, ne pas en faire un support. BANZA Freddy Mutoka écarté. **Aucun support consommé à ce jour, l'événement reste entièrement ouvert.**
+3. ⚠️ **Trois arguments proches ont été servis aujourd'hui, ne pas en produire un quatrième (§16 point 1).** Le commentaire Adesoye (arriéré de validation contre progression réelle), le DM Julien (zéro contre silence) et l'angle écarté chez Jean-Paul Gonzalez (absence de signal contre absence de recherche) sont **trois variantes du même raisonnement**. Le 3e a été abandonné pour cette raison. Un 4e sous une autre forme serait le gabarit à l'échelle de la journée.
+4. ⭐⭐ **Rocham Mulumbwe** (`/in/rocham-mulumbwe-587570186/`) — **invitation du 02/09 acceptée aujourd'hui**, aucun échange en messagerie. **Welcome DM dû et non rédigé ce run** (file déjà à 3 textes). Hook réel et déjà vérifié : il a commenté deux fois avec du fond sous nos propres commentaires (post Jacob Banda), en prolongeant l'argument d'une question neuve. ⚠️ Le fil public n'est pas clos — vérifier qu'un DM ne doublonne pas la conversation publique avant de rédiger. **Bloqué en commentaire jusqu'au 09/09.**
+5. ⭐ **Kevin S., PhD** (`/in/kevin-s-phd-0b38902/`) — **invitation reçue acceptée ce run**, aucun échange. *Senior Epidemiologist*, 65 relations en commun dont Syra Madad. **Welcome DM à évaluer** : son activité propre n'a pas été ouverte, **ouvrir `/recent-activity/all/` d'abord**, pas de note ni de DM sans hook vérifiable sur pièce.
+6. ⭐⭐ **Gail Carson** (`/in/gail-carson-16435183/`, **ISARIC**, 1 975 abonnés, 12 mutuels) et ⭐⭐ **Seynudé Jean-Fortune DAGNON** (`/in/seynudé-jean-fortune-dagnon-md-mph-seynudedagnon-com-093a5a2a/`, ***Malaria Senior Program Officer, Francophone Africa, Bill & Melinda Gates Foundation***) — **déjà suivis tous les deux**, jamais connectés, **activité propre non ouverte ce run**. Les deux meilleurs candidats de note de connexion disponibles, à traiter dès qu'un créneau a le temps d'ouvrir leur activité.
+7. ⭐⭐ **Isaias Fernandes Co** — a répondu « 👍 » ce matin à 06h35, **sans fond**. Notre message reste celui qui appelle une suite de sa part. Accepte le principe d'un appel **à partir de la semaine du 14 septembre**. **Rien à faire tant qu'il n'a pas renvoyé de créneau** ; ne pas relancer sur un pouce.
+8. 🔵 **Jean-Paul Gonzalez** — a répondu (19 h) dans le sous-fil Shuni de SOUAD BELKACEMI. Fil actif, **candidat volontairement écarté ce run** (voir point 3). À reprendre **seulement** avec un angle réellement autre ; ne pas rejouer l'angle « trace », déjà servi chez lui.
+9. ⭐⭐ **Dr. Ibrahima Socé Fall** — inchangé : 1er degré, aucun échange, **toujours aucun hook honnête**, sa seule prise de parole récente sur Ebola/RDC étant un grief institutionnel (§9). Meilleure opportunité dormante du carnet.
+10. ⭐⭐ **Dr. Malachie MANAOUDA** — note de connexion du 02/09 **toujours pas acceptée** (relations à 292, les 3 nouvelles sont Kevin S., Rocham Mulumbwe, James Schlitt). Si acceptée : welcome DM, en file de validation.
+11. 🔴 **Mohammad Ilias Hossain** — note **toujours non retentée**, conformément au carry-over du 31/08. Note rédigée et QA-validée, **ne pas la réécrire**. ➖ **Yakoza Nyirenda** : invitation sans note du 30/08 toujours en attente.
+12. 🏷️HORS-ROUTINE **— trois constats de dispositif, tous hors périmètre de cette routine, à trancher avec David.** (a) **Le contrôle mécanique ne voit pas les charpentes** : les 4 textes du jour ont échoué au moins une fois sur la question 11 en rendant « 0 collision de gabarit » à chaque fois, pour 6 réécritures au total. (b) **La contradiction « carry-over annonce une file / le corps de la même entrée dit envoyé »** est apparue **trois fois en dix jours** (25/08, 30/08, 03/09) ; elle est mécaniquement détectable et rien ne la détecte. (c) **Un Chrome fermé fait perdre un créneau entier** faute de texte couvrant ce cas, distinct de la panne d'appairage (voir la section navigateur).
+13. **Dr. Siaka Condé** — 5e jour sans retour. **Ne pas relancer avant le 05/09.** ➖ **Abou A. SOUMAH** : politesse sans fond du 29/08, rien de dû.
+14. ❌ **Ne pas reproposer sans élément neuf** : Zachariah G. Houdari et OLAOLUWA PHILIP (2 invitations reçues en attente) ; Haider Durrani, Kipchirchir Kigen, Victoria Kanana ; Abdulrazaq Tanga ; **Herve Chatue kamga** comme candidat connexion (suivi ce run, trop périphérique).
+15. ⚠️ **Doublons d'URN et notes d'outillage** : points 15, 16 et 17 du carry-over du 02/09 (17h), **inchangés, s'y reporter directement**. Deux confirmations de ce run : les commentaires ne se chargent bien qu'après **deux `computer scroll`**, et le bouton d'envoi d'une réponse se trouve **6 niveaux au-dessus** de l'éditeur (`closest('form')` ne le trouve pas).
+16. **Blocages hebdomadaires au 03/09** : **Adesoye Emmanuel Tunde reste au 09/09 en top-level** — la réponse en sous-fil publiée ce run **n'en crée pas de nouveau** (§14). Inchangés par ailleurs : Kyaw Thowai Prue Prince, Rocham Mulumbwe (09/09) ; Dr. Jean Kaseya, page ECDC, Jacob Banda (08/09) ; Oke Ikpekpe (04/09, top-level, sous-fil ouvert) ; Jason Kindrachuk, Dr Jeeven Kumar (04/09) ; Global Health EDCTP3, French Healthcare Association, Health Policy Watch, Tambe Elvis Akem, SOUAD BELKACEMI (05/09) ; Melvin Sanicas, Dossa Paul YAOÏTCHA, Mohammad Ilias Hossain (07/09, top-level, sous-fils ouverts) ; Dr. Rashi Bhardwaj, Dr Fabrice KHADDY, Miriam Mbueshi (09/09). **Harvey Basivikidi est libre depuis aujourd'hui.**
+
+---
+
+### 7️⃣ 🔧 ARBRE DE TRAVAIL
+
+`marketing/qa/product-claims.manual.json` **modifié avant ce run et toujours non commité** : il appartient au dispositif QA, pas à cette routine — laissé tel quel, comme aux runs précédents. `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis, inchangés depuis le 29/08) — **fichiers n'appartenant pas à cette routine, laissés intacts** (`AGENTS.md`). `marketing/qa/*.json` régénérés, non suivis. **Une autre session a poussé pendant ce run** (`a5a8f737`, *fix(fetcher-coverage)*) : code applicatif, **non touché, non commité par moi**. **Branche vérifiée avant commit : `master`.** Aucun verrou de code demandé : cette routine ne touche ni `app/`, ni `lib/`, ni `components/`, ni les dépendances. Chemins commités par ce run : `marketing/linkedin-contacts.md`, `marketing/content-log.md`, `marketing/linkedin-candidates-tracker.md` (`_shared/browser-status.md` vit hors du dépôt).
+
+---
+
+
 ## 📅 Session linkedin-hwg-monitoring — 02/09/2026 (9h)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` du 02/09 dans ce fichier ni dans `content-log.md` à l'ouverture → **premier déclenchement de cette routine aujourd'hui**. Les deux entrées du 02/09 déjà présentes dans `content-log.md` appartiennent à `linkedin-hwg-content-proposal` (créneau 8h35 puis reprise interactive avec David, post PARTNERS publié à 09h28) — routine distincte, quotas distincts. Horloge machine à l'heure (`Wed Sep 2 09:03 2026`). Branche vérifiée avant écriture : **master**.
