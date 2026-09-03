@@ -3907,3 +3907,90 @@ David, en session, sur le signalement du double contact népalais de l'addendum 
 - **Prospectés : 327** — inchangé. Ni le Népal (différé, non journalisé comme prospecté) ni CAPRISA (non envoyé) ne s'ajoutent tant que l'envoi n'a pas eu lieu.
 - **Envoyés : 327** — inchangé.
 - **Profondeur de file : 1 brouillon** — CAPRISA, vérifié en `labelIds: ["DRAFT"]`, non envoyé.
+
+---
+
+## 🔁 RELANCE J+10 — 2026-09-03, run automatique `daily-relance-check-healthwatch`
+
+**Résultat : 10 relances créées, l'arriéré reste vidé.** Le seul lot arrivant à maturité aujourd'hui — **24/08 (10 contacts éligibles, J+10)** — est traité intégralement dans le run. Aucun report, aucun orphelin.
+
+### 🚦 Frein de file — 0 en entrée, 10 en sortie, très loin du seuil
+
+`list_drafts` en tête de run, **deux appels** (métadonnées puis vue complète, consigne du 16/08 sur l'instabilité de l'outil) : **`{}` les deux fois — file totalement vide.** Aucune conclusion négative tirée d'un appel isolé.
+
+La file était donc à zéro à 06:23 UTC : **le brouillon CAPRISA laissé hier soir a été envoyé** (vérifié en direct, voir plus bas), et **le run de prospection du jour n'avait pas encore tourné** au moment de celui-ci — inversion d'ordre par rapport au 02/09, où la prospection avait précédé de 10 minutes. Sans effet : le frein de file se mesure à l'entrée du run, et 10 brouillons en sortie restent très en dessous du seuil de ~25 même si la prospection en ajoute 10 derrière.
+
+### 🔎 Vérification en direct des 10 — double contrôle appliqué
+
+Le lot du 24/08 **n'avait jamais été vérifié en direct** (signalé comme tel par le run du 02/09). Contrôle complet ce run, les deux volets exigés depuis l'incident THL Finlande du 25/08 :
+
+- **Requêtes `to:` groupées** (2 appels, `includeTrash: true`) : **les 10 fils d'origine portent exactement 1 message, `labelIds: ["SENT"]`.** Aucune réponse rattachée, aucune relance antérieure.
+- **Requête `from:` groupée** sur les 8 domaines du lot plus les 2 adresses Gmail nominatives (`after:2026/08/23`, `includeTrash: true`) : **résultat vide, `{}`.** Aucune réponse humaine hors fil, aucun accusé automatique détaché, aucun bounce.
+- **Anti-doublon** : grep par adresse sur l'ensemble du journal pour les 10 — **aucune n'apparaît dans une entrée « 🔁 RELANCE » antérieure**. Les 4 adresses à occurrences multiples (`info_sphpc@cuhk.edu.hk` ×2, `info@nccd.gov.mn` ×2, `inlasalapazbolivia@gmail.com` ×4, `adelf.ftb@gmail.com` ×9) sont vérifiées ligne à ligne : ce sont des mentions de prospection, d'écarts levés ou de la liste nominative de bounces, jamais un envoi de relance.
+
+**Date d'envoi retenue : 2026-08-24, 12:02:37–12:14:50 UTC**, lue sur les fils eux-mêmes — pas la date de création des brouillons (06:26–06:27 le même jour). J+10 tombe donc bien aujourd'hui.
+
+### ❌ 1 exclusion — Georgetown HSOC a répondu, et converti
+
+**`HSOC@georgetown.edu` (Health Security Operations Center, Georgetown) — exclu, réponse reçue.** Fil `1a03273735db557f` : 3 messages, l'envoi du 24/08 à 12:14:28, la réponse du HSOC le même jour à 16:53:56 (« happy to access the dashboard you built. How does one access the pro account? »), et la réponse de David à 18:38:02 ouvrant l'accès Pro. **C'est la seule conversion en accès Pro du canal**, déjà consignée le 25/08 (l. 2108) — relancer ici serait une faute. 10 éligibles sur les 11 contacts du 24/08.
+
+### ✉️ Les 10 relances créées
+
+Toutes en réponse dans le fil d'origine (`replyToMessageId`), objet « Re: … » généré par Gmail, créées entre **06:24:19 et 06:25:03 UTC**. Ordre = original le plus ancien en premier.
+
+| # | Institution | Adresse | Langue | Fil d'origine | Brouillon |
+|---|---|---|---|---|---|
+| 1 | RSTMH — Royal Society of Tropical Medicine and Hygiene | `info@rstmh.org` | EN | `1a032741fc8039f3` | `r-2607058723470640467` |
+| 2 | DGEpi — Deutsche Gesellschaft für Epidemiologie | `geschaeftsstelle@dgepi.de` | EN | `1a0327414d9ec9cc` | `r6920204950389905272` |
+| 3 | ABRASCO — Assoc. Brasileira de Saúde Coletiva | `abrasco@abrasco.org.br` | EN | `1a03273f4fb94bfc` | `r-3051933852415005635` |
+| 4 | SFSP — Société Française de Santé Publique | `accueil@sfsp.fr` | **FR** | `1a03273ed27e2b1d` | `r-1929148931711755040` |
+| 5 | INLASA — Instituto Nacional de Laboratorios de Salud (Bolivie) | `inlasalapazbolivia@gmail.com` | **ES** | `1a03273ca4e29031` | `r-2682315829148022042` |
+| 6 | NCCD — National Center for Communicable Diseases (Mongolie) | `info@nccd.gov.mn` | EN | `1a03273bf33f3947` | `r3989785554371159306` |
+| 7 | OCEAC — Coordination endémies Afrique centrale (CEMAC) | `contact@oceac.org` | **FR** | `1a032739e3969928` | `r-7119184298185204464` |
+| 8 | KNUST — School of Public Health (Ghana) | `sph@knust.edu.gh` | EN | `1a0327393c037622` | `r6595763952933459402` |
+| 9 | CUHK — JC School of Public Health and Primary Care | `info_sphpc@cuhk.edu.hk` | EN | `1a032736bb83f0de` | `r-7794751522850360404` |
+| 10 | ADELF (remplacement du 24/08) | `adelf.ftb@gmail.com` | **FR** | `1a0324b8fd0e708d` | `r6665448836426933892` |
+
+**Rédaction.** Salutation identique à l'original (« Hi team, » ×6, « Bonjour, » ×3, « Buenos días: » ×1 — aucun nom réel dans ce lot), une phrase de rappel, une ligne sur l'accès Pro toujours ouvert sans engagement, puis **la question de clôture de l'original reprise mot pour mot**, avec son destinataire exact : « your teaching or research monitoring », « your staff or postgraduate students », « votre suivi régional », « your surveillance team », « el seguimiento de su equipo », « votre réseau, ou vos membres travaillent-ils déjà directement sur les sources primaires », « vos adhérents, ou est-ce hors de votre ligne éditoriale », « your members, or is the language gap a blocker », « members who follow international outbreak reporting », « your membership ». Trois de ces questions laissent explicitement une porte de sortie au destinataire (SFSP, ABRASCO, ADELF) — c'était déjà le cas dans les originaux, conservé.
+
+**Aucun cas particulier à motif propre dans ce lot** : les 10 originaux se terminaient sur une question d'intérêt directe, aucun sur une demande de redirection vers une autre unité. Le gabarit générique du SKILL.md s'applique aux 10 sans exception, contrairement au lot du 21/08 où 4 des 10 avaient un motif de redirection à reprendre.
+
+**Conformité de forme, vérifiée par `list_drafts` en vue complète sur 3 brouillons témoins** (un FR, un ES, un EN) : aucun `htmlBody` fourni ; le `htmlBody` régénéré par Gmail sur le texte neuf ne contient que `<div dir="auto">` et des `<br/>`, **zéro balise `<a>`** ; **aucun domaine avec un `.` littéral** dans le texte nouveau (« healthwatch-global dot com » ×6, « point com » ×3, « punto com » ×1) ; chaque corps se termine par une question avant la signature. *Le corps cité automatiquement par Gmail sous chaque relance contient le lien de l'original — normal et sans impact, aucun lien neuf n'a été introduit.*
+
+**Contrôle du bug d'envoi instantané du connecteur (incident du 15/08) : négatif.** `list_drafts` en fin de run : **les 10 brouillons portent `labelIds: ["DRAFT"]`**, un seul par adresse, aucun doublon. `list_drafts` **stable** sur les quatre appels du run — aucune incohérence de pagination.
+
+### 📊 Bilan cumulé
+
+**✅ Envoi des 16 relances et du remplacement CAPRISA vérifié en direct, il n'était que déduit.** L'addendum d'hier concluait à l'envoi des 16 relances du 02/09 depuis un `list_drafts` à 1 brouillon — raisonnement invalidé par l'enseignement du 16/08. **Balayage `in:sent` sur la journée du 02/09 fait ce run** (corbeille incluse, 27 fils) : les **16 relances sont bien parties entre 06:57:44 et 06:59:23 UTC**, les 10 contacts de prospection entre 13:08:14 et 13:09:55, et **CAPRISA (`caprisa@caprisa.org`) à 13:19:03 UTC**, fil `1a06243aec1c7e8e`, `labelIds: ["SENT"]`. Écart création → envoi sur les relances : **~28 minutes**, lot entier en ordre de relecture inverse (Universiti Malaya en premier, PAHO Honduras en dernier) — profil « relecture humaine » rapide, **pas** le bug d'envoi instantané, qui signe à la même seconde.
+
+**Balayage des bounces** (`from:mailer-daemon`, `from:postmaster`, `subject:"Delivery Status Notification"`, `subject:"Undelivered Mail"`, `subject:Undeliverable`, `subject:"Mail delivery failed"`, `subject:"Adresse introuvable"`, `subject:"Address not found"`, `after:2026/09/01`, corbeille incluse) : **2 fils, ceux d'Antigua (01/09) et de PNG (02/09)**, tous deux déjà consignés. **Aucun bounce neuf** — rien sur CAPRISA, rien sur les 9 autres contacts du lot du 02/09, rien sur les 16 relances parties hier.
+
+**Bilan bounces cumulés depuis le 02/08 : 22** — recalculé depuis la liste nominative, **+1 par rapport au 02/09**. L'entrée neuve est la 22e ; les 21 premières sont identiques à la liste du 02/09 (l. 3053 pour les 20 premières, plus Antigua en 21e), non reproduites ici.
+
+22. **NDoH Papouasie-Nouvelle-Guinée** (02/09) — `health_ministry@health.gov.pg`, « adresse introuvable ou ne peut pas recevoir de messages », **domaine vivant avec MX Microsoft 365 valides, boîte locale inexistante**. Contact jamais bouncé auparavant : la liste nominative s'allonge bien d'une unité (règle du 17/08). **Écarté définitivement**, aucune relance possible. Remplacement CAPRISA parti le 02/09 à 13:19:03, non bouncé. *Ce bounce était consigné dans l'addendum du 02/09 mais volontairement non retotalisé — porteur unique, consigne du 16/08 ; c'est ce run qui l'intègre au cumul.*
+
+**Totaux au 2026-09-03, 06:26 UTC :**
+- **Prospectés : 328** = 327 (état du 02/09) **+ 1** (CAPRISA, envoi vérifié en direct ce run — il n'était compté ni en prospecté ni en envoyé tant qu'il restait en brouillon).
+- **Envoyés : 328** = 327 **+ 1** (CAPRISA). Les 10 brouillons de relance en file ne sont pas partis.
+- **Délivrés : 306** = 328 envoyés − 22 (taille de la liste nominative de bounces), recompté dans le même mouvement que la liste, pas repris d'une ligne précédente.
+- **Taux de délivrabilité : 93,3 % (306/328)** — stable au dixième près sur le 02/09 ; le bounce PNG (−1 délivré) est compensé par l'envoi CAPRISA (+1 envoyé, non bouncé).
+- **⚠️ Réserve maintenue** : les 328 envoyés comptent **4 envois vers des institutions déjà contactées** (incident du 22/08), **1 seconde tentative sur Antigua** et **1 sur PNG**. Le nombre d'**institutions distinctes** atteintes reste inférieur d'autant.
+- **Relances : 227 envoyées, 10 en attente d'envoi** (lot du 24/08, créées ce run) — **total cumulé de relances créées depuis le début : 237** = 227 + 10.
+- **Réponses institutionnelles : aucune nouvelle** depuis le refus Neumann du 01/09.
+
+**Profondeur de file en fin de run : 10 brouillons** — les 10 relances de ce run, la prospection du jour n'ayant pas encore tourné à cette heure.
+
+### 📅 Prochains lots
+
+- **25/08** (10 contacts, envoyés le 25/08 à 10:34:35–10:36:46 UTC) → J+10 le **04/09**, jamais vérifié en direct.
+- **26/08** → J+10 le **05/09** ; **27/08** → le **06/09**.
+- **30/08** (7 contacts, envoyés le 01/09 à 04:47–04:48) et **01/09** (9 délivrés sur 10) → J+10 le **11/09**.
+- **02/09** (9 contacts délivrés + CAPRISA envoyé le 02/09 à 13:19) → J+10 le **12/09** ; `health_ministry@health.gov.pg` **écarté définitivement**.
+- **Fiona Walsh** (`fiona.walsh@uni-heidelberg.de`) → statut comptable toujours en attente d'arbitrage, laissée en « sans réponse ». Sans effet opérationnel, sa relance unique est consommée.
+- **EUPHA** : arbitrage rendu par David le 31/08, relance créée — **plus rien en attente de ce côté**, la ligne disparaît du suivi.
+
+### ⚠️ Signalements
+
+- **Le lot du 24/08 comptait 11 contacts, pas 10.** Le tableau de la section du 24/08 en liste 10 ; le remplacement ADELF (`adelf.ftb@gmail.com`), créé le matin même et parti dans le même envoi de 12:14:50, n'y figure pas. Il est bien traité ici (relance n° 10). **À garder en tête pour les lots suivants : un remplacement de bounce créé le jour J part avec le lot et arrive à J+10 avec lui**, sans apparaître dans le tableau du lot.
+- **Un seul déclenchement de la routine aujourd'hui**, comme le 02/09. Le doublon du 01/09 ne s'est pas reproduit sur deux jours consécutifs.
+- **⚠️ Fichiers modifiés non touchés par cette routine, laissés tels quels** (règle `AGENTS.md`) : `marketing/qa/product-claims.manual.json` (modifié), `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis). Inchangés depuis le signalement du 02/09 — 2e run consécutif à les voir en attente.
