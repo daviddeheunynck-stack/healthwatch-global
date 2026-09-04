@@ -214,6 +214,11 @@ const GENERAL_PRESS_DOMAINS: ReadonlySet<string> = new Set([
   // as Leadership/Tchadinfos/Africa24 above. Found 2026-08-27 via section 4m,
   // Diphtheria/Senegal coverage.
   "enqueteplus.com",
+  // PressAfrik (Senegal) — established national newsroom (one of the country's
+  // most-visited news sites, publishing since 2007), same tier as EnQuête+ above.
+  // Found 2026-09-04 via [PROVENANCE]/[COUVERTURE]: the same Diphtheria/Senegal row
+  // now cites this outlet rather than enqueteplus.com.
+  "pressafrik.com",
   // Daily Monitor (Uganda) — established national newsroom, same tier as the others
   // above. Found 2026-08-29 re-sourcing Crimean-Congo Hemorrhagic Fever/Uganda off an
   // unattributed Outbreak News Today Substack post: this outlet independently named
