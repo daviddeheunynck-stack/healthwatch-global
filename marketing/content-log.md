@@ -2,6 +2,158 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session linkedin-hwg-followup-check — 04/09/2026 (13h, 1er des 2 créneaux après-midi) — ✅ **1 commentaire publié (6 jets)** — Oke Ikpekpe a répondu après 1 j de silence, réponse volontairement non faite ; événement Ebola/RDC neuf et fort repéré, ses deux porteurs bloqués jusqu'au 05/09
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` datée du 04/09 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture (les entrées du jour appartiennent à `linkedin-hwg-content-proposal` 8h35 et à `linkedin-hwg-monitoring` 9h + sa reprise de 10h15) → **premier déclenchement de cette routine aujourd'hui**. Les créneaux 13h et 17h sont deux runs intentionnellement distincts. Horloge machine à l'heure (`Fri Sep 4 13:02 2026`). Branche vérifiée : **master**. Registre de faits régénéré à 13h05 (221 faits, 106 lignes affichées, 3 périmés).
+
+---
+
+### 1️⃣ ✅ SUIVI DES ACTIONS DU JOUR ET DES FILS ACTIFS (§14) — **une seule réponse neuve sur 9 fils**
+
+**Commentaire Pete Macharia du matin (~10h55)** : toujours en place, texte unique dans la page, **28 impressions, 0 réaction, 0 réponse**. `Christian BABOKO` a commenté le post 2 h après nous, mais sur le post lui-même, pas sous notre commentaire (verbatim en section 5). Rien à faire.
+
+**DM James Schlitt envoyé à 10h12** : toujours le dernier message du fil, aucune réponse à 13h20. Dossier clos comme prévu.
+
+**Les 9 fils rouverts un par un**, pas recopiés du run de 9h :
+
+| Fil | URN | État au 04/09 13h |
+|---|---|---|
+| **Oke Ikpekpe** | `7500522694187089920` | 🔴 **IL A RÉPONDU**, ~12h15, après 1 j de silence. Traité en section 3 |
+| Adesoye Emmanuel Tunde | `7500940452578320384` | notre tour reste le dernier, **86 impressions**, aucune réponse neuve |
+| Rocham Mulumbwe / post Jacob Banda | `7500293159126761472` | notre réponse reste la dernière, 54 impressions. La réponse de Jacob Banda visible date de 3 j, antérieure à la nôtre |
+| SOUAD BELKACEMI / post Shuni | `7499735785110192129` | rien de neuf, décision du 03/09 maintenue |
+| Dossa Paul YAOÏTCHA | `7499435689214758912` | notre question (4 j) toujours sans réponse |
+| Dr. Rashi Bhardwaj | `7500961203263959040` | ⚠️ **volet commentaires non rendu par LinkedIn**, deux tentatives dont une avec défilement forcé. Le post charge, pas ses commentaires |
+| Mohammad Ilias Hossain | `7499900718590595072` | ⚠️ **idem**, même symptôme, deux tentatives |
+| Melvin Sanicas | `7499221325358501889` | rien de neuf |
+| Pete Macharia | `7501552252575215617` | traité ci-dessus |
+
+⚠️ **Sur les deux fils dont le volet commentaires n'a pas voulu se rendre** : ce n'est pas « rien de neuf », c'est « non vérifiable par cette voie ce run ». Le filet qui reste est la notification : les deux profils sont suivis, une réponse sous notre commentaire remonterait en notification, et **la seule notification de ce type ce midi est celle d'Oke Ikpekpe**. À revérifier au créneau de 17h, en ouvrant les posts depuis les notifications plutôt que par URN direct.
+
+---
+
+### 2️⃣ ✅ COMMENTAIRE 2/7 PUBLIÉ — **Ifedayo Adetifa**, EN, top-level, premier contact — 6 jets, 5 rejets sur 5 défauts différents
+
+`urn:li:activity:7501417483380113408`, post de 11 h à l'ouverture, **relation de 1er degré**, 30 réactions, **1 seul commentaire avant nous, le sien** (une liste de ses quatre sources). *Global Health Leader & Physician-Epidemiologist | Outgoing CEO, FIND | Former Director-General, Nigeria CDC | Lancet Commissioner*. Repéré via les notifications. Post long sur la chaîne de mise à disposition des contre-mesures (financement, market shaping, production africaine, cinq priorités Africa CDC/ASLM), dont la thèse est que le diagnostic a le moins de cette chaîne, avec la flambée Bundibugyo citée en exemple.
+
+**Ce dossier a demandé 6 jets, et aucun rejet n'a porté deux fois sur le même défaut.** Le détail vaut d'être gardé, parce que trois des cinq rejets portaient sur du **fond**, pas sur de la forme :
+
+- **Jet 1** — angle : le CFR de la ligne Ebola/RDC mesure en partie l'accès au test. Mécanique PASS après deux corrections (précision du pays, puis un `ngram.history` réel sur « i keep for dr congo », remonté à un commentaire publié le 26/08). Relecteur : **REECRIRE 4, 7, 11**. 🔴 **4** : « *it still publishes as a property of the disease* » est une affirmation produit qu'aucun registre ne couvre, verbe de publication sans sujet. 🔴 **7** : tout le premier paragraphe reformulait une phrase déjà dans son post (« *A test decides what is seen and counted* »). 🔴 **11** : posture d'observateur aval (famille interdite depuis le 03/09) plus le mouvement de collapse du post de marque du 31/08.
+- **Jet 2** — thèse changée, construite sur l'essai PARTNERS. Relecteur : **REECRIRE 4, 11, 12**. 🔴 **4** : « *the trial publishes how many people it has enrolled* » attribue à l'essai ce que publie l'**OMS**, et « *that count moves* » décrit un compteur suivi en continu là où il n'existe que **deux instantanés à huit semaines d'écart**. 🔴 **12, le plus coûteux** : la question présupposait un vide côté diagnostics que **notre propre veille contredit** (`content-log.md:14497` : le Day-45 du même compteur porte 83 soumissions EOI et 2 tests en revue). Poser publiquement cette question à l'ancien directeur de FIND aurait donné à penser que le rapport n'avait pas été ouvert.
+- **Jet 3** — question refaite sur ce que ces chiffres-là ne disent pas. Mécanique PASS. Relecteur : **11/12 PASS**, reste **REECRIRE 11** : « *what gets counted* » est la formule signature du corpus (**8 occurrences publiées**) et la charpente « l'indicateur compte l'amont, il rate l'aval » est le jumeau d'un commentaire publié (`content-log.md:6457`).
+- **Jet 4** — formules changées, lecture datée « At Day 45 ». Relecteur : **REECRIRE 11**, et c'est une **régression** : la réécriture avait réintroduit « *the [X] side of that [nom]* » (3 occurrences publiées) et « *put a number on* », les deux issues du **même** commentaire publié (`content-log.md:8716`), sur un point qu'il avait blanchi au jet 3.
+- **Jet 5** — les deux formules remplacées. Relecteur : **Q11 PASS enfin**, formules et charpente. Reste **REECRIRE 4**, sur **un seul mot** : « *the diagnostics entries … **were** submissions and regulatory reviews* » affirme que ces deux rubriques **épuisent** le volet diagnostics, ce qu'un résumé de veille ne peut pas établir. Même mode d'échec que le jet 2, en plus petit.
+- **Jet 6** — « were » → « included », rien d'autre touché. Le relecteur avait écrit qu'il n'aurait plus rien en attente sur les 12 questions si ce verbe était corrigé ; **non resoumis** pour cette raison, conformément à la conduite déjà appliquée le 04/09 matin sur le DM Schlitt.
+
+**🔒 Texte publié :**
+
+> At Day 45 the diagnostics entries in that tracker included submissions and regulatory reviews. A submission can be filed from anywhere.
+>
+> Once a test has to be physically in a health zone still reporting cases, which indicator covers that?
+
+**Publication confirmée** : URL du post (`7501417483380113408`) et présence du nom « Ifedayo Adetifa » vérifiées **dans le même appel JS que le clic sur « Commenter »**, texte du composeur comparé caractère pour caractère au brouillon validé avant le clic (238 caractères, 2 paragraphes), bouton atteint en remontant les ancêtres de l'éditeur rempli. Rendu vérifié par capture avant publication (2 paragraphes séparés d'une ligne vide). Après publication : éditeur vidé, **une seule occurrence** du texte dans la page, affiché sous « David Deheunynck • Vous · maintenant ». **Quota commentaires : 2/7. Nouveau blocage hebdomadaire : Ifedayo Adetifa jusqu'au 11/09.**
+
+`QA : mécanique PASS au jet 6 (238 car., 2 paragraphes, en/en, 0 blocker) ; seul finding informatif, un faux positif nommé par le relecteur — le « 45 » de « Day 45 » rapproché de la ligne West Nile/Roumanie (45 cas), alors que c'est un numéro d'édition du compteur IPPS | relecteur 5 passes, jets 1-5 rejetés sur 5 défauts distincts (affirmation produit sans sujet, redite du post, posture interdite, régression de formule, sur-affirmation d'un mot), jet 6 sans réserve | faits cités : aucun chiffre de flambée ; « Day 45 » est un label d'édition sourcé à la veille HWG, pas au registre — c'est le seul élément du texte qui ne remonte pas à une source primaire | registre du 04/09 (13:05) | statut : publié le 04/09 à ~13h35`
+
+⚠️ **Observation du relecteur à porter à David, indépendante du résultat.** La question 11 a échoué **quatre fois de suite** sur ce seul candidat, à chaque fois sur une formule différente. Les jets convergeaient (aucun ne rejouait le précédent), donc la règle des deux essais ne commandait pas l'abandon — mais c'est le motif exact que ce fichier a diagnostiqué le 03/09 (« *ce n'est plus un problème de rédaction, c'est un problème de stock d'angles* »). 🏷️HORS-ROUTINE : le relecteur note que le jet retenu est précisément l'élargissement de répertoire que la routine réclame depuis le 03/09 — **un fait vérifié livré sans le commenter, plus une question de métier sans thèse préalable**, au lieu d'une thèse argumentée depuis la position d'agrégateur. C'est une piste éditoriale concrète, à trancher par David.
+
+---
+
+### 3️⃣ ❌ OKE IKPEKPE A RÉPONDU — **aucune réponse publiée, et c'est une décision, pas un oubli**
+
+`urn:li:activity:7500522694187089920`, sous-fil ouvert depuis le 28/08, **10e tour possible**. Il a répondu à ~12h15, soit 1 jour après notre 9e tour que le run de 9h donnait pour éteint. Il est **libre de blocage top-level depuis aujourd'hui**, et §14 qualifie explicitement une réponse trouvée dans un fil actif d'opportunité de commentaire à part entière.
+
+**Verbatim reçu, intégral :**
+
+> David Deheunynck
+> If a preparedness check is meant to happen every month or every quarter, it is easier to know when one has been missed. There is already a schedule to follow. But if it only happens when someone asks for it, it can easily be overlooked. Having regular checks could also make accountability easier.
+
+**Ce à quoi il répond** : notre 9e tour, publié le 02/09, qui posait « *does it usually come with a cadence of its own, or does it arrive only when someone asks for it?* ». **Sa réponse est une concurrence** : il reprend notre alternative et tranche dans le sens que nous suggérions, en ajoutant l'argument de la redevabilité.
+
+**Trois angles instruits, les trois écartés, aucun jet rédigé :**
+1. « Une cadence ne rend un manquement visible qu'à qui détient le calendrier » → c'est la **posture d'observateur aval**, famille déclarée interdite le 03/09.
+2. « Une série numérotée signale elle-même son trou » → c'est **mot pour mot notre 8e tour** dans ce même fil (« *A bulletin numbered by epidemiological week reports its own gap* »).
+3. « Ce qu'on contrôle à date fixe dérive vers ce qui est contrôlable dans le temps imparti » → mouvement de collapse « X devient en pratique Y », même famille interdite.
+
+**Décision : ne rien publier.** Le post a une semaine, notre 9e tour a fait 3 impressions, sa réponse ne contient aucune matière neuve, et les trois seuls angles disponibles sont soit une redite de notre propre commentaire dans ce fil précis, soit une charpente brûlée. Publier aurait été le commentaire médiocre que la ligne 41 du SKILL interdit explicitement de forcer pour remplir un quota. **Le sous-fil reste ouvert** : s'il relance avec un élément neuf, la décision se réexamine. **Il reste par ailleurs le meilleur candidat DM du carry-over, jamais de message privé échangé.**
+
+---
+
+### 4️⃣ ❌ CANDIDAT COMMENTAIRE ABANDONNÉ — **Julien Harneis** (Senior Ebola Coordinator), l'angle était déjà publié chez quelqu'un d'autre
+
+`urn:li:activity:7501237885132677120`, post d'1 j, bilingue EN/FR, **2 commentaires seulement** (un vide, une demande de stage), profil **libre de blocage depuis le 02/09**, déjà commenté 4 fois par HWG. Contenu : les responsables humanitaires ont **prolongé de six mois** l'intensification de la riposte Ebola en RDC, alors que la flambée « franchit le seuil de 3 000 décès signalés ».
+
+**Angle instruit** : deux horloges coexistent, celle de la riposte (six mois, décidée) et celle qui met fin à une flambée (un décompte de jours sans cas, zone par zone, remis à zéro par un seul cas confirmé).
+
+**Abandonné au jet 1, sur le contrôle mécanique, et le blocage était juste.** `ngram.history` sur « *since the last confirmed case* », remonté à `content-log.md:5984` — un commentaire **déjà publié le 18/08 chez le Dr. Jean Kaseya**, qui tient exactement la même thèse : « *What ended Uganda's outbreak was a countdown: a fixed run of days with no new case… Days since the last confirmed case, province by province, is what would show where the focus you are calling for has already taken hold* ». Ce n'est pas une collision de formule, c'est **le même argument resservi à un autre destinataire**, ce que §5 item 7 interdit.
+
+**Aucun 2e jet tenté.** Les deux autres angles disponibles sous ce post étaient la posture d'observateur aval et le terrain politique (le post remercie nommément le Coordonnateur des secours d'urgence et le Comité permanent inter-organisations). **Profil non brûlé, aucun blocage créé** : à reprendre sur un autre post, avec un angle qui ne soit ni le décompte zonal ni l'architecture humanitaire.
+
+---
+
+### 5️⃣ 👀 VEILLE PASSIVE — **un événement Ebola/RDC neuf et de premier ordre, dont les deux porteurs sont bloqués**
+
+- 🔴 **L'événement du jour : quatre zones de santé de RDC ont atteint 42 jours sans nouveau cas d'Ebola**, le seuil international qui sert à déclarer la transmission interrompue ; cinq autres zones affectées sont à au moins trois semaines. Porté par **Health Policy Watch** (11 h), qui cite le Pr **Yap Boum II** (Africa CDC) : « *The message is that it is definitely possible in that environment to break the transmission* ». Le même post donne Mongbwalu, Rwampara et Nizi (Ituri) comme les zones de plus forte incidence, et signale une **baisse de 31 % de la vaccination rougeole** parmi les services essentiels perturbés.
+- 🔴 **Et son contrepoint exact, publié 1 h avant l'ouverture de ce run** : **Tambe Elvis Akem, MD** rapporte que le **2 septembre, la zone de santé de Rungu (Haut-Uele) a confirmé un nouveau cas après 40 jours sans aucun** — « *the longest stretch of inactivity to reactivate since @IRNR Group began tracking zone-level status in this outbreak* ». Deux jours avant le seuil. Il en tire une thèse méthodologique nette : « *A health zone with no new cases for weeks is not the same as a health zone where transmission has stopped* ».
+- ⚠️ **Les deux porteurs sont bloqués en commentaire jusqu'au 05/09** (Health Policy Watch et Tambe Elvis Akem). Recherche d'un porteur libre menée, §16 point 2 : trois requêtes de contenu triées par date (« 42 days Ebola health zones », « Ebola transmission health zones DRC », « Ebola health zone days since last case ») ne renvoient **aucun autre porteur** ; les pages Africa CDC et WHO AFRO n'ont pas été atteintes par leurs URL usuelles. **The Conversation Africa** a publié il y a 23 min un article co-signé Yap Boum II et Marie Roseline Darnycka BELIZAIRE (« *DRC's Ebola epidemic could be the worst in history: 4 things that could help end it* ») : porteur libre et frais, mais le post lui-même ne porte que le titre et le lien, sans matière propre à commenter.
+- 🔵 **Julien Harneis** : prolongation de six mois du scale-up système (section 4).
+- 🔵 **Catherine Linard** (1 j) : post de remerciement pour le mandat Francqui-Collen, toujours sans angle. Dossier clos depuis ce matin, ne pas rouvrir.
+- 🔵 **Christian BABOKO** a commenté le post de Pete Macharia 2 h après notre commentaire du matin : « *A similar approach could be applied in Lubumbashi, DRC, where research suggests that only a small proportion of health facilities provide the full package of EmONC functions. Combining facility mapping, geolocation, assessment of EmONC functionality, and referral pathway analysis could generate valuable evidence to strengthen maternal and newborn care.* » Traité comme cible de note de connexion dans `linkedin-contacts.md`.
+- 🔵 **ECDC** recrute son Chief Scientist (déjà noté ce matin, page bloquée jusqu'au 08/09). **Africa CDC** : rediffusion du briefing du 03/09, événement clos ce matin.
+- ⭐ **Matière de post original disponible et non servie** : l'écart entre les deux faits ci-dessus (quatre zones au seuil des 42 jours, une zone qui redémarre à 40) est un sujet entier sur ce que mesure un décompte de fin de flambée. Le fait **PARTNERS** reste lui aussi non servi en commentaire.
+- ⭐ **Signal de traction — le seul du run, et il arrive après la publication** : **Lenka Beňová** (`/in/lenka-be%C5%88ov%C3%A1-915bb711/`), *Professor in Maternal and Reproductive Health à l'**Institute of Tropical Medicine d'Anvers***, profil vérifié, **2 512 abonnés**, **a aimé notre commentaire Pete Macharia** du matin. **Déjà suivie depuis le 02/08**, jamais commentée : aucune action neuve possible, mais c'est la première interaction d'un profil de ce niveau avec ce commentaire. ⚠️ **Convergence à noter** : c'est la même institution que celle citée une heure plus tard par **Christian BABOKO** en réponse à notre note de connexion (« *the Lubumbashi School of Public Health and the Institute of Tropical Medicine (ITM) Antwerp have already explored all these aspects* »). Deux signaux indépendants pointant l'ITM Anvers le même jour.
+- **Signal de traction institutionnelle au sens strict de §13** : la barre demande un compte de référence institutionnelle et une interaction plus forte qu'un like. Le like de Lenka Beňová en est proche mais reste un like ; il est **repris dans la notification push de fin de run** avec les deux autres faits du jour, pas notifié seul.
+
+---
+
+### 6️⃣ 🗓️ LIGNE D'ÉVÉNEMENT (§16)
+
+**Événement clos ce matin** : briefing Africa CDC du 03/09, sorti de sa fenêtre 48 h sans commentaire, motif assumé (l'angle a manqué, pas le support).
+
+**Événement ouvert, à porter au créneau de 17h et à demain** : **le décompte zonal de fin de flambée en RDC** (quatre zones à 42 jours, Rungu qui redémarre à 40 le 02/09). Porteurs identifiés, dans l'ordre où les essayer : **Tambe Elvis Akem** (post d'1 h ce midi, le plus riche, **libre de blocage à partir du 05/09** — sa fenêtre 48 h court jusqu'au 06/09 midi, donc parfaitement atteignable demain matin) ; **Health Policy Watch** (11 h, libre le 05/09 également) ; The Conversation Africa, Yap Boum II, Marie Roseline Darnycka BELIZAIRE, page Africa CDC, page WHO AFRO, Prof. Mohamed Janabi. ⚠️ **Ne pas rejouer l'angle du décompte zonal contre l'agrégat national** : il est déjà publié chez le Dr. Jean Kaseya le 18/08 (section 4).
+
+---
+
+### 7️⃣ 📊 DONNÉES ÉPIDÉMIOLOGIQUES (§8) — **aucune écriture, un signalement résolu, un signalement neuf**
+
+- ✅ **Résolu : le signalement du 03/09 soir a été absorbé par la base.** Le run de 17h la veille avait repéré via une compilation tierce que le DRC MoH SitRep N°110 donnerait 6 250 / 3 039 au 01/09, contre 6 186 / 3 007 en base. **Le registre régénéré ce midi porte désormais 6 250 cas, 3 039 décès, CFR 48,6 %, arrêtés au 01/09, source ECDC**, écrits en base ce matin à 09h05. Le signalement peut être clos pour `morning-don-check` : ECDC a rattrapé, aucune écriture manuelle n'est nécessaire.
+- 🔬 **Signalement neuf, non ingéré** : **Tambe Elvis Akem donne 6 342 cas confirmés et une létalité de 48,4 % au 2 septembre**, avec 92 cas confirmés dans les 24 h et un détail journalier (59 le 30/08, 86 le 31/08, 64 le 01/09, 92 le 02/09), et 60 zones de santé affectées sur 151, inchangé depuis le 26/08. **Plus frais que notre ligne d'un jour et cohérent avec elle** (aucune régression). Mais c'est une **compilation tierce** (son dashboard IRNR, construit sur les SitReps du ministère), pas la lecture directe d'un sitrep primaire : **à vérifier sur pièce par `morning-don-check` avant toute écriture.**
+- ⚠️ **Chiffre plus bas repéré et volontairement non appliqué** : Health Policy Watch écrit « *the wider outbreak has recorded 5 656 cases and 2 715 deaths* », soit **nettement en dessous** de notre ligne. C'est un artefact de date d'arrêt (chiffres de fin août), exactement le cas prévu par §8 : sur un foyer actif, un cumul qui baisse ne s'écrit pas.
+- Les autres signalements des 02-03/09 restent ouverts et inchangés : Polio/RDC (Lualaba, Nord-Ubangi), Choléra/Tanzanie (arrêté au 28/06), Dengue/Tanzanie, Diphtérie/Nigéria, West Nile/Grèce.
+
+---
+
+### 8️⃣ 📊 QUOTAS À LA CLÔTURE (partagés entre les 3 sessions LinkedIn du jour)
+
+| Catégorie | Consommé | Plafond | Détail |
+|---|---|---|---|
+| Commentaires | **2 publiés** | 7 | Pete Macharia (~10h55, monitoring) + **Ifedayo Adetifa (~13h35, ce run, 6 jets)**. 2 candidats instruits et abandonnés ce run (Oke Ikpekpe, Julien Harneis), motifs de fond documentés |
+| Notes de connexion | **1 envoyée** | 7 | **Christian BABOKO**, 4 jets, **acceptée dans les minutes qui ont suivi**. ⚠️ **Plafond réel atteint côté plateforme : 0 invitation personnalisée restante ce mois-ci** |
+| Suivis | **8** | 7-10 | inchangé depuis ce matin, objectif atteint. **Aucun follow-back dû** : 410 abonnés, les nouveaux (Caroline Museka, Boris Pavlin) sont déjà suivis |
+| DM | **2 envoyés, 1 en file, 1 abandonné** | 8 | détail dans `linkedin-contacts.md` |
+| Invitations reçues traitées | 0 | — | les 2 restantes sont des décisions déjà prises le 31/08 |
+| Connexions acceptées | **1** | — | Christian BABOKO a accepté notre invitation le jour même |
+| Écritures en base | **0** | — | voir §7 |
+
+### 9️⃣ 🔁 CARRY-OVER POUR LE CRÉNEAU DE 17h (04/09)
+
+1. 🗓️ **LIGNE D'ÉVÉNEMENT (§16), la plus importante de ce carry-over — le décompte zonal de fin de flambée en RDC.** Quatre zones de santé à **42 jours sans nouveau cas** (le seuil de déclaration d'interruption de transmission) et cinq autres à trois semaines, **contre** la zone de **Rungu (Haut-Uele) qui a reconfirmé un cas le 02/09 après 40 jours**, deux jours avant le seuil. **Les deux porteurs sont bloqués jusqu'au 05/09** (Health Policy Watch, Tambe Elvis Akem). **Le meilleur créneau est demain matin, pas ce soir** : le post de Tambe Elvis Akem, publié vers 12h ce jour, sera à ~24 h demain, donc dans la fenêtre, et son blocage tombe le 05/09. ⚠️ **Ne pas rejouer l'angle « décompte zonal contre agrégat national »**, publié le 18/08 chez le Dr. Jean Kaseya.
+2. ⭐ **Oke Ikpekpe — sous-fil ouvert, aucune réponse publiée ce run, décision assumée** (section 3). Ne pas revenir dessus sans élément neuf de sa part : les trois angles disponibles sont une posture interdite, une redite de notre propre 8e tour, ou un collapse. Reste le meilleur candidat DM du carry-over, jamais de message privé échangé.
+3. ⚠️ **À RETESTER, ne pas recopier : deux fils dont le volet commentaires ne s'est pas rendu** — Dr. Rashi Bhardwaj (`7500961203263959040`) et Mohammad Ilias Hossain (`7499900718590595072`), deux tentatives chacun dont une avec défilement forcé. **Les rouvrir par un autre chemin** (activité récente du profil, ou depuis une notification) plutôt que par l'URN direct. Ce n'est pas « rien de neuf », c'est « non vérifié ».
+4. ❌ **Julien Harneis — profil intact, angle brûlé.** Aucun commentaire publié, aucun blocage créé. Ne pas rejouer le décompte zonal chez lui ; les deux autres angles de son post sont la posture d'observateur aval et le terrain politique.
+5. ⭐⭐ **Christian BABOKO — dossier prioritaire du prochain créneau.** Invitation avec note acceptée dans les minutes qui ont suivi, puis **trois messages reçus en quatre minutes**, dont quatre références qu'il dit couvrir déjà le sujet. **Deux jets de réponse rédigés, aucun envoyé** : le fil a changé sous le brouillon. **Lire les quatre références avant de répondre**, liste dans `linkedin-contacts.md` section 4bis.
+6. 🔴 **Contrainte de plateforme neuve : 0 invitation personnalisée restante ce mois-ci.** Toute invitation d'ici la fin du mois partira **sans note**. Ne pas rédiger de note de connexion sans avoir d'abord vérifié le compteur dans la modale.
+7. ⭐ **Signal de veille : Lenka Beňová** (`/in/lenka-be%C5%88ov%C3%A1-915bb711/`, *Professor in Maternal and Reproductive Health, ITM Anvers*, profil vérifié, 2 512 abonnés, **déjà suivie depuis le 02/08**) **a aimé notre commentaire Macharia**. Pas de nouvelle action possible (déjà suivie, jamais commentée), mais c'est la première interaction d'un profil de ce niveau avec ce commentaire.
+8. 🔬 **Signalement épidémiologique ouvert** (§7) : 6 342 cas / létalité 48,4 % au 02/09 selon la compilation de Tambe Elvis Akem, contre 6 250 / 3 039 au 01/09 en base. Source tierce, à vérifier sur pièce par `morning-don-check`. Le signalement de la veille (SitRep 110) est **résolu**, ECDC l'a absorbé.
+9. **Inchangés, à reporter tels quels** : ⭐⭐ Dr. Malachie MANAOUDA (welcome DM, **pas avant le 05/09**) ; **Dr. Siaka Condé** (ne pas relancer avant le 05/09) ; ⭐ John Omari Baso (ne rien envoyer avant qu'il écrive ; **réexporter le fil en entier** avant tout brouillon) ; ⭐⭐ Céline FRANÇOIS (meilleure cible de commentaire du lot des 8 suivis, dès qu'elle republie) ; ⭐⭐ Delphine CASAMATTA et David Moreau (excellentes cibles, aucun blocage, ne pas rejouer les angles morts) ; ⭐⭐ Jacques Delors TOUMANSIE MFONKOU (épisode 2 de « INSIDE THE FIELD ») et ⭐⭐ Ofelia CAZACU (OMS/ICG) ; ⭐⭐ Seynudé Jean-Fortune DAGNON (attendre l'acceptation) ; ⭐⭐ Dr. Ibrahima Socé Fall (toujours sans hook honnête) ; ➖ Yakoza Nyirenda (invitation sans note du 30/08 toujours en attente) ; ⭐⭐ Isaias Fernandes Co (rien avant la semaine du 14/09) ; ✅ clos : Kevin S., Rocham Mulumbwe, Boris Pavlin, Yuda Sule Paschal, Catherine Linard, Gail Carson ; ❌ ne pas reproposer sans élément neuf : Zachariah G. Houdari, OLAOLUWA PHILIP, Jean-Rodrigue NDONG, Haider Durrani, Kipchirchir Kigen, Victoria Kanana, Abdulrazaq Tanga, Herve Chatue kamga.
+10. **Blocages hebdomadaires au 04/09 après ce run** : **nouveau ce run — Ifedayo Adetifa (11/09)** ; Adesoye Emmanuel Tunde, Kyaw Thowai Prue Prince, Rocham Mulumbwe, Dr. Rashi Bhardwaj, Dr Fabrice KHADDY, Miriam Mbueshi (09/09) ; Dr. Jean Kaseya, page ECDC, Jacob Banda (08/09) ; Melvin Sanicas, Dossa Paul YAOÏTCHA, Mohammad Ilias Hossain (07/09, top-level, sous-fils ouverts) ; Global Health EDCTP3, French Healthcare Association, Health Policy Watch, Tambe Elvis Akem, SOUAD BELKACEMI (05/09) ; **Pete Macharia (11/09, créé ce matin)**. **Libres** : Oke Ikpekpe, Jason Kindrachuk, Dr Jeeven Kumar, Harvey Basivikidi, Robert Herriman, Patrick AYONGA, Oliver Morgan, page Africa CDC, page WHO AFRO, Vital Strategies, Tedros, Prof. Mohamed Janabi, INRB, Apoorva Wasnik, Johan Verheyden, Gaelle Gonzalez, Lori Peterson, Dr. Malachie MANAOUDA, James Schlitt, Martin Yakum, Ifedayo Adetifa (jusqu'à ce run), Julien Harneis, BANZA Freddy Mutoka, Jean-Paul Gonzalez, Delphine CASAMATTA, David Moreau, **Christian BABOKO**, **Lenka Beňová**, The Conversation Africa, Yap Boum II, Marie Roseline Darnycka BELIZAIRE.
+
+### 🔟 🔧 ARBRE DE TRAVAIL
+
+Fichiers modifiés par cette session : `marketing/content-log.md`, `marketing/linkedin-contacts.md`, `marketing/linkedin-candidates-tracker.md`. **Fichiers modifiés par d'autres et laissés intacts** (`AGENTS.md`) : `marketing/qa/product-claims.manual.json`, `scripts/audit-alert-day.mjs`, `scripts/probe-alert-lock.mjs` — inchangés depuis le 29/08 pour les deux derniers, signalés pour la troisième session consécutive. `marketing/qa/claimable-facts.json` régénéré, non suivi. `tmp/` non suivi. **Branche : master.** Aucun verrou de code demandé : cette routine ne touche ni `app/`, ni `lib/`, ni `components/`, ni les dépendances. Aucun commit local en attente à l'ouverture (`git log origin/master..master` vide).
+
+---
+
 ## 📅 Session linkedin-hwg-monitoring — 04/09/2026 (9h, puis reprise 10h15 sur ordre de David « continue le run ») — ✅ **1 commentaire publié (9 jets cumulés sur 3 candidats)** — 8 suivis, ligne d'événement Ebola/RDC sortie de sa fenêtre
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` du 04/09 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture (la seule entrée du jour était celle de `linkedin-hwg-content-proposal`, 8h35) → **premier déclenchement de cette routine aujourd'hui**. Horloge à l'heure (`Fri Sep 4 09:04 2026`). Branche vérifiée : **master**.

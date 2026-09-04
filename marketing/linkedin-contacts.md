@@ -1,6 +1,150 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
+## 📅 Session linkedin-hwg-followup-check — 04/09/2026 (13h, 1er des 2 créneaux après-midi) — ✅ **1 note de connexion envoyée (4 jets)** — ✅ **1 DM ENVOYÉ PAR LA ROUTINE (James Schlitt, 13h57, 3 jets)** — premier envoi réel sous l'exception d'automation du 03/09 — ⚠️ **LinkedIn n'accorde plus qu'une invitation personnalisée par mois, et elle vient d'être consommée**
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` du 04/09 dans ce fichier ni dans `content-log.md` à l'ouverture (entrées du jour : `linkedin-hwg-content-proposal` 8h35, `linkedin-hwg-monitoring` 9h + reprise 10h15). → **premier déclenchement de cette routine aujourd'hui**. Horloge à l'heure (`Fri Sep 4 13:02 2026`). Branche : **master**. Registre de faits régénéré à 13h05 (221 faits, 3 périmés).
+
+---
+
+### 1️⃣ ⚙️ RÉGIME DM APPLIQUÉ CE RUN — **l'exception d'automation du 03/09, pour la première fois réellement exercée**
+
+Le run de 9h ce matin avait appliqué la **ligne de base du 23/07** (mise en file) et il avait raison de le faire : la présence de David était **positivement établie**, par un commit horodaté 09h31 au milieu du run portant « David a tapé "publie" en session interactive ».
+
+**Ce run est dans la situation inverse, et il faut être honnête sur ce qu'elle vaut.** Aucune preuve de présence : dernier commit à 11h27 (celui du run du matin), aucun fichier du dépôt modifié depuis, rien tapé dans cette session. Mais **l'absence de preuve de présence n'est pas une preuve d'absence** — c'est la seule chose dont je dispose. Trois éléments font pencher vers l'application de l'exception plutôt que vers la mise en file :
+
+1. C'est un **run planifié**, sans intervention, ce qui est le cas canonique visé par le texte de `CLAUDE.md` (« pour les runs planifiés des trois mêmes routines, session automatisée, David absent »).
+2. **C'est exactement le créneau que David a nommé** en instaurant l'essai le 03/09 (« on teste l'automation au run de 13h aujourd'hui »).
+3. **L'essai du 03/09 n'a jamais eu lieu** : l'outillage QA est tombé en cours de run ce jour-là et aucun DM n'a pu être contrôlé, donc aucun envoyé. Si chaque run trouve un motif de ne pas l'exercer, l'essai que David a demandé ne se fait jamais.
+
+`CLAUDE.md` relu en début de run : l'exception y figure toujours, non révoquée. **Conduite appliquée : tout DM rédigé ce run passe le dispositif complet puis est envoyé par la routine.** Le DM déjà en file (trésor Ndaye) n'est **pas** concerné : le SKILL est explicite, « un DM en attente ne part jamais automatiquement par une session suivante sans validation explicite de David ».
+
+---
+
+### 2️⃣ ✅ DM ENVOYÉ PAR LA ROUTINE À 13h57 — **James Schlitt, PhD, MPH** — 3 jets, **premier envoi réel sous l'exception d'automation du 03/09**
+
+`/in/james-schlitt-phd-mph-4377a81b/`, *Computational Epidemiologist | AI & LLM Systems for Biosurveillance | Pandemic Forecasting*. **Il a répondu à 13h15, pendant ce run**, au message que David avait fait envoyer ce matin à 10h12. Fil relu **en entier** (9 messages, du 03/09 09h59 à son message de 13h15), collé verbatim au contrôle et au relecteur. *langue du fil = en ; langue du brouillon = en.*
+
+**Son message reçu, intégral :**
+
+> I'd consider the excluded rows to be evidence in a chain of custody analogy. For regular daily curves from a small pool of established bodies, their utility was diminished and we fed most of our plots with the daily max. For news extractions the source heterogeneity and validity are quite different so reasoned guesses and preserving evidence take priority. I'd rather be usefully wrong in such with all alternate conclusions still available than presumptively right with no evidence trail.
+>
+> A lot of this comes down to the expected profile of the desired user - outbreak investigator, epidemic modeller, general public? The utility of useful, early, and precise change for each.
+
+**Il pose donc une question directe sur le public visé par HWG.** La réponse est entièrement adossée à la copie publique du site (`product-claims.json`, `siteCopy`) : « *Solutions tailored for governments, NGOs, and private health sector actors.* » Aucune décision produit n'a été improvisée, ce qui écarte le garde-fou §3 sur les questions appelant un arbitrage business.
+
+**3 jets, trois rejets sur trois défauts différents, tous réels :**
+- **Jet 1** — réponse construite sur une antithèse (le lecteur opérationnel contre le relecteur ultérieur), clôturant sur « *Where does an evidence trail earn its keep when nobody downstream intends to walk it back?* ». Relecteur : **REECRIRE 11**, quatre recoupements documentés — « *earn its keep* » déjà en clôture d'un DM (`linkedin-contacts.md:11881`) ; « **downstream** », mot **écarté formellement deux fois pour saturation** (53 occurrences) ; la charpente de clôture « *Where does X … ?* » (`content-log.md:2989`) ; « *and stops there* » (`linkedin-contacts.md:4885`). **Et surtout une redite que James aurait vue lui-même** : l'antithèse en deux temps rejouait « *Your vetting cluster gives repetition a vote. Mine gives it none* », envoyée dans ce fil précis le 03/09 à 17h41.
+- **Jet 2** — antithèse supprimée, ouverture du 2e paragraphe sur « *The phrase that stays with me is usefully wrong.* ». Relecteur : **REECRIRE 11** de nouveau, et le motif est cinglant : « *stays with me* » est **la famille la plus saturée du corpus, 24 occurrences, déjà écartée formellement deux fois par le dispositif**, et le brouillon en reprenait le créneau syntaxique exact. Relevé au passage en question 5 : sans marqueur de citation, « *the phrase … is usefully wrong* » se lit par défaut comme « sa formule est fausse ».
+- **Jet 3** — citation explicitement attribuée (« *You said you would rather…* »), figure de réduction reformulée hors de la famille « one number ». **Relecteur : `VERDICT: ENVOYER`, 12 PASS sur 12**, rendu en connaissance du fait que le message partirait sans relecture de David. Une seule réserve de style signalée sans la compter en échec : « *cannot hold two of them* » télescopait deux sens de « hold » à côté de « warehouse ». **Corrigé avant envoi en « cannot act on two of them »**, correction d'un mot, revérifiée au contrôle mécanique (aucun n-gramme introduit, `grep` du corpus à 0).
+
+**✅ Texte envoyé à 13h57 :**
+
+> Not the modeller, and not the general public. The site says governments, NGOs and private health sector actors, and that is who I write for: someone deciding where staff and supplies go this week.
+>
+> You said you would rather be usefully wrong with the alternatives still available. A logistics officer picking one warehouse cannot act on two of them, so somewhere between your record and that decision the alternatives get cut down to what fits a single order.
+>
+> Who makes that call in your setup?
+
+**Envoi confirmé** : en-tête du composeur revérifié (« James Schlitt, PhD, MPH ») et contenu comparé **caractère pour caractère** au texte validé **dans le même appel JS que le clic sur « Envoyer »** — le clic n'était armé que si les deux correspondaient (495 caractères). Rendu vérifié par capture avant l'envoi : structure `P / ligne vide / P / ligne vide / P` conforme. **Après envoi** : composeur vidé, message présent dans le fil sous « David Deheunynck · 13:57 », **une seule occurrence dans la liste des messages** (contrôle anti-doublon explicite : 1 élément de message, 1 texte unique).
+
+**Arbitrage CTA : omis délibérément, pour la troisième fois dans ce fil.** `linkAllowed: on-request` au lexique, James n'a rien demandé, et l'arbitrage a déjà été rendu le 03/09 puis de nouveau ce matin (un CTA ajouté au brouillon avait été retiré sur avis du relecteur). **Le nom du produit, le lien et l'essai n'ont toujours jamais été envoyés dans ce fil.** La mention « *The site says…* » cite la copie publique sans nommer le produit ni renvoyer nulle part. **Aucun chiffre cité.**
+
+`QA : mécanique PASS au jet 3 hors faux positif (495 car., 3 paragraphes, en/en, 0 warn) ; seul blocker `context.too-soon` « 0 j », faux positif documenté pour une réponse en fil actif, confirmé trois fois par le relecteur | relecteur 3 passes, jets 1-2 rejetés sur des charpentes brûlées distinctes, jet 3 VERDICT: ENVOYER 12/12 | faits cités : aucun chiffre ; la seule affirmation produit est la copie publique du site, vérifiée mot pour mot contre product-claims.json | registre du 04/09 (13:05) | statut : envoyé le 04/09 à 13h57, en automation, conformément à l'exception du 03/09`
+
+---
+
+### 3️⃣ 🔒 DM TOUJOURS EN FILE, INCHANGÉ — **trésor Ndaye** (Ministère de la Santé publique, Kinshasa)
+
+Rédigé et double-checké ce matin par `linkedin-hwg-monitoring` (4 jets, relecteur `VERDICT: ENVOYER` sans réserve), mis en file parce que la présence de David était établie à ce moment-là. **Ce run ne l'envoie pas** : le SKILL est explicite, un DM en attente ne part jamais automatiquement par une session suivante sans validation explicite de David. Ancienneté : moins d'un jour, donc pas de revérification à la source exigée (§9, seuil 7 jours).
+
+**Texte complet, prêt, jamais envoyé :**
+
+> Merci pour la mise à jour. Je suis curieux du mécanisme qui finit par reclasser ce résidu chez vous.
+
+`QA : mécanique PASS au jet 4 (100 car., 1 phrase, fr/fr, 0 blocker) | relecteur 4 passes, jet 4 VERDICT: ENVOYER sans réserve | faits cités : aucun | statut : en file de validation depuis le 04/09 ~11h`
+
+**Son message du 04/09 10:45 (« Jusqu'à présent aucune suite. ») reste le dernier du fil**, rien n'a bougé à 14h.
+
+---
+
+### 4️⃣ ✅ NOTE DE CONNEXION 1/7 ENVOYÉE — **Christian BABOKO** (OMS, Kinshasa) — **acceptée dans les minutes qui ont suivi**
+
+`/in/christian-baboko-b1b57b374/`, *Field Epidemiologist | Polio Eradication | World Health Organization (WHO)*, Kinshasa, **2e degré au moment de l'envoi**, 66 relations, 74 abonnés, relations communes Pete Macharia et Issa Barry. **Suivi par HWG depuis le 02/08**, mais jamais connecté : le tracker portait « *délibérément PAS connecté : profil réel mais trop neuf pour une invitation* » (7 abonnés, 1 relation à l'époque). **Ce motif a disparu**, la décision d'août est explicitement levée dans le tracker.
+
+**Hook** : son commentaire publié 2 h avant l'ouverture de ce run, sous le post de Pete Macharia — le post même sous lequel HWG a commenté ce matin. Verbatim : « *Combining facility mapping, geolocation, assessment of EmONC functionality, and referral pathway analysis could generate valuable evidence to strengthen maternal and newborn care.* »
+
+**4 jets, chacun sur un défaut réel et différent** :
+- **Jet 1** (« *I would like to see where that goes* »). Mécanique : deux corrections de format (204 → 200 car., closer imposé manquant). Relecteur : **REECRIRE 12** — la note ne contenait, hors closer, que ses propres mots renvoyés plus un intérêt générique transférable à n'importe qui. Aucune raison de se connecter.
+- **Jet 2** (« *Your Lubumbashi combination is closer to an answer than mine* »). Mécanique PASS. Relecteur : **REECRIRE 11** — 🔴 jumeau quasi littéral d'un DM envoyé le 25/07 (« *puts you closer to that answer than most people I can ask* »), à un mot près sur le 5-gramme, donc invisible au contrôle mécanique. Interdiction explicite de le remplacer par un `[leur matière] + copule + prédicat évaluatif`, moule déjà servi dans 4 notes envoyées.
+- **Jet 3** (« *Your Lubumbashi list would go looking on purpose* »). Mécanique PASS. Relecteur : **REECRIRE 5** — 🔴 « list » n'est pas son mot (il écrit « *Combining* »), et surtout il **collisionne avec « unlisted » six mots plus tôt**, où « list » désigne le registre officiel incomplet : le même mot servait aux deux termes opposés de l'antithèse.
+- **Jet 4** — « list » → « combination », son propre terme, rien d'autre touché.
+
+**🔒 Texte envoyé (196/200 caractères) :**
+
+> Christian, my comment under that Macharia post said a failed referral never surfaces an unlisted facility on its own. Your Lubumbashi combination would go looking on purpose. Would love to connect
+
+**Envoi confirmé** : modale relue avant le clic (en-tête « *Ajoutez une note à votre invitation* », nom « Christian BABOKO » affiché), texte relu **par zoom sur la zone de saisie** et comparé mot pour mot au brouillon validé, compteur LinkedIn affichant **196/200** soit exactement la longueur mesurée hors ligne. Après le clic : modale fermée, toast « **Invitation envoyée à Christian.** », bouton du profil passé de « Se connecter » à « **En attente** ».
+
+✅ **Acceptée dans la foulée** : revérification du profil ~10 min plus tard, il est passé **1er degré**, 67 relations. **Aucun welcome DM envoyé, et c'est délibéré** : la note portait déjà le fond, et écrire en privé dans la demi-heure aurait doublé le contact sans matière neuve. À reprendre s'il répond ou publie.
+
+⚠️ **Fait de plateforme à connaître, découvert dans la modale** : « **Il vous reste 1 invitation personnalisée ce mois-ci** ». Elle vient d'être consommée. **Le quota interne de 7 notes de connexion par jour est donc sans objet jusqu'au reset mensuel** : toute invitation supplémentaire partira sans note. Arbitrage assumé de l'avoir dépensée ici plutôt que de la garder : le hook est daté du jour même (son commentaire d'il y a 2 h, sous un post où nous venions d'écrire), il ne survivrait pas au mois prochain, et aucun meilleur candidat nommé n'attendait. À vérifier au premier run de chaque mois plutôt qu'à le redécouvrir dans une modale.
+
+---
+### 4️⃣bis ❌ RÉPONSE À CHRISTIAN BABOKO — **rédigée, deux jets, NON ENVOYÉE : le fil a changé sous le brouillon**
+
+Après avoir accepté l'invitation, Christian a écrit **trois messages en quatre minutes** :
+
+> **13:57** — Thank you, that's a very insightful point. I agree that actively exploring these gaps could reveal what routine referral data may miss in Lubumbashi. I'd be very happy to connect and discuss this further.
+>
+> **13:59** — But I think the Lubumbashi School of Public Health and the Institute of Tropical Medicine (ITM) Antwerp have already explored all these aspects and generated substantial evidence.
+>
+> **14:00** — (quatre références, sans commentaire)
+
+**Les quatre références qu'il envoie, à lire avant toute réponse :**
+- `medrxiv.org/content/10.1101/2025.07.04.25330874v1`
+- `link.springer.com/article/10.1186/s12978-026-02303-2` (*Reproductive Health*)
+- `researchsquare.com/article/rs-10156630/v1`
+- `researchsquare.com/article/rs-10540353/v1`
+
+**Deux jets rédigés, aucun envoyé :**
+- **Jet 1** (« *A question on the referral side, since that is the part you named: when a referral is made and the patient never arrives, what does the routine record show?* »). Mécanique PASS hors faux positif. Relecteur : **REECRIRE 11**, trois collisions, dont une de fond très coûteuse — 🔴 « l'événement raté laisse-t-il une trace dans le registre ? » est **la question signature du corpus, servie à au moins cinq destinataires différents** (`linkedin-contacts.md:4889`, `:14247`, `:14335`, `:10502`, `:9804`). Remplacer « un renvoi manqué » par « une inhumation avortée » ou « une alerte close » redonnait mot pour mot un message déjà envoyé. Également : la charnière « *that is the part* » (8 emplois signatures) et le moule de clôture « *when a <événement>, <ce que le registre montre>* » (6 emplois).
+- **Jet 2**, objet entièrement changé, portant sur le phénomène plutôt que sur sa trace (« *what actually moves a facility in or out of the full package between two assessments?* »). Mécanique PASS hors faux positif. Relecteur : **REECRIRE 11**, et son verdict est arrivé après la décision d'abandon — il **valide l'objet** de la question comme réellement neuf (« *ce n'est pas une variante déguisée, c'est bien une autre question* », aucun des cinq précédents ne portant sur la **cause** d'un changement d'état), mais fait échouer sa **formulation** : 🔴 « *what actually moves a* » est un 4-gramme et une charpente repris mot pour mot du DM envoyé à **Ifedayo Adetifa** le 23/08 (« *What actually moves a burden like that onto a national schedule?* ») — c'est-à-dire au destinataire du commentaire publié **ce run même**, et « *what actually* » compte 15 occurrences au corpus. L'ouverture « *A question on the [X] half* » collisionne également.
+
+**🔴 Motif d'abandon, et c'est le bon** : entre la rédaction du jet 2 et sa relecture, Christian a envoyé ses messages de 13h59 et 14h00. Ma question portait sur l'évaluation EmONC à Lubumbashi — c'est-à-dire précisément le domaine dont il vient d'écrire qu'il est **déjà couvert**, en joignant quatre références. La poser telle quelle aurait donné à penser que je n'avais pas ouvert ce qu'il venait d'envoyer : **exactement le mode d'échec intercepté deux heures plus tôt sur le commentaire Adetifa**, où la question présupposait un vide que notre propre veille contredisait.
+
+**Les deux motifs convergent, et c'est ce qui rend la décision facile** : le fil avait changé sous le brouillon, et le brouillon n'aurait de toute façon pas dû partir en l'état. ✅ **À garder pour le 17h : l'objet de la question est validé neuf par le relecteur** — ce qui fait passer un établissement dans ou hors du paquet EmONC complet entre deux évaluations (rotation de personnel, rupture de stock, disponibilité du bloc ou du sang, couverture de nuit) est le seul élément des deux jets que le corpus n'a jamais servi. **Ce sont l'ouverture et la clôture qui sont à refaire, pas le fond** — et il faudra d'abord vérifier que les quatre références n'y répondent pas déjà.
+
+**Décision : rien envoyé, dossier reporté au créneau de 17h**, avec une consigne explicite — **lire les quatre références d'abord**. Une réponse honnête ici doit soit s'appuyer sur ce qu'elles contiennent, soit poser une question que leur lecture laisse ouverte. C'est un abandon de candidat au sens de §5, pas un oubli de suivi.
+
+⚠️ **Convergence à noter pour la suite** : il cite l'**Institute of Tropical Medicine d'Anvers**, et c'est de cette même institution que vient **Lenka Beňová** (professeure en santé maternelle et reproductive à l'ITM), qui a aimé notre commentaire Macharia ce midi. Deux signaux indépendants pointent le même institut le même jour.
+
+---
+
+### 5️⃣ 🌐 RÉSEAU — RIEN À FAIRE, TOUT VÉRIFIÉ
+
+- **Abonnés : 410** (408 ce matin). Les deux nouveaux sont **Caroline Museka, MPH** (déjà suivie depuis le 03/09) et **Boris Pavlin** (connexion acceptée ce matin, suivi automatique). Les 10 premiers de la liste sont tous en « Suivi ». **Aucun follow-back dû**, quota suivis inchangé à 8.
+- **Relations : 295** avant l'invitation Baboko, **296 après** son acceptation. La liste « Ajouts récents » ne montrait aucune acceptation neuve avant celle-ci (Boris Pavlin 04/09, Yuda Sule Paschal 03/09, tous deux traités).
+- **Invitations reçues : 2, inchangées** — Zachariah G. Houdari (services financiers) et OLAOLUWA PHILIP (géospatial/climat sans santé publique). Décisions du 31/08 maintenues, aucun élément neuf, non rejugées.
+- **Messagerie** : dossier spam/bloqués vérifié en direct (`/messaging/?filter=blocked`) → **vide**. Aucun message non lu dans la boîte principale.
+
+---
+
+### 6️⃣ 🔁 CARRY-OVER POUR LE CRÉNEAU DE 17h (côté contacts)
+
+1. 🔒 **DM trésor Ndaye toujours en attente de validation de David** (texte complet section 3). Ne part pas automatiquement.
+2. ⭐⭐ **Christian BABOKO — dossier prioritaire du prochain créneau.** Relation acquise, trois messages reçus en quatre minutes, quatre références envoyées. **Lire les quatre références avant de répondre** (liste en section 4bis). Ne pas reposer la question EmONC telle quelle : il vient d'écrire que ce terrain est déjà couvert.
+3. 🔴 **0 invitation personnalisée restante ce mois-ci.** Toute invitation d'ici le reset partira sans note.
+4. ⭐ **James Schlitt** — DM envoyé à 13h57 en automation. Fil très actif (il a répondu deux fois en 24 h). À revérifier au créneau de 17h.
+5. ⭐ **Lenka Beňová** (ITM Anvers, profil vérifié, 2 512 abonnés, déjà suivie depuis le 02/08) a aimé notre commentaire Macharia. **Même institution que les références envoyées par Christian BABOKO** : deux signaux ITM Anvers le même jour.
+6. **Inchangés** : Dr. Malachie MANAOUDA (welcome DM pas avant le 05/09) ; Dr. Siaka Condé (pas avant le 05/09) ; John Omari Baso (ne rien envoyer avant qu'il écrive, réexporter le fil en entier avant tout brouillon) ; Seynudé Jean-Fortune DAGNON (attendre l'acceptation) ; Yakoza Nyirenda (invitation sans note du 30/08 en attente) ; Isaias Fernandes Co (rien avant la semaine du 14/09) ; Dr. Ibrahima Socé Fall (sans hook honnête) ; Zachariah G. Houdari et OLAOLUWA PHILIP (invitations reçues, décisions du 31/08 maintenues).
+
+### 7️⃣ 🔧 ARBRE DE TRAVAIL
+
+Fichiers modifiés par cette session : `marketing/linkedin-contacts.md`, `marketing/content-log.md`, `marketing/linkedin-candidates-tracker.md`. **Fichiers modifiés par d'autres et laissés intacts** (`AGENTS.md`) : `marketing/qa/product-claims.manual.json`, `scripts/audit-alert-day.mjs`, `scripts/probe-alert-lock.mjs`. `marketing/qa/claimable-facts.json` régénéré, non suivi ; `tmp/` non suivi. **Branche : master.**
+
+---
+
 ## 📅 Session linkedin-hwg-monitoring — 04/09/2026 (9h, reprise 10h12 « publie », reprise 10h15 « continue le run ») — ✅ **8 suivis**, ✅ **2 DM envoyés/en cours**, ✅ **1 connexion acceptée**, ❌ **2 DM et 2 commentaires abandonnés** — dont **trois affirmations fausses et une erreur logique interceptées avant envoi**
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` du 04/09 dans ce fichier ni dans `content-log.md` à l'ouverture (seule entrée du jour : `linkedin-hwg-content-proposal`, 8h35) → **premier déclenchement de cette routine aujourd'hui**. Horloge à l'heure (`Fri Sep 4 09:04 2026`). Branche : **master**. Registre de faits régénéré à 09:04 (221 faits, 106 lignes affichées, 3 périmés) ; registre produit régénéré également.
