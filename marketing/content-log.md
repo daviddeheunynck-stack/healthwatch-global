@@ -32,6 +32,17 @@ Archive de tout le contenu créé. Mise à jour à chaque session.
 
 ---
 
+### 1️⃣bis ✅ REPRISE — LES DEUX FILS NON VÉRIFIÉS SONT MAINTENANT VÉRIFIÉS, RIEN DE NEUF
+
+Sur ordre de David en session interactive (« continue le run, traite les fils rouverts non vérifiés »), les deux posts ont été rouverts **par un chemin différent de l'URN direct** : page d'activité récente du profil (`/recent-activity/all/`), puis clic sur le bouton « X commentaire(s) » de la carte du post dans cette liste, plutôt que de charger la page du post isolément. Ce chemin a rendu le volet commentaires dans les deux cas, là où l'URN direct l'avait laissé vide deux fois de suite.
+
+- **Dr. Rashi Bhardwaj** (`7500961203263959040`) — notre commentaire du 03/09 (« *Priority four is the one I'd ask about directly: who actually pulls the trigger?...* ») reste **le seul commentaire du post**, 10 impressions, 0 réponse.
+- **Mohammad Ilias Hossain** (`7499900718590595072`) — notre commentaire du 31/08 (« *On the combined total: Uganda has declared its Ebola outbreak over...* ») reste **le seul commentaire du post**, 8 impressions, 0 réponse.
+
+**Rien de neuf sur les deux.** Le doute levé, aucune action supplémentaire requise sur ces deux fils.
+
+---
+
 ### 2️⃣ ✅ COMMENTAIRE 2/7 PUBLIÉ — **Ifedayo Adetifa**, EN, top-level, premier contact — 6 jets, 5 rejets sur 5 défauts différents
 
 `urn:li:activity:7501417483380113408`, post de 11 h à l'ouverture, **relation de 1er degré**, 30 réactions, **1 seul commentaire avant nous, le sien** (une liste de ses quatre sources). *Global Health Leader & Physician-Epidemiologist | Outgoing CEO, FIND | Former Director-General, Nigeria CDC | Lancet Commissioner*. Repéré via les notifications. Post long sur la chaîne de mise à disposition des contre-mesures (financement, market shaping, production africaine, cinq priorités Africa CDC/ASLM), dont la thèse est que le diagnostic a le moins de cette chaîne, avec la flambée Bundibugyo citée en exemple.
