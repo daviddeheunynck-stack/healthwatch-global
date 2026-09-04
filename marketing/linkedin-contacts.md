@@ -1,7 +1,7 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
-## 📅 Session linkedin-hwg-monitoring — 04/09/2026 (9h) — ✅ **8 suivis**, 🔒 **1 DM en file de validation**, ❌ **2 DM et 2 commentaires abandonnés** — dont **trois affirmations fausses interceptées avant envoi**
+## 📅 Session linkedin-hwg-monitoring — 04/09/2026 (9h, puis reprise interactive 10h12 sur ordre de David « publie ») — ✅ **8 suivis**, ✅ **1 DM envoyé**, ❌ **2 DM et 2 commentaires abandonnés** — dont **trois affirmations fausses interceptées avant envoi**
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` du 04/09 dans ce fichier ni dans `content-log.md` à l'ouverture (seule entrée du jour : `linkedin-hwg-content-proposal`, 8h35) → **premier déclenchement de cette routine aujourd'hui**. Horloge à l'heure (`Fri Sep 4 09:04 2026`). Branche : **master**. Registre de faits régénéré à 09:04 (221 faits, 106 lignes affichées, 3 périmés) ; registre produit régénéré également.
 
@@ -11,11 +11,13 @@
 
 L'exception d'automation du 03/09 (`CLAUDE.md`) fait envoyer les DM par la routine elle-même **« pour les runs planifiés des trois mêmes routines (session automatisée, David absent) »**. **La condition « David absent » n'est pas remplie ce matin, et c'est vérifiable** : le commit `01dd80ac`, horodaté **09h31**, soit au milieu de ce run, porte « *David a tapé "publie" en session interactive* » pour le post de marque Diphtérie/Niger. David était donc à son poste pendant ce créneau.
 
-**Conduite appliquée : la ligne de base du 23/07** — le DM est rédigé, passé au dispositif complet, puis **mis en file de validation**, jamais envoyé par la routine ; notification push envoyée. Motif : l'exception d'automation est explicitement bornée à l'absence de David, elle est encore présentée comme un essai non revu dans `CLAUDE.md`, et un envoi est irréversible alors qu'une mise en file coûte à David une décision d'une ligne. **Si ce n'est pas la lecture qu'il veut, un mot suffit à faire partir le texte tel quel : il est prêt et complet ci-dessous.**
+**Conduite appliquée initialement : la ligne de base du 23/07** — le DM a été rédigé, passé au dispositif complet, puis mis en file de validation, non envoyé par la routine ; notification push envoyée. Motif : l'exception d'automation est explicitement bornée à l'absence de David, elle est encore présentée comme un essai non revu dans `CLAUDE.md`, et un envoi est irréversible alors qu'une mise en file coûte à David une décision d'une ligne.
+
+**David a répondu directement dans cette session, en tapant « publie ».** Conformément à `_shared/report-conventions.md` (« une instruction écrite par David directement dans la session d'une routine automatique vaut validation explicite »), c'est une validation explicite pour ce DM précis. Le texte a été **envoyé à 10h12**, tel quel, sans nouvelle QA (déjà passée par 4 jets ce matin même) — détail en section 2.
 
 ---
 
-### 2️⃣ 🔒 DM EN FILE DE VALIDATION — **James Schlitt, PhD, MPH**, réponse en fil actif — 🔴 **le texte validé 12/12 hier soir était FAUX sur notre propre produit**
+### 2️⃣ ✅ DM ENVOYÉ À 10h12, SUR ORDRE EXPLICITE DE DAVID (« publie » tapé en session interactive) — **James Schlitt, PhD, MPH**, réponse en fil actif — 🔴 **le texte validé 12/12 hier soir était FAUX sur notre propre produit**
 
 `/in/james-schlitt-phd-mph-4377a81b/`, *Computational Epidemiologist | AI & LLM Systems for Biosurveillance | Pandemic Forecasting*. Fil relu **en entier** (7 messages, du 09h59 du 03/09 à son message de 18h15). Son message reste le dernier, rien n'a bougé. *langue du fil = en ; langue du brouillon = en.*
 
@@ -32,7 +34,7 @@ L'exception d'automation du 03/09 (`CLAUDE.md`) fait envoyer les DM par la routi
 - **Jet 3 — thèse entièrement changée, et c'est elle qui tient** : la divergence **arrive** et **est arbitrée à l'écriture**, mais rien ne conserve la valeur perdante. **Tout le fond passe** — 4(a), 4(b), 4(c), 4(d), 7, 1, 5, 8, 10 et 12 en `PASS`, chacun vérifié sur le code (`sync-outbreaks/route.ts` pour l'écrasement, `outbreak-guards.ts` pour le refus, `interface Outbreak` pour l'absence de champ concurrent, la migration `outbreak_snapshots` pour l'unicité quotidienne, et `lib/cron-monitor.ts` qui confirme que le motif de refus part en `console.warn` et **n'est jamais persisté**). Reste **REECRIRE 11**, purement formel, avec quatre corrections nommées.
 - **Jet 4 — les quatre corrections de forme appliquées telles quelles, aucun point de fond touché** : (i) suppression de l'antithèse « *Your vetting cluster… Mine consumes it* », qu'il avait déjà reçue à la virgule près la veille à 17h41 ; (ii) suppression de l'aphorisme d'ouverture, qui aurait été **le troisième d'affilée dans ce fil** et devenait une signature repérable ; (iii) « *refused outright* » → « *blocked* », pour ne pas reprendre son propre « *ends the question outright* » ; (iv) une seule formulation d'absence de trace au lieu de trois. **Non resoumis au relecteur** : il avait explicitement écrit « *Aucun point de fond à toucher : 4, 7 et le reste tiennent* » et listé les quatre corrections mot pour mot.
 
-**🔒 Texte final, prêt, NON ENVOYÉ :**
+**✅ Texte final, ENVOYÉ le 04/09 à 10h12, sur ordre explicite de David tapé directement dans cette session (« publie ») :**
 
 > Two sources landing different counts on the same row the same day is a case I handle at write time: one value stands and the other is either overwritten or blocked. A West Nile row for France once carried a hand-entered national bulletin figure that WHO's own edition came in under; the lower write was blocked, and nothing on the row records that the two ever differed.
 >
@@ -40,7 +42,9 @@ L'exception d'automation du 03/09 (`CLAUDE.md`) fait envoyer les DM par la routi
 >
 > What do the losing values do for you once a cluster has settled?
 
-`QA : mécanique 652 car., 3 paragraphes, en/en, 0 ngram, 0 warn — seul blocker le faux positif documenté context.too-soon (réponse en fil actif, il a écrit en dernier). Le verdict brut « ABANDON » au 4e essai est le mécanisme de boucle abandonné le 26/08, déclenché par la seule répétition de ce faux positif. | relecteur : 3 passes, jets 1 et 2 rejetés sur des affirmations produit fausses, jet 3 tout le fond en PASS, REECRIRE 11 formel, corrections appliquées au jet 4 | faits cités : aucun chiffre ; l'épisode West Nile/France est raconté sans ses valeurs | registre du 04/09 (09:04) | statut : en file de validation, jamais envoyé par la routine`
+**Contrôles avant l'envoi (§5 items 3 et 4)** : en-tête du composeur revérifié (« James Schlitt, PhD, MPH »), son message de 18h15 toujours le dernier du fil (rien n'avait bougé depuis 9h). Contenu du composeur comparé caractère pour caractère au texte validé **dans le même appel JS que le clic sur « Envoyer »** — identité et texte vérifiés, clic déclenché seulement si les deux correspondaient. Rendu revérifié par capture avant l'envoi : structure `P / (une ligne vide) / P / (une ligne vide) / P` conforme, malgré un `innerText` comptant 4 sauts de ligne entre paragraphes au lieu de 2 (même artefact déjà rencontré le 03/09 sur le DM SOUAD BELKACEMI — c'est la capture qui tranche, pas le texte tapé). **Après envoi** : composeur vidé, message présent dans le fil sous « Vous · 10:12 », accusé de remise affiché (coche), aperçu de la liste de conversations passé à « Vous : Two sources landing different counts on the… ».
+
+`QA : mécanique 652 car., 3 paragraphes, en/en, 0 ngram, 0 warn — seul blocker le faux positif documenté context.too-soon (réponse en fil actif, il a écrit en dernier). Le verdict brut « ABANDON » au 4e essai est le mécanisme de boucle abandonné le 26/08, déclenché par la seule répétition de ce faux positif. | relecteur : 3 passes, jets 1 et 2 rejetés sur des affirmations produit fausses, jet 3 tout le fond en PASS, REECRIRE 11 formel, corrections appliquées au jet 4 | faits cités : aucun chiffre ; l'épisode West Nile/France est raconté sans ses valeurs | registre du 04/09 (09:04) | statut : envoyé le 04/09 à 10h12, sur ordre explicite de David tapé en session interactive`
 
 ⚠️ **Une réserve d'outillage relevée par le relecteur, à traiter hors de ce run** : les garde-fous d'écriture (`lockedRowRegressionGuard` et consorts) **n'ont aucune entrée dans `product-claims.json`**. Ils ont été vérifiés directement dans le code ce matin, mais si cet angle doit resservir, une claim manuelle est à ajouter — sinon le prochain brouillon qui s'en réclame échouera légitimement en question 4.
 
@@ -122,13 +126,13 @@ Recherche active menée sur le fil (bulletin régional Santé publique France) p
 | Commentaires | **0** | 7 | 2 candidats instruits, **5 jets**, 5 rejets du relecteur, tous documentés. Aucun blocage hebdomadaire nouveau créé |
 | Notes de connexion | **0** | 7 | aucun hook honnête sur les 8 profils suivis |
 | Suivis | **8** | 7-10 | objectif atteint |
-| DM | **0 envoyé, 1 en file** | 8 | 1 en file (Schlitt), 2 abandonnés (Baso, Yuda) |
+| DM | **1 envoyé** | 8 | Schlitt, 10h12, sur ordre explicite de David ; 2 abandonnés (Baso, Yuda) |
 | Invitations reçues traitées | 0 | — | les 2 restantes sont des décisions déjà prises |
 | Écritures en base | **0** | — | voir §8 dans `content-log.md` |
 
 ### 8️⃣ 🔁 CARRY-OVER POUR LE CRÉNEAU DE 13h (04/09)
 
-1. 🔒 **DM James Schlitt en attente de validation de David** — texte complet en section 2, corrigé ce matin de **trois défauts que la validation 12/12 d'hier n'avait pas vus**, dont une affirmation fausse sur notre propre produit. **Ne pas renvoyer la version d'hier.** Notification push envoyée.
+1. ✅ **CLOS — DM James Schlitt envoyé le 04/09 à 10h12**, sur ordre explicite de David tapé en session interactive (« publie »). Texte complet en section 2. Ne pas rouvrir ce dossier ; à suivre uniquement s'il répond.
 2. 🔴 **À trancher avec David, le point le plus important de la journée** : le corpus a produit **5 jets et 0 commentaire publiable** ce matin, après 4 jets et 0 commentaire hier après-midi. Chaque rejet est juste et documenté ; c'est le répertoire d'angles qui est épuisé, pas la qualité du contrôle. Détail et tableau des moules brûlés : `content-log.md`, section 1 de l'entrée du jour.
 3. 🗓️ **Ligne d'événement Ebola/RDC : à clore.** Le briefing Africa CDC sort de la fenêtre 48 h aujourd'hui, trois porteurs neufs ont été trouvés ce matin (David Moreau, WHO AFRO, Issa Barry) — le support n'a pas manqué, l'angle a manqué. ⚠️ **Le fait PARTNERS reste disponible et jamais servi en commentaire, mais ne jamais l'opposer à 2018-2020** (l'essai PALM a randomisé un anticorps monoclonal et le remdesivir en Ituri dès novembre 2018).
 4. 🔵 **La page WHO AFRO n'est plus inatteignable** — elle publie et s'ouvre normalement depuis le fil (post de 23 h sur l'extension du CTE de Nizi). Ne plus recopier « toujours inatteignable » sans l'avoir retesté.
