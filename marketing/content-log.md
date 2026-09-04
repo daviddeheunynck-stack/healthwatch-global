@@ -2,6 +2,122 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session linkedin-hwg-monitoring — 04/09/2026 (9h) — ⚠️ **0 commentaire publié : 2 candidats instruits, 5 jets, 5 rejets du relecteur, tous réels** — 8 suivis, ligne d'événement Ebola/RDC sortie de sa fenêtre
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` du 04/09 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture (la seule entrée du jour était celle de `linkedin-hwg-content-proposal`, 8h35) → **premier déclenchement de cette routine aujourd'hui**. Horloge à l'heure (`Fri Sep 4 09:04 2026`). Branche vérifiée : **master**.
+
+**Registre de faits régénéré** (09:04) : **221 faits citables sur 106 lignes affichées**, 81 `is_seed` exclues, **3 périmés** — contre 14 hier après-midi. Les 11 lignes Polio redevenues citables au présent ont été rafraîchies entre-temps. Registre produit également régénéré (`npm run qa:claims`) : 19 formats de prix, 7 claims manuelles, 110 foyers / 73 pays / 18 maladies citables.
+
+**Navigateur : sain.** `_shared/browser-status.md` lu avant ouverture, dernière entrée **🟢 RÉTABLI (03/09 ~09h35)**. `list_connected_browsers` renvoie `23c7ecdd-26d7-4d25-b39b-1889eb0fa3bd` seul, sélectionné par deviceId (§7). Aucun incident de tout le run, aucun refus du classifieur — contrairement aux trois créneaux d'hier.
+
+---
+
+### 1️⃣ 🔴 CE QU'IL FAUT LIRE EN PREMIER — LE STOCK D'ANGLES EST BIEN LE PROBLÈME, ET C'EST MAINTENANT MESURÉ
+
+Le run de 13h du 03/09 avait posé le constat en `🏷️HORS-ROUTINE` : « *ce n'est plus un problème de rédaction, c'est un problème de stock d'angles* ». **Ce run le confirme sur 5 jets supplémentaires, tous rejetés, chacun sur un moule rhétorique différent du corpus HWG** — et un des rejets a intercepté une **erreur factuelle** qui serait partie en public.
+
+Les deux candidats étaient bons, et les deux posts étaient de la matière de premier choix (0 commentaire chacun, profils institutionnels neufs). Ce sont les textes qui n'ont pas tenu :
+
+| Moule | Où il a été retrouvé | Jets tués |
+|---|---|---|
+| Ouverture par désignation d'un fragment du post (« X est la partie qui m'arrête ») | 6 occurrences, famille déjà déclarée épuisée le 03/09 | Casamatta jet 1, Moreau jet 2 |
+| Clôture en alternative binaire « A, ou B ? » | 3 commentaires publiés les 02 et 03/09, déjà sanctionnée par un `REECRIRE 11` | Casamatta jet 1, Moreau jet 1 |
+| Posture d'observateur aval (« rien ne dit à un lecteur extérieur lequel des deux… ») | 5 occurrences publiées, famille déclarée interdite le 03/09 | Casamatta jet 2 |
+| Distinction générique à deux termes (« A et B ne font pas le même travail : l'un…, l'autre… ») | 4 occurrences, dont un jumeau exact sur le même milieu institutionnel (ANRS, 26/07) | Casamatta jet 3 |
+| Formule de déférence (« que vous tranchez mieux que moi ») | consignée comme recyclée le 03/09 | Moreau jet 1 |
+
+**Le contrôle mécanique a laissé passer les cinq** : il compare des chaînes de caractères, et les cinq brouillons avaient une formulation entièrement neuve. C'est le relecteur, et lui seul, qui voit une charpente. Concrètement : **le filet anti-gabarit outillé ne couvre pas le mode de répétition qui coûte le plus aujourd'hui.**
+
+🏷️HORS-ROUTINE : à trancher avec David. Deux journées consécutives où la production de commentaires tombe à 1 puis 0 alors que la matière est abondante et les quotas larges. Le problème n'est pas la barre de qualité, qui fait exactement son travail, ni les cibles, qui sont bonnes. C'est que **le corpus HWG argumente depuis un très petit nombre de postures**, toutes déjà servies plusieurs fois devant des audiences qui se recoupent. Un élargissement délibéré du répertoire (par exemple : commenter en apportant un fait vérifié sans le commenter, ou en posant une question de métier sans thèse préalable) demande une décision éditoriale, pas un jet de plus.
+
+### 2️⃣ ❌ COMMENTAIRE — CANDIDAT 1, **Delphine CASAMATTA** (Santé publique France), ABANDONNÉ APRÈS 3 JETS
+
+`urn:li:activity:7501290208424816641`, post de 16 h, **0 commentaire**, 9 réactions, 5 republications. *Chargée d'études scientifiques chez Santé publique France*, cellule régionale Auvergne-Rhône-Alpes. Le post annonce le bulletin mensuel régional (chaleur, arboviroses, West Nile, maladies à signalement obligatoire, mortalité) et **présente Odissé**, le nouveau portail open data de l'agence.
+
+**Pourquoi cette cible.** Profil institutionnel neuf, sujet en plein périmètre, post récent sans aucun commentaire, et un objet — un portail open data qui naît à côté d'un bulletin PDF — qui touche exactement au travail de lecture de sources que fait HWG.
+
+- **Jet 1** — angle : rien ne dit à un lecteur extérieur lequel du portail ou du bulletin fait foi. Mécanique **PASS** (394 car.). Relecteur : **REECRIRE 11**, deux motifs distincts et documentés, (a) ouverture par désignation d'un fragment du post, famille relevée à 6 occurrences et déjà déclarée recyclée le 03/09, (b) clôture en alternative binaire, servie dans trois commentaires publiés les 02 et 03/09.
+- **Jet 2** — les deux motifs corrigés, fond inchangé. Mécanique **PASS** (287 car.). Relecteur : **REECRIRE 11** de nouveau, sur un motif **différent** : la clause « *rien ne dit à un lecteur extérieur lequel des deux fait foi* » est la posture d'observateur aval, **5 occurrences publiées retrouvées**, et une famille que le corpus a lui-même déclarée épuisée le 03/09.
+- **Jet 3** — angle refondé du côté du producteur (Odissé arrive **par** le bulletin, ce n'est pas une concurrence). Mécanique **PASS** (363 car.). Relecteur : **REECRIRE 5, 9, 11, 12** — l'ouverture retombe sur la distinction générique à deux termes (« *A et B ne font pas le même travail : l'un…, l'autre…* », 4 occurrences dont un jumeau exact du 26/07 sur le même milieu institutionnel) ; le texte décrit Odissé au-delà des termes du post (« série interrogeable », « en continu ») devant une agente de l'agence qui le publie ; sous une annonce de parution à 0 commentaire, la question présuppose devant elle que le rôle du bulletin doit évoluer ; et « ailleurs » contredit « arrivant par le bulletin lui-même » dans le même texte.
+
+**Abandon.** Trois jets, trois moules distincts du même corpus, et le relecteur conclut lui-même qu'« il ne reste pas de fragment réutilisable ». Aucun texte publié, **aucun blocage hebdomadaire créé** : la cible reste entièrement disponible. Profil **suivi** ce run.
+
+---
+
+### 3️⃣ ❌ COMMENTAIRE — CANDIDAT 2, **David Moreau** (statisticien épidémiologiste), ABANDONNÉ APRÈS 2 JETS — **une erreur factuelle interceptée**
+
+`urn:li:activity:7500944178298650624`, post de 1 j, **0 commentaire**, 3 réactions. *Ingénieur Statisticien Epidémiologiste*, indépendant, Bretagne. Il publie une courbe cas/décès de la flambée Ebola en RDC arrêtée au 30 août, construite d'après les bulletins de l'OMS, et note qu'aucun vaccin ni traitement spécifique n'est homologué. **Porteur §16 de l'événement Ebola/RDC.**
+
+- **Jet 1** — angle : lui offrir le point ECDC (6 186 cas confirmés / 3 007 décès arrêtés au 31/08, registre du jour) et lui demander s'il reste sur un seul organisme ou prend le point le plus récent. Mécanique **PASS** après correction d'un `lexique` (« cas » sans qualificatif → « cas confirmés »). Relecteur : **REECRIRE 11, 12**. Le **12 est le vrai coup d'arrêt** : son post dit déjà « *plus de 6.000 cas recensés et près de 3000 décès* » — 6 186 et 3 007 tombent **à l'intérieur de son propre arrondi**, le « détail » n'apportait qu'une date.
+- **Jet 2** — angle entièrement changé : l'essai **PARTNERS** recrute depuis juillet dans l'Ituri (INRB, Institut de médecine tropicale d'Anvers, Oxford), donc une part des cas confirmés reçoit un traitement, ce qui met une discontinuité dans le bilan qu'il compare à 2018-2020. Mécanique : un blocker `context.cta-forbidden` sur le mot « essai », **faux positif documenté** (essai clinique, pas essai commercial ; `grep` sur les vrais marqueurs → 0). Relecteur : **REECRIRE 1, 5, 11**.
+  - 🔴 **Le point 1 est une erreur factuelle réelle, et elle serait partie en public.** « *un traitement que ceux de 2018-2020 n'avaient pas* » est **faux** : l'essai **PALM** a randomisé quatre produits, dont un anticorps monoclonal et le remdesivir, **en Ituri et au Nord-Kivu dès novembre 2018**. C'est même la flambée qui a produit les premiers traitements homologués contre Ebola. Publiée sous le post d'un statisticien épidémiologiste travaillant sur ce foyer, c'était l'erreur la plus visible disponible sur ce sujet.
+  - **5** : « le graphique » désigne un artefact que le fil ne permet pas de confirmer (le post pouvait porter un tableau ou l'article lié).
+  - **11** : « *Une nuance que le graphique ne peut pas porter* » rejoue l'aphorisme « *ce qu'un nombre ne transporte pas* », abandonné par écrit le 02/09 sous BANZA Freddy Mutoka et déjà servi deux fois le 01/09.
+
+**Abandon.** Deux jets, deux échecs en 11, et une affirmation fausse rattrapée avant publication. Aucun texte publié, aucun blocage créé. Profil **suivi** ce run. Le fait PARTNERS reste **inutilisé et disponible** : il n'a jamais été servi comme angle de commentaire sur aucun canal.
+
+---
+
+### 4️⃣ 🔁 SUIVI DES FILS ACTIFS (§14) — **LES 8 FILS ROUVERTS UN PAR UN, AUCUNE RÉPONSE NEUVE**
+
+Le carry-over de 17h la veille reportait cette vérification (« *à rouvrir un par un au run de 9h demain* »). Elle est faite, en entier, et pas recopiée :
+
+| Fil | URN | État au 04/09 9h |
+|---|---|---|
+| Adesoye Emmanuel Tunde | `7500940452578320384` | notre 4e tour (23 h) reste le dernier, 3 impressions, aucune réponse |
+| Oke Ikpekpe | `7500522694187089920` | notre 9e tour (1 j) reste le dernier, 3 impressions. **Post désormais vieux de 6 j** : le sous-fil s'éteint |
+| Rocham Mulumbwe / post Jacob Banda | `7500293159126761472` | notre réponse (1 j) reste la dernière, question ouverte non reprise |
+| SOUAD BELKACEMI / post Shuni | `7499735785110192129` | la réponse de **Jean-Paul Gonzalez** (1 j) est toujours le dernier message. Décision du 03/09 maintenue : le seul angle honnête disponible reste la variante d'une famille saturée |
+| Dossa Paul YAOÏTCHA | `7499435689214758912` | notre question (« *Que deviennent ces fiches de suivi une fois la riposte close ?* ») sans réponse ; il a répondu à **Vidékon Freddy Eckman HOUNGBEDJI**, pas à nous |
+| Mohammad Ilias Hossain | `7499900718590595072` | notre commentaire (3 j) reste le dernier |
+| Melvin Sanicas | `7499221325358501889` | notre commentaire (3 j) reste le dernier |
+| Dr. Rashi Bhardwaj | `7500961203263959040` | notre commentaire est **toujours le seul du post**, 10 impressions, aucune réponse |
+
+**Aucune opportunité de réponse en sous-fil ce run.** Ce n'est pas un manque de suivi, c'est un état de fait vérifié fil par fil.
+
+### 5️⃣ 👀 VEILLE PASSIVE
+
+- 🔵 **World Health Organization African Region publie de nouveau, et la page s'ouvre normalement dans le fil** (post de 23 h : extension à 80 lits du centre de traitement Ebola de Nizi, en Ituri, avec médicaments, EPI et fournitures de laboratoire). C'est un fait à retenir pour §16 : la page WHO AFRO était donnée « **toujours inatteignable** » depuis le 28/08 dans plusieurs carry-over successifs. **Elle ne l'est plus** — au moins par le fil. Aucun blocage hebdomadaire ne pèse sur elle.
+- 🔵 **Médecins Sans Frontières Eastern Africa** (6 j, hors fenêtre 48 h) : ouverture d'un centre de traitement Ebola à Beni, Nord-Kivu, et chiffres arrêtés au **22 août** (« *more than 5,514 confirmed cases and 2,642 confirmed deaths* ») — **plus anciens que notre ligne** (6 186 / 3 007 au 31/08), donc aucun signal.
+- 🔵 **Issa Barry** (relation de 1er degré, fil de DM ancien et nourri) a republié le post de David Moreau avec « *Pourquoi cette épidémie nous échappe-t-elle ?* ». ⚠️ **Cible volontairement non retenue** : le sous-fil de sa republication porte une mise en cause de la gestion de la riposte en RDC (recrutement par affinités, compétence des équipes). Terrain interdit par §9, et commenter la republication après avoir instruit le post d'origine aurait été une collision §16 sur la même cible réelle.
+- ⭐ **European Centre for Disease Prevention and Control** recrute son **Chief Scientist** (Stockholm, candidatures jusqu'au 30 septembre 2026), à la tête de l'unité Scientific Evidence and Communication. Sans intérêt comme cible de commentaire (offre d'emploi, et la page ECDC est bloquée jusqu'au 08/09), mais **matière de veille institutionnelle**.
+- **Statistiques des posts de David** : profil vu **359 fois**, **455 impressions** cumulées sur les posts. Le post CFR/dénominateur du 31/08 est à **229 impressions et 2 vues de profil générées** ; le post essai PARTNERS du 02/09 à **93 impressions**.
+- **Alexandre APPROUTSADI YOKSOU** (relation, épidémiologiste) annonce sa certification BSAFE (UNDSS). Pas de matière analytique, non retenu.
+- **Aucun signal de traction institutionnelle nouveau au sens de §13** → aucune notification push à ce titre.
+
+---
+
+### 6️⃣ 🗓️ LIGNE D'ÉVÉNEMENT (§16) — **EBOLA/RDC : L'ÉVÉNEMENT SORT DE SA FENÊTRE SANS COMMENTAIRE, ET LE MOTIF N'EST PAS LE SUPPORT**
+
+Le carry-over d'hier soir était net : « *c'est le créneau de 9h ou personne* » pour le briefing Africa CDC (`urn:li:ugcPost:7500903964570312704`, affiché « 1 j » hier soir).
+
+**État constaté ce matin :**
+- Le post du briefing est **toujours atteignable et toujours affiché « 1 j »**, événement terminé, rediffusion d'1 h 05, **33 participants** (26 hier), 54 réactions, 6 republications. Ses **4 commentaires restent tous de Tambe Elvis Akem**, bloqué en commentaire jusqu'au 05/09. **Toujours aucun chiffre dans le texte du post** : ils sont dans la vidéo.
+- **Trois porteurs neufs sont apparus ce matin**, ce que §16 point 2 demande précisément de chercher : **David Moreau** (courbe cas/décès, 1 j, 0 commentaire), **WHO AFRO** (23 h, page enfin atteignable), **Issa Barry** (12 h, écarté sur terrain politique).
+- **Le support n'a donc pas manqué. C'est l'angle qui a manqué** : le seul porteur instruit à fond (David Moreau) a produit deux jets morts, dont un sur une erreur factuelle. Aucun troisième candidat n'a été tenté, conformément à la règle des deux essais et à la lecture du run : après 5 rejets de charpente en une matinée, un 6e jet aurait été un jet du même moule.
+
+**Statut de la ligne d'événement : à clore.** Le briefing sort de la fenêtre 48 h dans la journée. Ce qu'il faut retenir pour la suite n'est pas « la cible était inaccessible » — elle ne l'était pas — mais que **le répertoire d'angles n'a rien produit de publiable sur un événement suivi depuis le 28/08**. C'est le même constat que la section 1.
+
+**Reste disponible et non consommé** : le fait **PARTNERS** (essai randomisé de plateforme recrutant dans l'Ituri depuis le 2 juillet, INRB / Institut de médecine tropicale d'Anvers / Oxford, un anticorps monoclonal et le remdesivir contre soins de support) n'a **jamais servi d'angle de commentaire sur aucun canal**. ⚠️ **Et une leçon à ne pas perdre : ne jamais l'opposer à 2018-2020.** L'essai PALM a randomisé un anticorps monoclonal et le remdesivir en Ituri et au Nord-Kivu dès novembre 2018 ; c'est cette flambée-là qui a produit les premiers traitements homologués. L'opposition « un traitement que 2018-2020 n'avait pas » est fausse et a été interceptée ce matin par le relecteur.
+
+---
+
+### 7️⃣ 📊 DONNÉES ÉPIDÉMIOLOGIQUES (§8) — AUCUNE ÉCRITURE, UN SEUL SIGNALEMENT, INCHANGÉ
+
+Aucun chiffre neuf et non couvert n'est apparu ce run. Les trois chiffres Ebola/RDC croisés sont tous **antérieurs ou égaux** à notre ligne (6 186 / 3 007 arrêtés au 31/08, ECDC) : David Moreau donne « plus de 6.000 / près de 3000 au 30 août », MSF « 5 514 / 2 642 au 22 août », le post WHO AFRO n'en porte aucun. **Aucune régression, aucune source plus fraîche trouvée ce run.**
+
+**Signalement ouvert, reporté tel quel à `morning-don-check`, sans reformulation** : le **DRC MoH SitRep N°110 du 01/09** donnerait 6 250 cas confirmés / 3 039 décès, repéré hier soir via une **compilation tierce** (`immunization-for-resilience.shinyapps.io`) et **jamais lu dans le PDF primaire** — à vérifier sur pièce avant toute écriture. Les autres signalements du 02-03/09 restent ouverts et inchangés : Polio/RDC (Lualaba et Nord-Ubangi), Choléra/Tanzanie (arrêté au 28/06, 68 j), Dengue/Tanzanie, Diphtérie/Nigéria, West Nile/Grèce.
+
+---
+
+### 8️⃣ 🔧 ARBRE DE TRAVAIL
+
+Fichiers modifiés par cette session : `marketing/linkedin-contacts.md`, `marketing/content-log.md`, `marketing/linkedin-candidates-tracker.md`. **Fichiers modifiés par d'autres et laissés intacts** (`AGENTS.md`) : `marketing/qa/product-claims.manual.json`, `scripts/audit-alert-day.mjs`, `scripts/probe-alert-lock.mjs` (les deux derniers non suivis, inchangés depuis le 29/08). `marketing/qa/*.json` régénérés, non suivis. **Branche : master.** Aucun verrou de code demandé : cette routine ne touche ni `app/`, ni `lib/`, ni `components/`, ni les dépendances.
+
+⚠️ **Trois commits d'une autre routine étaient locaux et non poussés à l'ouverture** (`cb755c21`, `7cf72582`, `01dd80ac`, tous de `linkedin-hwg-content-proposal` ce matin, dont la publication du post Diphtérie/Niger). Ils partent avec le push de ce run. **Signalé et non corrigé autrement** : ils ne m'appartiennent pas, mais `_shared/report-conventions.md` demande qu'une routine qui committe pousse dans le même run, et ce n'a pas été fait là.
+
+---
+
 ## 📅 Session linkedin-hwg-content-proposal — 04/09/2026 (vendredi MWF, 8h35) — ✅ **PUBLIÉ le 04/09/2026 à 09h29**, sur ordre explicite de David tapé en session (« publie ») — Diphtérie/Niger, l'antitoxine est le seul intrant de la riposte qui se rationne, et le mécanisme d'allocation est la mesure publique la plus nette de la pénurie
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-content-proposal` datée du 04/09 dans ce fichier à l'ouverture (la plus récente était `linkedin-hwg-followup-check-2` du 03/09, 18h) → premier déclenchement du jour. Horloge machine à l'heure : `date` renvoie **Fri Sep 4 09:05 2026**. Branche vérifiée avant écriture : **master**.

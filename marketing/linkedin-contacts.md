@@ -1,6 +1,151 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
+## 📅 Session linkedin-hwg-monitoring — 04/09/2026 (9h) — ✅ **8 suivis**, 🔒 **1 DM en file de validation**, ❌ **2 DM et 2 commentaires abandonnés** — dont **trois affirmations fausses interceptées avant envoi**
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` du 04/09 dans ce fichier ni dans `content-log.md` à l'ouverture (seule entrée du jour : `linkedin-hwg-content-proposal`, 8h35) → **premier déclenchement de cette routine aujourd'hui**. Horloge à l'heure (`Fri Sep 4 09:04 2026`). Branche : **master**. Registre de faits régénéré à 09:04 (221 faits, 106 lignes affichées, 3 périmés) ; registre produit régénéré également.
+
+---
+
+### 1️⃣ ⚠️ DÉCISION DE RÉGIME — LES DM VONT EN FILE DE VALIDATION CE RUN, PAS EN ENVOI AUTOMATIQUE
+
+L'exception d'automation du 03/09 (`CLAUDE.md`) fait envoyer les DM par la routine elle-même **« pour les runs planifiés des trois mêmes routines (session automatisée, David absent) »**. **La condition « David absent » n'est pas remplie ce matin, et c'est vérifiable** : le commit `01dd80ac`, horodaté **09h31**, soit au milieu de ce run, porte « *David a tapé "publie" en session interactive* » pour le post de marque Diphtérie/Niger. David était donc à son poste pendant ce créneau.
+
+**Conduite appliquée : la ligne de base du 23/07** — le DM est rédigé, passé au dispositif complet, puis **mis en file de validation**, jamais envoyé par la routine ; notification push envoyée. Motif : l'exception d'automation est explicitement bornée à l'absence de David, elle est encore présentée comme un essai non revu dans `CLAUDE.md`, et un envoi est irréversible alors qu'une mise en file coûte à David une décision d'une ligne. **Si ce n'est pas la lecture qu'il veut, un mot suffit à faire partir le texte tel quel : il est prêt et complet ci-dessous.**
+
+---
+
+### 2️⃣ 🔒 DM EN FILE DE VALIDATION — **James Schlitt, PhD, MPH**, réponse en fil actif — 🔴 **le texte validé 12/12 hier soir était FAUX sur notre propre produit**
+
+`/in/james-schlitt-phd-mph-4377a81b/`, *Computational Epidemiologist | AI & LLM Systems for Biosurveillance | Pandemic Forecasting*. Fil relu **en entier** (7 messages, du 09h59 du 03/09 à son message de 18h15). Son message reste le dernier, rien n'a bougé. *langue du fil = en ; langue du brouillon = en.*
+
+**🔴 LE POINT LE PLUS IMPORTANT DE CE DOSSIER.** Le brouillon mis en file hier soir portait un `VERDICT: ENVOYER, 12/12 PASS`. Repassé ce matin au relecteur avec une consigne de vérification du code plus large, il a fallu **trois jets** pour obtenir un texte défendable, et **chaque jet a été rejeté sur un défaut réel et différent** :
+
+- **Jet 1 (le texte d'hier, + un CTA que j'y avais ajouté ce matin) — REECRIRE 4, 10, 11.**
+  - 🔴 **4 : affirmation produit fausse.** « *a row that stops updating produces no test statistic, because there is no second observation to compare against* ». Faux : `app/api/cron/data-quality/route.ts` compare chaque jour une ligne active à l'instantané de la veille, et `lib/outbreak-trend.ts` compare à J-7. La vérification d'hier n'avait lu que `lib/outbreak-guards.ts`, côté écriture. La clause « *I mostly never have more than one accepted write to reconcile* » n'était couverte par rien et n'est mesurée nulle part.
+  - 🔴 **10 : le CTA que j'avais ajouté était à retirer, et le relecteur a raison contre moi.** J'avais appliqué la règle « CTA systématique en fil actif » du SKILL. Mais `lexicon.json` donne `linkAllowed: "on-request"` pour un DM, James n'a rien demandé, et **l'arbitrage inverse avait déjà été rendu et validé dans ce fil précis** le 03/09 (« *y accrocher une offre reviendrait à compenser un aveu de faiblesse par un argumentaire* »). CTA entièrement supprimé.
+  - 🔴 **11** : ouverture « *The stall point lands, and…* », moule « [fragment de son message] + verbe d'accrochage » servi le 27/08 à un autre destinataire ; et « *would show up on my side as* », posture d'observateur aval (« on my side » : 15 occurrences au corpus).
+- **Jet 2 — REECRIRE 4(a), 4(b)+7, 11.**
+  - 🔴 **4(a)** : le « *so* » reliait à tort la comparaison à l'instantané de la veille et la remontée en « stale ». Ce sont deux mécanismes distincts : le cron quotidien détecte des chutes et des pics (`deaths_gt_cases`, `zero_data`, `large_drop`, `spike`) et est **aveugle à une ligne figée**, dont le delta est nul ; la péremption, elle, se calcule sur la **date du bulletin** (`lib/outbreaks.ts staleOutbreakDays()`, `STALE_DAYS`), sans instantané.
+  - 🔴 **4(b) + 7 : deuxième affirmation fausse, et elle contredisait notre propre message.** « *What it never gets is a second source's value that same day to test against, or a dissenting count* ». Faux : les valeurs concurrentes **arrivent bel et bien** et sont testées à l'écriture — la doc de `lockedRowRegressionGuard` cite précisément une ligne **West Nile/France** où une saisie manuelle d'un bulletin national a été confrontée à l'édition de l'OMS, ainsi que « *Africa CDC's 2,320 published a day after WHO AFRO's 2,378 for the same outbreak* ». Et surtout, **David lui a écrit l'inverse la veille à 17h41** : « *On a same-day tie, whichever accepted write lands last is what stands* ». Le brouillon se serait contredit deux messages plus haut, devant le destinataire.
+  - 🔴 **11** : « *never enters the row* » et « *never reaching you* » relèvent de la famille « never enters / never reaches [record] », **la plus recyclée du corpus** (une dizaine d'occurrences publiées à d'autres destinataires), et déjà déclarée brûlée par écrit.
+- **Jet 3 — thèse entièrement changée, et c'est elle qui tient** : la divergence **arrive** et **est arbitrée à l'écriture**, mais rien ne conserve la valeur perdante. **Tout le fond passe** — 4(a), 4(b), 4(c), 4(d), 7, 1, 5, 8, 10 et 12 en `PASS`, chacun vérifié sur le code (`sync-outbreaks/route.ts` pour l'écrasement, `outbreak-guards.ts` pour le refus, `interface Outbreak` pour l'absence de champ concurrent, la migration `outbreak_snapshots` pour l'unicité quotidienne, et `lib/cron-monitor.ts` qui confirme que le motif de refus part en `console.warn` et **n'est jamais persisté**). Reste **REECRIRE 11**, purement formel, avec quatre corrections nommées.
+- **Jet 4 — les quatre corrections de forme appliquées telles quelles, aucun point de fond touché** : (i) suppression de l'antithèse « *Your vetting cluster… Mine consumes it* », qu'il avait déjà reçue à la virgule près la veille à 17h41 ; (ii) suppression de l'aphorisme d'ouverture, qui aurait été **le troisième d'affilée dans ce fil** et devenait une signature repérable ; (iii) « *refused outright* » → « *blocked* », pour ne pas reprendre son propre « *ends the question outright* » ; (iv) une seule formulation d'absence de trace au lieu de trois. **Non resoumis au relecteur** : il avait explicitement écrit « *Aucun point de fond à toucher : 4, 7 et le reste tiennent* » et listé les quatre corrections mot pour mot.
+
+**🔒 Texte final, prêt, NON ENVOYÉ :**
+
+> Two sources landing different counts on the same row the same day is a case I handle at write time: one value stands and the other is either overwritten or blocked. A West Nile row for France once carried a hand-entered national bulletin figure that WHO's own edition came in under; the lower write was blocked, and nothing on the row records that the two ever differed.
+>
+> So your France case, run through my pipeline, comes out as a single trajectory in the daily snapshot, with the divergence between JHU, NIH, BOP and Tencent surviving only in whatever I happened to notice that week.
+>
+> What do the losing values do for you once a cluster has settled?
+
+`QA : mécanique 652 car., 3 paragraphes, en/en, 0 ngram, 0 warn — seul blocker le faux positif documenté context.too-soon (réponse en fil actif, il a écrit en dernier). Le verdict brut « ABANDON » au 4e essai est le mécanisme de boucle abandonné le 26/08, déclenché par la seule répétition de ce faux positif. | relecteur : 3 passes, jets 1 et 2 rejetés sur des affirmations produit fausses, jet 3 tout le fond en PASS, REECRIRE 11 formel, corrections appliquées au jet 4 | faits cités : aucun chiffre ; l'épisode West Nile/France est raconté sans ses valeurs | registre du 04/09 (09:04) | statut : en file de validation, jamais envoyé par la routine`
+
+⚠️ **Une réserve d'outillage relevée par le relecteur, à traiter hors de ce run** : les garde-fous d'écriture (`lockedRowRegressionGuard` et consorts) **n'ont aucune entrée dans `product-claims.json`**. Ils ont été vérifiés directement dans le code ce matin, mais si cet angle doit resservir, une claim manuelle est à ajouter — sinon le prochain brouillon qui s'en réclame échouera légitimement en question 4.
+
+**Arbitrage CTA de ce fil : omis délibérément**, conformément au `linkAllowed: on-request` du lexique et à l'arbitrage déjà rendu le 03/09. Le nom du produit, le lien et l'essai n'ont **jamais** été envoyés dans ce fil, et ne le sont toujours pas. **Aucun chiffre cité** : l'épisode West Nile/France est raconté sans ses valeurs, qui datent d'août et ne figurent pas au registre du jour (la ligne y porte aujourd'hui 28 cas au 27/08, source ECDC).
+
+---
+
+### 3️⃣ ❌ DM ABANDONNÉ — **John Omari Baso** : la prémisse du brouillon était fausse
+
+Il a écrit « **Bonjour David.** » hier à 11h36 et rien depuis (22 h). Notre question du 03/09 09h56 (comment se termine l'inscription d'une province au décompte polio) reste ouverte de son côté. Le carry-over prévoyait « un mot bref légitime demain ».
+
+**Brouillon rédigé puis abandonné (texte complet, jamais envoyé) :**
+
+> Bonjour John, je vous rends votre bonjour. Votre message d'hier s'arrête à la première ligne, alors je préfère demander plutôt que supposer : est-ce que la suite s'est perdue en route ?
+
+**Deux motifs, tous deux réels :**
+- 🔴 **Attribution (question 5) — la prémisse est fausse.** « Bonjour David » **est sa formule d'ouverture habituelle en message autonome** : il l'a envoyée exactement comme ça le 01/09 à 15h12, suivie seulement ensuite de la pièce jointe puis du contenu. Traiter son message comme « interrompu » lui prête une propriété que le fil dément. Le relecteur a aussi constaté que l'export de fil fourni était **incomplet** (8 messages perdus, deux troncatures, dates décalées, pièces jointes non rendues) — à refaire proprement avant tout brouillon sur ce fil.
+- 🔴 **Gabarit (question 11).** Le texte est transférable tel quel à n'importe qui, et il collisionne trois fois avec ce fil même : « *votre message… s'arrête à la première ligne* » contre « *Une ligne de votre tableau m'arrête* » (02/09) ; « *je vous rends votre bonjour* » contre « *Bonjour John, merci, et ce n'est pas une formule* » (02/09) ; « *demander plutôt que supposer* » contre « *j'ai vérifié plutôt que de me défendre* » (28/08).
+
+**Décision : ne rien envoyer.** Sa formule d'ouverture est probablement le début d'un envoi à venir ; notre question reste ouverte de son côté ; une relance douce fondée sur une prémisse fausse ne valait pas le risque. À reprendre s'il écrit, ou dans quelques jours s'il ne dit rien.
+
+⚠️ **Correction d'archive importante sur ce fil.** J'ai d'abord noté « aucun CTA jamais envoyé dans ce fil » — **c'est faux**, mesuré sur l'export tronqué. Le lien et l'essai **sont partis dans ce fil le 27/08 à 20h57** (« *Two weeks to look at what does surface on healthwatch-global.com costs nothing…* »), et `linkedin-contacts.md` le consigne déjà. C'est l'anti-répétition qui s'applique à ce fil, pas la règle du CTA obligatoire.
+
+---
+
+### 4️⃣ ❌ WELCOME DM ABANDONNÉ — **Yuda Sule Paschal**, aucun hook honnête qu'il puisse trancher
+
+`/in/yuda-sule-paschal-8a0490257/`, connexion acceptée le 03/09 à 18h, **aucun message jamais échangé**. Vérification bidirectionnelle faite (§14 du SKILL) : profil réévalué, activité propre ouverte (20 items, un seul post propre : l'annonce d'un conférencier au Tanzania Health Summit).
+
+**Brouillon rédigé puis abandonné (texte complet, jamais envoyé) :**
+
+> Yuda, thanks for the invitation, glad to be connected.
+>
+> A Tanzania question, since that is where your work sits. The cholera figure I keep for the country stops at 28 June, 113 cases and 2 deaths, and it reaches me through WHO's Weekly Epidemiological Record rather than from Dar es Salaam. The ministry's own weekly bulletin, which I do read for other diseases, carries rotavirus but nothing on cholera.
+>
+> Where does Tanzania's own cholera reporting actually surface?
+
+**Six motifs, dont trois de fond :**
+- 🔴 **Affirmation non couverte (4)** : « *carries rotavirus but nothing on cholera* » est une **affirmation négative sur le contenu d'une publication tierce**, qu'aucun registre ne peut couvrir. Le registre prouve seulement d'où vient notre ligne rotavirus, pas ce que le bulletin contient ou ne contient pas. « weekly » et le pluriel « other diseases » ne sont pas établis non plus (une seule ligne `moh.go.tz` au registre).
+- 🔴 **Terrain politique (9)** : « *rather than from Dar es Salaam* » plus l'affirmation de lacune reviennent à commenter la conduite d'un État devant l'un de ses ressortissants. **Aggravant** : son unique post propre promeut un sommet dont le thème est « *Building Health Sovereignty and Strengthening Health Systems in a Changing Global Order* ».
+- 🔴 **Apport (12)** : la question relève de la surveillance/IDSR, et son profil est de **plaidoyer et d'événementiel**, comme cette routine l'avait elle-même consigné le 03/09. Rien n'établit qu'il soit en position d'y répondre.
+- Également : parcours déduit et non lisible (6), aucune clause d'ancrage présentant David ou HWG dans un premier message (7), et une ouverture cumulant deux formules nommément écartées (« thanks for the invitation », 3 occurrences ; « glad to be connected », 5 occurrences, écartée hier) sur une charpente identique au DM envoyé à Buno Tona le 31/08.
+
+**Décision : pas de welcome DM.** Même conduite que Kevin S. et Gail Carson — activité faite de republications et d'annonces d'événements, pas de hook honnête. **Dossier clos, à ne rouvrir que s'il publie du contenu propre et substantiel.** Relation acquise, rien n'est perdu.
+
+### 5️⃣ ✅ SUIVIS — **8/7-10**, tous vérifiés bouton par bouton
+
+Recherche active menée sur le fil (bulletin régional Santé publique France) puis par mots-clés (`Santé publique France épidémiologiste surveillance`). **Vein trouvée : la cellule régionale Auvergne-Rhône-Alpes de Santé publique France**, jamais représentée dans le corpus jusqu'ici. Chaque suivi est confirmé par le passage de l'`aria-label` « Suivre X » à « Suivi, cliquez pour ne plus suivre X », dans le même appel JS que la vérification de l'URL du profil (§7).
+
+1. **Delphine CASAMATTA** — `/in/delphine-casamatta-440302389/`, *Chargée d'études scientifiques chez Santé publique France*, Lyon, 3e, 126 abonnés.
+2. **David Moreau** — `/in/david-moreau-0669b21b/`, *Ingénieur Statisticien Epidémiologiste*, indépendant, Bretagne, 3e, 311 abonnés.
+3. **Guillaume Spaccaferri** — `/in/guillaume-spaccaferri-58799980/`, ***Délégué régional Santé publique France Auvergne-Rhône-Alpes***, Clermont-Ferrand, 3e, 404 abonnés.
+4. **Alexandra THABUIS** — `/in/alexandra-thabuis-4b03051b5/`, *Epidémiologiste chez Santé publique France*, Lyon, EHESP, **2e**, mutuel Kevin S., 481 abonnés.
+5. **Erica FOUGERE** — `/in/erica-fougere-4b5b4b2a7/`, *Épidémiologiste Santé publique France AURA*, Lyon, **2e**, **mutuels Pierre Formenty et Fontanet Arnaud**, 356 abonnés.
+6. **Céline FRANÇOIS** — `/in/céline-françois-5566bb1b9/`, *Epidémiologiste - Biostatisticienne chez Santé publique France*, Paris, **2e**, 1 166 abonnés. **Publie ses propres points hebdomadaires de surveillance en Île-de-France.**
+7. **Anne Fouillet** — `/in/anne-fouillet-b179b0140/`, *Biostatisticienne - épidémiologiste chez Santé publique France*, ENSAI, 3e, 228 abonnés. Excès de mortalité toutes causes pendant les canicules.
+8. **Anne Thuret, PharmD PhD** — `/in/anne-thuret-pharmd-phd-14b34282/`, *Epidemiologiste, Chargée de Projets Scientifiques Santé publique France*, Paris, **2e**, 728 abonnés.
+
+❌ **Un candidat écarté malgré un intitulé parfait** : **Jean-Rodrigue NDONG** (`/in/jean-rodrigue-ndong-a43092150/`, *Epidémiologiste chez Santé publique France*, 2e). Son activité visible est une republication d'un partenariat associatif pour l'élection **Miss Orléans Métropole 2026**, aucune production épidémiologique. Règle « filtrer sur la pertinence réelle, pas sur un titre qui sonne bien » appliquée.
+
+✅ **Carry-over clos : Catherine Linard.** Le report du 03/09 la donnait « toujours non évaluée » — **c'est une erreur de report** : le tracker la porte **suivie depuis le 2026-08-02** (pas de bouton connexion exposé). Son post du 03/09 reste un remerciement sans angle. Dossier clos, à ne plus reporter.
+
+---
+
+### 6️⃣ ✅ RÉSEAU — RIEN DE NEUF DEPUIS HIER SOIR
+
+- **Abonnés : 408** (407 hier). Le seul nouveau est **Yuda Sule Paschal**, déjà en relation depuis hier soir et déjà suivi. Les 10 premiers de la liste sont tous en « Suivi ». **Aucun follow-back dû.**
+- **Relations : 294** (293 hier), l'écart correspond exactement à l'acceptation de Yuda hier à 18h. Liste « Ajouts récents » relue : **aucune acceptation neuve depuis hier soir.**
+- **Invitations reçues : 2, inchangées** — **Zachariah G. Houdari** (services financiers) et **OLAOLUWA PHILIP** (géospatial/climat sans santé publique). Décisions du 31/08 maintenues, aucun élément neuf, non rejugées.
+- ✅ **Carry-over clos : Yuda Sule Paschal.** Le carry-over du run de 17h la veille demandait de cliquer « Accepter » ; **c'était déjà fait** par la reprise interactive de 18h. Le gestionnaire d'invitations ne le montre plus. Ne pas le reporter une 3e fois.
+- **Notes de connexion : 0/7.** Aucune rédigée, et c'est une décision, pas un oubli : les 8 profils suivis ce run n'offrent aucun hook honnête et propre à eux (activité faite de republications pour six d'entre eux ; les deux qui produisent du contenu propre — Delphine CASAMATTA et David Moreau — sont précisément les deux sous les posts desquels un commentaire a été instruit puis abandonné ce matin, leur écrire en privé le même jour sur le même sujet aurait doublé le contact).
+
+---
+
+### 7️⃣ 📊 QUOTAS À LA CLÔTURE
+
+| Catégorie | Consommé | Plafond | Détail |
+|---|---|---|---|
+| Commentaires | **0** | 7 | 2 candidats instruits, **5 jets**, 5 rejets du relecteur, tous documentés. Aucun blocage hebdomadaire nouveau créé |
+| Notes de connexion | **0** | 7 | aucun hook honnête sur les 8 profils suivis |
+| Suivis | **8** | 7-10 | objectif atteint |
+| DM | **0 envoyé, 1 en file** | 8 | 1 en file (Schlitt), 2 abandonnés (Baso, Yuda) |
+| Invitations reçues traitées | 0 | — | les 2 restantes sont des décisions déjà prises |
+| Écritures en base | **0** | — | voir §8 dans `content-log.md` |
+
+### 8️⃣ 🔁 CARRY-OVER POUR LE CRÉNEAU DE 13h (04/09)
+
+1. 🔒 **DM James Schlitt en attente de validation de David** — texte complet en section 2, corrigé ce matin de **trois défauts que la validation 12/12 d'hier n'avait pas vus**, dont une affirmation fausse sur notre propre produit. **Ne pas renvoyer la version d'hier.** Notification push envoyée.
+2. 🔴 **À trancher avec David, le point le plus important de la journée** : le corpus a produit **5 jets et 0 commentaire publiable** ce matin, après 4 jets et 0 commentaire hier après-midi. Chaque rejet est juste et documenté ; c'est le répertoire d'angles qui est épuisé, pas la qualité du contrôle. Détail et tableau des moules brûlés : `content-log.md`, section 1 de l'entrée du jour.
+3. 🗓️ **Ligne d'événement Ebola/RDC : à clore.** Le briefing Africa CDC sort de la fenêtre 48 h aujourd'hui, trois porteurs neufs ont été trouvés ce matin (David Moreau, WHO AFRO, Issa Barry) — le support n'a pas manqué, l'angle a manqué. ⚠️ **Le fait PARTNERS reste disponible et jamais servi en commentaire, mais ne jamais l'opposer à 2018-2020** (l'essai PALM a randomisé un anticorps monoclonal et le remdesivir en Ituri dès novembre 2018).
+4. 🔵 **La page WHO AFRO n'est plus inatteignable** — elle publie et s'ouvre normalement depuis le fil (post de 23 h sur l'extension du CTE de Nizi). Ne plus recopier « toujours inatteignable » sans l'avoir retesté.
+5. ⭐ **John Omari Baso** — DM abandonné ce matin sur une prémisse fausse (section 3). Son « Bonjour David. » est sa formule d'ouverture habituelle en message autonome, **pas un message tronqué**. Notre question du 03/09 09h56 reste ouverte de son côté. **Ne rien envoyer avant qu'il écrive**, ou attendre quelques jours. ⚠️ Avant tout brouillon sur ce fil, **réexporter le fil en entier** : l'export de ce matin perdait 8 messages et décalait les dates.
+6. ❌ **Yuda Sule Paschal — dossier clos**, welcome DM abandonné sur 6 motifs dont 3 de fond (section 4). Activité de plaidoyer et d'événementiel, aucun hook honnête. **Ne pas reproposer sans contenu propre et substantiel de sa part.**
+7. ⭐⭐ **Delphine CASAMATTA et David Moreau, tous deux suivis ce matin, restent d'excellentes cibles** : aucun commentaire n'a été publié chez eux, donc **aucun blocage hebdomadaire**. Ne pas rejouer les angles morts (Odissé vs bulletin sous toutes ses formes pour l'une ; le point ECDC et l'opposition PARTNERS/2018-2020 pour l'autre). Le mieux serait un autre post.
+8. ⭐ **Céline FRANÇOIS** (`/in/céline-françois-5566bb1b9/`, SpF, 2e, 1 166 abonnés) — la seule des 8 suivis qui **produise ses propres points hebdomadaires de surveillance** (Île-de-France, grippe et syndromes grippaux par tranche d'âge). Dernier en date : 5 mois. **Meilleure cible de commentaire du lot dès qu'elle republie.**
+9. ✅ **Clos, ne pas reporter à nouveau** : Catherine Linard (suivie depuis le 02/08, erreur de report du 03/09) ; Yuda Sule Paschal (invitation déjà acceptée le 03/09 à 18h, le carry-over de 17h était périmé).
+10. **Inchangés, à reporter tels quels** : ⭐⭐ **Dr. Malachie MANAOUDA** (welcome DM, **pas avant le 05/09** sauf réponse ou publication) ; ⭐⭐ Gail Carson (dossier clos, ne pas rouvrir sans élément neuf) ; ⭐⭐ Seynudé Jean-Fortune DAGNON (connecté le 03/09, attendre l'acceptation) ; ⭐⭐ Dr. Ibrahima Socé Fall (toujours sans hook honnête) ; 🔴 Mohammad Ilias Hossain (**ne pas réécrire la note**) ; ➖ Yakoza Nyirenda (invitation sans note du 30/08 toujours en attente) ; ⭐⭐ Isaias Fernandes Co (rien avant la semaine du 14/09) ; **Dr. Siaka Condé** (ne pas relancer avant le 05/09) ; ⭐⭐ **Jacques Delors TOUMANSIE MFONKOU** (épisode 2 de « INSIDE THE FIELD » à surveiller, ne pas y contester sa thèse en premier contact) et ⭐⭐ **Ofelia CAZACU** (OMS/ICG) ; ✅ clos : Kevin S., Rocham Mulumbwe ; ❌ ne pas reproposer sans élément neuf : Zachariah G. Houdari, OLAOLUWA PHILIP, Jean-Rodrigue NDONG, Haider Durrani, Kipchirchir Kigen, Victoria Kanana, Abdulrazaq Tanga, Herve Chatue kamga.
+11. **Blocages hebdomadaires au 04/09 — aucun nouveau créé ce run** (0 commentaire publié) : Adesoye Emmanuel Tunde, Kyaw Thowai Prue Prince, Rocham Mulumbwe, Dr. Rashi Bhardwaj, Dr Fabrice KHADDY, Miriam Mbueshi (09/09) ; Dr. Jean Kaseya, page ECDC, Jacob Banda (08/09) ; Melvin Sanicas, Dossa Paul YAOÏTCHA, Mohammad Ilias Hossain (07/09, top-level, sous-fils ouverts) ; Global Health EDCTP3, French Healthcare Association, Health Policy Watch, Tambe Elvis Akem, SOUAD BELKACEMI (05/09). **Libres depuis aujourd'hui : Oke Ikpekpe, Jason Kindrachuk, Dr Jeeven Kumar.** Également libres : Harvey Basivikidi, Robert Herriman, Patrick AYONGA, Oliver Morgan, page Africa CDC, **page WHO AFRO**, Vital Strategies, Tedros, Prof. Mohamed Janabi, INRB, Apoorva Wasnik, Johan Verheyden, Gaelle Gonzalez, Lori Peterson, Dr. Malachie MANAOUDA, James Schlitt, Martin Yakum, Ifedayo Adetifa, Julien Harneis, BANZA Freddy Mutoka, Jean-Paul Gonzalez, **Delphine CASAMATTA, David Moreau** et les 6 autres suivis du jour.
+
+### 9️⃣ 🔧 ARBRE DE TRAVAIL
+
+Fichiers modifiés par cette session : `marketing/linkedin-contacts.md`, `marketing/content-log.md`, `marketing/linkedin-candidates-tracker.md`. Fichiers modifiés **par d'autres et laissés intacts** (`AGENTS.md`) : `marketing/qa/product-claims.manual.json`, `scripts/audit-alert-day.mjs`, `scripts/probe-alert-lock.mjs`. `marketing/qa/*.json` régénérés, non suivis. **Branche : master.** ⚠️ Trois commits de `linkedin-hwg-content-proposal` étaient restés locaux ce matin (`cb755c21`, `7cf72582`, `01dd80ac`) ; ils partent avec le push de ce run, signalé dans `content-log.md`.
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check-2 — 03/09/2026 (18h, reprise interactive sur demande de David « remplis les quotas ») — ✅ **1 note de connexion publiée, 1 invitation acceptée, 1 DM en file de validation**
 
 **Contexte** : suite directe du run de 17h. David a demandé de reprendre les quotas restants (commentaires 1/7, notes de connexion 0/7, suivis 9/10). Session interactive, David présent — tout DM nouveau (hors ceux déjà validés par lui) passe donc en file, conformément à la politique commune §5.
