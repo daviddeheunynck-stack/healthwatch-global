@@ -2,6 +2,130 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session linkedin-hwg-content-proposal — 04/09/2026 (vendredi MWF, 8h35) — ✅ **1 POST PROPOSÉ, statut PRÊT — en attente de publication** — Diphtérie/Niger, l'antitoxine est le seul intrant de la riposte qui se rationne, et le mécanisme d'allocation est la mesure publique la plus nette de la pénurie
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-content-proposal` datée du 04/09 dans ce fichier à l'ouverture (la plus récente était `linkedin-hwg-followup-check-2` du 03/09, 18h) → premier déclenchement du jour. Horloge machine à l'heure : `date` renvoie **Fri Sep 4 09:05 2026**. Branche vérifiée avant écriture : **master**.
+
+**Étape 0 — aucun brouillon en attente.** Le brouillon du 28/08 (Dengue/Taïwan) avait été retiré le 31/08. Le dernier post de marque LinkedIn est celui du **02/09** (Ebola/RDC, essai PARTNERS), publié sur ordre de David en session. Rien en `PRÊT` en suspens.
+
+**Étape 0 bis — thread X des 7 derniers jours, lu avant de choisir l'angle.** Un seul : **thread hebdo du 31/08** (Ebola/RDC, Ervebo, protection des soignants « absente → inconnue »). Combiné au post LinkedIn du 02/09, **tout le terrain Ebola/RDC est écarté d'entrée** — deux publications sur ce foyer en 4 jours, sur les deux canaux. Aucun candidat n'a eu à être abandonné à ce titre, l'exclusion a été faite avant rédaction.
+
+**Registres régénérés en début de run** : `npm run qa:facts` → **221 faits citables sur 106 lignes affichées**, 81 lignes `is_seed` exclues, 12 faits périmés. `npm run qa:claims` → 805 chaînes de copie publique sur 5 locales, couverture citable 110 foyers / 73 pays / 18 maladies / 32 hôtes source, 7 claims manuelles.
+
+---
+
+### 1️⃣ CANDIDATS EXAMINÉS ET ÉCARTÉS
+
+Base prod interrogée (`.env.local.live`) : **119 lignes actives, 104 non-`is_seed`, 44 mises à jour dans les 7 jours.**
+
+| Candidat | Fraîcheur | Motif d'abandon |
+|---|---|---|
+| **Diphtérie / Sénégal** (25 cas, 4 décès, 7 districts, `updated_at` 04/09) | la plus fraîche du run | **Source non primaire.** La ligne est sourcée PressAfrik, corroborée APS/Leral. Aucun bulletin du ministère sénégalais ni de l'OMS AFRO trouvé. Matière remarquable pourtant (les 4 premiers cas confirmés viennent d'une **relecture rétrospective des registres de consultation du 1er mai au 8 août**, 591 cas suspects retrouvés) — **à reprendre dès qu'une source primaire existe.** |
+| **Fièvre du Nil occidental / Italie** (521 cas, 26 décès, 04/09) | excellente | Angle WNV/Italie **déjà publié le 03/08**. Et la piste « écart avec les autres pays européens » est en réalité un **défaut de données HWG**, pas un angle — voir §4. |
+| **Diphtérie Guinée/Tchad** (comparaison des létalités 19% / 1%) | registre | 🔴 **Rejeté par le relecteur : charpente déjà publiée le 27/07/2026**, avec l'argument du dénominateur en prime. Voir §2. |
+| **Poliomyélite / Soudan du Sud, Mali** (cVDPV2, 04/09) | la plus fraîche | Alimentation automatisée depuis le 28/08, chiffres très petits (10 et 2 cas), pas d'angle structurel neuf. |
+| **Rotavirus / Tanzanie** (89 cas, bulletin hebdo du ministère) | bonne, source primaire | Retenu en réserve. Angle « une flambée de rotavirus n'est presque jamais déclarée nulle part » solide mais moins fort que le candidat retenu. |
+| **Dengue Malaisie / Sri Lanka** | très fraîche | Dengue déjà très servie (07/08, 05/08, brouillon retiré du 28/08). |
+
+---
+
+### 2️⃣ ⚠️ PREMIER BROUILLON COMPLET, REJETÉ PAR LE RELECTEUR — À GARDER EN MÉMOIRE
+
+Un brouillon entier a été rédigé et **avait passé le contrôle mécanique** (PASS) sur l'angle **Guinée 19% / Tchad 1%** : même maladie, même région, même document OMS, létalités séparées d'un facteur 19, avec l'explication de l'OMS pour la Guinée (« poor health seeking behaviour, late presentation to health facilities as well as limited case management capacity ») et une mise en garde honnête sur le dénominateur.
+
+**Le relecteur indépendant l'a fait tomber sur les questions 11 et 12, à raison, pièces à l'appui :**
+- **Post publié le 27/07/2026** (`urn:li:share:7487410236429955072`) : mêmes deux pays, mêmes chiffres, même mécanisme. Verbatims archivés : « Nineteen times apart, same pathogen, same region, same period. » et « Widen the denominator and the ratio falls. Narrow it and the ratio climbs. **Neither movement says anything about how well patients were treated.** »
+- Cette matière exacte avait **déjà été écartée par écrit** par cette routine (`content-log.md` l. 3762) : « la première paire envisagée (Diphtérie/Tchad, 5227 cas/54 décès, WHO Rapid Risk Assessment) a été écartée avant rédaction complète — elle avait déjà servi de matière à un post publié le 24/07 ».
+- La figure « two clocks » que le brouillon utilisait en chute était elle aussi brûlée (post du 26/08 : « There are two clocks on an outbreak figure. »).
+
+**Leçon opérationnelle : le contrôle mécanique ne voit pas une redite de charpente quand la formulation est entièrement neuve.** Il compare des chaînes ; il a donné PASS sur un angle intégralement republié. C'est exactement l'angle mort documenté sous [[feedback_anti_template_check_structure_not_just_wording]], et c'est le relecteur qui l'a rattrapé, pas le script. **Le §0 bis du SKILL (lecture des threads X récents) ne suffit pas non plus : la collision était ici avec un post LinkedIn vieux de 5 semaines, hors de sa fenêtre de 7 jours.**
+
+---
+
+### 3️⃣ ANGLE RETENU, ET POURQUOI IL EST NEUF
+
+**La pénurie mondiale d'antitoxine diphtérique (DAT), ancrée sur le retournement du Niger entre 2024 et 2025.**
+
+Le fait qui porte le post, verbatim OMS : le Niger a déclaré **4002 cas suspects et 27 décès en 2024**, puis **2244 cas et 154 décès en 2025** — soit, dans les mots du document, « a 44% decrease in the number of cases and a 470% increase in the number of deaths ». La courbe de cas descend pendant que les décès sont multipliés par près de six.
+
+Le mécanisme rhétorique, jamais servi dans ce corpus : **l'existence d'un mécanisme d'allocation est en soi la mesure publique de la pénurie.** L'OMS ne distribue pas simplement la DAT, elle la libère depuis un stock d'urgence via un mécanisme d'allocation ; on ne construit pas ce genre de dispositif pour un produit dont il y a assez. Et sur les trois moteurs de létalité que l'OMS nomme elle-même, **deux sont des stocks** (antitoxine, antibiotiques) et un seul est une capacité qu'un ministère peut construire.
+
+**Vérification d'antériorité faite sur pièce par le relecteur** : `antitoxin` et `DAT` renvoient **zéro occurrence** dans `content-log.md` **et** `x-watchlist.md`. Les chiffres 4002 / 2244 / 2456 non plus. Ni la charpente du 27/07 ni celle du 26/08 ne sont rejouées.
+
+### Sources primaires
+**OMS, « Rapid risk assessment, acute event of potential public health concern — Diphtheria, African Region », version 2.** En-tête du PDF : « Date and version of current assessment: 16 March 2026, v2 » ; page de publication OMS : 20 mars 2026. PDF **téléchargé en session (953 Ko) et parsé** (`pdftotext`), jamais lu depuis un extrait de moteur de recherche. C'est **la version la plus récente** : recherche faite, aucune v3 n'existe.
+- « Niger: From 1 January to 31 December 2025, a total of 2 244 suspected cases of diphtheria with 154 deaths (CFR 6.7%) were reported. This represents a 44% decrease in the number of cases and a 470% increase in the number of deaths reported compared to the total number of cases reported in 2024 when 4002 suspected cases with 27 deaths (CFR 0.7%) were recorded. From 1 January 2025 to 1 March 2026, a total of 2 456 suspected cases with 166 deaths (CFR 6.8%) were reported. »
+- « Treatment involves administering diphtheria antitoxin and antibiotics. Diphtheria specific antitoxin (DAT) neutralizes circulation toxin in the blood. DAT must be administered as soon as possible, as early administration is associated with improved clinical outcomes. »
+- « DAT availability across affected countries remains critically low, with current stock levels below minimum operational requirements. »
+- « WHO has continually ensured equitable, evidence-based access to the DAT emergency stockpile through an allocation mechanism, which aims to serve outbreak-affected settings. As part of these efforts, a number of vials were dispatched to Chad, Guinea, Mali, and Niger. »
+- « Global scarcity of DAT for the treatment of affected persons. »
+- « Global scarcity of Diphtheria Antitoxin (DAT) and shortages of some antibiotics, along with inadequate clinical management capacity, continues to drive high case fatality rates. »
+
+**Prérequis CTA vérifié en base prod** : la ligne **Niger / Diphtérie** est `active=true`, `is_seed=false`, `cases=2456`, `deaths=166`, `asOf=2026-03-01`, non périmée au registre — un visiteur qui suit le lien trouve bien le pays cité.
+
+### TEXTE — statut : 🟠 **PRÊT — en attente de publication**
+
+> In 2024, Niger reported 4002 suspected diphtheria cases and 27 deaths. In 2025, it reported 2244 suspected cases and 154 deaths.
+>
+> WHO puts it as a 44% decrease in cases and a 470% increase in deaths.
+>
+> A case curve falling while the death count climbs is not a story about transmission. It is a story about what happens to people who are already sick.
+>
+> Diphtheria does its damage through a toxin. The drug for it is diphtheria antitoxin, or DAT, which WHO describes as neutralising "circulation toxin in the blood", and which "must be administered as soon as possible, as early administration is associated with improved clinical outcomes."
+>
+> On supply, WHO's March 2026 risk review of the African Region says availability across the affected countries "remains critically low, with current stock levels below minimum operational requirements." It calls the wider position a "global scarcity of DAT for the treatment of affected persons."
+>
+> Antitoxin is not simply sent where it is needed. Doses reach patients from an emergency stockpile, released through an allocation mechanism.
+>
+> An allocation mechanism is what a supply looks like when there is not enough to go round. It is not a footnote to the scarcity. It is the clearest public sign of it.
+>
+> The same review names what drives high case fatality rates: scarcity of antitoxin, "shortages of some antibiotics", and "inadequate clinical management capacity". One of those three is something a health ministry can build, given time and money. Two of them are stock.
+>
+> Niger has reported 2456 suspected cases and 166 deaths in total, from January 2025 to 2026-03-01.
+>
+> Not one of those three drivers shows up in a case count.
+>
+> healthwatch-global.com
+
+**Statut :** PRÊT — en attente de la validation explicite de David avant qu'il ne publie lui-même (règle de non-publication autonome du contenu de marque LinkedIn, [[feedback_no_self_publishing]]). David non présent au moment du run planifié (8h35).
+
+### Double-check
+*Forme* — EN ✅ (défaut posts de marque, [[feedback_linkedin_brand_posts_in_english]]) ; **1696 caractères, 11 paragraphes aérés** ✅ ; **0 tiret cadratin ou demi-cadratin, 0 caractère non-ASCII, 0 hashtag, 0 ProMED** (contrôles automatisés) ✅ ; lien nu en fin de post, aucun CTA impératif ✅ ; aucun faux témoignage ✅.
+
+*Exactitude* — les six citations entre guillemets sont **verbatim du PDF**, vérifiées mot pour mot. Tous les chiffres viennent du document ; 2456 et 166 sont en plus dans le registre de faits. **Aucun calcul, aucun ratio dérivé** : les « 44% » et « 470% » sont l'arithmétique de l'OMS, pas la nôtre, et le post le dit (« WHO puts it as »).
+
+*Hook* — **structurel, pas événementiel** : il ne dépend d'aucune date qui passe, donc reportable sans coût si David publie plus tard.
+
+*Ce que le post n'affirme pas* — il ne dit pas qui fabrique la DAT ni qui décide des volumes (retiré au 2e tour de relecture, terrain politique) ; il ne requalifie pas le mécanisme de l'OMS en « comité de rationnement » (retiré au 2e tour) ; il n'affirme rien sur ce qu'un compte de cas mesure (retiré au 4e tour, contredisait la position publiée par HWG le 27/07 sur ce même document) ; il ne prétend pas que l'antitoxine serait le seul intrant hors du contrôle national (retiré au 2e tour, l'OMS nomme aussi les antibiotiques).
+
+```
+QA: PRÊT — en attente de publication | mécanique PASS (essai 5, 1696 car., langue en/fil en, 0 bloquant ; source primaire fournie en threadFile, d'où 9 [facts.from-thread] informatifs) | relecteur 12/12 PASS, VERDICT: ENVOYER — après 3 tours de correction : (1) angle Guinée/Tchad REJETÉ (redite du 27/07), angle refait de zéro ; (2) REECRIRE 5,6,9 (attribution, sur-affirmation, terrain politique) ; (3) REECRIRE 6 (référent de la chute non résolu) ; (4) REECRIRE 6 (chute affirmait ce qu'un compte de cas mesure) ; puis ENVOYER | faits cités: Niger/Diphtérie (2456/166, asOf 2026-03-01) + verbatims RRA v2 | registres du 04/09 08h50 | 0 claim produit ajoutée | AUCUNE PUBLICATION — validation de David requise
+```
+
+---
+
+### 4️⃣ 🔴 DÉFAUT DE DONNÉES TROUVÉ EN COURS DE RUN — NE RELÈVE PAS DE CETTE ROUTINE, À TRANSMETTRE
+
+En examinant les lignes Fièvre du Nil occidental comme candidat d'angle, un problème visible publiquement sur le site est apparu.
+
+**Constat.** Les 6 lignes WNV européennes alimentées par le tableau de bord hebdomadaire de l'ECDC portent toutes `deaths = 0` : Grèce 214/0, Espagne 79/0, Macédoine du Nord 49/0, Roumanie 45/0, France 28/0, Allemagne 2/0. Seule l'Italie (521/26) échappe au motif, parce qu'elle est alimentée par une **autre** source, le bulletin de l'ISS.
+
+**La Grèce à 0 décès est fausse.** L'EODY a rapporté **19 décès** pour la saison 2026 à la date du 26 août (tous âgés de 66 à 92 ans, âge médian 85), largement repris par la presse hellénique et internationale. Le site public de HWG affiche donc `0` là où l'agence nationale en compte 19. *Réserve : `eody.gov.gr` répond 403 même avec un User-Agent navigateur, la vérification n'a pas pu être bouclée sur la source primaire elle-même — le chiffre de 19 vient de reprises de presse concordantes.*
+
+**Cause identifiée, et elle est documentée dans le code.** `app/api/cron/sync-who-regional/route.ts`, fetcher `fetchWNVEcdc`, commentaire d'origine :
+> « Not tracked by this source at all (no deaths column or mention anywhere on the page) — 0 means "unreported", same convention as every other fetcher here that only has a case figure. »
+
+La convention interne est donc assumée et cohérente. **Le problème n'est pas le fetcher, c'est que la convention « 0 = non rapporté » est invisible pour un visiteur**, qui lit 0 comme « aucun décès ». Même famille que [[project_null_deaths_followup_2026_08_26]] (« la limite de `outbreak-guards.ts` reste non corrigée ») et symétrique inverse de [[project_cholera_pakistan_zero_deaths_resolved_2026_08_25]], où le 0 s'était révélé authentique.
+
+**Aucune action prise, et c'est délibéré** : `app/` n'appartient à aucune routine documentaire (`AGENTS.md`), et **`app/api/cron/sync-who-regional/route.ts` est déjà modifié dans l'arbre par quelqu'un d'autre** — il n'a même pas été ouvert en écriture. À arbitrer par David, ou à router vers `morning-don-check` / `daily-product-ideas-healthwatch` sous verrou de code.
+
+---
+
+### 5️⃣ Arbre de travail — fichiers ne relevant pas de cette routine
+Conformément à `AGENTS.md`, ce run ne stage que `marketing/content-log.md`. Laissés tels quels et signalés, inchangés par ce run : `app/api/cron/sync-who-regional/route.ts` (modifié, non commité — cf. §4, volontairement pas touché), `marketing/qa/product-claims.manual.json` (modifié, non commité), `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis). `marketing/qa/claimable-facts.json` et `product-claims.json` ont été régénérés par ce run (registres QA) mais ne sont pas stagés.
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check-2 — 03/09/2026 (18h, reprise interactive « remplis les quotas ») — 1 note de connexion publiée, 0 commentaire (aucun candidat honnête trouvé), signal Ebola/RDC pour morning-don-check
 
 Détail des DM/notes/suivis dans `linkedin-contacts.md`, entrée du jour. Cette entrée se limite à la veille et au signal produit.
