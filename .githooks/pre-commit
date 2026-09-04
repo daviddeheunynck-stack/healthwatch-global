@@ -1,6 +1,10 @@
 #!/bin/sh
-# Empêche vercel.json et un commentaire "Schedule: <cron-expr>" de diverger
-# silencieusement.
+# Deux contrôles, chacun déclenché seulement par les chemins qui le concernent :
+#   1. une URL sur un éditeur qu'on n'a pas le droit de récupérer
+#      automatiquement (voir plus bas, et scripts/check-restricted-fetch.mjs) ;
+#   2. vercel.json et un commentaire "Schedule: <cron-expr>" qui divergent.
+#
+# ── 2. Horaires de crons ─────────────────────────────────────────────────────
 #
 # Trouvé deux fois le même jour (2026-08-23) : fix(crons) 313117a corrige des
 # horaires en-tête devenus faux après un changement de vercel.json, puis
@@ -17,6 +21,26 @@
 #   git commit --no-verify
 
 staged=$(git diff --cached --name-only)
+
+# ── 1. Éditeurs qu'on n'a pas le droit de récupérer automatiquement ─────────
+# Ajouté le 2026-09-04. Un fetcher de polioeradication.org a vécu 7 jours
+# (28/08 → 04/09) alors que la restriction commerciale de ce site était écrite
+# depuis le 29/07 — dans le SKILL.md d'une routine, donc invisible au moment
+# d'écrire le cron. Le registre est maintenant dans lib/source-trust.ts
+# (RESTRICTED_FETCH_DOMAINS) et ce contrôle refuse un commit qui introduit une
+# URL sur l'un de ces hôtes. Déclenché dès que le commit touche du code
+# applicatif, parce que c'est là que le fetcher a été écrit.
+if echo "$staged" | grep -qE '^(app|lib)/.*\.(ts|tsx)$'; then
+  node scripts/check-restricted-fetch.mjs
+  if [ "$?" -ne 0 ]; then
+    echo "" >&2
+    echo "COMMIT REFUSÉ — voir le détail ci-dessus. Une vérification humaine reste" >&2
+    echo "autorisée sur ces éditeurs ; c'est la récupération automatique qui ne l'est pas." >&2
+    echo "Si l'URL n'est pas un fetch, déclare-la dans ACKNOWLEDGED, sinon : git commit --no-verify" >&2
+    echo "" >&2
+    exit 1
+  fi
+fi
 
 echo "$staged" | grep -qE '^(vercel\.json|app/api/(cron|admin)/.*/route\.ts|lib/cron-monitor\.ts)$' || exit 0
 

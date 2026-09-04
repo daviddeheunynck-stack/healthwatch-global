@@ -100,6 +100,57 @@ const FORBIDDEN_SOURCE_DOMAINS: ReadonlySet<string> = new Set([
   "reliefweb.int",
 ]);
 
+// ── Éditeurs qu'on n'a pas le droit de RÉCUPÉRER automatiquement ─────────────
+// Catégorie distincte de la précédente, et jusqu'ici la seule des deux à n'avoir
+// aucune existence en code. Ces éditeurs peuvent être cités — une vérification
+// humaine qui lit le bulletin et recopie un chiffre reste l'arbitrage retenu par
+// David pour chacun d'eux — mais leurs conditions interdisent l'usage commercial
+// de leur contenu, donc aucun cron ne doit aller le chercher tout seul.
+//
+// Pourquoi une liste plutôt que des commentaires : le 2026-08-28, un fetcher
+// GPEI a été ajouté à sync-who-regional pour combler le retard des lignes cVDPV
+// africaines. La restriction de polioeradication.org était déjà écrite depuis le
+// 2026-07-29 — dans le SKILL.md d'une routine — et le message de retrait du
+// 2026-09-04 (0df093ae) le dit lui-même : elle « n'avait pas été recroisée au
+// moment de construire ce cron un mois plus tard ». Le cron a vécu 7 jours. Une
+// règle qui ne vit que dans la mémoire de celui qui l'a écrite n'est pas un
+// garde-fou ; scripts/check-restricted-fetch.mjs lit cette liste et refuse un
+// commit qui introduit une URL sur l'un de ces hôtes dans app/ ou lib/.
+//
+// `why` est du texte pour un humain qui lit le refus, pas un identifiant.
+export const RESTRICTED_FETCH_DOMAINS: ReadonlyArray<{ domain: string; since: string; why: string }> = [
+  {
+    domain: "polioeradication.org",
+    since:  "2026-07-29",
+    why:    "GPEI — CGU : « not for sale or for use in conjunction with commercial purposes », autorisation écrite requise pour toute reproduction substantielle. Lignes polio en vérification manuelle (Afghanistan/Pakistan depuis toujours, les 13 cVDPV africaines depuis le 2026-09-04).",
+  },
+  {
+    domain: "endpolio.com.pk",
+    since:  "2026-07-29",
+    why:    "Pakistan NEOC — même traitement manuel que GPEI, dont il reprend les chiffres.",
+  },
+  {
+    domain: "cdc.gov.au",
+    since:  "2026-07-12",
+    why:    "CDC Australie — copyright : usage personnel ou interne seulement, « must not use … for any commercial purpose ». Décision de David : ligne Diphtérie/Australie rafraîchie à la main, pas de scraper (legal_cdc_australia_commercial_use_restriction).",
+  },
+  {
+    domain: "ncdc.gov.ng",
+    since:  "2026-09-02",
+    why:    "Nigeria CDC — les sitreps PDF portent une clause de confidentialité (« confidential, privileged … may not be used, published, or redistributed »). sync-ncdc est suspendu ; ne jamais réingérer ces PDF (legal_ncdc_nigeria_confidential_sitreps_2026_09_02).",
+  },
+  {
+    domain: "reliefweb.int",
+    since:  "2026-07-06",
+    why:    "UN OCHA — CGU non commerciales. Déjà interdit de citation (voir FORBIDDEN_SOURCE_DOMAINS) ; listé ici aussi pour que l'interdiction d'ingestion soit vérifiée mécaniquement et pas seulement documentée.",
+  },
+  {
+    domain: "promedmail.org",
+    since:  "2026-06",
+    why:    "ProMED/ISID — mise en demeure reçue, source retirée intégralement en juin 2026. Aucune réintroduction sans accord écrit.",
+  },
+];
+
 /**
  * True when `source` cites a publisher HWG is not permitted to cite. Exported so the
  * daily data-quality audit can name the offending rows without re-deriving the rule

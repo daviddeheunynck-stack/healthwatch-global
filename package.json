@@ -14,6 +14,7 @@
     "check:crons": "node scripts/check-cron-schedule.mjs",
     "check:migrations": "node scripts/check-migrations-applied.mjs",
     "check:regions": "node scripts/check-region-coverage.mjs",
+    "check:sources": "node scripts/check-restricted-fetch.mjs",
     "check:prices": "node scripts/check-stripe-prices.mjs",
     "qa:facts": "node scripts/build-claimable-facts.mjs",
     "qa:claims": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/build-product-claims.mjs",
