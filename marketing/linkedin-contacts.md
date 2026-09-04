@@ -1,7 +1,7 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
-## 📅 Session linkedin-hwg-monitoring — 04/09/2026 (9h, puis reprise interactive 10h12 sur ordre de David « publie ») — ✅ **8 suivis**, ✅ **1 DM envoyé**, ❌ **2 DM et 2 commentaires abandonnés** — dont **trois affirmations fausses interceptées avant envoi**
+## 📅 Session linkedin-hwg-monitoring — 04/09/2026 (9h, reprise 10h12 « publie », reprise 10h15 « continue le run ») — ✅ **8 suivis**, ✅ **2 DM envoyés/en cours**, ✅ **1 connexion acceptée**, ❌ **2 DM et 2 commentaires abandonnés** — dont **trois affirmations fausses et une erreur logique interceptées avant envoi**
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` du 04/09 dans ce fichier ni dans `content-log.md` à l'ouverture (seule entrée du jour : `linkedin-hwg-content-proposal`, 8h35) → **premier déclenchement de cette routine aujourd'hui**. Horloge à l'heure (`Fri Sep 4 09:04 2026`). Branche : **master**. Registre de faits régénéré à 09:04 (221 faits, 106 lignes affichées, 3 périmés) ; registre produit régénéré également.
 
@@ -121,19 +121,25 @@ Recherche active menée sur le fil (bulletin régional Santé publique France) p
 
 ### 7️⃣ 📊 QUOTAS À LA CLÔTURE
 
+**Table mise à jour en fin de reprise (11h20).**
+
 | Catégorie | Consommé | Plafond | Détail |
 |---|---|---|---|
-| Commentaires | **0** | 7 | 2 candidats instruits, **5 jets**, 5 rejets du relecteur, tous documentés. Aucun blocage hebdomadaire nouveau créé |
-| Notes de connexion | **0** | 7 | aucun hook honnête sur les 8 profils suivis |
-| Suivis | **8** | 7-10 | objectif atteint |
-| DM | **1 envoyé** | 8 | Schlitt, 10h12, sur ordre explicite de David ; 2 abandonnés (Baso, Yuda) |
+| Commentaires | **1 publié** | 7 | Macharia, ~10h55, 4 jets. Candidats Casamatta/Moreau du matin restent abandonnés (0 publié). Aucun blocage hebdomadaire créé (1er contact) |
+| Notes de connexion | **0** | 7 | aucun hook honnête sur les 8 profils suivis ni sur Boris Pavlin |
+| Suivis | **8** | 7-10 | objectif atteint, inchangé pendant la reprise |
+| DM | **1 envoyé, 1 en file** | 8 | Schlitt envoyé 10h12 (ordre explicite) ; trésor Ndaye en file (4 jets) ; 2 abandonnés (Baso, Yuda) |
 | Invitations reçues traitées | 0 | — | les 2 restantes sont des décisions déjà prises |
+| Connexions acceptées | **1** | — | Boris Pavlin (OMS), 38e jour d'attente, aucun DM (pas de hook) |
 | Écritures en base | **0** | — | voir §8 dans `content-log.md` |
 
 ### 8️⃣ 🔁 CARRY-OVER POUR LE CRÉNEAU DE 13h (04/09)
 
 1. ✅ **CLOS — DM James Schlitt envoyé le 04/09 à 10h12**, sur ordre explicite de David tapé en session interactive (« publie »). Texte complet en section 2. Ne pas rouvrir ce dossier ; à suivre uniquement s'il répond.
-2. 🔴 **À trancher avec David, le point le plus important de la journée** : le corpus a produit **5 jets et 0 commentaire publiable** ce matin, après 4 jets et 0 commentaire hier après-midi. Chaque rejet est juste et documenté ; c'est le répertoire d'angles qui est épuisé, pas la qualité du contrôle. Détail et tableau des moules brûlés : `content-log.md`, section 1 de l'entrée du jour.
+1bis. 🔒 **DM trésor Ndaye en attente de validation de David** — texte complet en section 2 de la reprise 10h15-11h20 ci-dessous. 4 jets, décideur au ministère de la Santé de Kinshasa. Notification push envoyée avec le DM Schlitt.
+1ter. ✅ **CLOS — commentaire Pete Macharia publié ~10h55** (4 jets) — texte et détail dans `content-log.md`, section 3️⃣bis. Ne pas rouvrir sauf réponse de sa part.
+1quater. ⭐ **Boris Pavlin (OMS) — connexion acceptée, dossier clos sans DM.** Activité propre trop ancienne (3-6 ans) pour un hook honnête. Ne pas reproposer sans contenu neuf.
+2. 🟢 **Partiellement répondu par la reprise 10h15-11h20** : le corpus a quand même produit **1 commentaire publiable** après 9 jets cumulés sur 3 candidats (5 hier + 4 ce matin sur Macharia), en sortant délibérément de la posture d'observateur HWG habituelle. **Le point reste à trancher avec David** : est-ce un signe que le stock d'angles se reconstitue quand l'angle est assez différent, ou un coup de chance sur une cible atypique (facility registry, pas surveillance de cas) ? Détail et tableau des moules brûlés : `content-log.md`, section 1 de l'entrée du jour.
 3. 🗓️ **Ligne d'événement Ebola/RDC : à clore.** Le briefing Africa CDC sort de la fenêtre 48 h aujourd'hui, trois porteurs neufs ont été trouvés ce matin (David Moreau, WHO AFRO, Issa Barry) — le support n'a pas manqué, l'angle a manqué. ⚠️ **Le fait PARTNERS reste disponible et jamais servi en commentaire, mais ne jamais l'opposer à 2018-2020** (l'essai PALM a randomisé un anticorps monoclonal et le remdesivir en Ituri dès novembre 2018).
 4. 🔵 **La page WHO AFRO n'est plus inatteignable** — elle publie et s'ouvre normalement depuis le fil (post de 23 h sur l'extension du CTE de Nizi). Ne plus recopier « toujours inatteignable » sans l'avoir retesté.
 5. ⭐ **John Omari Baso** — DM abandonné ce matin sur une prémisse fausse (section 3). Son « Bonjour David. » est sa formule d'ouverture habituelle en message autonome, **pas un message tronqué**. Notre question du 03/09 09h56 reste ouverte de son côté. **Ne rien envoyer avant qu'il écrive**, ou attendre quelques jours. ⚠️ Avant tout brouillon sur ce fil, **réexporter le fil en entier** : l'export de ce matin perdait 8 messages et décalait les dates.
@@ -147,6 +153,43 @@ Recherche active menée sur le fil (bulletin régional Santé publique France) p
 ### 9️⃣ 🔧 ARBRE DE TRAVAIL
 
 Fichiers modifiés par cette session : `marketing/linkedin-contacts.md`, `marketing/content-log.md`, `marketing/linkedin-candidates-tracker.md`. Fichiers modifiés **par d'autres et laissés intacts** (`AGENTS.md`) : `marketing/qa/product-claims.manual.json`, `scripts/audit-alert-day.mjs`, `scripts/probe-alert-lock.mjs`. `marketing/qa/*.json` régénérés, non suivis. **Branche : master.** ⚠️ Trois commits de `linkedin-hwg-content-proposal` étaient restés locaux ce matin (`cb755c21`, `7cf72582`, `01dd80ac`) ; ils partent avec le push de ce run, signalé dans `content-log.md`.
+
+---
+
+## 🔁 REPRISE — 04/09/2026 (10h15-11h20), sur ordre de David tapé en session (« continue le run »)
+
+### 1️⃣ ✅ COMMENTAIRE PUBLIÉ — Pete Macharia, PhD (4 jets) — détail complet dans `content-log.md`, section 3️⃣bis
+
+Repéré via notification (Christian BABOKO, déjà suivi, commentant sous son post). Preprint « Discontinu-cities » sur le recensement des établissements de santé du Grand Conakry. 4 jets, 3 motifs de rejet distincts sur la question 11 (alternative binaire, lien chiffré inventé 63%/564, distinction générique à deux termes) — le dernier repéré étant une **erreur logique réelle** (564 présenté comme un sous-ensemble des 63 % non-déclarants, alors que 63 % de 691 ≈ 435 < 564). Publié ~10h55. **Quota commentaires : 1/7.**
+
+### 2️⃣ 🔒 DM EN FILE DE VALIDATION — **trésor Ndaye**, réponse en fil actif (9 jours plus tard) — 4 jets
+
+`/in/trésor-ndaye-0ba081b3/`, *MD, MPH(e), GEP chez **Ministère de la santé publique Kinshasa**, aussi Inspection Générale de la Santé/RD Congo*. Contact de 1er degré, décideur institutionnel, connexion acceptée au 7e jour le 26/08. Repéré en ouvrant la messagerie (nouveau message reçu à 10h45, non signalé en notification). *langue du fil = fr ; langue du brouillon = fr ; vouvoiement.*
+
+**Contexte.** Le 26/08, David avait relancé Trésor sur un point technique laissé en suspens depuis un échange public du 18/08 : 850 cas confirmés d'un point de situation INSP-RDC (arrêté au 15/08) n'entrant dans aucune catégorie d'issue. Deux hypothèses posées : soit un retard de clôture de dossiers qui se résorbe avec le temps, soit un résidu qui ne se résorbe jamais. Aujourd'hui à 10h45, Trésor répond enfin, en quatre mots : « **Jusqu'à présent aucune suite.** »
+
+**🔴 Ce dossier a exigé 4 jets, chacun sur un défaut réel et différent** — l'essentiel de la difficulté : ne pas sur-interpréter une réponse volontairement laconique, et ne jamais laisser une question sur un mécanisme interne se lire comme un doute sur la compétence du ministère.
+
+- **Jet 1** — « ça confirme la deuxième branche… reste vraiment sans catégorie », suivi d'un CTA (carte des flambées HWG, essai 14 jours). Mécanique **FAIL** (`ngram.history`, CTA quasi identique à celui envoyé hier à SOUAD BELKACEMI). Relecteur : **REECRIRE 5, 9, 10, 11, 12** — sur-interprétation de « Jusqu'à présent » en confirmation définitive ; insinuation via « s'il en reçoit un » sur la capacité du ministère ; CTA plaqué sur un échange de 4 mots ; gabarits recyclés.
+- **Jet 2** — CTA retiré, question reformulée au conditionnel, ouverture par citation du fragment « Jusqu'à présent » + clôture en alternative binaire. Mécanique **PASS**. Relecteur : **REECRIRE 9, 11** — l'insinuation institutionnelle survivait sous forme d'hypothèse plutôt que de constat (« ne fait-il simplement jamais l'objet d'un retour »), et l'ouverture comme la clôture reprenaient deux moules brûlés le jour même sur d'autres brouillons.
+- **Jet 3** — une seule question courte, sans CTA, sans fragment cité. Mécanique **PASS**. Relecteur : **REECRIRE 7, 9, 11, 12** — « , quand ça arrive » restait lisible comme « seulement si ça arrive » (même insinuation, reformulée), et « ce genre de résidu » généralisait au-delà de l'instance précise, rendant la question transférable à n'importe qui. Le relecteur a lui-même fourni la correction minimale : deux retraits, aucune reformulation créative.
+- **Jet 4** — les deux retraits appliqués tels quels. Relecteur : **VERDICT: ENVOYER** — vérifié que « qui finit par reclasser » est désormais une affirmative présupposant la résolution (pas un doute), et que « ce résidu » reprend l'anaphore exacte du message de David du 26/08, sans généraliser.
+
+**🔒 Texte final, prêt, en file de validation — jamais envoyé par la routine :**
+
+> Merci pour la mise à jour. Je suis curieux du mécanisme qui finit par reclasser ce résidu chez vous.
+
+`QA : mécanique PASS au jet 4 (100 car., 1 phrase, fr/fr, 0 blocker) | relecteur 4 passes, jets 1-3 rejetés sur des variantes du même risque (insinuation institutionnelle) et sur des gabarits distincts, jet 4 VERDICT: ENVOYER sans réserve | faits cités : aucun | statut : en file de validation, jamais envoyé par la routine — David présent en session (commit `01dd80ac` horodaté 09h31 ce même run), la ligne de base du 23/07 s'applique`
+
+⚠️ **Motif de mise en file plutôt qu'envoi automatique** : identique à la décision de la section 1️⃣ de l'entrée du matin — l'exception d'automation du 03/09 est bornée à « David absent », condition non remplie ce run.
+
+### 3️⃣ ⭐ CONNEXION ACCEPTÉE — **Boris Pavlin** (OMS) — aucun welcome DM, pas de hook honnête
+
+`/in/boris-pavlin-4aa1049/`, *Epidemiologist at World Health Organization*. Invitation envoyée sans note le 28/07 (quota connexions plein ce jour-là), acceptée aujourd'hui à son **38e jour** — la plus ancienne invitation en attente du corpus. Vérification bidirectionnelle faite (§14) : activité propre ouverte en entier.
+
+**Aucun hook honnête disponible.** Ses deux seuls posts personnels datent de **3 et 6 ans** (un webinaire de stage OMS, un document sans texte). Son seul signal récent est un commentaire d'**une ligne, vieux de 3 mois**, sur un preprint hantavirus d'un tiers (« *Has the preprint link been taken down?* ») — trop ancien et trop mince pour servir de point d'accroche sans paraître fouillé après coup.
+
+**Décision : pas de welcome DM, même conduite que Kevin S. et Gail Carson.** Suivi automatique confirmé (la connexion entraîne le suivi). **Dossier clos, à rouvrir seulement s'il publie du contenu propre.**
 
 ---
 

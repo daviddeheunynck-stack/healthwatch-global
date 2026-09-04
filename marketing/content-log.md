@@ -2,7 +2,7 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
-## 📅 Session linkedin-hwg-monitoring — 04/09/2026 (9h) — ⚠️ **0 commentaire publié : 2 candidats instruits, 5 jets, 5 rejets du relecteur, tous réels** — 8 suivis, ligne d'événement Ebola/RDC sortie de sa fenêtre
+## 📅 Session linkedin-hwg-monitoring — 04/09/2026 (9h, puis reprise 10h15 sur ordre de David « continue le run ») — ✅ **1 commentaire publié (9 jets cumulés sur 3 candidats)** — 8 suivis, ligne d'événement Ebola/RDC sortie de sa fenêtre
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` du 04/09 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture (la seule entrée du jour était celle de `linkedin-hwg-content-proposal`, 8h35) → **premier déclenchement de cette routine aujourd'hui**. Horloge à l'heure (`Fri Sep 4 09:04 2026`). Branche vérifiée : **master**.
 
@@ -55,6 +55,31 @@ Les deux candidats étaient bons, et les deux posts étaient de la matière de p
   - **11** : « *Une nuance que le graphique ne peut pas porter* » rejoue l'aphorisme « *ce qu'un nombre ne transporte pas* », abandonné par écrit le 02/09 sous BANZA Freddy Mutoka et déjà servi deux fois le 01/09.
 
 **Abandon.** Deux jets, deux échecs en 11, et une affirmation fausse rattrapée avant publication. Aucun texte publié, aucun blocage créé. Profil **suivi** ce run. Le fait PARTNERS reste **inutilisé et disponible** : il n'a jamais été servi comme angle de commentaire sur aucun canal.
+
+---
+
+## 🔁 REPRISE — 04/09/2026 (10h15-11h20), sur ordre de David tapé en session (« continue le run »)
+
+### 3️⃣bis ✅ COMMENTAIRE 1/7 PUBLIÉ — **Pete Macharia, PhD**, EN, top-level, premier contact — 4 jets, un vrai lien chiffré inventé intercepté au passage
+
+`urn:li:activity:7501552252575215617`, post de 2 h à l'ouverture, **1er degré, jamais contacté**, 20 réactions, 3 commentaires (un seul visible, de **Christian BABOKO**, déjà suivi par HWG depuis le 02/08). Repéré via les notifications, pas via la recherche active. *PhD | Health Geography | Spatial epidemiology | GIS*. Preprint « Discontinu-cities » (UrbanBirth Collective) : recensement complet des établissements de santé du Grand Conakry, Guinée — 459 sur liste officielle dont seulement 231 retrouvés, 564 établissements jamais listés, 691 au total, 63 % ne déclarant pas au DHIS2 (quasi tous privés).
+
+**Angle délibérément choisi hors du territoire épuisé ce matin même** : pas de posture d'observateur HWG (« ce que je lis/agrège »), sujet génuinement différent (complétude d'un registre d'établissements, pas comptage de cas). N'empêche pas les mêmes moules structurels de resurgir sous une formulation neuve — 4 jets ont été nécessaires :
+
+- **Jet 1** — angle : deux problèmes dans le taux de 63 % (établissements qui existent sans déclarer, établissements absents de toute liste). Mécanique **PASS** (435 car.). Relecteur : **REECRIRE 11** — clôture en alternative binaire « A, ou B ? » (motif brûlé le jour même) + ouverture en distinction générique à deux termes symétriques.
+- **Jet 2** — clôture rendue ouverte, ouverture reformulée sur les 564. Mécanique **PASS** (373 car.). Relecteur : **REECRIRE 7, 11** — 🔴 **lien chiffré inventé** : le brouillon rattachait les 564 non-listés à « that 63 % » comme un sous-ensemble, alors que 63 % de 691 ≈ 435 < 564 — ce sont deux statistiques disjointes du post, jamais reliées par les auteurs ; et l'ouverture « The 564 … are probably the harder half … to recover » reprenait la charpente « [chiffre] + copule + prédicat évaluatif », 6 occurrences déjà relevées dans ce fichier même (l.9007, 8550, 13994).
+- **Jet 3** — lien chiffré supprimé, copule évaluative retirée. Mécanique **PASS** (368 car.). Relecteur : **REECRIRE 11** de nouveau, sur un **3e motif distinct** : l'ouverture retombait sur la distinction générique à deux termes (motif du jet 1) sous un vocabulaire entièrement neuf — « *le filet anti-gabarit outillé ne couvre pas le mode de répétition qui coûte le plus aujourd'hui* ».
+- **Jet 4** — comparaison à deux catégories supprimée, le brouillon ne parle plus que des 564, sans généralisation abstraite en ouverture. Relecteur : **VERDICT: ENVOYER**, 0 échec — vérifié par citation directe que les trois motifs des jets précédents (alternative binaire, distinction à deux termes, copule évaluative) sont absents, et qu'aucune autre charpente connue n'est apparue à la place.
+
+**🔒 Texte publié :**
+
+> 564 facilities in Grand Conakry never made it onto any official list at all. A census catches them once, but nothing in how health systems normally get updated, a closure notice, a referral that fails and gets traced back, would ever surface one on its own between one census and the next.
+>
+> What keeps that number from drifting back up once the census team moves on to the next city?
+
+**Publication confirmée** : identité de la cible (URL du post + nom « Pete Macharia » présent dans la page) vérifiée dans le même appel JS que le clic sur « Commenter », texte comparé caractère pour caractère au brouillon validé avant le clic (383 car., 2 paragraphes). Après publication : éditeur vidé, **une seule occurrence** du texte, affiché sous « David Deheunynck · maintenant ». **Quota commentaires : 1/7.** Profil **non suivi séparément** ce run (1er degré, déjà relation).
+
+`QA : mécanique PASS au jet 4 (0 blocker, 0 warn) | relecteur 4 passes, jets 1-3 rejetés sur 3 motifs distincts (alternative binaire, lien chiffré inventé 63%/564, distinction à deux termes), jet 4 VERDICT: ENVOYER sans réserve | faits cités : 564, sourcé du post lui-même (pas du registre HWG) | statut : publié le 04/09 à ~10h55`
 
 ---
 
