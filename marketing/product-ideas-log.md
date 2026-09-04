@@ -3467,16 +3467,23 @@ signalée sans bloquer.
 Les deux constructions sont du code. Aucun appel en prod autre que des
 lectures.
 
-1. **`data-quality` récupère toujours `polioeradication.org` tous les jours
-   (section 4j, ligne 127).** Le message de `0df093ae` affirme « plus aucun
-   code du dépôt ne fetch ce domaine » : c'est vrai de `sync-who-regional`,
-   faux du dépôt. La sonde ne lit que des noms de pays et une date d'arrêt,
-   n'écrit rien en base et ne recopie aucun chiffre — elle n'est pas du même
-   ordre que le fetcher retiré ce matin. **L'arbitrage est juridique, il n'a
-   pas été pris par cette routine** : la garder, ou la retirer comme le
-   fetcher. L'occurrence est déclarée dans `ACKNOWLEDGED` avec la mention
-   `⚠️ NON TRANCHÉ`, elle ne bloque donc rien en attendant, et elle est
-   nommée à chaque exécution du contrôle.
+1. **RÉSOLU (session interactive, 04/09) — la sonde 4j est retirée.** David a
+   tranché : `data-quality` ne récupère plus `polioeradication.org`, quel que
+   soit ce qu'elle en lisait. Commit `158f27b1` — `fetchGPEIThisWeek()`,
+   `parseGPEIThisWeek()` et le bloc d'appel de la section 4j supprimés
+   entièrement. `check-restricted-fetch.mjs` ne signale plus d'entrée
+   `ACKNOWLEDGED` sans occurrence pour ce fichier (il l'annonçait déjà comme
+   « à retirer » avant la suppression — usage exactement prévu).
+
+   **Conséquence assumée, écrite dans le code à l'endroit où elle était
+   implicite** (commentaire de la section 4l) : une ligne polio désactivée
+   redevient indétectable si le GPEI continue de la publier — c'était la
+   seule exception à « 4l ne voit que les lignes actives », elle disparaît
+   avec la sonde. Le trou de couverture qui avait motivé sa construction le
+   22/08 (un Incident Manager de l'OMS avait dû demander à David si le site
+   avait lu le bulletin) redevient donc sans contrôle automatique ; seule la
+   vérification manuelle déjà en place pour Afghanistan/Pakistan couvre
+   désormais les 13 lignes africaines.
 
 2. **Lassa fever / Nigéria est toujours sur le site public** — 1 056 cas,
    253 décès. La ligne a été désactivée le 02/09 quand la clause de
