@@ -69,7 +69,14 @@ const KNOWN_SEED_CLUSTERS = [
   { label: "MERS-CoV (DON591)", diseaseMatch: /mers-cov/i, expectedCount: 1 },
   { label: "Choléra (DON579, multi-pays)", diseaseMatch: /cholera/i, expectedCount: 4 },
   { label: "Polio PHEIC (Afghanistan/Pakistan/Palestine)", diseaseMatch: /polio/i, expectedCount: 3 },
-  { label: "Cereulide / lait infantile (DON596, multi-pays)", diseaseMatch: /cereulide/i, expectedCount: 10 },
+  // 2026-09-03 : cluster CLOS. Les 10 lignes DON596 ont été passées à active=false +
+  // response_phase="contained" sur ordre explicite de David en session interactive
+  // (compteur de foyers actifs 129 -> 119, voir marketing/product-ideas-log.md, entrée
+  // du 03/09 au soir, commit 66588a8e). Aucun suivi de l'OMS depuis le DON initial du
+  // 13/03/2026 ; les chiffres n'ont pas été retouchés, seul le statut. L'entrée est
+  // retirée d'ici plutôt que passée à expectedCount:0 — un cluster sans ligne active
+  // n'a plus rien à comparer, et la garder ferait sortir un "ÉCART 0/0" chaque matin.
+  // Ne pas la réintroduire sans un nouveau DON OMS sur cet événement.
 ];
 
 async function fetchJson(url, opts) {
@@ -861,7 +868,16 @@ const MANUAL_ROW_CHECKED = {
   // compte 2 cas sur ces quatre semaines : 34 au 19/07 + 2 donnerait 36, pas 32. Ne pas régresser la
   // ligne de 34 à 32 sur cette seule lecture de tableau — attendre un BSS de l'ARASS postérieur à la
   // semaine 29, qui est la source primaire de ce territoire.
-  "4f95242c-e512-488e-ba52-38298a3e9ec3": "2026-08-19",
+  // Revérifié le 04/09 par les DEUX voies, sans changement. (a) Le listing WPRO
+  // (who.int/westernpacific/wpro-emergencies/surveillance/dengue) s'arrête toujours au
+  // Dengue Situation Update #752 du 20/08 — celui-là même que la ligne cite déjà (36 cas
+  // confirmés cumulés 2026, arrêté au 02/08). (b) Le listing ARASS
+  // (service-public.pf/dsp/bulletin-de-surveillance-sanitaire/) ne contient toujours aucun
+  // bulletin postérieur à la S29/2026 : le seul lien 2026 servi est
+  // « bulletin-de-surveillance-sanitaire-de-la-s29-2026/ ». La divergence à 32 cas du
+  // rapport WHO/SPC du 14/08 reste donc non appliquée, pour les raisons ci-dessus.
+  // Rien à écrire.
+  "4f95242c-e512-488e-ba52-38298a3e9ec3": "2026-09-04",
   // Polio/Afghanistan : « Polio This Week » du 19/08/2026 — « Four WPV1 cases were reported this
   // week from Hirat, Kandahar and Paktika, with onset of paralysis in June and July (most recent
   // case: 17 July 2026). The total number of cases in 2026 is 19. » Ligne corrigée le 21/08 de 15
@@ -1141,7 +1157,7 @@ const MARBURG_CLOSURE_WATCH_FROM = "2026-08-11";
 // Le résumé de recherche l'accompagnait d'un « 20 confirmed cases and 2 deaths » qui ne correspond
 // à AUCUNE épidémie ougandaise réelle (2017 : 3 cas ; 2025 : 14 confirmés / 2 décès ; 2026 : 1 cas).
 // Toujours vérifier la date de publication de cet article avant de conclure à une clôture.
-const MARBURG_CLOSURE_LAST_CHECK = "2026-09-01"; // relu le 01/09 : la page gov.uk (toujours datée du 27/08) liste encore le cas de Kyegegwa notifié le 30/06 sous « Current incidents and outbreaks » 2026, sans aucune mention de fin d'épidémie, alors qu'elle en porte explicitement une pour d'autres événements 2025-2026. WebSearch « Marburg Uganda outbreak declared over 2026 » : rien non plus — les seules clôtures qui remontent sont l'Éthiopie (26/01/2026) et le Rwanda, deux faux positifs voisins de ceux déjà documentés. Ligne laissée active à 1 cas / 1 décès. Historique du 28/08 : // gov.uk (page mise à jour le 27/08, relue le 28/08) : le cas du 30/06 à Kyegegwa est toujours listé sous « Current incidents and outbreaks » 2026, aucune déclaration de fin d'épidémie. WebSearch « Marburg Uganda outbreak declared over August 2026 » : rien non plus, la couverture s'arrête au silence des autorités ougandaises constaté par STAT le 16/07. Les trois faux positifs documentés plus haut tiennent, ne pas les alléger.
+const MARBURG_CLOSURE_LAST_CHECK = "2026-09-04"; // relu le 04/09 : WebSearch « Marburg Uganda outbreak declared over end of outbreak 2026 » — toujours aucune déclaration de fin d'épidémie pour l'événement de Kyegegwa notifié le 30/06/2026. ⚠️ NOUVEAU FAUX POSITIF à ajouter aux trois déjà documentés : la requête remonte en tête `afro.who.int/news/marburg-virus-disease-outbreak-uganda-over`, dont le titre semble répondre exactement à la question — l'article est daté du 8 DÉCEMBRE 2017 et clôt l'épidémie de Kween/Kapchorwa (dernier cas confirmé décédé le 26/10/2017). Même famille de piège de millésime que Ouaddaï/Sila 2025 et Fidji 2025 : vérifier la date de publication ET le district avant d'appliquer. Ligne laissée active à 1 cas / 1 décès. Historique du 01/09 :  // relu le 01/09 : la page gov.uk (toujours datée du 27/08) liste encore le cas de Kyegegwa notifié le 30/06 sous « Current incidents and outbreaks » 2026, sans aucune mention de fin d'épidémie, alors qu'elle en porte explicitement une pour d'autres événements 2025-2026. WebSearch « Marburg Uganda outbreak declared over 2026 » : rien non plus — les seules clôtures qui remontent sont l'Éthiopie (26/01/2026) et le Rwanda, deux faux positifs voisins de ceux déjà documentés. Ligne laissée active à 1 cas / 1 décès. Historique du 28/08 : // gov.uk (page mise à jour le 27/08, relue le 28/08) : le cas du 30/06 à Kyegegwa est toujours listé sous « Current incidents and outbreaks » 2026, aucune déclaration de fin d'épidémie. WebSearch « Marburg Uganda outbreak declared over August 2026 » : rien non plus, la couverture s'arrête au silence des autorités ougandaises constaté par STAT le 16/07. Les trois faux positifs documentés plus haut tiennent, ne pas les alléger.
 // ⚠️ TROISIÈME FAUX POSITIF DE CLÔTURE, rencontré le 22/08 — distinct des deux ci-dessus : la guidance
 // gov.uk ET le DON615 mentionnent tous deux une « fenêtre de 42 jours » ougandaise qui « cesse le
 // 27/08 ». C'est celle de l'EBOLA Bundibugyo (dernier cas importé de RDC sorti de soins le 16/07),
@@ -1322,6 +1338,24 @@ const STALE_CRON_ROW_CHECKED = {
   // doivent etre cloturees ou re-sourcees.
   "f8ac0c0f-4607-4910-bf42-60fbce058975": "2026-08-28",
   "7203dc63-d8b1-46fe-afeb-a5ad1541ccac": "2026-08-28",
+  // Diphtérie/Haïti : vérifiée le 04/09 (première sortie de cette ligne en section 4e, 46j
+  // sans écriture). La source de la ligne est l'« Epidemiological Alert: Diphtheria in the
+  // Americas Region » de l'OPS du 11/06/2026 (SE 1 à SE 21 : 163 cas confirmés dans les
+  // Amériques, dont Haïti 159 cas et 5 décès). Page `paho.org/en/epidemiological-alerts-and-
+  // updates` relue ce jour : aucune publication diphtérie postérieure au 11/06 — les entrées
+  // les plus récentes portent sur la grippe aviaire (26/08) et la rougeole (07/08). C'est une
+  // alerte PONCTUELLE, pas une série périodique : même famille que Shigellosis/EU-EEA et que
+  // le RRA diphtérie Région africaine ci-dessus. Rien à écrire, ni chiffres ni date d'arrêté.
+  // ⚠️ Faux positif à NE PAS appliquer : les recherches font remonter, pour Haïti, un compte de
+  // cas SUSPECTS bien plus élevé (1 476 suspects/17 décès en janvier-mai, puis 1 924 suspects /
+  // 159 confirmés / 18 décès au 20/06, dont 13 décès parmi les suspects et 5 parmi les
+  // confirmés) et un titre de presse « plus de 1600 cas ». La ligne compte les cas CONFIRMÉS et
+  // les décès PARMI LES CONFIRMÉS — écrire 1 924 ou 1 600 par-dessus 159 serait un changement de
+  // cadrage déguisé en mise à jour. Le 159/5 n'a d'ailleurs pas bougé entre le 11/06 et le
+  // 20/06. Même piège que le « 209 cas » tchadien (sous-total) et le cadrage SPC/Kiribati.
+  // 🔎 Au prochain passage : guetter une nouvelle alerte ou mise à jour épidémiologique OPS
+  // sur la diphtérie, seule édition capable de faire bouger cette ligne.
+  "f4fd70c8-67a8-4cb8-a206-e0f1e8408935": "2026-09-04",
 };
 const STALE_CRON_DAYS = 45;
 console.log(`\n=== Lignes de cron figées depuis > ${STALE_CRON_DAYS}j (date d'arrêté potentiellement périmée) ===`);
