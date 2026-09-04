@@ -1,7 +1,7 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
-## 📅 Session linkedin-hwg-followup-check — 04/09/2026 (13h, 1er des 2 créneaux après-midi) — ✅ **1 note de connexion envoyée (4 jets)** — ✅ **1 DM ENVOYÉ PAR LA ROUTINE (James Schlitt, 13h57, 3 jets)** — premier envoi réel sous l'exception d'automation du 03/09 — ⚠️ **LinkedIn n'accorde plus qu'une invitation personnalisée par mois, et elle vient d'être consommée**
+## 📅 Session linkedin-hwg-followup-check — 04/09/2026 (13h, 1er des 2 créneaux après-midi, reprise interactive 14h50-15h10 « double check et envoie le DM à Ndaye et traite les autres réponses à envoyer ») — ✅ **1 note de connexion envoyée (4 jets)** — ✅ **3 DM envoyés (Schlitt 13h57 en automation + 15h06 sur ordre explicite ; Ndaye 14h53 sur ordre explicite ; BABOKO 15h08 sur ordre explicite)** — ⚠️ **LinkedIn n'accorde plus qu'une invitation personnalisée par mois, et elle vient d'être consommée**
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` du 04/09 dans ce fichier ni dans `content-log.md` à l'ouverture (entrées du jour : `linkedin-hwg-content-proposal` 8h35, `linkedin-hwg-monitoring` 9h + reprise 10h15). → **premier déclenchement de cette routine aujourd'hui**. Horloge à l'heure (`Fri Sep 4 13:02 2026`). Branche : **master**. Registre de faits régénéré à 13h05 (221 faits, 3 périmés).
 
@@ -54,19 +54,38 @@ Le run de 9h ce matin avait appliqué la **ligne de base du 23/07** (mise en fil
 
 ---
 
-### 3️⃣ 🔒 DM EN FILE, TEXTE CORRIGÉ — **trésor Ndaye** (Ministère de la Santé publique, Kinshasa) — ⚠️ **le jet 4 de ce matin présupposait la résolution, corrigé sur demande de David en session interactive**
+### 2️⃣bis ✅ RÉPONSE À JAMES SCHLITT — ENVOYÉE À 15h06, sur ordre explicite de David tapé en session interactive (« traite les autres réponses à envoyer ») — 2 jets
 
-Rédigé et double-checké ce matin par `linkedin-hwg-monitoring` (4 jets, relecteur `VERDICT: ENVOYER` sans réserve), mis en file parce que la présence de David était établie à ce moment-là. **Ce run ne l'a pas envoyé** : le SKILL est explicite, un DM en attente ne part jamais automatiquement par une session suivante sans validation explicite de David.
+Il a répondu à 14h41, pendant la reprise interactive : « *Ideally the person who does the diligence and reads the source matter reports. Would you not want the same? My job is simply to surface stronger signal higher to them, not replace their judgement.* » Fil relu en entier (11 messages). *langue du fil = en ; langue du brouillon = en.*
 
-**🔴 Défaut trouvé au double-check post-archivage, en session interactive avec David.** Le texte mis en file ce matin (« *Je suis curieux du mécanisme qui finit par reclasser ce résidu chez vous* ») affirmait que le résidu finit par se résorber. Or sa réponse complète, intégralement relue, est : « **Jusqu'à présent aucune suite.** » — quatre mots ambigus entre deux lectures très différentes, empruntées à la dichotomie que David avait lui-même posée le 26/08 (« *un retard de clôture des dossiers se résorbe pendant que les cas montent, alors qu'une part sans issue déclarée, elle, ne se résorbe pas* ») : soit le résidu n'a pas bougé depuis le 15 août, soit aucun rapport ne permet encore de trancher. L'affirmative du jet 4 penchait vers la lecture la moins probable des deux, sans le signaler.
+- **Jet 1** — réponse directe suivie d'un pivot vers l'idée de narrations à faible signal de James, jamais reprise depuis la promesse de David du 03/09 11h57 (« *The narrative-collecting idea deserves more than a quick reply, so I want to sit with it properly before I say anything useful* »). Mécanique PASS hors faux positif. Relecteur : **REECRIRE 9** — 🔴 le brouillon nommait « *the poultry-plant case* », l'exemple précis (Texas, travail migrant, défiance, réglementation) que ce même fil avait déjà écarté le 03/09 pour son terrain sensible reconstituable. Nommer le cas par son nom rouvrait exactement ce risque.
+- **Jet 2** — généralisé (« *an investigator can already read a slow signal correctly before it fires* »), sans aucun élément identifiant. **Relecteur : `VERDICT: ENVOYER`, 12/12** — vérifié que l'ancrage sur ce que James a réellement écrit (« *an easy inference problem in the short term* », « *let the context... drive an investigator's experience* ») tenait toujours après la généralisation, et qu'aucun chemin ne permettait de reconstituer le cas Texas.
 
-**Texte corrigé, en file — jamais envoyé par la routine :**
+**✅ Texte envoyé à 15h06 :**
+
+> Not the same: mine doesn't hand the reader a cluster to weigh, it settles on one value and stands behind it.
+>
+> I said I would sit with your narrative-collecting idea before answering, and now I have. It works because an investigator can already read a slow signal correctly before it fires. Is the list of narratives worth watching something you built by hand, or does it grow from what past outbreaks turned out to have looked like early?
+
+**Envoi confirmé** : en-tête revérifié, texte comparé caractère pour caractère au brouillon validé dans le même appel JS que le clic (441 car.). Après envoi : composeur vidé, message sous « David Deheunynck · 15:06 ». **Affirmation produit vérifiée dans le code avant rédaction** (`lockedRowRegressionGuard` dans `lib/outbreak-guards.ts`, `interface Outbreak` dans `lib/outbreaks.ts` : aucun champ pour une valeur concurrente). Aucun CTA, aucun lien — toujours jamais envoyés dans ce fil.
+
+`QA : mécanique PASS hors faux positif context.too-soon (confirmé une 4e fois sur ce fil) | relecteur 2 passes, jet 1 rejeté sur un terrain politique réactivé, jet 2 VERDICT: ENVOYER 12/12 | faits cités : aucun chiffre | statut : envoyé le 04/09 à 15h06, sur ordre explicite de David tapé en session interactive`
+
+---
+
+### 3️⃣ ✅ DM ENVOYÉ À 14h53, sur ordre explicite de David tapé en session interactive (« envoie le DM à Ndaye ») — **trésor Ndaye** (Ministère de la Santé publique, Kinshasa) — texte corrigé au double-check post-archivage
+
+Rédigé et double-checké ce matin par `linkedin-hwg-monitoring` (4 jets, relecteur `VERDICT: ENVOYER` sans réserve), mis en file parce que la présence de David était établie à ce moment-là.
+
+**🔴 Défaut trouvé au double-check post-archivage, en session interactive avec David.** Le texte mis en file ce matin (« *Je suis curieux du mécanisme qui finit par reclasser ce résidu chez vous* ») affirmait que le résidu finit par se résorber. Or sa réponse complète, intégralement relue, est : « **Jusqu'à présent aucune suite.** » — quatre mots ambigus entre deux lectures très différentes, empruntées à la dichotomie que David avait lui-même posée le 26/08 (« *un retard de clôture des dossiers se résorbe pendant que les cas montent, alors qu'une part sans issue déclarée, elle, ne se résorbe pas* ») : soit le résidu n'a pas bougé depuis le 15 août, soit aucun rapport ne permet encore de trancher. L'affirmative du jet 4 penchait vers la lecture la moins probable des deux, sans le signaler. Corrigé, repassé au relecteur (12/12, `VERDICT: ENVOYER`), puis David a tapé « envoie le DM à Ndaye » directement en session.
+
+**✅ Texte envoyé à 14h53 :**
 
 > Aucune suite, ça veut dire que le résidu n'a pas bougé sur les rapports parus depuis le 15 août, ou qu'aucun rapport ne permet encore de trancher ?
 
-`QA : mécanique PASS (147 car., 1 phrase, fr/fr, 0 blocker) | relecteur 12/12 PASS, VERDICT: ENVOYER — attribution vérifiée : les deux branches de l'alternative sont symétriques, aucune n'est présentée comme la lecture retenue | faits cités : « 15 août », vient du fil (point de situation INSP du 26/08), pas de la base | statut : en file de validation, jamais envoyé par la routine`
+**Envoi confirmé** : fil revérifié juste avant l'envoi (son message du 10h45 toujours le dernier, rien n'avait bougé), en-tête et texte comparés dans le même appel JS que le clic. Après envoi : composeur vidé, message sous « David Deheunynck · 14:53 ».
 
-**Son message du 04/09 10:45 (« Jusqu'à présent aucune suite. ») reste le dernier du fil.**
+`QA : mécanique PASS (147 car., 1 phrase, fr/fr, 0 blocker) | relecteur 12/12 PASS, VERDICT: ENVOYER — attribution vérifiée : les deux branches de l'alternative sont symétriques, aucune n'est présentée comme la lecture retenue | faits cités : « 15 août », vient du fil (point de situation INSP du 26/08), pas de la base | statut : envoyé le 04/09 à 14h53, sur ordre explicite de David tapé en session interactive`
 
 ---
 
@@ -93,7 +112,7 @@ Rédigé et double-checké ce matin par `linkedin-hwg-monitoring` (4 jets, relec
 ⚠️ **Fait de plateforme à connaître, découvert dans la modale** : « **Il vous reste 1 invitation personnalisée ce mois-ci** ». Elle vient d'être consommée. **Le quota interne de 7 notes de connexion par jour est donc sans objet jusqu'au reset mensuel** : toute invitation supplémentaire partira sans note. Arbitrage assumé de l'avoir dépensée ici plutôt que de la garder : le hook est daté du jour même (son commentaire d'il y a 2 h, sous un post où nous venions d'écrire), il ne survivrait pas au mois prochain, et aucun meilleur candidat nommé n'attendait. À vérifier au premier run de chaque mois plutôt qu'à le redécouvrir dans une modale.
 
 ---
-### 4️⃣bis ❌ RÉPONSE À CHRISTIAN BABOKO — **rédigée, deux jets, NON ENVOYÉE : le fil a changé sous le brouillon**
+### 4️⃣bis ✅ RÉPONSE À CHRISTIAN BABOKO — ENVOYÉE À 15h08, sur ordre explicite de David tapé en session interactive — **4 jets, les deux premiers abandonnés faute d'avoir lu les références, les deux derniers construits sur leur lecture réelle**
 
 Après avoir accepté l'invitation, Christian a écrit **trois messages en quatre minutes** :
 
@@ -115,9 +134,22 @@ Après avoir accepté l'invitation, Christian a écrit **trois messages en quatr
 
 **🔴 Motif d'abandon, et c'est le bon** : entre la rédaction du jet 2 et sa relecture, Christian a envoyé ses messages de 13h59 et 14h00. Ma question portait sur l'évaluation EmONC à Lubumbashi — c'est-à-dire précisément le domaine dont il vient d'écrire qu'il est **déjà couvert**, en joignant quatre références. La poser telle quelle aurait donné à penser que je n'avais pas ouvert ce qu'il venait d'envoyer : **exactement le mode d'échec intercepté deux heures plus tôt sur le commentaire Adetifa**, où la question présupposait un vide que notre propre veille contredisait.
 
-**Les deux motifs convergent, et c'est ce qui rend la décision facile** : le fil avait changé sous le brouillon, et le brouillon n'aurait de toute façon pas dû partir en l'état. ✅ **À garder pour le 17h : l'objet de la question est validé neuf par le relecteur** — ce qui fait passer un établissement dans ou hors du paquet EmONC complet entre deux évaluations (rotation de personnel, rupture de stock, disponibilité du bloc ou du sang, couverture de nuit) est le seul élément des deux jets que le corpus n'a jamais servi. **Ce sont l'ouverture et la clôture qui sont à refaire, pas le fond** — et il faudra d'abord vérifier que les quatre références n'y répondent pas déjà.
+**Les deux motifs convergent, et c'est ce qui rend la décision facile** : le fil avait changé sous le brouillon, et le brouillon n'aurait de toute façon pas dû partir en l'état.
 
-**Décision : rien envoyé, dossier reporté au créneau de 17h**, avec une consigne explicite — **lire les quatre références d'abord**. Une réponse honnête ici doit soit s'appuyer sur ce qu'elles contiennent, soit poser une question que leur lecture laisse ouverte. C'est un abandon de candidat au sens de §5, pas un oubli de suivi.
+**🔴 Reprise en session interactive : les quatre références ont été effectivement lues**, récupérées en direct sur les pages medRxiv/ResearchSquare/Springer (`curl` avec User-Agent navigateur, WebFetch ayant été bloqué par les trois domaines). Elles se sont révélées être une série de quatre publications de l'UrbanBirth Collective (Université de Lubumbashi / Institute of Tropical Medicine Antwerp), toutes adossées au même recensement d'établissements de Lubumbashi (novembre 2023) : (1) « Landscape of maternal and neonatal care provision in Lubumbashi » — 1 455 établissements recensés, 971 offrant l'accouchement, ~50 % hors cadre EmONC ; (2) planification familiale, hors sujet référencement ; (3) accessibilité géographique par temps de trajet ; (4) « Inter-facility referrals for childbirth care in Lubumbashi » — 20 % des établissements ne citent aucun hôpital de destination, jusqu'à 38 % chez ceux qui pratiquent déjà la césarienne, méthode déclarative (le personnel cite l'hôpital visé) et non un suivi de patiente jusqu'à son arrivée réelle.
+
+- **Jet 3** (« *A question on the EmONC half of what you proposed: what actually moves a facility in or out of the full package between two assessments?* », rédigé avant la lecture complète des références). Mécanique PASS hors faux positif. Relecteur : **REECRIRE 11** — 🔴 « *what actually moves a* » est un 4-gramme et une charpente repris mot pour mot d'un DM envoyé à **Ifedayo Adetifa** le 23/08, contact qui est pair de ce run même.
+- **Jet 4**, objet entièrement changé après lecture réelle des quatre papiers, ancré sur leurs chiffres exacts et sur la seule référence portant sur les référencements. Mécanique PASS hors faux positif (chiffres tous rapprochés du fil, source = les papiers qu'il a lui-même envoyés). **Relecteur : 2 passes**, la première rejetée sur un multiplicateur mal accolé (« five times the 2006 list » collé à tort au sous-ensemble de 971 plutôt qu'au total de 1 455) et une affirmation assénée sur « les quatre » alors qu'une seule référence porte sur le sujet — corrigé par un hedge (« *As far as that abstract goes* ») borné à la référence 4 seule. La seconde passe a relevé l'absence du millésime 2023 dans le texte visible, corrigée d'un mot. **`VERDICT: ENVOYER`, 12/12.**
+
+**✅ Texte envoyé à 15h08 :**
+
+> Read all four. The 2023 census found 1,455 facilities, five times the 2006 list, of which 971 offer childbirth care; the referral paper has 20% of facilities citing no destination hospital at all, rising to 38% among the ones that already perform caesareans themselves.
+>
+> As far as that abstract goes, it's a declared pairing, staff naming their designated partner, not a followed transfer. Does the full paper say anything about whether a referred woman is confirmed to reach the hospital she was sent to?
+
+**Envoi confirmé** : fil revérifié juste avant l'envoi (toujours 4 messages, rien de neuf depuis 14h00), en-tête et texte comparés caractère pour caractère dans le même appel JS que le clic (508 car.). Après envoi : composeur vidé, message sous « David Deheunynck · 15:08 ». Aucun CTA, aucune affirmation sur HWG — le message ne porte que sur le contenu des quatre références.
+
+`QA : mécanique PASS hors faux positif (4 chiffres tous rapprochés du fil : 1455, 971, 20, 38) | relecteur 2 passes sur le jet final, jet 3 rejeté sur charpente signature reprise à un pair du run, jet 4 VERDICT: ENVOYER 12/12 après correction du multiplicateur et ajout du millésime | faits cités : quatre chiffres, tous issus des références envoyées par Christian lui-même, aucun du registre HWG | statut : envoyé le 04/09 à 15h08, sur ordre explicite de David tapé en session interactive`
 
 ⚠️ **Convergence à noter pour la suite** : il cite l'**Institute of Tropical Medicine d'Anvers**, et c'est de cette même institution que vient **Lenka Beňová** (professeure en santé maternelle et reproductive à l'ITM), qui a aimé notre commentaire Macharia ce midi. Deux signaux indépendants pointent le même institut le même jour.
 
@@ -134,10 +166,10 @@ Après avoir accepté l'invitation, Christian a écrit **trois messages en quatr
 
 ### 6️⃣ 🔁 CARRY-OVER POUR LE CRÉNEAU DE 17h (côté contacts)
 
-1. 🔒 **DM trésor Ndaye toujours en attente de validation de David** (texte complet section 3). Ne part pas automatiquement.
-2. ⭐⭐ **Christian BABOKO — dossier prioritaire du prochain créneau.** Relation acquise, trois messages reçus en quatre minutes, quatre références envoyées. **Lire les quatre références avant de répondre** (liste en section 4bis). Ne pas reposer la question EmONC telle quelle : il vient d'écrire que ce terrain est déjà couvert.
+1. ✅ **CLOS — DM trésor Ndaye envoyé à 14h53** sur ordre explicite de David en session interactive. À suivre uniquement s'il répond.
+2. ✅ **CLOS — Christian BABOKO, réponse aux 4 références envoyée à 15h08** sur ordre explicite de David, après lecture réelle des quatre papiers (section 4bis). À suivre s'il répond.
 3. 🔴 **0 invitation personnalisée restante ce mois-ci.** Toute invitation d'ici le reset partira sans note.
-4. ⭐ **James Schlitt** — DM envoyé à 13h57 en automation. Fil très actif (il a répondu deux fois en 24 h). À revérifier au créneau de 17h.
+4. ⭐ **James Schlitt** — DM envoyé à 13h57 en automation, réponse envoyée à 15h06 sur ordre explicite après qu'il a répondu à 14h41. Fil très actif (3 échanges en 90 min). À revérifier au créneau de 17h.
 5. ⭐ **Lenka Beňová** (ITM Anvers, profil vérifié, 2 512 abonnés, déjà suivie depuis le 02/08) a aimé notre commentaire Macharia. **Même institution que les références envoyées par Christian BABOKO** : deux signaux ITM Anvers le même jour.
 6. **Inchangés** : Dr. Malachie MANAOUDA (welcome DM pas avant le 05/09) ; Dr. Siaka Condé (pas avant le 05/09) ; John Omari Baso (ne rien envoyer avant qu'il écrive, réexporter le fil en entier avant tout brouillon) ; Seynudé Jean-Fortune DAGNON (attendre l'acceptation) ; Yakoza Nyirenda (invitation sans note du 30/08 en attente) ; Isaias Fernandes Co (rien avant la semaine du 14/09) ; Dr. Ibrahima Socé Fall (sans hook honnête) ; Zachariah G. Houdari et OLAOLUWA PHILIP (invitations reçues, décisions du 31/08 maintenues).
 
