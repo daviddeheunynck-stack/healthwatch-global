@@ -1,6 +1,7 @@
 // Watchlist change alert — sent when cases/deaths update for a starred outbreak
 
 import { getResponseGuidance, RESPONSE_ACTIONS } from "./response-guidance";
+import { publishableSourceUrl } from "./source-trust";
 
 const APP_URL = "https://healthwatch-global.com";
 
@@ -143,6 +144,11 @@ export function buildWatchlistAlertEmail(
 
   const subject = c.subject(outbreak.disease || outbreak.disease_en, outbreak.country || outbreak.country_en);
 
+  // L'URL seule, et rien pour un éditeur interdit : ce gabarit publiait jusqu'ici
+  // la colonne `source` brute, annotation d'édition comprise, à la fois dans le
+  // `href` et comme libellé visible (voir sourceUrl dans lib/source-trust.ts).
+  const sourceHref = publishableSourceUrl(outbreak.source);
+
   const html = `<!DOCTYPE html>
 <html lang="${locale}" dir="${dir}">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -208,7 +214,7 @@ export function buildWatchlistAlertEmail(
     </table>
 
     <!-- Source -->
-    ${outbreak.source ? `<p style="color:#475569;font-size:12px;margin-bottom:20px;">${c.source} : <a href="${outbreak.source}" style="color:#ef4444;">${outbreak.source.replace("https://", "")}</a></p>` : ""}
+    ${sourceHref ? `<p style="color:#475569;font-size:12px;margin-bottom:20px;">${c.source} : <a href="${sourceHref}" style="color:#ef4444;">${sourceHref.replace("https://", "")}</a></p>` : ""}
 
     <!-- CTA -->
     <a href="${dashUrl}" style="display:inline-block;background:#dc2626;color:white;padding:12px 28px;border-radius:8px;font-weight:700;font-size:14px;text-decoration:none;">${c.cta}</a>

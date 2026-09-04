@@ -12,7 +12,7 @@ import CitationBlock from "@/components/CitationBlock";
 import OutbreakStatsGrid from "@/components/OutbreakStatsGrid";
 import ShareOutbreakButton from "@/components/ShareOutbreakButton";
 import OutbreakCasesChart from "@/components/OutbreakCasesChart";
-import { getLocalizedDisease, getLocalizedCountry, getLocalizedDescription, sourceStatus, sourceName, publishableSourceName, staleOutbreakDays, isSourceConfirmed } from "@/lib/outbreaks";
+import { getLocalizedDisease, getLocalizedCountry, getLocalizedDescription, sourceStatus, sourceName, publishableSourceName, publishableSourceUrl, staleOutbreakDays, isSourceConfirmed } from "@/lib/outbreaks";
 import { diseaseToSlug, matchDisease } from "@/lib/disease-data";
 import { jsonLdHtml } from "@/lib/json-ld";
 import { countryToSlug } from "@/lib/country-utils";
@@ -563,10 +563,10 @@ export default async function OutbreakPage({
       )}
 
       {/* Source link */}
-      {status !== "unverified" && o.source && (
+      {status !== "unverified" && publishableSourceUrl(o.source) && (
         <div className="mb-2 text-sm flex items-center gap-2">
           <a
-            href={o.source}
+            href={publishableSourceUrl(o.source)!}
             target="_blank"
             rel="noopener noreferrer"
             className={`underline ${status === "don" ? "text-red-400 hover:text-red-300" : "text-gray-400 hover:text-gray-200"}`}

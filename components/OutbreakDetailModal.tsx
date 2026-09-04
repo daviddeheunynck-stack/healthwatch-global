@@ -1685,7 +1685,7 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
         <div className="px-5 pb-5 space-y-2">
           {status === 'don' && (
             <a
-              href={outbreak.source!}
+              href={publishableSourceUrl(outbreak.source)!}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 text-sm font-medium transition-colors text-red-400 hover:text-red-300"
@@ -1696,7 +1696,7 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
           )}
           {status === 'official' && (
             <a
-              href={outbreak.source!}
+              href={publishableSourceUrl(outbreak.source)!}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 text-sm font-medium transition-colors text-gray-400 hover:text-gray-200"
@@ -1707,7 +1707,7 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
           )}
           {status === 'press' && (
             <a
-              href={outbreak.source!}
+              href={publishableSourceUrl(outbreak.source)!}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 text-sm font-medium transition-colors text-violet-400 hover:text-violet-300"

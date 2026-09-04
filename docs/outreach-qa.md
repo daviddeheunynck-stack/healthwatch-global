@@ -310,9 +310,14 @@ pas pouvoir le convaincre une seconde fois.
 > 9. **Terrain politique** — le message valide, conteste ou commente-t-il un
 >    grief interne, une querelle institutionnelle ou une position politique ?
 >    Le silence doit être total, dans les deux sens.
-> 10. **CTA** — s'il y a un appel à l'action ou un lien : au moins un aller-retour
->     de fond a-t-il eu lieu, et le CTA part-il d'un point déjà présent dans
->     l'échange ? Sinon `FAIL`.
+> 10. **CTA** — sur un DM en fil actif, y a-t-il un CTA ? **Son absence est un
+>     `FAIL`** dès qu'un aller-retour de fond a eu lieu. S'il y en a un, part-il
+>     d'un point déjà présent dans l'échange ? Sinon `FAIL` **sur le pont, pas
+>     sur le principe** : la correction attendue est de refaire l'amenée, jamais
+>     de retirer le CTA. Ne réponds `PASS` à une absence de CTA que pour l'un des
+>     trois motifs admis (échange pas encore substantiel, argumentaire déjà servi
+>     plus tôt dans ce même fil, canal où le CTA est interdit — commentaire ou
+>     reply publique), et cite lequel.
 > 11. **Gabarit** — le message pourrait-il être envoyé à quelqu'un d'autre en
 >     changeant seulement le prénom ? Si oui, `FAIL`.
 > 12. **Apport** — le message apporte-t-il quelque chose que le destinataire n'a

@@ -131,7 +131,7 @@
   "channel_limits": {
     "linkedin-connect-note": { "maxChars": 200, "maxParagraphs": 1, "ctaAllowed": false, "linkAllowed": false, "closer": { "fr": "Au plaisir d'échanger.", "en": "Would love to connect" } },
     "linkedin-comment":      { "maxChars": 700, "maxParagraphs": 3, "ctaAllowed": false, "linkAllowed": false },
-    "linkedin-dm":           { "maxChars": 1300, "maxParagraphs": 5, "ctaAllowed": "after-substantive-exchange", "linkAllowed": "on-request" },
+    "linkedin-dm":           { "maxChars": 1300, "maxParagraphs": 5, "ctaAllowed": "after-substantive-exchange", "linkAllowed": "after-substantive-exchange" },
     "linkedin-post":         { "maxChars": 3000, "maxParagraphs": 12, "ctaAllowed": true, "linkAllowed": true },
     "email":                 { "maxChars": 2200, "maxParagraphs": 7, "ctaAllowed": true, "linkAllowed": true }
   },

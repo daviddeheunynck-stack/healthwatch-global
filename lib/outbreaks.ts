@@ -778,7 +778,7 @@ export function freshOutbreakHours(outbreak: Outbreak): number | null {
 // live table through it. Re-exported here because every consumer imports it from
 // "@/lib/outbreaks".
 export type { SourceStatus };
-export { sourceName, publishableSourceName, publishableSourceUrl } from "./source-trust";
+export { sourceName, publishableSourceName, publishableSourceUrl, sourceUrl } from "./source-trust";
 
 export function sourceStatus(outbreak: Pick<Outbreak, "source">): SourceStatus {
   return sourceStatusOf(outbreak.source);

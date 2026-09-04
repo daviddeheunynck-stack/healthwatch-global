@@ -1213,8 +1213,8 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                         </span>
                       )}
                       {sourceStatus(outbreak) === 'don' && (
-                        outbreak.source ? (
-                          <a href={outbreak.source} target="_blank" rel="noopener noreferrer" title={l.donTooltip} className="inline-flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded bg-blue-900/30 border border-blue-700/50 text-blue-400 shrink-0 cursor-pointer whitespace-nowrap hover:bg-blue-900/60 transition-colors">
+                        publishableSourceUrl(outbreak.source) ? (
+                          <a href={publishableSourceUrl(outbreak.source)!} target="_blank" rel="noopener noreferrer" title={l.donTooltip} className="inline-flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded bg-blue-900/30 border border-blue-700/50 text-blue-400 shrink-0 cursor-pointer whitespace-nowrap hover:bg-blue-900/60 transition-colors">
                             {l.donBadge} ↗
                           </a>
                         ) : (
@@ -1224,8 +1224,8 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                         )
                       )}
                       {sourceStatus(outbreak) === 'official' && (
-                        outbreak.source ? (
-                          <a href={outbreak.source} target="_blank" rel="noopener noreferrer" title={l.officialTooltip} className="inline-flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-900/30 border border-amber-700/50 text-amber-400 shrink-0 cursor-pointer whitespace-nowrap hover:bg-amber-900/60 transition-colors">
+                        publishableSourceUrl(outbreak.source) ? (
+                          <a href={publishableSourceUrl(outbreak.source)!} target="_blank" rel="noopener noreferrer" title={l.officialTooltip} className="inline-flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-900/30 border border-amber-700/50 text-amber-400 shrink-0 cursor-pointer whitespace-nowrap hover:bg-amber-900/60 transition-colors">
                             {sourceName(outbreak.source)} ↗
                           </a>
                         ) : (
@@ -1235,8 +1235,8 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                         )
                       )}
                       {sourceStatus(outbreak) === 'press' && (
-                        outbreak.source ? (
-                          <a href={outbreak.source} target="_blank" rel="noopener noreferrer" title={l.pressTooltip} className="inline-flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded bg-violet-900/30 border border-violet-700/50 text-violet-400 shrink-0 cursor-pointer whitespace-nowrap hover:bg-violet-900/60 transition-colors">
+                        publishableSourceUrl(outbreak.source) ? (
+                          <a href={publishableSourceUrl(outbreak.source)!} target="_blank" rel="noopener noreferrer" title={l.pressTooltip} className="inline-flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded bg-violet-900/30 border border-violet-700/50 text-violet-400 shrink-0 cursor-pointer whitespace-nowrap hover:bg-violet-900/60 transition-colors">
                             {sourceName(outbreak.source)} ↗
                           </a>
                         ) : (

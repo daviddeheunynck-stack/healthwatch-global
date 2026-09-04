@@ -2,6 +2,7 @@
 
 import { getResponseGuidance, RESPONSE_ACTIONS } from "./response-guidance";
 import { signUnsubscribeToken } from "./unsubscribe-token";
+import { publishableSourceUrl } from "./source-trust";
 
 const APP_URL = "https://healthwatch-global.com";
 
@@ -232,8 +233,12 @@ export function buildDiseaseAlertEmail(
   const subject    = c.subject(outbreak.disease || outbreak.disease_en);
   const preheader  = c.preheader(outbreak.disease || outbreak.disease_en, outbreak.country || outbreak.country_en);
 
-  const sourceLabel = outbreak.source
-    ? outbreak.source.replace(/^https?:\/\//, "").replace(/\/.*$/, "") + " →"
+  // L'URL seule : la colonne `source` porte souvent une annotation d'édition
+  // après l'adresse (voir sourceUrl dans lib/source-trust.ts), et elle partait
+  // jusqu'ici dans le `href` de cet e-mail.
+  const sourceHref  = publishableSourceUrl(outbreak.source);
+  const sourceLabel = sourceHref
+    ? sourceHref.replace(/^https?:\/\//, "").replace(/\/.*$/, "") + " →"
     : "";
 
   const html = `<!DOCTYPE html>
@@ -304,7 +309,7 @@ export function buildDiseaseAlertEmail(
       <tr><td style="color:#94a3b8;font-size:12px;padding:12px 0 3px;font-family:Arial,Helvetica,sans-serif;">
         ${c.date} : <span style="color:#475569;">${esc(outbreak.date ?? "")}</span>${ageLabel ? ` <span style="color:${ageColor};font-weight:700;">(${ageLabel})</span>` : ""}
       </td></tr>
-      ${outbreak.source ? `<tr><td style="color:#94a3b8;font-size:12px;padding:3px 0;font-family:Arial,Helvetica,sans-serif;">${c.source} : <a href="${esc(outbreak.source)}" style="color:#dc2626;text-decoration:none;font-family:Arial,Helvetica,sans-serif;">${esc(sourceLabel)}</a></td></tr>` : ""}
+      ${sourceHref ? `<tr><td style="color:#94a3b8;font-size:12px;padding:3px 0;font-family:Arial,Helvetica,sans-serif;">${c.source} : <a href="${esc(sourceHref)}" style="color:#dc2626;text-decoration:none;font-family:Arial,Helvetica,sans-serif;">${esc(sourceLabel)}</a></td></tr>` : ""}
     </table>
 
     <!-- CTA (table-based for Outlook) -->

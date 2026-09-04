@@ -32,6 +32,48 @@ const KNOWN_PRESS_DOMAINS_HTTP_OK = new Set<string>([
   "french.china.org.cn", // Xinhua's French service — https cert fails, http is the live site
 ]);
 
+// ── L'URL contenue dans un `source` ──────────────────────────────────────────
+// `outbreaks.source` est du texte libre, pas une colonne d'URL. La vérification
+// manuelle y écrit couramment l'URL SUIVIE de l'édition exacte du bulletin qui
+// porte le chiffre — une information que l'URL seule ne donne pas, puisque la
+// même page hebdomadaire est réécrite chaque semaine :
+//
+//   https://polioeradication.org/about-polio/polio-this-week/ (GPEI, Country updates as of 26 August 2026)
+//
+// Mesuré en prod le 2026-09-04 : 16 des 126 lignes affichées ont cette forme,
+// dont 15 des 16 lignes polio. Le problème n'était pas l'annotation, utile et
+// voulue, mais que rien ne séparait les deux moitiés : `new URL()` accepte la
+// chaîne entière (elle encode les espaces), donc le classificateur trouvait bien
+// le bon hôte et décernait sa pastille — pendant que les huit surfaces qui
+// publient un lien (fiche, modale, pastilles du tableau, exports CSV/PDF, page
+// d'impression, deux gabarits d'e-mail d'alerte) envoyaient la chaîne complète
+// dans le `href`. Le lecteur atterrissait sur
+// `…/polio-this-week/%20(GPEI,%20Country%20updates…)`, un chemin qui n'existe pas.
+//
+// Échoue en `null` plutôt qu'en URL devinée : une source sans URL en tête de
+// chaîne ("OMS", "PAHO/OPS nov. 2025 — …") n'a pas de lien à publier, et c'est
+// déjà ce que le tier 'unverified' dit d'elle.
+export function sourceUrl(source: string | null | undefined): string | null {
+  const match = /^https?:\/\/\S+/i.exec((source ?? "").trim());
+  if (!match) return null;
+
+  // La ponctuation qui termine la phrase, pas l'URL. Une parenthèse fermante
+  // n'est retirée que si elle n'a pas d'ouvrante dans le candidat : certaines
+  // URLs légitimes en contiennent (articles de type "…_(virus)").
+  let candidate = match[0].replace(/[.,;:]+$/, "");
+  while (candidate.endsWith(")") && !candidate.includes("(")) {
+    candidate = candidate.slice(0, -1);
+  }
+
+  try {
+    const url = new URL(candidate);
+    if (url.protocol !== "https:" && url.protocol !== "http:") return null;
+    return candidate;
+  } catch {
+    return null;
+  }
+}
+
 // ── Legally forbidden publishers ─────────────────────────────────────────────
 // Hosts HealthWatch Global has no right to cite at all, for reasons that have nothing
 // to do with how trustworthy they are. Checked BEFORE every allowlist below, so a host
@@ -65,10 +107,12 @@ const FORBIDDEN_SOURCE_DOMAINS: ReadonlySet<string> = new Set([
  * reasons — placeholder text, a blog, http:// — and only this one is a legal matter).
  */
 export function isForbiddenSourceHost(source: string | null | undefined): boolean {
+  const url = sourceUrl(source);
+  if (!url) return false; // not a URL at all — no host to forbid
   try {
-    return hostMatchesDomain(new URL(source || "").hostname.toLowerCase(), FORBIDDEN_SOURCE_DOMAINS);
+    return hostMatchesDomain(new URL(url).hostname.toLowerCase(), FORBIDDEN_SOURCE_DOMAINS);
   } catch {
-    return false; // not a URL at all — no host to forbid
+    return false;
   }
 }
 
@@ -252,7 +296,10 @@ function hostMatchesDomain(host: string, domains: ReadonlySet<string>): boolean 
 export type SourceStatus = 'don' | 'official' | 'press' | 'unverified';
 
 export function sourceStatusOf(source: string | null | undefined): SourceStatus {
-  const src = source || "";
+  // L'annotation d'édition qui suit parfois l'URL (voir sourceUrl) ne fait pas
+  // partie de l'adresse : classer la chaîne entière ferait échouer le test DON,
+  // qui est ancré sur la fin de l'URL.
+  const src = sourceUrl(source) ?? source ?? "";
   if (REAL_WHO_DON_SOURCE.test(src)) return 'don';
   if (FAKE_SEED_DON.test(src)) return 'unverified';
 
@@ -384,7 +431,7 @@ export function sourceName(source: string | null | undefined): string {
 /** L'URL de source, ou `null` si son éditeur ne peut pas être cité. */
 export function publishableSourceUrl(source: string | null | undefined): string | null {
   if (!source) return null;
-  return isForbiddenSourceHost(source) ? null : source;
+  return isForbiddenSourceHost(source) ? null : sourceUrl(source);
 }
 
 /** Le nom de l'éditeur, ou `null` s'il ne peut pas être cité. */
