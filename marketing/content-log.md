@@ -2,7 +2,7 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
-## 📅 Session linkedin-hwg-content-proposal — 04/09/2026 (vendredi MWF, 8h35) — ✅ **1 POST PROPOSÉ, statut PRÊT — en attente de publication** — Diphtérie/Niger, l'antitoxine est le seul intrant de la riposte qui se rationne, et le mécanisme d'allocation est la mesure publique la plus nette de la pénurie
+## 📅 Session linkedin-hwg-content-proposal — 04/09/2026 (vendredi MWF, 8h35) — ✅ **PUBLIÉ le 04/09/2026 à 09h29**, sur ordre explicite de David tapé en session (« publie ») — Diphtérie/Niger, l'antitoxine est le seul intrant de la riposte qui se rationne, et le mécanisme d'allocation est la mesure publique la plus nette de la pénurie
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-content-proposal` datée du 04/09 dans ce fichier à l'ouverture (la plus récente était `linkedin-hwg-followup-check-2` du 03/09, 18h) → premier déclenchement du jour. Horloge machine à l'heure : `date` renvoie **Fri Sep 4 09:05 2026**. Branche vérifiée avant écriture : **master**.
 
@@ -63,7 +63,7 @@ Le mécanisme rhétorique, jamais servi dans ce corpus : **l'existence d'un méc
 
 **Prérequis CTA vérifié en base prod** : la ligne **Niger / Diphtérie** est `active=true`, `is_seed=false`, `cases=2456`, `deaths=166`, `asOf=2026-03-01`, non périmée au registre — un visiteur qui suit le lien trouve bien le pays cité.
 
-### TEXTE — statut : 🟠 **PRÊT — en attente de publication**
+### TEXTE — statut : ✅ **PUBLIÉ le 04/09/2026 à 09h29**
 
 > In 2024, Niger reported 4002 suspected diphtheria cases and 27 deaths. In 2025, it reported 2244 suspected cases and 154 deaths.
 >
@@ -87,7 +87,9 @@ Le mécanisme rhétorique, jamais servi dans ce corpus : **l'existence d'un méc
 >
 > healthwatch-global.com
 
-**Statut :** PRÊT — en attente de la validation explicite de David avant qu'il ne publie lui-même (règle de non-publication autonome du contenu de marque LinkedIn, [[feedback_no_self_publishing]]). David non présent au moment du run planifié (8h35).
+**Statut :** ✅ **PUBLIÉ le 04/09/2026 à 09h29**, sur ordre explicite tapé par David en session interactive (« publie ») — dérogation ponctuelle, poste par poste ([[feedback_no_self_publishing]]). Le run planifié (8h35) avait laissé le brouillon en attente ; David est revenu en session peu après pour le double-checker (voir échange précédent) puis a ordonné la publication.
+
+**Procédure de publication** : navigateur unique connecté (`23c7ecdd-26d7-4d25-b39b-1889eb0fa3bd`, « Browser 1 »), sélectionné directement (un seul candidat, pas d'ambiguïté). Aucune entrée 🔴 du jour dans `_shared/browser-status.md` avant ouverture. Composeur ouvert sans popup Premium à fermer ce run. Texte saisi paragraphe par paragraphe (saut de ligne double avant chaque nouveau paragraphe). Défilement à la souris inopérant dans le composeur à cette taille de fenêtre (déjà documenté) — contourné par clic dans le champ puis `Tab` pour faire apparaître la carte de lien et le bouton Publier. Carte de lien confirmée rendue (titre + domaine `healthwatch-global.com`) avant le clic. Toast « Le post a bien été publié » confirmé. **Texte relu en entier après publication via `get_page_text`**, comparé phrase par phrase à l'archive ci-dessus : identique mot pour mot, y compris les quatre citations entre guillemets et la ponctuation. URL du post : https://www.linkedin.com/feed/update/urn:li:share:7501541589421387778/
 
 ### Double-check
 *Forme* — EN ✅ (défaut posts de marque, [[feedback_linkedin_brand_posts_in_english]]) ; **1696 caractères, 11 paragraphes aérés** ✅ ; **0 tiret cadratin ou demi-cadratin, 0 caractère non-ASCII, 0 hashtag, 0 ProMED** (contrôles automatisés) ✅ ; lien nu en fin de post, aucun CTA impératif ✅ ; aucun faux témoignage ✅.
@@ -99,7 +101,7 @@ Le mécanisme rhétorique, jamais servi dans ce corpus : **l'existence d'un méc
 *Ce que le post n'affirme pas* — il ne dit pas qui fabrique la DAT ni qui décide des volumes (retiré au 2e tour de relecture, terrain politique) ; il ne requalifie pas le mécanisme de l'OMS en « comité de rationnement » (retiré au 2e tour) ; il n'affirme rien sur ce qu'un compte de cas mesure (retiré au 4e tour, contredisait la position publiée par HWG le 27/07 sur ce même document) ; il ne prétend pas que l'antitoxine serait le seul intrant hors du contrôle national (retiré au 2e tour, l'OMS nomme aussi les antibiotiques).
 
 ```
-QA: PRÊT — en attente de publication | mécanique PASS (essai 5, 1696 car., langue en/fil en, 0 bloquant ; source primaire fournie en threadFile, d'où 9 [facts.from-thread] informatifs) | relecteur 12/12 PASS, VERDICT: ENVOYER — après 3 tours de correction : (1) angle Guinée/Tchad REJETÉ (redite du 27/07), angle refait de zéro ; (2) REECRIRE 5,6,9 (attribution, sur-affirmation, terrain politique) ; (3) REECRIRE 6 (référent de la chute non résolu) ; (4) REECRIRE 6 (chute affirmait ce qu'un compte de cas mesure) ; puis ENVOYER | faits cités: Niger/Diphtérie (2456/166, asOf 2026-03-01) + verbatims RRA v2 | registres du 04/09 08h50 | 0 claim produit ajoutée | AUCUNE PUBLICATION — validation de David requise
+QA: PUBLIÉ ✅ le 04/09 à 09h29, sur ordre explicite de David tapé en session (« publie ») | mécanique PASS (essai 5, 1696 car., langue en/fil en, 0 bloquant ; source primaire fournie en threadFile, d'où 9 [facts.from-thread] informatifs) | relecteur 12/12 PASS, VERDICT: ENVOYER — après 3 tours de correction : (1) angle Guinée/Tchad REJETÉ (redite du 27/07), angle refait de zéro ; (2) REECRIRE 5,6,9 (attribution, sur-affirmation, terrain politique) ; (3) REECRIRE 6 (référent de la chute non résolu) ; (4) REECRIRE 6 (chute affirmait ce qu'un compte de cas mesure) ; puis ENVOYER | double-check post-archivage : citations re-vérifiées mot pour mot contre le PDF indépendamment de la 1re passe, ligne DB re-confirmée en direct, faux FAIL anti-gabarit (auto-collision avec l'archive) identifié et écarté par contre-test sur le corpus pré-archivage | faits cités: Niger/Diphtérie (2456/166, asOf 2026-03-01) + verbatims RRA v2 | registres du 04/09 08h50 | 0 claim produit ajoutée | publié sur https://www.linkedin.com/feed/update/urn:li:share:7501541589421387778/
 ```
 
 ---
