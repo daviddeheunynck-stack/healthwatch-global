@@ -3409,8 +3409,112 @@ insensible aux faux positifs — il ne cherche que des noms d'hôtes littéraux,
 le contournement documenté (`git commit --no-verify`) existe déjà pour le hook
 voisin.
 
-### Statut
 
-Deux idées **PROPOSÉES**. Les deux passent les trois garde-fous (petit effort,
-aucune migration ni écriture en prod, aucun envoi externe) — construction
-engagée dans la foulée, sous verrou de code partagé.
+### Construction — les deux idées sont livrées
+
+Verrou de code partagé acquis avant la première édition, relâché après la
+dernière (`code-lock.mjs`, protocole du 02/09). Aucune autre routine ne
+tenait le verrou.
+
+**Idée 1 — commit `b378a39a`.** `sourceUrl()` dans `lib/source-trust.ts` :
+fonction pure qui extrait l'URL en tête de chaîne, retire la ponctuation de
+fin (parenthèse fermante seulement si elle n'a pas d'ouvrante — sinon
+`…/Marburg_(virus)` serait tronquée), valide le résultat, et rend `null`
+plutôt qu'une URL devinée. Branchée dans `publishableSourceUrl()`,
+`isForbiddenSourceHost()` et `sourceStatusOf()`, puis utilisée par les huit
+surfaces qui envoyaient la chaîne brute : fiche foyer, modale (3 liens),
+pastilles du tableau (3 liens, avec le repli non cliquable désormais piloté
+par l'URL réelle et non par « le champ est non vide »), colonne `source_url`
+du CSV, deux gabarits PDF, page d'impression, e-mail d'alerte par maladie,
+e-mail d'alerte watchlist. **Le champ `source` n'est pas modifié en base** :
+l'annotation d'édition est utile et voulue, c'est sa lecture qui était fausse.
+
+Vérifié, pas seulement compilé :
+
+| Contrôle | Résultat |
+|---|---|
+| `scripts/check-source-trust.mjs` | 22/22 cas fixes, tiers inchangés (affichées : don 3, official 116, press 7, unverified 0) |
+| Rejeu des 295 lignes réelles | 16 `href` corrigés, tous vers l'URL propre |
+| Effet de bord mesuré | 4 lignes d'archive au `source` en texte brut (« OMS », « PAHO/OPS nov. 2025 — … ») ne fuient plus dans la cellule `source_url` des exports — elles sont en `unverified`, donc n'ont jamais rendu de lien |
+| Gabarits d'e-mail rendus sur une vraie ligne polio annotée | `href="https://polioeradication.org/about-polio/polio-this-week/"` dans les deux |
+
+`npx tsc --noEmit` et `npx eslint` propres sur les 7 fichiers.
+
+**Idée 2 — commit `09089a8d`.** `RESTRICTED_FETCH_DOMAINS` dans
+`lib/source-trust.ts` (6 éditeurs, chacun avec sa date et le motif exact :
+CGU citée, décision de David, mémoire de référence), et
+`scripts/check-restricted-fetch.mjs` qui balaie `app/` et `lib/`. Branché
+dans `.githooks/pre-commit` (avant le contrôle d'horaires existant, déclenché
+dès qu'un `.ts`/`.tsx` de `app/` ou `lib/` est mis en index) et exposé en
+`npm run check:sources`.
+
+Le contrôle ne regarde que les **littéraux de chaîne**, via le parseur
+TypeScript : une adresse citée dans un commentaire n'est pas une
+récupération, et le dépôt en contient beaucoup. Le découpage de commentaires
+écrit à la main pour ce script a d'ailleurs échoué à l'essai — la fin de
+`/^https?:\/\//` contient littéralement `//` et faisait passer le reste de la
+ligne pour un commentaire, ce qui masquait précisément l'occurrence la plus
+intéressante. C'est ce qui a fait passer au parseur.
+
+Vérifié : sortie 0 sur le dépôt tel quel ; un fichier temporaire sous `lib/`
+portant une URL `polioeradication.org` fait sortir en 1 en nommant fichier,
+ligne et motif (fichier supprimé après l'essai) ; le hook a réellement tourné
+sur le commit lui-même. Une entrée `ACKNOWLEDGED` devenue sans objet est
+signalée sans bloquer.
+
+### Ce qui reste chez David — aucune écriture de données en prod n'a été faite ce soir
+
+Les deux constructions sont du code. Aucun appel en prod autre que des
+lectures.
+
+1. **`data-quality` récupère toujours `polioeradication.org` tous les jours
+   (section 4j, ligne 127).** Le message de `0df093ae` affirme « plus aucun
+   code du dépôt ne fetch ce domaine » : c'est vrai de `sync-who-regional`,
+   faux du dépôt. La sonde ne lit que des noms de pays et une date d'arrêt,
+   n'écrit rien en base et ne recopie aucun chiffre — elle n'est pas du même
+   ordre que le fetcher retiré ce matin. **L'arbitrage est juridique, il n'a
+   pas été pris par cette routine** : la garder, ou la retirer comme le
+   fetcher. L'occurrence est déclarée dans `ACKNOWLEDGED` avec la mention
+   `⚠️ NON TRANCHÉ`, elle ne bloque donc rien en attendant, et elle est
+   nommée à chaque exécution du contrôle.
+
+2. **Lassa fever / Nigéria est toujours sur le site public** — 1 056 cas,
+   253 décès. La ligne a été désactivée le 02/09 quand la clause de
+   confidentialité des sitreps NCDC a été trouvée, mais `active=false` ne la
+   retire pas de l'affichage : `getOutbreaksCached()` garde une ligne
+   `source_priority>=3` pendant 60 jours, et l'écriture de désactivation a
+   elle-même rafraîchi la moitié `updated_at` de cette fenêtre. Exactement le
+   piège documenté le 26/08 pour les 4 lignes ReliefWeb. Son `source` pointe
+   aujourd'hui vers la page de listing publique (la version expurgée, pas le
+   PDF confidentiel) — donc pas une citation interdite en soi, mais les
+   chiffres affichés viennent bien du sitrep. La sortir demande soit de la
+   re-sourcer, soit de descendre `source_priority` sous 3 : deux écritures de
+   données en prod, hors de ce que cette routine se permet seule.
+
+3. **`ncdc.gov.ng` n'est pas dans `FORBIDDEN_SOURCE_DOMAINS`**, et ne peut pas
+   y entrer tel quel : la règle du 02/09 est **au niveau du chemin** (les PDF
+   `…/sitreps/*.pdf` portent la clause, la page de listing expurgée non),
+   alors que la liste construite le 26/08 ne connaît que des domaines. La
+   section 4m de l'audit quotidien est donc structurellement incapable de
+   nommer une ligne re-sourcée vers un de ces PDF. Étendre la liste aux motifs
+   de chemin est un petit chantier — non fait ce soir parce qu'il touche à la
+   qualification juridique d'une source, et que le périmètre exact (tout
+   `ncdc.gov.ng` ? seulement les PDF ?) est une décision, pas une mécanique.
+
+4. **Deux crons en `no_data` prolongé**, relevés à nouveau sans être traités :
+   `check-mpox-sitrep` et `sync-drc-sitrep`. Aucun n'est en `error`. Inchangé
+   depuis le relevé du 03/09.
+
+### Fichiers modifiés par d'autres, laissés intacts (AGENTS.md)
+
+Au moment du commit : `docs/outreach-qa.md`, `marketing/content-log.md`,
+`marketing/linkedin-contacts.md`, `marketing/qa/lexicon.json`,
+`marketing/qa/product-claims.manual.json` (modifiés), et
+`scripts/audit-alert-day.mjs`, `scripts/probe-alert-lock.mjs` (non suivis).
+Aucun n'a été stagé, stashé ni annulé. Un push a été rejeté en cours de run
+(une session LinkedIn poussait au même moment, `9354839f`) puis repassé sans
+intervention sur l'arbre.
+
+**Statut : 2 idées PROPOSÉES ET CONSTRUITES.** Aucune idée écartée par un
+garde-fou ce soir ; le seul point volontairement non tranché est l'arbitrage
+juridique du point 1 ci-dessus.
