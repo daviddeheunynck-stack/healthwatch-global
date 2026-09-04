@@ -43,6 +43,37 @@ Sur ordre de David en session interactive (« continue le run, traite les fils r
 
 ---
 
+### 1️⃣ter ✅ 2 COMMENTAIRES SUPPLÉMENTAIRES PUBLIÉS (3/7, 4/7) — deux réponses substantielles trouvées en revérifiant les notifications, sur ordre de David
+
+En revérifiant les notifications une dernière fois (sur demande de David), deux réponses de fond étaient arrivées, aucune des deux vue lors du passage précédent :
+
+**A. Ifedayo Adetifa a répondu à notre commentaire du midi (28 min avant la relecture)** : « *Valid poin. The true definition of access is having an appropriate test available at the health facility (or indeed community) where required. For me, this is a point-of-care test in PHC settings. **The tracker still reports no PoC test.*** » Il confirme donc directement notre hypothèse (aucun indicateur ne couvre la présence physique d'un test).
+
+- **Jet 1** (« *Is that absence itself the finding, meaning no PoC test shows up as zero somewhere, or is there not yet a dataset...* »). Relecteur : **REECRIRE 7, 11, 12** — 🔴 la question ignorait l'information la plus fraîche du fil : Adetifa venait de dire que le tracker **rapporte** ce zéro (un champ existe), pas qu'aucun dataset n'existe ; la clôture binaire « X, or is there not yet Y » est un moule saturé du corpus (6 occurrences) ; l'apport n'exploitait pas sa position spécifique chez FIND.
+- **Jet 2**, reconstruit sur le zéro confirmé, ancré sur sa position FIND (« *the way FIND would check it* »). Relecteur : **REECRIRE 11** — 🔴 la nouvelle clôture (« *or does it just mean nobody submitted one?* ») était **le même moule binaire sous un autre habillage**, un défaut déjà identifié et corrigé sur ce même corpus le 02/09 (`content-log.md:1042`, commentaire Kyaw Thowai Prue Prince).
+- **Jet 3**, clôture binaire supprimée, question affirmative unique. **Relecteur : `VERDICT: ENVOYER`, 12/12.**
+
+**✅ Texte publié :**
+
+> Does that zero get checked the way FIND would check it, someone confirming no PoC test on site rather than reading it off a blank submission?
+
+**Publication confirmée** : identité de la cible et texte comparés dans le même appel JS que le clic, une seule occurrence après publication. **Quota commentaires : 4/7.** Réponse dans un fil déjà bloqué en top-level (Ifedayo Adetifa, jusqu'au 11/09) — la réponse en sous-fil n'y est pas soumise (§14) et ne crée aucun blocage supplémentaire.
+
+**B. Fassou Mathias Grovogui, MD, MPH — co-auteur du recensement de Conakry (`Discontinu-cities`, UrbanBirth Collective) — a répondu à notre commentaire du matin sous le post de Pete Macharia**, premier contact : « *We agree that this reveals governance gaps... The regions and health districts in Grand Conakry have now adopted the findings and expect to regularly update the list and improve the contribution of private health facilities to the DHIS2... it is on policymakers to provide the resources for that.* »
+
+- **Jet 1** (« *Is that feedback loop already running on a set cadence and a named channel..., or is it still the expectation the regions agreed to before the resourcing you mention exists?* »). Relecteur : **REECRIRE 8, 11** — 🔴 ton de contre-interrogatoire envers quelqu'un qui venait de répondre en détail et de bonne foi, et **même moule binaire « already X, or is it still Y » saturé** (3 occurrences dans le corpus, dont `linkedin-contacts.md:5195`).
+- **Jet 2**, entièrement refait : question neutre sur la mécanique concrète du canal DHIS2 qu'il a lui-même nommé, sans alternative fermée. **Relecteur : `VERDICT: ENVOYER`, 12/12** — vérifié que ce n'était ni une reformulation du même moule ni un ton de mise à l'épreuve.
+
+**✅ Texte publié :**
+
+> What does that DHIS2 contribution look like on the ground: a facility submitting its own updates directly, or one that still passes through a district office first?
+
+**Publication confirmée** de la même façon. **Quota commentaires : 3/7** (publié avant le A ci-dessus). Premier contact, aucun blocage préexistant.
+
+⚠️ **Convergence notée** : Grovogui (ITM Anvers, co-auteur du recensement Conakry) répond le même jour où Christian BABOKO cite ce même recensement en DM comme preuve que « ces aspects ont déjà été explorés » — deux fils indépendants pointent la même équipe de recherche.
+
+---
+
 ### 2️⃣ ✅ COMMENTAIRE 2/7 PUBLIÉ — **Ifedayo Adetifa**, EN, top-level, premier contact — 6 jets, 5 rejets sur 5 défauts différents
 
 `urn:li:activity:7501417483380113408`, post de 11 h à l'ouverture, **relation de 1er degré**, 30 réactions, **1 seul commentaire avant nous, le sien** (une liste de ses quatre sources). *Global Health Leader & Physician-Epidemiologist | Outgoing CEO, FIND | Former Director-General, Nigeria CDC | Lancet Commissioner*. Repéré via les notifications. Post long sur la chaîne de mise à disposition des contre-mesures (financement, market shaping, production africaine, cinq priorités Africa CDC/ASLM), dont la thèse est que le diagnostic a le moins de cette chaîne, avec la flambée Bundibugyo citée en exemple.
@@ -138,7 +169,7 @@ Sur ordre de David en session interactive (« continue le run, traite les fils r
 
 | Catégorie | Consommé | Plafond | Détail |
 |---|---|---|---|
-| Commentaires | **2 publiés** | 7 | Pete Macharia (~10h55, monitoring) + **Ifedayo Adetifa (~13h35, ce run, 6 jets)**. 2 candidats instruits et abandonnés ce run (Oke Ikpekpe, Julien Harneis), motifs de fond documentés |
+| Commentaires | **4 publiés** | 7 | Pete Macharia (~10h55, monitoring) + Ifedayo Adetifa top-level (~13h35, 6 jets) + réponse Grovogui (~15h30, 2 jets) + réponse Adetifa (~15h35, 3 jets). 2 candidats instruits et abandonnés ce run (Oke Ikpekpe, Julien Harneis), motifs de fond documentés |
 | Notes de connexion | **1 envoyée** | 7 | **Christian BABOKO**, 4 jets, **acceptée dans les minutes qui ont suivi**. ⚠️ **Plafond réel atteint côté plateforme : 0 invitation personnalisée restante ce mois-ci** |
 | Suivis | **8** | 7-10 | inchangé depuis ce matin, objectif atteint. **Aucun follow-back dû** : 410 abonnés, les nouveaux (Caroline Museka, Boris Pavlin) sont déjà suivis |
 | DM | **4 envoyés** (Schlitt 13h57 + 15h06, Ndaye 14h53, BABOKO 15h08) | 8 | reprise interactive 14h50-15h10 sur ordre explicite de David ; détail dans `linkedin-contacts.md` |
