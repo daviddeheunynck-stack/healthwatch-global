@@ -2,6 +2,83 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session linkedin-hwg-followup-check-2 — 04/09/2026 (17h, 2e des 2 créneaux après-midi) — ❌ **0 commentaire publié, quota laissé à 4/7** — recherche menée jusqu'au bout, meilleur candidat trouvé et **volontairement non publié faute de pouvoir cibler le post sans ambiguïté** ; ✅ 2 DM envoyés en automation (détail dans `linkedin-contacts.md`)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` du 04/09 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture → **premier déclenchement productif de cette routine aujourd'hui** (réserve sur une session homonyme de 11h12 sans production : voir l'en-tête de l'entrée jumelle dans `linkedin-contacts.md`). Horloge à l'heure (`Fri Sep 4 17:10 2026`). Branche : **master**. Registres régénérés à 17h11.
+
+---
+
+### 1️⃣ ✅ SUIVI DES ACTIONS DU JOUR ET DES FILS ACTIFS (§14)
+
+**Notifications parcourues intégralement à l'ouverture (9 items).** Les retombées des 4 commentaires du jour :
+
+| Action du jour | Retombée au 17h10 |
+|---|---|
+| Commentaire **Pete Macharia** (~10h55, monitoring) | **Lenka Beňová** (ITM Anvers) l'a aimé, déjà noté à 13h. **Fassou Mathias Grovogui** y avait répondu, traité à 15h30. Rien de neuf depuis. |
+| Commentaire **Ifedayo Adetifa** top-level (~13h35) | Sa réponse de ~15h20 a été traitée à ~15h35. Le post est à **32 réactions / 6 commentaires**. Rien de neuf depuis. |
+| Réponse **Grovogui** (~15h30) | Aucune réponse. |
+| Réponse **Adetifa** (~15h35) | Aucune réponse. |
+| Post de marque **Diphtérie/Niger** (publié 09h29) | **33 impressions**, **Qadeer Ahsan** a réagi. Aucun commentaire reçu. |
+| Fil **Oke Ikpekpe** | Sa réponse de ~13h (« *If a preparedness check is meant to happen every month or every quarter…* ») est bien celle déjà instruite et **volontairement laissée sans réponse** au créneau de 13h. Décision maintenue, aucun élément neuf de sa part depuis. |
+
+**Aucune réponse neuve trouvée sur un fil de commentaire des jours précédents.** Les deux fils dont le volet commentaires ne s'était pas rendu (Dr. Rashi Bhardwaj, Mohammad Ilias Hossain) avaient déjà été revérifiés par un autre chemin à ~15h30 (commit `316b18a7`, « rien de neuf ») : **le carry-over du 13h est donc clos, pas recopié.**
+
+---
+
+### 2️⃣ ❌ COMMENTAIRES — QUOTA LAISSÉ À 4/7, RECHERCHE MENÉE À SON TERME
+
+Trois créneaux restaient. **Quatre candidats instruits, tous écartés, dont un sur un motif purement technique qu'il faut lire jusqu'au bout.**
+
+**a) Alexandra THABUIS** (Santé publique France, cellule régionale Auvergne-Rhône-Alpes), post de ~16h30, dans la fenêtre 48 h, aucun blocage. ❌ **Écarté : hors périmètre.** Le post porte sur l'activité physique et la sédentarité (#SeptembreBouge, Baromètre 2024) — prévention des maladies chroniques, pas surveillance épidémiologique. Aucun angle HWG honnête. S'y ajoute que la même cellule régionale a déjà consommé 3 jets abandonnés ce matin (post Odissé de Delphine CASAMATTA).
+
+**b) Nirmal Kandel** (OMS), post de ~14h sur les 24-72 premières heures en catastrophe et l'alerte précoce. ❌ **Écarté : registre inadapté.** C'est un récit inspirant (un enseignant qui sauve ses élèves), pas une matière analytique. Y greffer un angle de surveillance épidémiologique sonnerait faux.
+
+**c) Benjamin O'Neil** (*Epidemiology Director | Global Health Security & Development | Outbreak Response*), post de ~16h20, profil en plein périmètre, aucun blocage. ❌ **Écarté : pas de matière.** Le post est une annonce administrative — l'examen de certification CDI est gratuit pour qui s'inscrit avant le 9 septembre. Rien à commenter sur le fond, et le sujet est une certification professionnelle américaine.
+
+**d) 🔴 page WHO AFRO — le bon candidat, non publié pour une raison technique, pas éditoriale.** Post de la veille (dans la fenêtre 48 h), **45 réactions, 6 commentaires**, **page libre de tout blocage** : *« Strengthening patient care is critical to the #Ebola response. In Nizi, Ituri Province, WHO supported the expansion of the Ebola Treatment Centre (ETC) to 80 beds. Essential medicines, personal protective equipment (PPE), laboratory supplies and logistical support were also provided. »*
+
+- **C'est un porteur neuf de la ligne d'événement Ebola/RDC** du carry-over de 13h (§16), et un porteur **non bloqué**, contrairement aux deux seuls identifiés jusqu'ici (Health Policy Watch et Tambe Elvis Akem, bloqués jusqu'au 05/09). Ce point à lui seul justifiait de le chercher.
+- **Motif de non-publication : le post n'a pas pu être isolé sans ambiguïté dans le DOM du fil.** Aucun `urn:li:activity` n'apparaît plus dans le HTML rendu (0 occurrence sur toute la page), les classes sont obfusquées, et la remontée des ancêtres depuis le texte du post attrape un conteneur qui **englobe le post d'un autre auteur** (Catherine Linard). Publier dans ces conditions, c'est exactement le risque que `hwg-social-policy.md` §7 interdit : un clic irréversible sur une cible dont l'identité n'est pas garantie dans le même appel que le clic.
+- **Rien n'est perdu** : les deux autres porteurs de cet événement se débloquent **le 05/09**, et le carry-over de 13h désignait déjà demain matin comme le meilleur créneau. WHO AFRO s'y ajoute maintenant comme troisième porteur, libre, à ouvrir **par la page de l'organisation** (`/company/world-health-organization-afro/posts/`) plutôt que depuis le fil, pour retrouver un contexte à post unique.
+- ⚠️ **Deux angles à ne pas rejouer sur cet événement** : le « décompte zonal contre agrégat national » (publié le 18/08 chez le Dr. Jean Kaseya) ; et la figure « la capacité de réponse est ce que les bulletins ne portent jamais », qui est un moule saturé du corpus, relevé nommément par le relecteur ce soir même (`linkedin-contacts.md:9980`).
+- ⚠️ **Et un fait à ne PAS citer** : le décompte des quatre zones de santé à 42 jours vient de la compilation d'un tiers (Tambe Elvis Akem), **jamais vérifié contre une source primaire** — il est en attente de `morning-don-check` (§7 du carry-over de 13h). Aucun commentaire ne doit s'appuyer dessus tant que ce n'est pas fait.
+
+**Aucun commentaire médiocre n'a été forcé pour remplir le quota** (ligne 41 du SKILL), et la recherche a bien été menée à son terme (point 8 du déroulé) : notifications intégrales, puis parcours du fil d'actualité jusqu'au chargement de 7 posts distincts, tous évalués.
+
+---
+
+### 3️⃣ ✅ DM — 2 ENVOYÉS EN AUTOMATION (5/8 et 6/8)
+
+Détail complet, jets, QA et textes intégraux dans `marketing/linkedin-contacts.md`, entrée du même run. En résumé :
+- **Christian BABOKO** (OMS Kinshasa), 17h39, **6 jets** — 5 rejets sur 5 défauts distincts, dont une **affirmation produit fausse** sur l'essai (formule déjà sanctionnée le 25/08) et un **CTA retiré en entier** faute de pont honnête entre un fil obstétrical et un tableau de bord de flambées.
+- **James Schlitt**, 18h16, **5 jets** — 4 rejets, dont **deux affirmations produit fausses successives** sur le comportement d'écriture de la base, la première contredisant mot pour mot ce que nous lui avions écrit **sept heures plus tôt dans le même fil**.
+
+---
+
+### 4️⃣ 📌 INFOS NOTÉES POUR DE FUTURS POSTS
+
+1. **Ebola/RDC, volet prise en charge** — WHO AFRO documente l'extension du CTE de **Nizi (Ituri) à 80 lits**, plus médicaments essentiels, EPI, consommables de laboratoire et appui logistique, avec un témoignage de patient guéri. C'est un chiffre de **capacité de réponse** daté et attribué, catégorie que la base HWG ne porte pas du tout — matière possible pour un post de marque sur ce que mesure un compte de cas et ce qu'il ne mesure pas, à condition de sortir du moule rhétorique saturé signalé en §2.
+2. **Convergence ITM Anvers, 3e signal en une journée** — après Lenka Beňová (like sur le commentaire Macharia) et les références envoyées par Christian BABOKO, le co-auteur **Fassou Mathias Grovogui** est lui aussi ITM Anvers. Trois entrées indépendantes vers la même équipe le même jour.
+3. **Ngoy Guillaume** vient de prendre un poste d'**officier de surveillance de la 17ᵉ épidémie de MVE** chez International Medical Corps (repéré au fil). Profil terrain sur l'événement Ebola/RDC en cours, à évaluer comme candidat suivi/connexion à un prochain créneau.
+
+---
+
+### 5️⃣ 🔁 CARRY-OVER POUR LE CRÉNEAU DE 9h (05/09)
+
+1. 🗓️ **LIGNE D'ÉVÉNEMENT (§16), inchangée et prioritaire — Ebola/RDC.** Trois porteurs désormais identifiés : **Health Policy Watch** et **Tambe Elvis Akem** (bloqués jusqu'au 05/09, donc **libres dès demain**) et **la page WHO AFRO** (libre, post « Nizi / 80 lits » de la veille, encore dans la fenêtre 48 h demain matin). **Ouvrir WHO AFRO par sa page d'organisation, pas depuis le fil** (voir §2d). Angles brûlés et fait non vérifié : voir §2d.
+2. ⚠️ **Le quota commentaires ferme la journée à 4/7.** Trois créneaux non consommés, un seul bon candidat trouvé, écarté sur motif technique documenté. Ce n'est pas un arrêt prématuré : les 4 candidats instruits sont listés avec leur motif.
+3. ⚠️ **Navigateur à surveiller au prochain run** : `javascript_tool` refusé par le classifieur pendant ~25 min, zoom de page corrompu par `computer scroll`, timeouts CDP répétés, et **plus aucun `urn:li:activity` dans le HTML du fil** — ce dernier point change la façon de cibler un post et vaut pour toutes les routines LinkedIn. Contournements trouvés, détaillés dans `linkedin-contacts.md`, même run.
+4. ✅ **Clos ce run** : les deux fils non rendus du carry-over de 13h (Dr. Rashi Bhardwaj, Mohammad Ilias Hossain), revérifiés à 15h30 par un autre chemin.
+5. ⭐ **Oke Ikpekpe** — décision de 13h maintenue, aucune réponse publiée, sous-fil ouvert. Ne pas y revenir sans élément neuf de sa part.
+6. **Inchangés, à reporter tels quels** : ⭐⭐ Dr. Malachie MANAOUDA (welcome DM, **ouvert dès le 05/09**) ; **Dr. Siaka Condé** (**ouvert dès le 05/09**) ; ⭐ John Omari Baso (ne rien envoyer avant qu'il écrive, réexporter le fil en entier avant tout brouillon) ; ⭐⭐ Céline FRANÇOIS (dès qu'elle republie) ; ⭐⭐ Delphine CASAMATTA et David Moreau (aucun blocage, ne pas rejouer les angles morts du matin) ; ⭐⭐ Jacques Delors TOUMANSIE MFONKOU et ⭐⭐ Ofelia CAZACU ; ⭐⭐ Seynudé Jean-Fortune DAGNON (attendre l'acceptation) ; ⭐⭐ Dr. Ibrahima Socé Fall (toujours sans hook honnête) ; ➖ Yakoza Nyirenda ; ⭐⭐ Isaias Fernandes Co (rien avant la semaine du 14/09) ; ❌ ne pas reproposer sans élément neuf : Zachariah G. Houdari, OLAOLUWA PHILIP, Jean-Rodrigue NDONG, Haider Durrani, Kipchirchir Kigen, Victoria Kanana, Abdulrazaq Tanga, Herve Chatue kamga.
+7. **Blocages hebdomadaires au 04/09 en fin de journée — aucun nouveau créé ce run** (0 commentaire publié) : Ifedayo Adetifa, Pete Macharia (11/09) ; Adesoye Emmanuel Tunde, Kyaw Thowai Prue Prince, Rocham Mulumbwe, Dr. Rashi Bhardwaj, Dr Fabrice KHADDY, Miriam Mbueshi (09/09) ; Dr. Jean Kaseya, page ECDC, Jacob Banda (08/09) ; Melvin Sanicas, Dossa Paul YAOÏTCHA, Mohammad Ilias Hossain (07/09, top-level, sous-fils ouverts) ; Global Health EDCTP3, French Healthcare Association, Health Policy Watch, Tambe Elvis Akem, SOUAD BELKACEMI (05/09, **donc libres demain**). **Libres** : Oke Ikpekpe, Jason Kindrachuk, Dr Jeeven Kumar, Harvey Basivikidi, Robert Herriman, Patrick AYONGA, Oliver Morgan, page Africa CDC, **page WHO AFRO**, Vital Strategies, Tedros, Prof. Mohamed Janabi, INRB, Apoorva Wasnik, Johan Verheyden, Gaelle Gonzalez, Lori Peterson, Dr. Malachie MANAOUDA, James Schlitt, Martin Yakum, Julien Harneis, BANZA Freddy Mutoka, Jean-Paul Gonzalez, Delphine CASAMATTA, David Moreau, Christian BABOKO, Lenka Beňová, The Conversation Africa, Yap Boum II, Marie Roseline Darnycka BELIZAIRE, **Benjamin O'Neil**, **Alexandra THABUIS**, **Nirmal Kandel** (ces trois derniers évalués et écartés ce run, aucun commentaire publié, donc aucun blocage créé).
+
+### 6️⃣ 🔧 ARBRE DE TRAVAIL
+
+Fichiers modifiés par cette session : `marketing/content-log.md`, `marketing/linkedin-contacts.md`. **Fichiers modifiés par d'autres et laissés intacts** (`AGENTS.md`) : `marketing/qa/product-claims.manual.json`, `scripts/audit-alert-day.mjs`, `scripts/probe-alert-lock.mjs` — **signalés pour la quatrième session consécutive**. `marketing/qa/claimable-facts.json` et `marketing/qa/product-claims.json` régénérés, non suivis ; `tmp/` non suivi. **Branche : master.** Aucun verrou de code demandé.
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check — 04/09/2026 (13h, 1er des 2 créneaux après-midi) — ✅ **1 commentaire publié (6 jets)** — Oke Ikpekpe a répondu après 1 j de silence, réponse volontairement non faite ; événement Ebola/RDC neuf et fort repéré, ses deux porteurs bloqués jusqu'au 05/09
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` datée du 04/09 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture (les entrées du jour appartiennent à `linkedin-hwg-content-proposal` 8h35 et à `linkedin-hwg-monitoring` 9h + sa reprise de 10h15) → **premier déclenchement de cette routine aujourd'hui**. Les créneaux 13h et 17h sont deux runs intentionnellement distincts. Horloge machine à l'heure (`Fri Sep 4 13:02 2026`). Branche vérifiée : **master**. Registre de faits régénéré à 13h05 (221 faits, 106 lignes affichées, 3 périmés).
