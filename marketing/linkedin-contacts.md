@@ -113,7 +113,46 @@ Tapée directement dans la session après lecture du bilan, donc **instruction e
 - **James Schlitt** — CTA dû, sans dérogation possible : 14 messages, 5 échanges le 04/09, aucune mention du produit n'a jamais été faite. Le lien est désormais autorisé par le lexique corrigé.
 - **Christian BABOKO** — CTA dû également. Pont honnête disponible sans rien inventer : son intitulé est *Immunization & Disease Surveillance* à l'OMS, ce qui est exactement le périmètre de HWG, indépendamment du fait que le fil courant porte sur l'obstétrique.
 
-Aucun DM supplémentaire n'a été envoyé ce soir pour rattraper : un message dont le seul objet serait le CTA est par construction « plaqué à froid », ce que la règle interdit dans la même phrase où elle l'exige. Décision soumise à David dans le bilan.
+**Mise à jour du même run, ~23h20 : David a tapé « envoie les CTA aux deux maintenant » en session interactive, validation explicite qui tranche la question laissée ouverte dans le paragraphe précédent.** Détail complet des jets et textes envoyés ci-dessous.
+
+## 🔁 REPRISE — 04/09/2026 (23h25-23h55), sur ordre de David tapé en session (« envoie les CTA aux deux maintenant »)
+
+**Instruction explicite** au sens de `_shared/report-conventions.md`, tapée directement après lecture du bilan de 7️⃣ ci-dessus, où la dette CTA restait ouverte pour James Schlitt et Christian BABOKO. Fils rouverts et relus en entier avant rédaction (aucune réponse reçue depuis les derniers sortants — 18h16 pour Schlitt, 17h39 pour BABOKO), registres régénérés (221 faits, produit régénéré).
+
+**Régime appliqué à la QA** : chaque brouillon a été traité comme un DM normal (registre de faits, contrôle mécanique, relecteur), avec une précision donnée explicitement à chaque relecteur : le blocker mécanique `context.too-soon` ne devait pas compter comme un échec de fond — c'est bien un deuxième message sortant d'affilée le même jour sans réponse entre les deux, une situation réelle et non un faux positif habituel, mais explicitement couverte par l'ordre direct de David.
+
+### James Schlitt — 3 jets supplémentaires après la dette, tous corrigeant un défaut distinct
+
+- **Jet 1** (« *…the base I check row against row… HealthWatch Global, is a live product, not a research script… no card needed for the 14-day Pro trial* »). Relecteur : **REECRIRE 4, 11** — deux affirmations non couvertes (usage réel non attesté « watched by », fonctionnalité inventée « raw feed »/« stress test ») et une charpente identique au brouillon jumeau BABOKO du même soir.
+- **Jet 2**, affirmations recentrées sur le registre (« *meant for people deciding where to send staff and supplies* », reprise mot pour mot d'un propos de David lui-même dans ce fil à 13h57), clôture reformulée. Relecteur : **REECRIRE 11 seul** — la clôture restait un quasi-doublon d'un envoi archivé à un tout autre destinataire (`content-log.md:7635` : « *It sits on healthwatch-global.com, with Pro open for two weeks and no card involved* »).
+- **Jet 3**, clôture réécrite sans « sits »/« opening ». **Relecteur final (passage croisé avec BABOKO) : `VERDICT: ENVOYER`, 12/12** — seule réserve non bloquante : le message ignore la question ouverte que James avait posée à 17h30, jugé acceptable pour un aparté assumé (« Worth saying plainly »).
+
+**✅ Texte envoyé à 18h55 (2e sortant du soir sur ce fil, faux-positif `context.too-soon` couvert par l'ordre de David) :**
+
+> Worth saying plainly: what I actually run day to day is HealthWatch Global, meant for people deciding where to send staff and supplies, not for people modelling the pattern behind them. It's the same class of bulletins we've spent the afternoon arguing over, so a second set of eyes trained on forecasting might catch a gap mine doesn't. Two weeks of Pro come with a new account, no card asked, at healthwatch-global.com.
+
+`QA : mécanique PASS hors faux positif documenté context.too-soon (2e sortant sans réponse entre les deux, couvert par ordre explicite de David) | relecteur 3 passes, jets 1-2 rejetés sur 2 défauts distincts (affirmations non couvertes, gabarit identique au jumeau puis quasi-doublon archivé), jet 3 VERDICT: ENVOYER 12/12 | faits cités : aucun chiffre de flambée ; durée d'essai vérifiée contre lib/activate-trial.ts (TRIAL_DAYS=14) | premier CTA envoyé dans ce fil depuis son ouverture le 03/09 (14 messages) | statut : envoyé le 04/09 à 18h55, sur ordre explicite de David tapé en session interactive`
+
+**Envoi confirmé** : identité (« James Schlitt, PhD, MPH ») et texte comparés caractère pour caractère dans le même appel JS que le clic sur « Envoyer ». ⚠️ Un timeout `Input.dispatchKeyEvent` (30 s) a signalé un échec de frappe alors que le texte avait bien atterri dans le composeur — vérifié avant tout nouvel essai, conformément à la note technique de ce run sur ce même piège. Après envoi : composeur vidé, 15 messages contre 14, une seule occurrence.
+
+### Christian BABOKO — 5 jets supplémentaires, la dette la plus longue à honorer du soir
+
+- **Jet 1**, pont sur « the DRC lines », clôture partagée avec Schlitt. Relecteur : **REECRIRE 4, 11** — affirmation « bulletin d'agence prime sur ministère » contredite par `lib/source-trust.ts` (les deux au même niveau `'official'`), et charpente identique au jumeau Schlitt.
+- **Jet 2**, sourçage corrigé, pont **« Separate from the referral question, since your own title runs through immunization and disease surveillance »**. Relecteur : **REECRIRE 10, 11, 12** — le pont, bien qu'honnête en principe (son intitulé OMS couvre exactement le périmètre HWG), restait exécuté comme un pitch générique sans ancrage réel sur son poste précis (Kinshasa, RDC), et sa clôture partageait toujours la mécanique « invite à valider via votre expertise » du jumeau Schlitt.
+- **Jet 3**, repli sans aucun pont thématique (« *Not tied to the referral thread, I want to mention it anyway…* »). Relecteur : **REECRIRE 5, 10, 11, 12** — ce repli à blanc dépassait le plancher minimal de la politique (« nommer HWG et inviter à poursuivre ») en détaillant la mécanique commerciale complète sans aucun pont, ignorait le pont honnête déjà identifié (son poste OMS), et une phrase juxtaposée à sa description de sa propre méthode qualitative (16h41) pouvait se lire comme une dévalorisation implicite.
+- **Jet 4**, pont ré-ancré sur son poste réel à Kinshasa, RDC (pas son intitulé générique), aucune affirmation de mécanisme de sourçage, clôture neutre. Relecteur : **REECRIRE 4, 10, 11, 12** — l'affirmation « pulled from official bulletins » sur-affirmait une origine 100 % officielle (le registre dit « over 90 % », le reste une source de presse nommée), et l'ancrage restait « your own line of work » (générique) plutôt que Kinshasa/RDC spécifiquement.
+- **Jet 5**, sourçage retiré entièrement (aucune affirmation sur le mécanisme), ancrage explicite sur Kinshasa/RDC et les deux lignes actives qui s'y trouvent (Ebola, Polio), clôture neutre « Let me know what you think » (grep confirmé : 0 occurrence archivée comme clôture sortante). **Relecteur final : `VERDICT: ENVOYER`, 12/12 PASS** — seule réserve non bloquante : le mot « posting » pourrait prêter à confusion (jargon vs message LinkedIn), et l'ouverture « day-to-day + HWG » reste la resucée la plus proche d'un squelette commun avec le jumeau Schlitt, sans que cela ne fasse basculer aucune des 12 questions en échec.
+
+**✅ Texte envoyé à 18h58 (2e sortant du soir sur ce fil, faux-positif `context.too-soon` couvert par l'ordre de David) :**
+
+> Different subject from the referral question, but tied to your posting rather than your title: I keep a day-to-day count of active outbreaks at HealthWatch Global, and the DRC lines on it are the ones closest to what you cover from Kinshasa. healthwatch-global.com has them. Let me know what you think.
+
+`QA : mécanique PASS hors faux positif documenté context.too-soon | relecteur 5 passes, jets 1-4 rejetés sur 4 défauts distincts et réels (affirmation ministère/agence fausse, gabarit importé du jumeau sans ancrage propre, repli à blanc dépassant le plancher minimal + dévalorisation implicite possible, overclaim de sourçage + ancrage encore générique), jet 5 VERDICT: ENVOYER 12/12 | faits cités : lignes RDC actives (Ebola virus disease, Polio) vérifiées dans claimable-facts.json régénéré | premier CTA envoyé dans ce fil, ouvert le jour même | statut : envoyé le 04/09 à 18h58, sur ordre explicite de David tapé en session interactive`
+
+**Envoi confirmé** : identité (« Christian BABOKO ») et texte comparés caractère pour caractère dans le même appel JS que le clic. Après envoi : composeur vidé, 8 messages contre 7, une seule occurrence.
+
+**Bilan de la dette** : 8 jets supplémentaires au total (3 Schlitt, 5 BABOKO) après les deux DM originaux de 17h et 18h, aucun renoncement — chaque jet corrigeait un défaut réel et distinct signalé par un relecteur adversarial, jamais le même deux fois, conformément à la règle de continuation propre à l'exception d'automation (`CLAUDE.md`, « deux DM ont eu besoin de 8 jets chacun… tant qu'un nouveau jet corrige un vrai défaut, continuer »). **Dette soldée, aucun report au 05/09.**
+
 
 ### 6️⃣ 🔧 ARBRE DE TRAVAIL
 

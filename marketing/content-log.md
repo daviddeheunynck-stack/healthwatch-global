@@ -79,6 +79,8 @@ Détail complet, jets, QA et textes intégraux dans `marketing/linkedin-contacts
 
 **Sans effet sur les commentaires** : le CTA y reste interdit (`ctaAllowed: false`, `linkAllowed: false` pour `linkedin-comment`), rien ne change de ce côté.
 
+**Mise à jour ~23h20, sur ordre explicite de David (« envoie les CTA aux deux maintenant »)** : les deux DM ont été rédigés et envoyés — James Schlitt à 18h55 (3 jets supplémentaires, 2 rejets sur des affirmations non couvertes puis un quasi-doublon archivé) et Christian BABOKO à 18h58 (5 jets supplémentaires, 4 rejets — une affirmation ministère/agence fausse, un gabarit importé sans ancrage propre, un repli à blanc dépassant le plancher minimal de la politique, un overclaim de sourçage). Chaque jet corrigeait un défaut réel et distinct signalé par un relecteur adversarial, jamais le même deux fois. **Détail complet, textes intégraux et QA : `linkedin-contacts.md`, même run, section « REPRISE — 23h25-23h55 ».** Dette CTA soldée, aucun report au 05/09.
+
 ### 6️⃣ 🔧 ARBRE DE TRAVAIL
 
 Fichiers modifiés par cette session : `marketing/content-log.md`, `marketing/linkedin-contacts.md`. **Fichiers modifiés par d'autres et laissés intacts** (`AGENTS.md`) : `marketing/qa/product-claims.manual.json`, `scripts/audit-alert-day.mjs`, `scripts/probe-alert-lock.mjs` — **signalés pour la quatrième session consécutive**. `marketing/qa/claimable-facts.json` et `marketing/qa/product-claims.json` régénérés, non suivis ; `tmp/` non suivi. **Branche : master.** Aucun verrou de code demandé.
