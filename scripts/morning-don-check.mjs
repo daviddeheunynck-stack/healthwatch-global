@@ -832,6 +832,28 @@ const MANUAL_ROWS = {
   "30961b24-f228-4f16-8861-8131cab5aa85": "Dengue/Nicaragua",
   "d2db38cc-f638-456a-bc7b-0d48f904b408": "Choléra/RCA",
   "120d6d5a-4e9b-4fda-8a1a-67e504246c55": "Crimée-Congo/Ouganda",
+  // Ajoutées le 2026-09-04 : ces 13 lignes étaient alimentées par un cron
+  // (fetchPolioGPEIThisWeek dans sync-who-regional, 2026-08-28 -> 2026-09-04)
+  // qui violait les CGU non-commerciales de polioeradication.org — même
+  // restriction déjà documentée pour Polio/Afghanistan et Polio/Pakistan
+  // ci-dessus mais pas recroisée au moment de construire ce cron. Code
+  // retiré sur décision de David en session interactive ; ces 13 rejoignent
+  // le même régime de vérification manuelle. Un seul WebFetch de
+  // polioeradication.org/about-polio/polio-this-week/ couvre potentiellement
+  // plusieurs d'entre elles (voir la procédure dédiée dans SKILL.md §5).
+  "6f53a37f-5736-4c0a-b2ad-d81377710cb3": "Polio/Nigeria",
+  "64f7c22d-a614-4719-83fe-cf11ba62837f": "Polio/RD Congo",
+  "4bb491b1-719b-4603-85c2-8ffa5b700f54": "Polio/Tchad",
+  "2cfe960a-a08b-4a56-92fe-98cc4a86bae5": "Polio/Soudan",
+  "ab97b8b6-969f-48a7-ab9f-ddc7b5d7ac0c": "Polio/RCA",
+  "700a708c-1d97-4a2c-9323-e2144f9761ae": "Polio/Somalie",
+  "d9e8f604-933b-44e9-995f-52ddff6b5af2": "Polio/Soudan du Sud",
+  "2c6edbc7-519d-4dfd-9125-41537ea3dc96": "Polio/Éthiopie",
+  "300eefbb-71d4-49d5-a395-181a2cc24507": "Polio/Niger",
+  "63410950-8b12-4695-b18c-1af905fe758c": "Polio/Togo",
+  "c1e0d8dc-9a0a-44c2-a006-99132ce42750": "Polio/Mali",
+  "54acfa36-efe5-44fe-ba80-6dade8f9d4d8": "Polio/Angola",
+  "1d6e75dc-76fd-404d-a1d9-f535c5a9e731": "Polio/Madagascar",
 };
 // Ebola/RD Congo (bd1c3a46) : chiffre débloqué le 19/08 — David a ouvert le PDF IRIS lui-même
 // (même blocage JS que le PDF diphtérie australienne), lu directement depuis ses Téléchargements.
@@ -848,6 +870,32 @@ const MANUAL_ROWS = {
 // ⚠️ Ne bumper une date ci-dessous qu'après avoir effectivement consulté la source primaire —
 // jamais pour faire taire une ligne.
 const MANUAL_ROW_CHECKED = {
+  // Polio/Mali et Polio/Soudan du Sud : vérifiées le 04/09 contre le HTML réel de
+  // « Polio This Week » (bulletin arrêté au 02/09) en corrigeant le parseur du cron
+  // qui les alimentait alors — Mali « There are two cases reported in 2026 » = 2
+  // cVDPV2, Soudan du Sud « There are ten cVDPV1 cases reported in 2026 » = 10
+  // cVDPV1. Chiffres déjà écrits en base ce jour-là (avant le retrait complet du
+  // cron sur décision de David). Rien à revérifier avant le prochain WebFetch hebdo.
+  "c1e0d8dc-9a0a-44c2-a006-99132ce42750": "2026-09-04",
+  "d9e8f604-933b-44e9-995f-52ddff6b5af2": "2026-09-04",
+  // Polio/Angola, Togo, Soudan, RCA, Madagascar, Somalie, Niger, Tchad, Éthiopie :
+  // vérifiées le 04/09 sur la même page « Polio This Week » arrêtée au 02/09 —
+  // aucun des 9 n'est narré dans cette édition (« more information on the
+  // countries that have reported cases and/or environmental samples this week »
+  // ne les mentionne pas). Conformément à la logique de la routine, l'absence de
+  // narration une semaine donnée signifie « rien de neuf », pas un retard —
+  // chiffres laissés inchangés (arrêté 2026-08-18, dernière édition où chacun
+  // apparaissait). Prochain WebFetch hebdo : si l'un de ces pays réapparaît dans
+  // la section « Country updates », comparer son total annuel à la ligne.
+  "54acfa36-efe5-44fe-ba80-6dade8f9d4d8": "2026-09-04",
+  "63410950-8b12-4695-b18c-1af905fe758c": "2026-09-04",
+  "2cfe960a-a08b-4a56-92fe-98cc4a86bae5": "2026-09-04",
+  "ab97b8b6-969f-48a7-ab9f-ddc7b5d7ac0c": "2026-09-04",
+  "1d6e75dc-76fd-404d-a1d9-f535c5a9e731": "2026-09-04",
+  "700a708c-1d97-4a2c-9323-e2144f9761ae": "2026-09-04",
+  "300eefbb-71d4-49d5-a395-181a2cc24507": "2026-09-04",
+  "4bb491b1-719b-4603-85c2-8ffa5b700f54": "2026-09-04",
+  "2c6edbc7-519d-4dfd-9125-41537ea3dc96": "2026-09-04",
   // Choléra/RCA : revérifié le 29/08 (WebSearch « République centrafricaine choléra bilan cas
   // décès août 2026 Bimbo Mbaïki »). Rien de plus récent que les 720 cas / 46 décès arrêtés au
   // 06/08 déjà en base ; les résultats se referment sur la déclaration d'épidémie du 26/06
