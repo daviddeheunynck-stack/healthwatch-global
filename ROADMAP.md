@@ -36,6 +36,21 @@ For every new source, verify and document:
 
 Keep a record of each source's terms-of-use check before it goes live.
 
+**That record now exists: `~/.claude/scheduled-tasks/_shared/sources-interdites.md`.**
+Check it BEFORE writing any fetcher, cron, or script that reads an external source and
+writes to the database — including extending an existing fetcher to a new domain. It lists
+the sources that are off-limits for ingestion or citation (ProMED, reliefweb.int,
+cdc.gov.au, polioeradication.org, ncdc.gov.ng sitrep PDFs) and those cleared for manual
+lookup but deliberately left without a cron (spc.int). A source **absent** from that file is
+**unverified, not permitted** — run the four checks above and record the outcome there.
+
+Created 2026-09-04, after `fetchPolioGPEIThisWeek` (commit `a95244dd`) ran for seven days
+writing polioeradication.org content into a database backing a paid product. The
+restriction had been documented since 2026-07-29 — in another routine's notes, which the
+author of that cron had no particular reason to open. Removed in `0df093ae`. That is the
+third instance of this failure mode in three months (ProMED, ReliefWeb, GPEI): the rule
+existed every time, just never where someone was building.
+
 ---
 
 ## Other backlog items
