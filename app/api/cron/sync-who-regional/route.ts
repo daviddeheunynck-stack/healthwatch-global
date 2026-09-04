@@ -454,6 +454,43 @@ async function getGpeiSection(): Promise<{ asOf: string | null; lines: string[] 
   return gpeiSectionCache;
 }
 
+// GPEI's year-total sentence for a serotype has been seen in TWO phrasings,
+// not one — found 2026-09-04 when Mali and South Sudan silently stopped
+// updating (11-12 days stale) despite being narrated every week: that week's
+// bulletin phrased their totals as "There are two cases reported in 2026."
+// / "There are ten cVDPV1 cases reported in 2026." instead of the usual
+// "The number of cVDPV1 cases in 2026 is ten." The old single-pattern lookup
+// failed closed on both — correctly refusing to guess, but silently, with
+// nothing distinguishing "not restated this week" (fine, skip) from "restated
+// in a phrasing we don't parse" (a real miss). Two tried in order:
+//   1. "number of {sero} ... in {year} is N"            — the common phrasing
+//   2. "there are/is/were/was N [{sero}] cases reported in {year}"
+// Pattern 2 makes the serotype word optional, but ONLY when the country
+// tracks a single serotype (serotypeCount === 1) — for a country tracking two
+// or more (Nigeria, Chad), an unqualified "there are N cases..." could belong
+// to either serotype's paragraph, and guessing which one would silently
+// misattribute a count rather than fail closed.
+function findSerotypeYearCount(block: string[], sero: string, year: number, serotypeCount: number): number | undefined {
+  const primary = block.find((l) => new RegExp(`number of ${sero}\\b.*\\bin ${year}\\b`, "i").test(l));
+  if (primary) {
+    const m = primary.match(new RegExp(`number of ${sero}\\b[^.]*\\bin ${year}\\s+is\\s+([A-Za-z0-9,]+)`, "i"));
+    if (m) return parseCountOrWord(m[1]);
+  }
+  const explicitSero = block.find((l) => new RegExp(`there\\s+(?:are|is|were|was)\\s+[A-Za-z0-9,]+\\s+${sero}\\s+cases?\\s+reported\\s+in\\s+${year}\\b`, "i").test(l));
+  if (explicitSero) {
+    const m = explicitSero.match(new RegExp(`there\\s+(?:are|is|were|was)\\s+([A-Za-z0-9,]+)\\s+${sero}\\s+cases?\\s+reported\\s+in\\s+${year}\\b`, "i"));
+    if (m) return parseCountOrWord(m[1]);
+  }
+  if (serotypeCount === 1) {
+    const implicitSero = block.find((l) => new RegExp(`there\\s+(?:are|is|were|was)\\s+[A-Za-z0-9,]+\\s+cases?\\s+reported\\s+in\\s+${year}\\b`, "i").test(l));
+    if (implicitSero) {
+      const m = implicitSero.match(new RegExp(`there\\s+(?:are|is|were|was)\\s+([A-Za-z0-9,]+)\\s+cases?\\s+reported\\s+in\\s+${year}\\b`, "i"));
+      if (m) return parseCountOrWord(m[1]);
+    }
+  }
+  return undefined;
+}
+
 function fetchPolioGPEIThisWeek(country_en: string): () => Promise<Found | null> {
   return async () => {
     const serotypes = GPEI_CVDPV_TARGETS[country_en];
@@ -468,11 +505,8 @@ function fetchPolioGPEIThisWeek(country_en: string): () => Promise<Found | null>
       let total = 0;
       const perSerotype: string[] = [];
       for (const sero of serotypes) {
-        const line = block.find((l) => new RegExp(`number of ${sero}\\b.*\\bin ${year}\\b`, "i").test(l));
-        if (!line) return null; // configured serotype not restated this week's block — fail closed rather than undercount
-        const m = line.match(new RegExp(`number of ${sero}\\b[^.]*\\bin ${year}\\s+is\\s+([A-Za-z0-9,]+)`, "i"));
-        const count = m ? parseCountOrWord(m[1]) : undefined;
-        if (count === undefined) return null;
+        const count = findSerotypeYearCount(block, sero, year, serotypes.length);
+        if (count === undefined) return null; // configured serotype not restated this week's block in a recognized phrasing — fail closed rather than undercount
         total += count;
         perSerotype.push(`${count} ${sero}`);
       }
