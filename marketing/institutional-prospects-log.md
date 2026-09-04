@@ -4080,3 +4080,99 @@ Non touchés, signalés seulement (règle `AGENTS.md`). `list_drafts` en fin de 
 - **⚠️ Cadence à surveiller (consigne du 02/09)** : premier lot au volume remonté à 20. Si ces 16 sont encore en brouillon dans 24-48 h, c'est le symptôme du 04-05/08 et la cadence doit redescendre à 10 — pas insister.
 - **Relance J+10** : le lot du 03/09 deviendra éligible le **13/09**, sur le nombre effectivement envoyé.
 - **⚠️ Fichiers modifiés non touchés par cette routine, laissés tels quels** (règle `AGENTS.md`) : `marketing/qa/product-claims.manual.json` (modifié), `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis).
+
+---
+
+## 🔁 RELANCE J+10 — 2026-09-04, run automatique `daily-relance-check-healthwatch`
+
+**Résultat : 10 relances créées, l'arriéré reste vidé.** Le seul lot arrivant à maturité aujourd'hui — **25/08 (10 contacts, J+10)** — est traité intégralement. Aucune exclusion, aucun report, aucun orphelin.
+
+### 🚦 Frein de file — 0 en entrée, 10 en sortie
+
+`list_drafts` en tête de run, **deux appels** (métadonnées puis vue complète, consigne du 16/08 sur l'instabilité de l'outil) : **`{}` les deux fois — file totalement vide.** Aucune conclusion négative tirée d'un appel isolé. Les 26 brouillons laissés hier soir (10 relances + 16 de prospection) sont donc tous partis — vérifié en direct, voir plus bas. Sortie de run à **10 brouillons**, très en dessous du seuil de ~25.
+
+### 🔎 Vérification en direct des 10 — double contrôle appliqué
+
+Le lot du 25/08 **n'avait jamais été vérifié en direct** (signalé comme tel par le run du 03/09). Contrôle complet ce run, les deux volets exigés depuis l'incident THL Finlande du 25/08 :
+
+- **Requêtes `to:` groupées** (2 appels, `includeTrash: true`) : **les 10 fils d'origine portent exactement 1 message, `labelIds: ["SENT"]`.** Aucune réponse rattachée, aucune relance antérieure.
+- **Requête `from:` groupée** sur les 9 domaines du lot plus l'adresse Gmail nominative de l'IAE (`after:2026/08/24`, `includeTrash: true`) : **résultat vide, `{}`.** Aucune réponse humaine hors fil, aucun accusé automatique détaché, aucun bounce.
+- **Anti-doublon** : aucune des 10 adresses n'apparaît dans une entrée « 🔁 RELANCE » antérieure du journal (contrôle du 25/08 reconduit — le run de prospection de ce jour-là avait déjà greppé domaine **et** nom d'organisation pour les 10, listes inchangées depuis).
+
+**Date d'envoi retenue : 2026-08-25, 10:34:35–10:36:46 UTC**, lue sur les fils eux-mêmes — pas la date de création des brouillons (06:17 le même jour). J+10 tombe donc bien aujourd'hui.
+
+**Aucun remplacement de bounce n'est parti avec ce lot** (le piège signalé hier avec ADELF) : le balayage `in:sent` du 25/08 ne remonte, en dehors des 10, que les 15 relances du matin et deux messages d'accompagnement d'essai produit — hors périmètre, voir ci-dessous.
+
+### ❌ Aucune exclusion sur le lot — mais un contact du 25/08 hors périmètre, signalé
+
+**ANSS Guinée (`bonivogui@anss-guinee.org`) — non éligible, et ce n'est pas un oubli.** Un message lui est bien parti le 25/08 à 18:23 UTC, donc à J+10 aujourd'hui, mais ce n'est pas un contact de prospection institutionnelle : c'est le **2e message d'accompagnement d'un essai produit** (le 1er datant du 24/08 à 09:41), sur deux fils distincts. Deux sollicitations sont déjà ouvertes ; une relance en ferait une 3e, exactement le motif du verrou IEA. **Laissé de côté**, comme aux runs précédents qui le suivaient sans jamais le relancer.
+
+### ✉️ Les 10 relances créées
+
+Toutes en réponse dans le fil d'origine (`replyToMessageId`), objet « Re: … » généré par Gmail, créées entre **06:24:10 et 06:24:30 UTC**. Ordre = original le plus ancien en premier.
+
+| # | Institution | Adresse | Langue | Fil d'origine | Brouillon |
+|---|---|---|---|---|---|
+| 1 | AFREhealth — African Forum for Research and Education in Health | `info@afrehealth.org` | EN | `1a037913ec54070d` | `r-2331338378156868582` |
+| 2 | SItI — Società Italiana di Igiene, Medicina Preventiva e Sanità Pubblica | `sitinazionale@tiscali.it` | EN | `1a037913540851bf` | `r1392985838525839550` |
+| 3 | PHAA — Public Health Association of Australia | `phaa@phaa.net.au` | EN | `1a037911cf54c623` | `r-8375306862341696645` |
+| 4 | SMSP — Sociedad Mexicana de Salud Pública | `smsp@smsp.org.mx` | **ES** | `1a03791136979d2d` | `r7280912886342753241` |
+| 5 | PHASA — Public Health Association of South Africa | `secretariat@phasa.org.za` | EN | `1a0379105be35140` | `r8164164397383928093` |
+| 6 | EPHA — Ethiopian Public Health Association | `info@etpha.org` | EN | `1a03790f7b5539e5` | `r1320038852716260180` |
+| 7 | IAE — Indian Association of Epidemiologists | `iae.association2015@gmail.com` | EN | `1a03790dbc088be3` | `r1198632657836301317` |
+| 8 | IPHA — Indian Public Health Association | `office@iphaonline.org` | EN | `1a03790d12bcd3a5` | `r1807861266620403905` |
+| 9 | ORAS-CONHU — Organismo Andino de Salud | `contacto@conhu.org.pe` | **ES** | `1a03790c52e4fbac` | `r-1053980567507239099` |
+| 10 | GHC — Gulf Health Council | `info@ghc.sa` | EN | `1a03790ba14f3ad7` | `r6250548234638906974` |
+
+**Rédaction.** Salutation identique à l'original (« Hi team, » ×8, « Hola, » ×2 — aucun nom réel dans ce lot), une phrase de rappel, une ligne sur l'accès Pro toujours ouvert sans engagement, puis **la question de clôture de l'original reprise mot pour mot**, avec son destinataire exact : « the institutions in your consortium », « an English-language cross-source feed still worth having », « a real gap for your members, or is that already covered », « ¿Tendría sentido para la SMSP? », « Would you take a look? », « does your network already get this through official channels », « the IAE membership », « is it not the kind of thing IPHA circulates », « ¿Le serviría al ORAS-CONHU como fuente de contraste? », « something the Council would have a use for ». **Quatre de ces questions laissent explicitement une porte de sortie au destinataire** (PHAA, EPHA, IPHA, SItI) — c'était déjà le cas dans les originaux, conservé.
+
+Le périmètre de l'offre est repris tel qu'il était formulé à chacun, pas uniformisé : **PHASA et IPHA** conservent l'accès étendu aux membres (« for your secretariat and for your members », « for the association and for anyone you point at it »), les huit autres restent sur le périmètre de l'original.
+
+**Aucun cas particulier à motif propre dans ce lot** : les 10 originaux se terminaient sur une question d'intérêt directe, aucun sur une demande de redirection vers une autre unité. Le gabarit générique du SKILL.md s'applique aux 10 sans exception.
+
+**🆕 Première application de la règle du 03/09 sur le domaine.** [[feedback_relance_no_domain_repeat_2026_09_03]] : **aucune des 10 relances ne répète le domaine** — ni « dot com », ni « punto com ». Le lien figure déjà dans le message d'origine cité par Gmail juste en dessous. Les relances du 03/09 portaient encore « healthwatch-global dot com » ×6 et « punto com » ×1 ; c'est le premier lot rédigé sous la nouvelle consigne.
+
+**Conformité de forme, vérifiée par `list_drafts` en vue complète sur les 10** (pas un échantillon) : aucun `htmlBody` fourni ; le `htmlBody` régénéré par Gmail sur le texte neuf ne contient que `<div dir="auto">` et des `<br/>`, **zéro balise `<a>`, zéro `https://`, zéro domaine avec un `.` littéral** ; chaque corps se termine par une question avant la signature.
+
+**Contrôle du bug d'envoi instantané du connecteur (incident du 15/08) : négatif.** Les 10 brouillons portent `labelIds: ["DRAFT"]`, un seul par adresse, aucun doublon. `list_drafts` **stable** sur les trois appels du run.
+
+### 🔧 Correction — l'alerte « lien cliquable » du run de prospection d'hier était une erreur de lecture
+
+Le run `daily-institutional-prospecting-healthwatch` du 03/09 a signalé, en fin d'entrée, que mes 10 brouillons de relance portaient tous `<a href="https://healthwatch-global.com/en">` et violaient donc le garde-fou du 02/08. **Vérification faite ce run sur le fil RSTMH (`1a032741fc8039f3`) en `FULL_CONTENT` : c'est faux, et le mécanisme de l'erreur est clair.**
+
+Le texte **neuf** de la relance du 03/09 est propre — « healthwatch-global dot com », aucune balise. La balise `<a href>` se trouve **exclusivement à l'intérieur du `<blockquote class="gmail_quote">`**, c'est-à-dire dans l'e-mail d'origine du 24/08 que Gmail recopie automatiquement sous la réponse. Le SKILL.md le prévoit explicitement : « le corps cité automatiquement par Gmail peut contenir l'ancien lien de l'original, c'est normal et sans impact ». **Le run de prospection a greppé `href=` sur le `htmlBody` entier sans distinguer le bloc cité du texte neuf.** Rien à corriger sur les relances ; les 10 sont d'ailleurs parties telles quelles ce matin.
+
+**En revanche, le constat déplacé d'un cran est réel et appartient à l'autre routine : les e-mails de prospection d'origine, eux, portent bien un lien cliquable.** Le message du 24/08 à RSTMH se termine par `Find us at <a href="https://healthwatch-global.com/en">healthwatch-global</a>` — un lien **et** un domaine avec un `.` littéral, les deux interdits par le garde-fou du 02/08. Idem sur les 10 originaux du 25/08 relancés ici (`<a href=".../en">` ×8, `.../es` ×2). **Rien touché** (règle `AGENTS.md`, ce sont les envois d'une autre routine) — **à trancher par David ou par un run de `daily-institutional-prospecting-healthwatch`.** À noter que ces liens partent depuis des semaines sans incident constaté ; le garde-fou visait la réécriture Gmail en `google.com/url?q=…`, pas un risque de délivrabilité prouvé.
+
+### 📊 Bilan cumulé
+
+**✅ Envoi des 10 relances et des 16 contacts de prospection du 03/09 vérifié en direct.** Balayage `in:sent` sur la journée du 03/09 (corbeille incluse) : les **10 relances sont parties entre 09:55:46 et 09:56:16 UTC** (écart création → envoi ~3 h 31, lot entier en ordre de relecture inverse — profil « relecture humaine », **pas** le bug d'envoi instantané), et les **16 contacts de prospection en deux salves** : 6 entre 09:58:40 et 09:59:38, puis 10 entre 16:32:48 et 16:34:29 UTC. Les 16 sont donc tous envoyés, et **l'alerte de cadence posée hier par le run de prospection est levée** : les 16 du lot remonté à 20 ne sont pas restés en file, le symptôme du 04-05/08 ne se reproduit pas.
+
+**Balayage des bounces** (`from:mailer-daemon`, `from:postmaster`, `subject:"Delivery Status Notification"`, `subject:"Undelivered Mail"`, `subject:Undeliverable`, `subject:"Mail delivery failed"`, `subject:"Adresse introuvable"`, `subject:"Address not found"`, `after:2026/09/02`, corbeille incluse) : **1 seul fil, celui de PNG (02/09)**, déjà consigné. **Aucun bounce neuf** — rien sur les 16 contacts de prospection partis hier, rien sur les 10 relances.
+
+**Bilan bounces cumulés depuis le 02/08 : 22** — recalculé depuis la liste nominative, **inchangé par rapport au 03/09**. Aucune entrée neuve, la liste des 22 (l. 3053 pour les 20 premières, plus Antigua en 21e et NDoH PNG en 22e) n'est pas reproduite ici.
+
+**Totaux au 2026-09-04, 06:26 UTC :**
+- **Prospectés : 344** = 328 (état du 03/09) **+ 16** (le lot du 03/09, envoi vérifié en direct ce run).
+- **Envoyés : 344** = 328 **+ 16**. Les 10 brouillons de relance en file ne sont pas partis.
+- **Délivrés : 322** = 344 envoyés − 22 (taille de la liste nominative de bounces), recompté dans le même mouvement que la liste, pas repris d'une ligne précédente.
+- **Taux de délivrabilité : 93,6 % (322/344)** — en hausse de 0,3 pt sur le 03/09 (93,3 %), les 16 envois d'hier n'ayant produit aucun bounce.
+- **⚠️ Réserve maintenue** : les 344 envoyés comptent **4 envois vers des institutions déjà contactées** (incident du 22/08), **1 seconde tentative sur Antigua** et **1 sur PNG**. Le nombre d'**institutions distinctes** atteintes reste inférieur d'autant.
+- **Relances : 237 envoyées** (227 au 03/09 + les 10 du lot du 24/08, parties hier), **10 en attente d'envoi** (lot du 25/08, créées ce run) — **total cumulé de relances créées depuis le début : 247** = 237 + 10.
+- **Réponses institutionnelles : aucune nouvelle** depuis le refus Neumann du 01/09.
+
+**Profondeur de file en fin de run : 10 brouillons** — les 10 relances de ce run, la prospection du jour n'ayant pas encore tourné à cette heure.
+
+### 📅 Prochains lots
+
+- **26/08** (12 contacts) → J+10 le **05/09** ; **27/08** → le **06/09**.
+- **30/08** (7 contacts, envoyés le 01/09 à 04:47–04:48) et **01/09** (9 délivrés sur 10) → J+10 le **11/09**.
+- **02/09** (9 contacts délivrés + CAPRISA) → J+10 le **12/09** ; `health_ministry@health.gov.pg` **écarté définitivement**.
+- **03/09** (16 contacts, envoyés le 03/09 en deux salves) → J+10 le **13/09**.
+- **Fiona Walsh** (`fiona.walsh@uni-heidelberg.de`) → statut comptable toujours en attente d'arbitrage, laissée en « sans réponse ». Sans effet opérationnel, sa relance unique est consommée.
+
+### ⚠️ Signalements
+
+- **L'alerte « lien cliquable » d'hier était un faux positif sur les relances, mais un vrai constat sur les e-mails de prospection** — voir la section « Correction » ci-dessus. Rien touché, à trancher par David.
+- **Un seul déclenchement de la routine aujourd'hui**, comme les 02 et 03/09. Le doublon du 01/09 ne s'est plus reproduit depuis.
+- **⚠️ Fichiers modifiés non touchés par cette routine, laissés tels quels** (règle `AGENTS.md`) : `marketing/qa/product-claims.manual.json` (modifié), `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis). Inchangés depuis le signalement du 02/09 — **3e run consécutif** à les voir en attente.
