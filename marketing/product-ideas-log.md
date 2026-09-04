@@ -3289,3 +3289,128 @@ inactive avant ce soir — non touchée). Compteur de foyers actifs : **129 → 
 Script jetable supprimé après vérification, conformément à la convention du dépôt
 (`scripts/*-YYYY-MM-DD.mjs`, ignoré par git, effacé une fois le correctif confirmé
 appliqué).
+
+---
+
+## 2026-09-04 — Proposition du jour
+
+**Signal terrain :** `product-feedback.md` n'a pas bougé depuis l'entrée
+`lepapapericles5` du 31/08 (piste « digest allégé » déjà mesurée et close le
+02/09 : il n'y avait rien à alléger). Les deux idées de ce soir viennent de
+l'événement du jour — le retrait, ce matin, du cron cVDPV africain pour
+violation des CGU de `polioeradication.org` (`0df093ae`) — et de ce que la
+vérification de ce retrait a fait apparaître en base.
+
+**Flotte de crons :** 53 entrées `cron:run:*` relues en prod, **aucune en
+`error`**. `check-mpox-sitrep`, `check-wer-cholera` et `sync-drc-sitrep` en
+`no_data`, état documenté comme légitime. Rien à traiter de ce côté ce soir.
+
+### 1. 🔴 15 des 16 lignes polio affichées portent un lien « Source » qui ne pointe pas vers la source — le champ mélange l'URL et une annotation humaine, et toutes les surfaces envoient la chaîne entière dans le `href`
+
+**Signal.** Le retrait du cron GPEI de ce matin repasse les 13 lignes cVDPV
+africaines en vérification manuelle. En allant vérifier ce que ces lignes
+citent réellement, mesuré en prod (`tqznwmpkokdzrszysbcm`, lecture seule) :
+**16 des 126 lignes affichées ont un `source` de la forme « URL + texte
+libre »**, dont **15 des 16 lignes polio** (toutes sauf la Palestine) :
+
+```
+https://polioeradication.org/about-polio/polio-this-week/ (GPEI, Global Polio Update slide deck, data in WHO HQ as of 18 August 2026)
+https://www.endpolio.com.pk/polioin-pakistan/district-wise-polio-cases (Pakistan National Emergency Operation Centre), corroborated by GPEI country updates as of 22 July 2026
+https://ncdc.gov.ng/diseases/sitreps (source retiree 2026-09-02 — voir description)
+```
+
+L'annotation est légitime et utile : elle dit *quelle édition* du bulletin
+hebdomadaire porte le chiffre, ce que l'URL seule ne dit pas. Le défaut n'est
+pas de l'avoir écrite, c'est que **rien dans le code ne distingue la partie
+URL du reste**. `sourceStatusOf()` fait `new URL(source)` — qui accepte cette
+chaîne, encode les espaces et rend `hostname = polioeradication.org`, donc la
+ligne reçoit la pastille « ✓ source officielle vérifiée ». Puis chaque surface
+publie la chaîne complète comme lien :
+
+| Surface | Ligne | Ce qui part dans le `href` |
+|---|---|---|
+| Fiche foyer | `app/[locale]/outbreak/[id]/page.tsx:569` | `o.source` brut |
+| Modale de détail (don / official / press) | `components/OutbreakDetailModal.tsx:1688,1699,1710` | `outbreak.source!` brut |
+| Pastilles du tableau (don / official / press) | `components/OutbreakTable.tsx:1217,1228,1239` | `outbreak.source` brut |
+| Export CSV, colonne `source_url` | `components/OutbreakTable.tsx:455` | `publishableSourceUrl()`, qui renvoie la chaîne telle quelle |
+| Export PDF (2 gabarits) | `components/OutbreakTable.tsx:482,601` | idem |
+| Page d'impression | `app/(print)/[locale]/outbreak/[id]/print/page.tsx:325` | idem |
+| E-mail d'alerte par maladie | `lib/disease-alert-email.ts:307` | `outbreak.source` brut |
+| E-mail d'alerte watchlist | `lib/watchlist-alert-email.ts:211` | `outbreak.source` brut, **et comme libellé visible** |
+
+Le navigateur reçoit
+`https://polioeradication.org/about-polio/polio-this-week/%20(GPEI,%20Global%20Polio%20Update%20slide%20deck,...)`,
+c'est-à-dire un chemin qui n'existe pas. `publishableSourceUrl()` existe déjà
+et est utilisé aux bons endroits — mais il ne fait que *retirer* les éditeurs
+interdits (correctif du 26/08), il ne vérifie jamais que ce qu'il rend est une
+URL.
+
+**Pourquoi ça compte maintenant.** C'est le jeu de données le plus exposé du
+produit : celui qu'un Incident Manager de l'OMS a testé le 22/08, celui qui a
+fait créer 13 lignes à la main le soir même. Un prospect qui clique sur
+« Source » depuis n'importe laquelle de ces lignes — site, CSV exporté, PDF ou
+e-mail d'alerte — n'atteint pas le bulletin. La pastille dit « source
+officielle vérifiée » et le lien ne mène nulle part.
+
+**Effort : petit.** Une fonction pure d'extraction (`sourceUrl()`), branchée
+dans `publishableSourceUrl()` et dans les huit surfaces qui contournent
+aujourd'hui le helper. Aucune écriture en base : le champ `source` garde son
+annotation, c'est sa lecture qui est corrigée.
+
+**Risque/inconnue :** une extraction trop stricte casserait des liens
+aujourd'hui valides. Mesuré avant : sur les 295 lignes de la table,
+**0 ligne d'archive** et 16 lignes affichées sont concernées, et aucune ligne
+affichée n'est en `unverified` — donc toutes ont bien une URL en tête de
+chaîne. Le repli reste `null` (pas de lien) plutôt qu'une URL devinée.
+
+### 2. 🔴 Le retrait du cron GPEI de ce matin invoque une règle qui n'existe nulle part en code — et il reste un fetch de ce domaine dans le dépôt
+
+**Signal.** Le message de `0df093ae` le dit lui-même : la restriction des CGU
+de `polioeradication.org` était **déjà documentée le 29/07** pour
+l'Afghanistan et le Pakistan, « mais n'avait pas été recroisée au moment de
+construire ce cron un mois plus tard ». Le cron a vécu 7 jours (28/08 →
+04/09). Ce n'est pas un oubli isolé : HWG a en réalité **deux catégories
+légales distinctes**, et une seule est représentée en code.
+
+| Catégorie | Éditeurs | Représentation en code |
+|---|---|---|
+| Ne jamais **citer** | `reliefweb.int`, sitreps PDF `ncdc.gov.ng` | `FORBIDDEN_SOURCE_DOMAINS` (1 entrée), testée avant toute liste d'autorisation, auditée tous les jours (section 4m) |
+| Ne jamais **récupérer automatiquement** | `polioeradication.org`, `cdc.gov.au`, `endpolio.com.pk`, ProMED | **rien** — uniquement des fichiers mémoire et des commentaires de code |
+
+La seconde catégorie n'est vérifiable que par la lecture attentive d'un humain
+qui se souvient d'une note écrite cinq semaines plus tôt. C'est exactement le
+mode de défaillance que le correctif du 26/08 a supprimé pour la première
+catégorie, laissé intact pour la seconde.
+
+**Constat mesuré, non résolu par le commit de ce matin.** Le message dit
+« plus aucun code du dépôt ne fetch ce domaine » : c'est vrai de
+`sync-who-regional`, faux du dépôt.
+`app/api/cron/data-quality/route.ts:127` porte toujours
+`GPEI_THIS_WEEK_URL = "https://polioeradication.org/about-polio/polio-this-week/"`
+et sa sonde de couverture polio (section 4j) le récupère **tous les jours**.
+Cette sonde ne lit que des dates et des noms de pays, n'écrit rien en base et
+ne recopie aucun chiffre — elle n'est donc pas du même ordre que le fetcher
+retiré ce matin. **Mais l'écart entre ce que le commit affirme et ce que le
+dépôt contient est réel, et l'arbitrage est juridique : il revient à David,
+pas à cette routine** (politique commune §10). Ce qui se construit ce soir,
+c'est de quoi le rendre visible et empêcher le prochain, pas de quoi trancher
+celui-là.
+
+**Effort : petit.** Un registre `RESTRICTED_FETCH_DOMAINS` à côté de la liste
+d'interdits existante, un script de contrôle statique qui balaie
+`app/api/cron/**` et `lib/**` à la recherche d'un littéral d'URL sur ces
+hôtes, et son branchement dans le hook `pre-commit` déjà en place (même patron
+que `check-cron-schedule.mjs`, déclenché seulement quand le commit touche
+ces chemins). Les occurrences connues sont déclarées explicitement, avec leur
+motif ; **toute occurrence nouvelle bloque le commit.**
+
+**Risque/inconnue :** un contrôle qui bloque un commit doit être quasi
+insensible aux faux positifs — il ne cherche que des noms d'hôtes littéraux, et
+le contournement documenté (`git commit --no-verify`) existe déjà pour le hook
+voisin.
+
+### Statut
+
+Deux idées **PROPOSÉES**. Les deux passent les trois garde-fous (petit effort,
+aucune migration ni écriture en prod, aucun envoi externe) — construction
+engagée dans la foulée, sous verrou de code partagé.
