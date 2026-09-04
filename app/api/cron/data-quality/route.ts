@@ -6,7 +6,6 @@ import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
 import { sendBrevoEmail } from "@/lib/brevo-send";
 import { isCollapse, isSpike, deathsExceedCases, isZeroData } from "@/lib/outbreak-guards";
 import { sourceStatusOf, sourceName, isForbiddenSourceHost, PUBLICLY_CLAIMED_SOURCES } from "@/lib/source-trust";
-import { fetchWithRetry } from "@/lib/fetch-retry";
 import { checkFetcherCoverage } from "@/lib/fetcher-coverage";
 
 export const dynamic = "force-dynamic";
@@ -109,105 +108,6 @@ function buildDataQualityDescription(diseaseEn: string, countryEn: string, cases
   const casesStr  = cases.toLocaleString("en");
   const deathsStr = deaths > 0 ? ` and ${deaths.toLocaleString("en")} death${deaths > 1 ? "s" : ""}` : "";
   return `${diseaseEn} in ${countryEn} — ${casesStr} cumulative case${cases > 1 ? "s" : ""}${deathsStr} reported as of ${date}.`;
-}
-
-// ── GPEI "Polio This Week" coverage probe ─────────────────────────────────────
-// polioeradication.org is one of the two MANUAL_WEEKLY_SOURCES of section 4f: no
-// cron writes polio rows, they are refreshed by hand. 4f can only notice that a
-// row we ALREADY have has gone stale — it is structurally blind to a country the
-// source reports and we hold no row for at all. That blind spot cost the entire
-// African cVDPV picture: on 2026-08-22 a WHO Incident Manager sent David the GPEI
-// update and asked whether we had read it. The base had three polio rows
-// (Afghanistan, Pakistan, Palestine) and not one African one, while GPEI's own
-// public page — already quoted verbatim in the Afghanistan row's `source` column
-// — listed DR Congo, Nigeria, Niger, the Central African Republic and Sudan that
-// same week. 13 rows were created by hand that evening
-// (scripts/add-cvdpv-africa-gpei-2026-08-22.mjs); this probe is what would have
-// surfaced the gap without a stranger telling us.
-const GPEI_THIS_WEEK_URL = "https://polioeradication.org/about-polio/polio-this-week/";
-
-// Countries the summary names the WHO way and the base names its own way. Only
-// entries verified against real rows belong here — an unlisted mismatch shows up
-// as a false "no row" review line, which is a question in an email, never a
-// write. That failure direction is deliberate: silence is what this whole
-// section exists to fix.
-const GPEI_COUNTRY_ALIASES: Record<string, string> = {
-  "democratic republic of the congo": "dr congo",
-  "united republic of tanzania": "tanzania",
-  "occupied palestinian territory": "palestine",
-  "state of palestine": "palestine",
-};
-
-function normalizeCountryKey(name: string): string {
-  const k = name
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z ]/g, "")
-    .replace(/\s+/g, " ")
-    .trim();
-  return GPEI_COUNTRY_ALIASES[k] ?? k;
-}
-
-const MONTHS = ["january","february","march","april","may","june","july","august","september","october","november","december"];
-
-interface GPEIWeek { asOf: string | null; countries: Array<{ name: string; note: string }> }
-
-// Text-level parse rather than a CSS selector: the page's markup is WordPress
-// boilerplate that changes with every theme bump, but the two anchors used here
-// ("Summary of new polioviruses this week" and "Country updates as of <date>")
-// are the editorial structure of the bulletin itself and have been stable for
-// years. Returns null rather than a partial result if either anchor is gone —
-// same fail-closed rule as verifyFromDON above.
-function parseGPEIThisWeek(rawHtml: string): GPEIWeek | null {
-  const lines = rawHtml
-    .replace(/<(script|style|noscript)[\s\S]*?<\/\1>/gi, " ")
-    .replace(/<\/(p|li|div|h[1-6]|tr)\s*>|<br\s*\/?>/gi, "\n")
-    .replace(/<[^>]+>/g, " ")
-    .replace(/&nbsp;|&#160;/gi, " ")
-    .replace(/&#8217;|&rsquo;/gi, "'")
-    .replace(/&amp;/gi, "&")
-    .replace(/[ \t\u00a0]+/g, " ")
-    .split("\n")
-    .map((l) => l.trim())
-    .filter(Boolean);
-
-  const startIdx = lines.findIndex((l) => /new polioviruses this week/i.test(l));
-  if (startIdx < 0) return null;
-  const asOfIdx = lines.findIndex((l, i) => i > startIdx && /country updates as of/i.test(l));
-  if (asOfIdx < 0) return null;
-
-  let asOf: string | null = null;
-  const asOfMatch = lines[asOfIdx].match(/as of\s+(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})/i);
-  if (asOfMatch) {
-    const month = MONTHS.indexOf(asOfMatch[2].toLowerCase());
-    if (month >= 0) {
-      asOf = `${asOfMatch[3]}-${String(month + 1).padStart(2, "0")}-${asOfMatch[1].padStart(2, "0")}`;
-    }
-  }
-
-  // "Nigeria: one cVDPV2 case, one cVDPV3 case and one cVDPV2-positive
-  // environmental sample" — one bullet per country, between the two anchors.
-  const countries: Array<{ name: string; note: string }> = [];
-  for (let i = startIdx + 1; i < asOfIdx; i++) {
-    const m = lines[i].match(/^([A-Z][A-Za-z'.\- ]{2,60}?)\s*:\s*(.+)$/);
-    if (m) countries.push({ name: m[1].trim(), note: m[2].trim() });
-  }
-  return { asOf, countries };
-}
-
-async function fetchGPEIThisWeek(): Promise<GPEIWeek | null> {
-  // fetchWithRetry: 2 attempts, 8s each (unchanged from the original
-  // single-attempt timeout — see the sync-usda-aphis lesson, 2026-09-02).
-  // Called once per run, so no per-item budget concern. See
-  // lib/fetch-retry.ts (2026-09-02).
-  const { response: res } = await fetchWithRetry(GPEI_THIS_WEEK_URL, { headers: FETCH_HEADERS }, { attempts: 2, timeoutMs: 8000, backoffMs: [1000] });
-  if (!res || !res.ok) return null;
-  try {
-    return parseGPEIThisWeek(await res.text());
-  } catch {
-    return null;
-  }
 }
 
 // Delegates to the shared helper (lib/brevo-send.ts), which throws both on a
@@ -697,8 +597,12 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
   // sens : un cron peut tamponner sincèrement pendant qu'un volet de son travail
   // échoue en silence (sync-paho-alerts, 16 jours sur le sitrep rougeole, réparé
   // le 30/08). Le tampon dit « quelqu'un a relu cette source », pas « tout ce que
-  // cette source publie a été ingéré » — c'est la section 4j, et non celle-ci,
-  // qui pose la seconde question.
+  // cette source publie a été ingéré » — cette section ne pose pas la seconde
+  // question. (La 4j qui la posait pour la polio, en récupérant elle-même
+  // polioeradication.org chaque jour, a été retirée le 2026-09-04 sur décision de
+  // David : ce site est un éditeur qu'on n'a pas le droit de récupérer
+  // automatiquement, voir RESTRICTED_FETCH_DOMAINS dans lib/source-trust.ts. Ce
+  // trou de couverture reste réel, sans contrôle automatique pour le détecter.)
   const staleExemptions = DASHBOARD_SOURCES.map((d) => ({
     ...d,
     ageDays: d.verifiedOn ? Math.round((Date.now() - new Date(d.verifiedOn).getTime()) / 86_400_000) : null,
@@ -1056,71 +960,6 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
     }
   }
 
-  // ── 4j. GPEI coverage — countries the source reports, the base doesn't hold ───
-  // See the parseGPEIThisWeek block above for why this exists. Two distinct
-  // questions, both unanswerable from the rows alone:
-  //   (1) does every country in this week's summary have an ACTIVE polio row?
-  //   (2) is our newest polio row anywhere near the bulletin's own cut-off date?
-  // (2) is not a duplicate of 4f's 30-day manual-source tier: GPEI republishes
-  // weekly, so a hand-refresh that quietly stops is visible here after ~10 days
-  // instead of 30, and it is measured against what the source actually says it
-  // covers rather than against wall-clock time.
-  const gpei = await fetchGPEIThisWeek();
-  if (!gpei) {
-    // Deliberately silent: an unreachable page or a retitled section is not a
-    // data anomaly, and a daily "GPEI illisible" line would train the reader to
-    // skim this email. The consequence is that a permanently broken parse stays
-    // invisible here — the cron log below carries it instead.
-    console.log("[data-quality] 4j — page GPEI illisible ou inchangée dans sa structure, contrôle de couverture polio sauté.");
-  } else if (gpei.countries.length > 0) {
-    const { data: polioRows, error: polioErr } = await supabase
-      .from("outbreaks")
-      .select("country, country_en, active, date")
-      .or("disease_en.ilike.*polio*,disease.ilike.*polio*");
-    if (polioErr) {
-      needsReview.push({
-        label: "[GPEI] Contrôle de couverture polio impossible",
-        detail: `Lecture des lignes polio en échec (${polioErr.message}) — la page GPEI a bien été lue (${gpei.countries.length} pays cette semaine), la comparaison n'a pas pu se faire.`,
-      });
-    } else {
-      const activeKeys = new Set<string>();
-      const anyKeys    = new Set<string>();
-      let newestPolioDate: string | null = null;
-      for (const r of polioRows ?? []) {
-        const key = normalizeCountryKey(r.country_en ?? r.country ?? "");
-        if (!key) continue;
-        anyKeys.add(key);
-        if (r.active) {
-          activeKeys.add(key);
-          if (r.date && (!newestPolioDate || r.date > newestPolioDate)) newestPolioDate = r.date;
-        }
-      }
-
-      for (const c of gpei.countries) {
-        const key = normalizeCountryKey(c.name);
-        if (activeKeys.has(key)) continue;
-        const dormant = anyKeys.has(key);
-        needsReview.push({
-          label: `[GPEI] Polio / ${c.name}`,
-          detail: dormant
-            ? `Le GPEI rapporte « ${esc(c.note)} » cette semaine, mais la ligne polio de ce pays est INACTIVE en base — la réactiver et la remettre à jour depuis ${GPEI_THIS_WEEK_URL}.`
-            : `Le GPEI rapporte « ${esc(c.note)} » cette semaine et AUCUNE ligne polio n'existe pour ce pays — trou de couverture, pas une donnée périmée. Source : ${GPEI_THIS_WEEK_URL}${gpei.asOf ? ` (arrêtée au ${gpei.asOf})` : ""}.`,
-        });
-      }
-
-      const GPEI_MAX_LAG_DAYS = 10;
-      if (gpei.asOf && newestPolioDate) {
-        const lagDays = Math.round((new Date(gpei.asOf).getTime() - new Date(newestPolioDate).getTime()) / 86_400_000);
-        if (lagDays > GPEI_MAX_LAG_DAYS) {
-          needsReview.push({
-            label: "[GPEI] Lignes polio en retard sur le bulletin",
-            detail: `Le GPEI publie des données arrêtées au ${gpei.asOf} ; la ligne polio la plus récente en base est datée du ${newestPolioDate} (${lagDays}j d'écart, seuil ${GPEI_MAX_LAG_DAYS}j). Aucun cron n'alimente ces lignes : rafraîchir à la main depuis ${GPEI_THIS_WEEK_URL}.`,
-          });
-        }
-      }
-    }
-  }
-
   // ── 4k. Multi-day regression watermark on locked / PHEIC rows ─────────────
   // Section 3 only ever compares against YESTERDAY's snapshot (`.eq("snapped_at",
   // yesterday)` above), and sync-outbreaks rewrites the current day's snapshot
@@ -1223,10 +1062,12 @@ async function runDataQuality(_req: NextRequest, supabase: SupabaseClient) {
 
   // ── 4l. Rows that just left the map ───────────────────────────────────────
   // Everything above this line reads `rows`, i.e. `.eq("active", true)`. The moment
-  // a row is deactivated it drops out of all eleven sections at once — staleness,
+  // a row is deactivated it drops out of all sections at once — staleness,
   // regression, CFR, duplication, the 14-day watermark — and becomes indistinguishable
-  // from a country with no outbreak at all. Section 4j is the sole exception, and
-  // only for polio, only because it compares against an external source.
+  // from a country with no outbreak at all. Until 2026-09-04 section 4j was the sole
+  // exception (it compared polio rows against polioeradication.org directly, so a
+  // deactivated row could still be flagged) — removed that day, see the note near
+  // the "quelqu'un a relu cette source" comment above for why.
   //
   // Real case, 2026-08-24: Cholera/Angola and Cholera/Yemen had been switched off
   // while stuck at 31/05 figures, and WHO kept publishing for both (5,361 cases /

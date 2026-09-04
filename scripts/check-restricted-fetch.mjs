@@ -39,11 +39,6 @@ const SCAN_DIRS = ["app", "lib"];
 // décision, pas une exemption commode : elle dit pourquoi cette URL peut rester.
 const ACKNOWLEDGED = [
   {
-    file:   "app/api/cron/data-quality/route.ts",
-    domain: "polioeradication.org",
-    why:    "Sonde de couverture polio (section 4j) : lit les noms de pays et la date d'arrêt du bulletin pour repérer un pays que la source rapporte et que la base ne contient pas. N'écrit rien en base et ne recopie aucun chiffre. ⚠️ NON TRANCHÉ — le message de 0df093ae (2026-09-04) affirme « plus aucun code du dépôt ne fetch ce domaine », ce qui est vrai de sync-who-regional et faux du dépôt. Arbitrage juridique laissé à David : garder la sonde, ou la retirer comme le fetcher.",
-  },
-  {
     file:   "app/api/cron/sync-who-regional/route.ts",
     domain: "reliefweb.int",
     why:    "RELIEFWEB_BASE + queryReliefWeb() : code mort derrière `const reliefWebOk = false` (2026-07-06), gardé en dur pour qu'un appname approuvé ne puisse jamais rallumer l'ingestion en silence. Aucun appel possible.",
