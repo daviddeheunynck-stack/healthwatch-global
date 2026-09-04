@@ -54,17 +54,19 @@ Le run de 9h ce matin avait appliqué la **ligne de base du 23/07** (mise en fil
 
 ---
 
-### 3️⃣ 🔒 DM TOUJOURS EN FILE, INCHANGÉ — **trésor Ndaye** (Ministère de la Santé publique, Kinshasa)
+### 3️⃣ 🔒 DM EN FILE, TEXTE CORRIGÉ — **trésor Ndaye** (Ministère de la Santé publique, Kinshasa) — ⚠️ **le jet 4 de ce matin présupposait la résolution, corrigé sur demande de David en session interactive**
 
-Rédigé et double-checké ce matin par `linkedin-hwg-monitoring` (4 jets, relecteur `VERDICT: ENVOYER` sans réserve), mis en file parce que la présence de David était établie à ce moment-là. **Ce run ne l'envoie pas** : le SKILL est explicite, un DM en attente ne part jamais automatiquement par une session suivante sans validation explicite de David. Ancienneté : moins d'un jour, donc pas de revérification à la source exigée (§9, seuil 7 jours).
+Rédigé et double-checké ce matin par `linkedin-hwg-monitoring` (4 jets, relecteur `VERDICT: ENVOYER` sans réserve), mis en file parce que la présence de David était établie à ce moment-là. **Ce run ne l'a pas envoyé** : le SKILL est explicite, un DM en attente ne part jamais automatiquement par une session suivante sans validation explicite de David.
 
-**Texte complet, prêt, jamais envoyé :**
+**🔴 Défaut trouvé au double-check post-archivage, en session interactive avec David.** Le texte mis en file ce matin (« *Je suis curieux du mécanisme qui finit par reclasser ce résidu chez vous* ») affirmait que le résidu finit par se résorber. Or sa réponse complète, intégralement relue, est : « **Jusqu'à présent aucune suite.** » — quatre mots ambigus entre deux lectures très différentes, empruntées à la dichotomie que David avait lui-même posée le 26/08 (« *un retard de clôture des dossiers se résorbe pendant que les cas montent, alors qu'une part sans issue déclarée, elle, ne se résorbe pas* ») : soit le résidu n'a pas bougé depuis le 15 août, soit aucun rapport ne permet encore de trancher. L'affirmative du jet 4 penchait vers la lecture la moins probable des deux, sans le signaler.
 
-> Merci pour la mise à jour. Je suis curieux du mécanisme qui finit par reclasser ce résidu chez vous.
+**Texte corrigé, en file — jamais envoyé par la routine :**
 
-`QA : mécanique PASS au jet 4 (100 car., 1 phrase, fr/fr, 0 blocker) | relecteur 4 passes, jet 4 VERDICT: ENVOYER sans réserve | faits cités : aucun | statut : en file de validation depuis le 04/09 ~11h`
+> Aucune suite, ça veut dire que le résidu n'a pas bougé sur les rapports parus depuis le 15 août, ou qu'aucun rapport ne permet encore de trancher ?
 
-**Son message du 04/09 10:45 (« Jusqu'à présent aucune suite. ») reste le dernier du fil**, rien n'a bougé à 14h.
+`QA : mécanique PASS (147 car., 1 phrase, fr/fr, 0 blocker) | relecteur 12/12 PASS, VERDICT: ENVOYER — attribution vérifiée : les deux branches de l'alternative sont symétriques, aucune n'est présentée comme la lecture retenue | faits cités : « 15 août », vient du fil (point de situation INSP du 26/08), pas de la base | statut : en file de validation, jamais envoyé par la routine`
+
+**Son message du 04/09 10:45 (« Jusqu'à présent aucune suite. ») reste le dernier du fil.**
 
 ---
 
