@@ -122,7 +122,11 @@ La convention interne est donc assumée et cohérente. **Le problème n'est pas 
 ---
 
 ### 5️⃣ Arbre de travail — fichiers ne relevant pas de cette routine
-Conformément à `AGENTS.md`, ce run ne stage que `marketing/content-log.md`. Laissés tels quels et signalés, inchangés par ce run : `app/api/cron/sync-who-regional/route.ts` (modifié, non commité — cf. §4, volontairement pas touché), `marketing/qa/product-claims.manual.json` (modifié, non commité), `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis). `marketing/qa/claimable-facts.json` et `product-claims.json` ont été régénérés par ce run (registres QA) mais ne sont pas stagés.
+Conformément à `AGENTS.md`, ce run ne stage que `marketing/content-log.md`. Laissés tels quels et signalés, inchangés par ce run : `marketing/qa/product-claims.manual.json` (modifié, non commité), `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` (non suivis).
+
+⚠️ **Correction post-commit.** À l'ouverture du run, `app/api/cron/sync-who-regional/route.ts` était modifié et non commité ; il ne l'est plus. **Une autre session l'a commité pendant ce run**, à 08h47, sous `0df093ae` — *« fix(sync-who-regional): retire le cron cVDPV africain, violation CGU polioeradication.org »*. Ce fichier n'a à aucun moment été ouvert en écriture ni stagé par cette routine.
+
+**Conséquence directe sur ce run, à signaler :** ce commit repasse les **13 lignes Polio cVDPV africaines** en vérification manuelle parce que `polioeradication.org` interdit ce fetch — même famille que [[legal_reliefweb_noncommercial]] et [[legal_ncdc_nigeria_confidential_sitreps_2026_09_02]]. Le candidat **Poliomélite / Soudan du Sud + Mali** écarté au §1 de cette entrée était précisément sourcé GPEI : il avait été écarté pour faiblesse d'angle, il aurait de toute façon été **interdit de publication**. À retenir pour les prochains créneaux : **ne plus proposer d'angle adossé à une source GPEI** tant que la situation n'est pas tranchée. `marketing/qa/claimable-facts.json` et `product-claims.json` ont été régénérés par ce run (registres QA) mais ne sont pas stagés.
 
 ---
 
