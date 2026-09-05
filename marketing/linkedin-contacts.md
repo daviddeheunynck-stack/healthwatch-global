@@ -1,6 +1,108 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
+## 📅 Session linkedin-hwg-followup-check-2 — 05/09/2026 (17h, 2e des 2 créneaux après-midi) — 🔴 **Ngoy Guillaume a répondu à 14h49 — cas positif de MVE en cours d'investigation à Bunia + demande de passer sur WhatsApp : garde-fou §10, rien envoyé, décision à David** — ✅ **1 commentaire publié** (Yilkal Kebede, détail dans `content-log.md`) — ⚠️ **capacité d'invitation toujours inerte 3 h après le run de 13h** — ✅ **2 nouveaux abonnés, quota de suivis au plafond (10/10) donc aucun follow-back possible**
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` du 05/09 dans ce fichier ni dans `content-log.md` à l'ouverture ; seules y figuraient les entrées de `linkedin-hwg-monitoring` (9h) et `linkedin-hwg-followup-check` (13h) → **premier déclenchement de cette routine aujourd'hui**. Horloge `Sat Sep 5 17:09 2026`. Branche : **master**, arbre propre. Registre de faits régénéré à 17h11 (224 faits, 106 lignes affichées, 3 périmés).
+
+**Décision de régime : file de validation.** Tranchée à l'ouverture sur la trace (3 commits entre 15h04 et 15h44, journée de présence continue, et le précédent du 04/09 invoqué par le run de 13h démenti par les faits — David était présent ce jour-là et a tapé deux ordres), puis **confirmée en cours de run** par le commit `fbe4901b` tombé à **17h23**, 14 minutes après l'ouverture. Raisonnement complet dans `content-log.md` §1.
+
+---
+
+### 1️⃣ 🔴 NGOY GUILLAUME A RÉPONDU — deux points à trancher par David, **rien envoyé, rien mis en file**
+
+`/in/ngoy-guillaume-76b8b2267/`. Notre relance de 14h43 (envoyée au run de 13h sur ordre explicite de David, reprise littérale de la question du 17/08 restée sans réponse) **a produit une réponse en 6 minutes**, après 19 jours de silence.
+
+**Verbatim reçu, 14h49 :**
+
+> Bonjour DAVID je t'espère en bonne santé on peut se parler apres je suis dans des instigations d'un cas positif de la MVE dans l'AS Bigo/BUNIA
+>
+> Voici mon Whatsapp : +243974488400
+
+**Trois éléments distincts, aucun ne se traite en autonomie :**
+
+1. 🔴 **Changement de canal proposé (WhatsApp) — garde-fou explicite du SKILL** (« *Garde-fous — s'arrêter et attendre David plutôt qu'agir* … *changement de canal proposé* », politique commune §10). **Aucune réponse rédigée, aucun brouillon mis en file** : le contenu d'une réponse dépend entièrement de la décision de David sur le canal, et écrire un texte qui l'ignore ou qui la présume reviendrait à trancher à sa place. **Le numéro n'a été ni enregistré ailleurs, ni utilisé, ni recopié dans un autre fichier que celui-ci.**
+2. **Il diffère l'échange** (« *on peut se parler apres* ») : il est en investigation de terrain. Rien n'est dû immédiatement, et une relance rapide serait déplacée. Notre question du 17/08 reste sans réponse — c'est le 2e report, mais pour un motif nouveau et légitime cette fois.
+3. **Il est passé au tutoiement** (« *je t'espère en bonne santé* ») alors que tout le fil est en vouvoiement depuis le 16/08. Conformément à [[feedback_linkedin_tutoiement_mirror_contact]], **une réponse future devra être au tutoiement** — à ne pas rejouer en « vous » par continuité de frappe avec les 3 messages précédents.
+
+📌 **Ce fil est le seul de tout le corpus où un interlocuteur écrit depuis une investigation en cours.** Sur le fond du dossier HWG (la ventilation infranationale qui disparaît à l'agrégation nationale), c'est la source la plus directe que nous ayons jamais eue — raison de plus pour ne pas la brûler avec une réponse mal calibrée.
+
+⚠️ **Rappel du run de 13h, toujours valable** : la recherche `/messaging/` n'indexait pas ce fil (zéro résultat pour « Ngoy » comme pour « Guillaume »). **Ce run n'a pas eu à s'y fier** — le fil est remonté normalement en tête de la liste des conversations, la réponse de 14h49 étant la plus récente de la messagerie. La panne d'indexation reste non expliquée et non retestée en tant que telle.
+
+---
+
+### 2️⃣ ✅ MESSAGERIE — un seul message entrant, aucun autre à traiter
+
+**10 conversations les plus récentes relues + filtre « non lus »** (`/messaging/?filter=unread`). Le seul non lu est l'**offre promotionnelle LinkedIn Premium du 28 juillet** : promo hors sujet, ignorée sans réponse ni brouillon, conformément au SKILL.
+
+**Suivi des envois récents — aucune réponse nouvelle en dehors de Ngoy Guillaume :**
+- **Dr. Siaka Condé** (envoyé 13h55 ce jour) — notre message reste le dernier, 3 h de silence, normal.
+- **Dr. Malachie MANAOUDA** (10h02) — notre message reste le dernier.
+- **James Schlitt** (04/09 18h16, CTA 23h20) — toujours le dernier message. **Plus de 22 h de silence**, inhabituel pour lui (il répond en général sous 1 à 3 h). 3e créneau consécutif à le constater.
+- **Christian BABOKO** (04/09 18h58, CTA 23h20) — toujours le dernier message.
+- **trésor Ndaye** (04/09), **SOUAD BELKACEMI.** (03/09), **Julien Tuba** (03/09), **Dossa Paul YAOÏTCHA** (02/09), **Harvey Basivikidi** (01/09) — nos messages restent les derniers, rien de dû.
+- **John Omari Baso** (« Bonjour David. » du 03/09) et **Isaias Fernandes Co** (« 👍 » du 03/09) — inchangés, décisions maintenues (ne rien envoyer avant qu'il écrive / rien avant la semaine du 14/09).
+
+**Quota DM : 3 envoyés / 8, inchangé depuis le run de 13h.** Aucun DM rédigé ni envoyé ce run.
+
+---
+
+### 3️⃣ ✅ SUIVI DES FILS DE COMMENTAIRE (§1 et §14) — **aucun tour neuf nulle part**
+
+Les quatre posts rouverts **directement**, pas jugés sur les notifications :
+
+| Fil | État constaté à ~17h20 |
+|---|---|
+| **Tambe Elvis Akem** (`7501577237150994432`), commentaire de ~10h05 | 5 commentaires énumérés : le nôtre, Basile Ngontcha, Firdaus Kharas, et **les deux réponses de l'auteur, toutes deux adressées à eux, pas à nous**. **Il n'a toujours pas répondu** (7 h). Sous-fil ouvert. |
+| **Keneth Mugume** (`7501721704931684353`), commentaire de ~11h | **Notre commentaire est toujours le seul du post.** Aucune réponse, aucune réaction. |
+| **Ifedayo Adetifa** (`7501417483380113408`), §14 | 8 commentaires, **notre réponse du 04/09 ~15h35 reste la dernière du sous-fil**. Inchangé depuis 13h. |
+| **Fassou Mathias Grovogui / post Pete Macharia** (`7501552252575215617`), §14 | 8 commentaires après déroulé, **notre réponse du 04/09 ~15h30 reste la dernière du sous-fil**. La notification « Meg Wirth et 1 autre personne ont réagi à votre commentaire » porte bien sur des **réactions**, pas une réponse — reconfirmé sur le post. |
+
+---
+
+### 4️⃣ ⚠️ INVITATIONS — capacité toujours inerte, et l'hypothèse de la file perd du poids
+
+**Quota inchangé : 1/7** (Keneth Mugume, sans note, run de 9h). **Retest mené jusqu'au bout, conformément à la règle du carry-over reporté** (`report-conventions.md` : au 2e report, retester la prémisse, ne pas recopier le motif).
+
+- **Menu « Plus » du profil de Yilkal Kebede** : le menu s'ouvre, « Se connecter » est bien présent comme `a[role="menuitem"]`. Cliqué **une seule fois**, avec vérification du slug dans le même appel JS. **Aucun effet** : pas de modale, pas de toast, pas de mention « En attente ».
+- **Vérification à la source, pas au symptôme** : `/mynetwork/invitation-manager/sent/` relu après la tentative. La plus récente reste **Keneth Mugume, « Envoyé il y a 6 heures »**. **Aucune invitation n'est partie, aucun doublon créé.**
+- **Arrêt après une tentative** (politique commune §7 : ne jamais recliquer à l'aveugle, un 2e clic crée un doublon). Le run de 13h en avait déjà fait deux sur ce même profil, également sans effet.
+- 🔎 **Élément neuf, qui affaiblit l'hypothèse dominante du run de 13h** : la file d'invitations en attente est passée de **« Personnes (99) » à « Personnes (98) »** entre 13h et 17h. Si le blocage venait d'un plafond de file à 99, la libération d'un créneau aurait dû rendre l'émission possible — **elle ne l'a pas fait**. L'hypothèse restante la plus plausible est un **plafond d'émission côté plateforme** (journalier ou hebdomadaire), distinct du plafond mensuel de notes personnalisées, lui aussi toujours épuisé.
+
+**Conséquence assumée** : **aucun candidat de connexion instruit ce run**, conformément à l'instruction du carry-over de 13h (« si elle est toujours inerte, ne pas dépenser de temps à instruire des candidats »). **6 créneaux perdus, faute de capacité, pas faute de profils.** Candidat prêt dès qu'elle revient : **Yilkal Kebede** (2e degré, 5 relations en commun, suivi, et désormais commenté).
+
+**Invitations reçues : 2, inchangées** — Zachariah G. Houdari et OLAOLUWA PHILIP. Décisions du 31/08 maintenues, aucun élément neuf, non rejugées.
+
+---
+
+### 5️⃣ ✅ RÉSEAU — **2 nouveaux abonnés**, mais quota de suivis au plafond haut (10/10) : aucun follow-back possible
+
+Liste des abonnés relue triée par récence. **Deux noms neufs sont apparus au-dessus de Caroline Museka**, qui était en tête au run de 13h — ce sont donc des abonnés **postérieurs à 13h** :
+
+| Profil | Intitulé | Décision |
+|---|---|---|
+| **Fayssal ZEMMOUCHI** `/in/ACoAAD6DImwBI8oUhlOdUdLysHtSiUHpLvWanXw` | *Médecin chez Institut Pasteur d'Algérie* | ⭐⭐ **Pertinent** (Institut Pasteur, réseau de laboratoires de référence). Bouton « Suivre » — **non suivi, quota épuisé**. À traiter en priorité demain. |
+| **Mahamba Nzanzu** `/in/ACoAAEfsDDwBWvDg3qfGt35MJwa9OXQ0KDtQvQ8` | *Spécialiste en Santé Publique - Analyse et Évaluation des politiques, programmes et systèmes de santé internationale* | ⭐ Périmètre santé publique, plus politiques que surveillance. Bouton « Suivre » — **non suivi, quota épuisé**. À réévaluer demain. |
+
+⚠️ **Identifiés par leur lien opaque `ACoAA…` et non par leur nom affiché** (politique commune §12) : la page des abonnés n'expose pas les slugs vanity. Ces identifiants sont stables et suffisent à les retrouver.
+
+**Miriam Mbueshi** apparaît aussi en tête, mais déjà « Suivi » et déjà au corpus (bloquée en commentaire jusqu'au 09/09) — rien à faire.
+
+**Quota suivis : 10/10, plafond haut atteint au run de 13h.** Aucun suivi ce run, et ce n'est **pas** un renoncement de pertinence : deux candidats légitimes sont identifiés et documentés ci-dessus, ils attendent la remise à zéro du quota. **Relations : aucune acceptation neuve** depuis le relevé de 13h.
+
+---
+
+### 6️⃣ 🔁 CARRY-OVER POUR LE CRÉNEAU DE 9h (06/09) — côté contacts
+
+1. 🔴 **LE POINT LE PLUS IMPORTANT — Ngoy Guillaume, décision de David en attente.** Il a répondu, il est en investigation d'un cas positif de MVE à Bigo/Bunia, et **il propose de passer sur WhatsApp**. Rien envoyé, rien en file, aucun brouillon rédigé (garde-fou §10). **Ne pas rédiger de réponse avant que David ait tranché le canal.** Quand ce sera fait : **tutoiement obligatoire** (il a basculé), et notre question du 17/08 reste ouverte. Verbatim complet en §1.
+2. ⚠️ **Invitations : ne pas retenter un 3e clic sur Yilkal Kebede.** L'émission est inerte depuis ~14h sur deux surfaces et trois tentatives cumulées (2 au run de 13h, 1 ici), et la baisse de la file 99→98 n'a rien débloqué. **Reconstater d'abord sur un profil différent** avant de conclure quoi que ce soit — si c'est encore inerte, ne pas dépenser de temps à instruire des candidats de connexion, et le signaler à David comme un blocage de plateforme à surveiller.
+3. ⭐⭐ **Fayssal ZEMMOUCHI** (Institut Pasteur d'Algérie) et ⭐ **Mahamba Nzanzu** — nouveaux abonnés depuis 13h, **follow-back dû dès la remise à zéro du quota de suivis**, non fait ce run uniquement parce que le plafond 10/10 était déjà atteint (§5).
+4. ⭐ **James Schlitt** — nos deux envois du 04/09 restent les derniers, **plus de 22 h de silence**, 3e créneau consécutif à le constater pour quelqu'un qui répond d'ordinaire sous 1 à 3 h. Ne rien relancer, mais le noter : si rien n'est venu demain matin, considérer le fil comme en pause plutôt que comme actif.
+5. ⭐ **Christian BABOKO**, **Dr. Siaka Condé** (envoyé 13h55), **Dr. Malachie MANAOUDA** (10h02) — nos messages sont les derniers, aucune réponse, rien de dû. Le fil Condé rouvre une relance déjà servie : **ne pas en ajouter une autre** avant qu'il écrive.
+6. **Inchangés, à reporter tels quels** : ⭐ John Omari Baso (ne rien envoyer avant qu'il écrive, réexporter le fil en entier avant tout brouillon) ; ⭐⭐ Seynudé Jean-Fortune DAGNON (attendre l'acceptation) ; ➖ Yakoza Nyirenda (invitation sans note du 30/08 toujours en attente) ; ⭐⭐ Isaias Fernandes Co (rien avant la semaine du 14/09) ; ⭐⭐ Dr. Ibrahima Socé Fall (toujours sans hook honnête) ; ⭐⭐ Gail Carson (dossier clos) ; ⭐⭐ Jacques Delors TOUMANSIE MFONKOU et ⭐⭐ Ofelia CAZACU ; ⭐⭐ Céline FRANÇOIS (dès qu'elle republie) ; ⭐⭐ Delphine CASAMATTA et David Moreau ; 🕐 Alhassan Fouard Kanu (identité non levée, ne pas agir sans slug) ; ❌ **Dr R Hyacinthe ZABRE** (clos, hors périmètre) ; ❌ Zachariah G. Houdari et OLAOLUWA PHILIP (invitations reçues, décisions du 31/08 maintenues).
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check — 05/09/2026 (13h, 1er des 2 créneaux après-midi) — ✅ **2 DM envoyés en fin de run, sur ordre explicite de David tapé en session** (Dr. Siaka Condé, Ngoy Guillaume) — ✅ **3 suivis (quota 10/10, plafond haut)** — ⚠️ **invitation impossible à émettre sur deux surfaces alors qu'une est partie à 11h** — ❌ 0 commentaire (détail des 5 jets dans `content-log.md`) — 🔴 **découverte majeure : le brouillon Ngoy Guillaume mis en file ce matin était faux, un vrai fil actif depuis le 16/08 existait, invisible à la recherche `/messaging/`**
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` du 05/09 dans ce fichier ni dans `content-log.md` à l'ouverture ; seules les entrées de `linkedin-hwg-monitoring` (9h) y figuraient → **premier déclenchement de cette routine aujourd'hui**. Horloge `Sat Sep 5 13:03 2026`. Branche : **master**. Registre de faits régénéré à 13h05 (224 faits, 106 lignes affichées, 3 périmés).

@@ -2,6 +2,145 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session linkedin-hwg-followup-check-2 — 05/09/2026 (17h, 2e des 2 créneaux après-midi) — ✅ **1 commentaire publié (4 jets, 3 rejets sur des défauts tous distincts)** — 🔴 **Ngoy Guillaume a répondu à 14h49 : cas positif de MVE en cours d'investigation à Bunia, et proposition de passer sur WhatsApp — garde-fou §10, décision à David** ; ⚠️ **régime file de validation confirmé par un commit tombé PENDANT le run**
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` datée du 05/09 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture ; les seules entrées du jour sont celles de `linkedin-hwg-monitoring` (9h) et `linkedin-hwg-followup-check` (13h) → **premier déclenchement de cette routine aujourd'hui**. Horloge à l'heure (`Sat Sep 5 17:09 2026`). Branche vérifiée : **master**, arbre propre à l'ouverture. Registre de faits régénéré à 17h11 : **224 faits sur 106 lignes affichées, 3 périmés, 81 lignes `is_seed` exclues** — identique en volume aux relevés de 9h05 et 13h05.
+
+**Navigateur : nominal tout le run.** `_shared/browser-status.md` lu avant ouverture, dernière entrée **🟢 RÉTABLI (03/09 ~09h35)**. `list_connected_browsers` renvoie `23c7ecdd-26d7-4d25-b39b-1889eb0fa3bd` seul, sélectionné par deviceId (§7). Aucun timeout CDP, aucun refus du classifieur. **Aucune entrée à ajouter à `browser-status.md`.**
+
+---
+
+### 1️⃣ ⚠️ DÉCISION DE RÉGIME — **file de validation**, et pour une fois positivement établie plutôt que déduite
+
+**Régime retenu : file de validation (ligne de base du 23/07), pas l'automation.** Tranchée en ouverture sur la trace disponible, puis **confirmée en cours de run par une preuve directe**.
+
+- À l'ouverture (17h09), les trois derniers commits du dépôt dataient de **15h04, 15h37 et 15h44** — soit 1 h 25 avant l'ouverture, sur du code applicatif (correctifs paywall).
+- Journée de présence continue et documentée : David a travaillé de 07h35 à 11h50, **tapé des ordres en session interactive à ~13h55 et ~14h50** (envoi des 2 DM en file), puis commité de 15h04 à 15h44.
+- ⚠️ **Le précédent invoqué par le run de 13h s'est révélé faux dans les faits.** Ce run avait retenu l'automation en lisant un creux d'1 h 33 comme une absence ; David était en réalité présent et a tapé deux ordres dans cette même session. Un creux d'1 h 25 un samedi de travail continu est donc un **doute réel**, et `CLAUDE.md` tranche explicitement ce cas : « en cas de doute réel sur la présence de David, c'est la ligne de base du 23/07 qui l'emporte ».
+- ✅ **Confirmé pendant le run** : le commit `fbe4901b` (« *feat(paywall): unlock one showcase disease per continent for free accounts* ») est tombé à **17h23**, soit 14 minutes après l'ouverture — même figure qu'au run de 9h ce matin. La présence de David est **positivement établie**, la décision n'est plus une inférence.
+
+📌 Ce run est donc un **troisième point de données** sur la question `🏷️HORS-ROUTINE` ouverte par le créneau de 13h (à partir de quelle ancienneté de trace un run bascule-t-il de la file vers l'automation ?). Les trois runs du jour l'ont tranchée différemment : 9h file (commit pendant le run), 13h automation (creux d'1 h 33 — **démenti par les faits**), 17h file (creux d'1 h 25, **confirmé par un commit pendant le run**). **Le seul discriminant qui n'a jamais menti aujourd'hui est un commit tombant pendant le run lui-même** ; l'ancienneté d'une trace antérieure a induit le run de 13h en erreur. À faire trancher par David.
+
+---
+
+### 2️⃣ ✅ COMMENTAIRE 3/7 PUBLIÉ — **Yilkal Kebede**, EN, premier contact — **4 jets, 3 rejets sur trois défauts réels et tous différents**
+
+`urn:li:activity:7501851400176431104`, post d'**11 h** (fenêtre 48 h, ouverte jusqu'au 07/09 au matin), **2e degré**, **2 commentaires** avant nous / 31 réactions / 9 republications. *One Health Workforce Development Officer, Health Security Activity Project*, Addis-Abeba, 3 282 abonnés, 5 relations en commun, Tufts University. **Candidat reporté par le créneau de 13h**, suivi ce jour-là, aucun blocage.
+
+**Les 2 commentaires existants relus en entier avant rédaction (§5)** : « Great Job! » (Yechale Teshome) et l'assertion générale de Lian Wee LOO (« *Community knowledge becomes the detection layer, not a downstream input.* »). Inchangés depuis 13h, aucune question posée, aucun angle de fond pris.
+
+- **Jet 1** — nœud sentinelle mobile : la surveillance sentinelle tire son sens de la fixité de l'observateur, que devient la ligne de base quand le nœud est transhumant ? Mécanique **PASS** (395 car., 2 §, en/en, 0 bloquant). Relecteur : **11 PASS, FAIL 11**. 🔴 L'armature « condition de validité + question qui en remplit le paramètre » est celle du commentaire **Keneth Mugume publié à 11h le même jour** (« *that comparison only holds if…* » + « *What stretch of the year…* ») ; « *gets its meaning from* » est un synonyme de « *only counts if* », et « *is what lets* » est la variante du moule brûlé « *is the one that* ». Les deux se seraient lus en enfilade comme un gabarit.
+- **Jet 2** — même intuition, charpente changée en observation + question de méthode : un informateur qui voyage avec le troupeau est un point d'observation mobile, qu'utilise le travail de Chifra pour distinguer une hausse d'incidence d'un déplacement vers une zone plus à risque ? Mécanique **PASS** (257 car.). Relecteur : **11 PASS, FAIL 7**. 🔴 **Défaut différent, et décisif** : la question est déjà couverte par sa propre énumération — « *participatory mapping* » (outil spatial), « *seasonal calendars* » (outil temporel) et surtout « *spatiotemporal risk stratification* », qui nomme littéralement la ventilation espace/temps demandée. **2e fois de la journée qu'un jet vient buter sur un terme énuméré de son post.**
+- **Jet 3** — angle déplacé sur le maillon que le post ne traite nulle part : le passage du signal vétérinaire vers la santé humaine. Mécanique **PASS** (259 car.). Relecteur : **11 PASS, FAIL 5**. 🔴 La prémisse absolue « *Everything described here sits on the veterinary side* » est réfutable mot pour mot par son propre texte — « *Within a One Health paradigm* », « *human-livestock-wildlife interface* », « *formal veterinary-medical surveillance* » — et l'adresser à un **One Health Workforce Development Officer** revenait à lui expliquer que son post One Health n'est pas One Health. **Le relecteur valide en revanche explicitement l'angle et la question de clôture** : il vérifie ses six termes de cadrage un par un et conclut qu'aucun ne nomme de mécanisme de remontée vers la santé humaine (« *Une catégorie, pas un mécanisme* »).
+- **Jet 4 = publié** — correction ciblée de la seule prémisse fautive, angle et question inchangés. La classification devient celle de sa propre liste de syndromes (deux animaux, deux zoonotiques) au lieu d'un absolu sur le périmètre du post. Mécanique **PASS** (277 car., 2 §, en/en, 0 bloquant, 0 warn).
+
+**Ce n'est pas la règle des deux essais** (politique commune §5 item 6, compteur par brouillon) : les trois rejets portent sur **trois défauts distincts** (gabarit, question pré-répondue, attribution fautive), jamais deux fois le même, et le 4e jet corrige un point que le relecteur avait nommé comme trivial en laissant le reste intact.
+
+**Texte publié :**
+
+> The taxonomies this network reports in are ethnoveterinary, and two of the four syndromes you list, blackleg and haemorrhagic septicaemia, stay in animals. Anthrax and brucellosis do not.
+>
+> What carries a signal from this informant network over to the human health side in Afar?
+
+**Verrou §15 appliqué juste avant le clic**, pas seulement à l'ouverture : `git log` et `git status` relus (arbre propre, aucun fichier d'une autre routine), `content-log.md` et `linkedin-contacts.md` recomptés sur « Yilkal » (8 et 4 occurrences, toutes de l'entrée de 13h) — **aucune autre session n'avait visé cette cible entre-temps**.
+
+**Publication confirmée.** URN (`7501851400176431104`), présence du nom « Yilkal Kebede » et **comparaison caractère par caractère au brouillon (277 car., `exact: true`) faites dans le même appel JS que le clic**, bouton atteint en remontant au `form` de l'éditeur rempli plutôt que par un sélecteur global. Rendu vérifié par capture **avant** publication (2 paragraphes, aucune troncature). **Après publication** : éditeur vidé, **une seule occurrence** du texte dans la page, affiché sous « **David Deheunynck • Vous · maintenant** », compteur passé de **2 à 3 commentaires**. **Quota commentaires : 3/7. Nouveau blocage hebdomadaire : Yilkal Kebede jusqu'au 12/09** (le post reste ouvert en sous-fil).
+
+⚠️ **Incident de saisie, identique à celui du run de 9h et cette fois expliqué.** La première frappe (184 + 87 caractères) **n'est allée nulle part** : éditeur toujours `ql-blank`, aucune occurrence du texte dans la page, aucun champ rempli, URL inchangée — **aucune saisie parasite, vérifié explicitement avant de retenter**. Cause trouvée : les coordonnées avaient été calculées à partir du `getBoundingClientRect()` de l'éditeur **dans un appel JS antérieur**, et le clic est retombé sur la barre d'actions (« Commenter »/« Republier ») parce que la page avait défilé entre-temps. C'est exactement le cas prévu par la politique commune §7 (« *recalculer les coordonnées après un défilement, jamais réutiliser une position antérieure* »). **La capture d'écran prise juste avant le 2e clic a donné la bonne position du premier coup.** ➡️ Retenir : pour l'éditeur de commentaire, prendre la position **sur une capture**, jamais sur un `getBoundingClientRect()` d'un appel précédent.
+
+`QA : mécanique jet 4 PASS (277 car., 2 paragraphes, en/en, 0 blocker, 0 warn) | relecteur 3 passes à contexte neuf, jets 1-3 rejetés sur Q11 (gabarit), Q7 (question pré-répondue) et Q5 (attribution), jet 4 = correction ciblée du seul point nommé | faits cités : aucun chiffre (0 nombre dans le texte, vérifié) | registre du 05/09 (17:11) | statut : publié le 05/09 vers 17h40`
+
+---
+
+### 3️⃣ ❌ CANDIDAT COMMENTAIRE ABANDONNÉ — **Marieta Braks** (RIVM), West Nile / ECDC — **1 jet, abandonné sur un défaut de fond que le relecteur a trouvé dans notre propre code**
+
+`urn:li:activity:7501908145087111168`, post de **7 h** (fenêtre 48 h), **2e degré**, **0 commentaire et 0 réaction avant nous** — aucune redondance possible (§5). *Public Health Biologist / Medical Entomologist at Dutch National Institute of Public Health and the Environment* (**RIVM**). **Légitimité établie sans réserve.** Repérée par recherche active de contenu (« West Nile virus surveillance », tri par date), après que les deux candidats du carry-over de 13h se sont révélés sans post propre récent (§4).
+
+Post entier, très court : « *Good resource for ongoing tracking of West Nile virus in Europe / Weekly updates: Seasonal surveillance in humans in 2026 for West Nile virus* » + lien vers la page hebdomadaire de l'ECDC.
+
+**Angle tenté** : mettre en regard la page qu'elle recommande et les bulletins nationaux. Le registre HWG porte **9 lignes West Nile fever** : l'**Italie** (521 cas / 26 décès, `asOf` **02/09**, source = bollettino ISS en PDF) et **six pays sourcés ECDC** (Grèce 214, Espagne 79, Macédoine du Nord 49, Roumanie 45, France 28, Allemagne 2), tous `asOf` **27/08**. Mécanique **WARN** (288 car., 2 §, en/en, **0 bloquant**) — le seul warn est `facts.unsourced` sur « 27 », quantième de la date « 27 August », faux positif de classe documentée.
+
+🔴 **Le relecteur a trouvé trois défauts que ni moi ni le contrôle mécanique ne pouvions voir, et il est allé les chercher dans le code du fetcher.** C'est le meilleur rattrapage du dispositif depuis longtemps :
+
+1. **« 27 August » n'est pas la date d'arrêt des comptages ECDC, c'est la date de production du rapport.** Le commentaire au-dessus de `getWnvSeason` dans `app/api/cron/sync-who-regional/route.ts` le dit explicitement : « *The exact data-cutoff date (the second one) didn't survive a plain regex reliably […] so `date` uses the produced-on date instead, which is always present and only ever 1-2 days later.* » Le brouillon aurait donc affirmé publiquement, sous le post d'une chercheuse d'institut national, quelque chose de faux sur une page de l'ECDC.
+2. **Aucune ligne ECDC pour l'Italie n'existe au registre.** Le contraste mis en scène (page ECDC vs bollettino italien) n'était soutenu par **rien** dans nos données : on compare une ligne italienne d'origine ISS à des lignes ECDC d'autres pays.
+3. **Deux définitions de cas différentes, présentées comme un simple décalage temporel.** Le fetcher décrit la métrique ECDC comme des « *locally acquired human cases* » ; le 521 de l'ISS inclut les cas importés et les porteurs asymptomatiques détectés chez les donneurs de sang (extrait archivé dans ce fichier pour le bollettino n°1). C'est exactement le piège déjà documenté pour la France le 28/08 (`linkedin-contacts.md`) — **et il a failli être rejoué à l'identique.**
+
+❌ **Candidat abandonné après un seul jet, sans tentative de réécriture** : ce n'est pas une formule à corriger, c'est la prémisse de l'angle qui est fausse. **Aucun commentaire publié, donc aucun blocage hebdomadaire créé** — le profil est excellent et reste entièrement disponible.
+
+📌 **Effet de bord, et c'est le vrai apport de ce candidat : un défaut de données produit, à faire remonter.** Nos six lignes West Nile sourcées ECDC stockent en `date`/`asOf` la **date de production du rapport**, pas la date de coupure des données qu'il contient. HWG affiche donc « au 27 août » pour des comptages qui s'arrêtent en réalité 1 à 2 jours plus tôt. Le compromis est **assumé et documenté** dans le code (la regex ne tenait pas sur la seconde date), il n'est donc pas un bug — mais il est invisible pour un utilisateur, et il porte sur exactement la colonne qui fait la valeur du produit. **🏷️HORS-ROUTINE : faut-il extraire la vraie date de coupure des rapports ECDC (parseur plus robuste que la regex actuelle), ou afficher explicitement qu'il s'agit d'une date de publication ?** Ce n'est ni une écriture en base ni du ressort de cette routine — c'est un point produit pour `morning-don-check` ou une session interactive.
+
+---
+
+### 4️⃣ 🔍 RECHERCHE DE COMMENTAIRES MENÉE À SON TERME — 5 pistes instruites, 1 publiée, 4 écartées avec motif
+
+Conformément au point 8 du SKILL (ne pas clore sur un premier passage partiel), la recherche a été poussée au-delà du candidat reporté :
+
+| Piste | Origine | Issue |
+|---|---|---|
+| **Yilkal Kebede** | carry-over 13h | ✅ **publié** (§2) |
+| **Nasir Bello Muhammad** (`/in/nasirbm3/`) | carry-over 13h, post rage/Bhoutan | ❌ **sans suite** : sa page d'activité ne rend que des **republications** (AFENET NG ×2, Dr. Jill López…), son post propre sur la rage n'est plus atteignable par ce chemin. Pas de cible. |
+| **Nelly Saiti** (`/in/nelly-saiti-85020950/`) | carry-over 13h, post Kenya/El Niño | ❌ **sans suite** : même constat, activité récente entièrement composée de republications (António Guterres, CNN). Pas de cible. |
+| **Marieta Braks** (RIVM) | recherche active « West Nile virus surveillance » | ❌ **abandonné sur le fond** (§3) |
+| **JEAN NACHEGA** | recherche active « Ebola Bunia Ituri » | ❌ **écarté avant rédaction.** Post de 9 h annonçant une Correspondence au *Lancet* sur la santé mentale des intervenants Ebola (co-auteurs Zumla, Muyembe-Tamfum, Seedat). **Trois motifs cumulés** : (a) **4 jets ont déjà été abandonnés chez lui ce matin même** ; (b) le sujet est la santé au travail des répondants, hors du domaine surveillance/données de HWG — tout angle honnête serait soit hors sujet, soit un accusé de réception habillé (Q12) ; (c) le texte est une **tribune de plaidoyer** (« *We also call for…* »), terrain que la politique commune §9 impose de laisser en silence. Aucun blocage créé. |
+
+**Une piste sans valeur de commentaire mais utile comme recoupement** : **Francois Kabumba** (*MHPSS Associate at IOM - UN Migration*, post de 2 h) annonce sa prise de poste **à Bunia, Ituri, dans le cadre de la riposte Ebola en cours**. Post de carrière, aucun angle analytique possible, non retenu — mais il **corrobore indépendamment** qu'une riposte Ebola opère bien en Ituri, ce qui rend cohérent le signal reçu en DM (§ `linkedin-contacts.md` §1) et le situe **dans la zone connue de la flambée** (« l'épidémie d'Ebola dans l'est de la RDC », Dr. Jean Kaseya, post de 7 h), **et non comme une extension géographique nouvelle**.
+
+**Quota commentaires laissé à 3/7, assumé.** La recherche a été menée jusqu'au bout — 2 candidats du carry-over vérifiés, 2 recherches de contenu neuves, 5 pistes instruites — et les 4 abandons portent sur des motifs de fond nommés, pas sur un arrêt prématuré. Conformément à la ligne 41 du SKILL, aucun commentaire médiocre n'a été forcé pour remplir le quota.
+
+---
+
+### 5️⃣ ✅ SUIVI DES ACTIONS DU JOUR ET DES FILS ACTIFS (§14) — aucun tour neuf
+
+Les quatre posts concernés rouverts **directement**, pas jugés sur les notifications : Tambe Elvis Akem (il n'a toujours pas répondu à 7 h, alors qu'il a répondu à ses deux autres commentateurs), Keneth Mugume (notre commentaire est toujours le seul du post), Ifedayo Adetifa et Grovogui/Macharia (notre tour reste le dernier des deux sous-fils). Détail dans `linkedin-contacts.md` §3.
+
+**Notifications parcourues intégralement (10 cartes).** Aucune réponse à un commentaire HWG, aucune mention neuve. Sans action : le post Ebola/RDC du **Dr. Jean Kaseya** (7 h, après son passage à *Afrique Midi* sur RFI — **bloqué en hebdomadaire jusqu'au 08/09**, donc inexploitable), un post agricole de BERNADETTE ILENGETE, deux posts d'Ifeanyi Nsofor (subventions pétrolières au Nigeria, hors périmètre), un post d'activité physique de SERGE LAURENT HOUNTONNAGNON, un post de leadership de REMY KABANGU. Deux cartes statistiques : **notre post Diphtérie/Niger du 04/09 est à 55 impressions et a généré 1 vue de profil**, et la notification « Meg Wirth et 1 autre personne ont réagi à votre commentaire » (post Macharia) porte bien sur des réactions.
+
+📌 **Un signal à noter sans le surinterpréter** : « *Un utilisateur occupant le poste de Médecin chez World Health Organization a consulté votre profil* » (1 h). **Pas de notification push** : la vue de profil est anonyme, ce n'est pas une interaction avec du contenu HWG, et la barre de §13 (compte vérifié identifiable qui interagit) n'est pas atteinte. **Profil vu 360 fois, 538 impressions de posts** au compteur du jour.
+
+---
+
+### 6️⃣ 📌 INFOS NOTÉES POUR DE FUTURS POSTS
+
+1. 🔴 **Cas positif de MVE à Bigo/Bunia (Ituri) — signal de terrain de première main, NON ingérable en l'état.** Reçu en DM à 14h49 d'un contact qui déclare être **en investigation sur place**. Conformément à la politique commune §8, **rien n'a été écrit en base** : un message n'est pas une source primaire, et aucun bulletin officiel n'a été lu par cette session. Notre ligne Ebola/RDC est **nationale** (6 342 cas / 3 072 décès / létalité 48,4 % au 02/09, source ECDC, `ageDays: 0`) et ne descend pas au niveau de l'aire de santé — **elle n'est donc ni contredite ni complétée par ce signal**. Bunia est en Ituri, dans l'est de la RDC, **zone connue de la flambée en cours** : ce n'est pas une extension géographique. **Pour `morning-don-check`** : à recouper contre le prochain sitrep du ministère de la santé RDC, qui publie au niveau des zones de santé.
+2. **West Nile / Europe — matière de saison, et une nuance de méthode qui vaut un post.** HWG porte 9 lignes actives (Italie 521/26 au 02/09 via bollettino ISS ; Grèce 214, Espagne 79, Macédoine du Nord 49, Roumanie 45, France 28, Allemagne 2, sourcées ECDC). **L'angle vraiment intéressant, découvert ce run** : les décomptes nationaux et le décompte ECDC ne comptent pas la même chose (tous cas, importés et donneurs asymptomatiques compris, contre *locally acquired human cases*), et les dates affichées sont des dates de publication, pas de coupure. **C'est exactement le genre de sujet que le compte de marque traite bien** — mais il exige de lire la page ECDC elle-même avant d'écrire quoi que ce soit, ce que cette session n'a pas fait (voir §3).
+3. **Rage / Bhoutan (4 septembre 2026, validation OMS)** — inchangé depuis 13h, à vérifier contre le communiqué OMS primaire avant tout usage. HWG ne porte aucune ligne rage.
+4. **Kenya / El Niño** — inchangé depuis 13h : pluies intenses annoncées d'octobre 2026 à janvier 2027, flambées hydriques et vectorielles anticipées. HWG porte des lignes choléra et dengue.
+5. **Le compte X n'est pas concerné** : `x-hwg-monitoring` et `x-hwg-followup-check` restent éliminées depuis le 17/08.
+
+---
+
+### 7️⃣ 📊 QUOTAS À LA CLÔTURE (partagés entre les 3 sessions LinkedIn du jour)
+
+| Quota | Consommé | Plafond | Détail |
+|---|---|---|---|
+| **Commentaires** | **3** | 7 | Tambe Elvis Akem + Keneth Mugume (run de 9h), **Yilkal Kebede ce run** (4 jets). 4 candidats écartés ce run avec motif de fond, recherche menée à son terme (§4). |
+| **DM** | **3 envoyés** | 8 | Inchangé (MANAOUDA 10h02, Ngoy Guillaume ~14h50, Dr. Siaka Condé ~13h55). **0 rédigé ce run** : le seul message entrant appelle une décision de David sur le canal avant toute rédaction (garde-fou §10). |
+| **Suivis** | **10** | 7-10 | Inchangé, **plafond haut atteint au run de 13h**. 2 nouveaux abonnés identifiés et documentés, follow-back reporté à demain faute de créneau. |
+| **Invitations** | **1** | 7 | Keneth Mugume (sans note, 9h). **6 créneaux perdus, capacité d'émission inerte** — retestée et reconfirmée ce run, avec un élément neuf (file 99→98 sans déblocage). |
+
+---
+
+### 8️⃣ 🔁 CARRY-OVER POUR LE CRÉNEAU DE 9h (06/09)
+
+1. 🔴 **Ngoy Guillaume — décision de David en attente, le point le plus important de la journée.** Réponse reçue à 14h49 : investigation d'un cas positif de MVE à Bigo/Bunia, et **proposition de passer sur WhatsApp**. **Rien envoyé, rien mis en file, aucun brouillon rédigé** (garde-fou §10, changement de canal). Verbatim complet et les trois points à trancher dans `linkedin-contacts.md` §1. **Tutoiement obligatoire** dans toute réponse future (il a basculé).
+2. 🗓️ **LIGNE D'ÉVÉNEMENT (§16) — la ligne Ebola/RDC est CLOSE**, commentée ce matin chez Tambe Elvis Akem. **Rien ne la rouvre** : le post du Dr. Jean Kaseya (7 h, RFI) est le seul porteur frais et il est bloqué jusqu'au **08/09**. Ne pas la reconduire mécaniquement.
+3. ⭐⭐ **Marieta Braks** (`/in/marieta-braks-2bba401/`, RIVM) — **excellent profil, aucun blocage créé, angle abandonné mais candidat entier.** Son post West Nile court jusqu'au **07/09**. ⚠️ **Ne pas rejouer l'angle du décalage de dates** : « 27 August » est la date de production du rapport ECDC, pas la coupure des données, et le contraste avec le bollettino italien mélange deux définitions de cas (§3). Un angle neuf est possible, mais il exige de **lire la page ECDC elle-même** d'abord.
+4. ⭐⭐ **Fayssal ZEMMOUCHI** (Institut Pasteur d'Algérie) et ⭐ **Mahamba Nzanzu** — nouveaux abonnés depuis 13h, **follow-back dû dès la remise à zéro du quota**, non fait ce run uniquement pour cause de plafond 10/10.
+5. ⚠️ **Invitations : ne pas retenter un 3e clic sur Yilkal Kebede** (3 tentatives cumulées sans effet). Reconstater sur un **profil différent** avant toute conclusion ; si c'est encore inerte, ne pas instruire de candidats de connexion et le remonter à David comme blocage de plateforme.
+6. 🏷️HORS-ROUTINE : **deux questions produit ouvertes par ce run**, aucune du ressort de cette routine — (a) les lignes West Nile sourcées ECDC stockent une date de **publication** en guise de date d'arrêt (§3) ; (b) à partir de quelle ancienneté de trace un run bascule-t-il de la file vers l'automation (§1, 3 réponses différentes en une journée).
+7. ❌ **Ne pas reproposer sans élément neuf** : **JEAN NACHEGA** (4 jets abandonnés ce matin + post de plaidoyer hors domaine, §4) ; **Nasir Bello Muhammad** et **Nelly Saiti** (activité récente entièrement en republications, pas de cible — à revérifier seulement s'ils publient en propre) ; **Chrissy Chabwera Banda** (angle mort sur le fond au run de 13h, reste suivie) ; **Francois Kabumba** (post de carrière, sans angle) ; Zachariah G. Houdari, OLAOLUWA PHILIP, Jean-Rodrigue NDONG, Haider Durrani, Kipchirchir Kigen, Victoria Kanana, Abdulrazaq Tanga, Herve Chatue kamga, Talaat Aladesawe, Ekokobe Forbin, Evélyne TOFFOHOSSOU, Pulcherie CODJO, AHMED ABDELAZIZ, Moe Myint Oo ; ❌ **Dr R Hyacinthe ZABRE** (retiré définitivement, hors périmètre).
+8. **Blocages hebdomadaires au 05/09 en fin de journée** : **nouveau ce run — Yilkal Kebede (12/09)** ; Tambe Elvis Akem, Keneth Mugume (12/09) ; Ifedayo Adetifa, Pete Macharia (11/09) ; Adesoye Emmanuel Tunde, Kyaw Thowai Prue Prince, Rocham Mulumbwe, Dr. Rashi Bhardwaj, Dr Fabrice KHADDY, Miriam Mbueshi (09/09) ; Dr. Jean Kaseya, page ECDC, Jacob Banda (08/09) ; Melvin Sanicas, Dossa Paul YAOÏTCHA, Mohammad Ilias Hossain (07/09, top-level, sous-fils ouverts). **Libres, et nouveaux au corpus ce run** : Marieta Braks, JEAN NACHEGA, Francois Kabumba, Fayssal ZEMMOUCHI, Mahamba Nzanzu (aucun commentaire publié chez eux). Libres par ailleurs, inchangés : Nasir Bello Muhammad, Chrissy Chabwera Banda, Global Health EDCTP3, French Healthcare Association, Health Policy Watch, SOUAD BELKACEMI, Oke Ikpekpe, Jason Kindrachuk, Dr Jeeven Kumar, Harvey Basivikidi, Robert Herriman, Patrick AYONGA, Oliver Morgan, page Africa CDC, page WHO AFRO, Vital Strategies, Tedros, Prof. Mohamed Janabi, INRB, Apoorva Wasnik, Johan Verheyden, Gaelle Gonzalez, Lori Peterson, Dr. Malachie MANAOUDA, James Schlitt, Martin Yakum, Julien Harneis, BANZA Freddy Mutoka, Jean-Paul Gonzalez, Delphine CASAMATTA, David Moreau, Christian BABOKO, Lenka Beňová, The Conversation Africa, Yap Boum II, Marie Roseline Darnycka BELIZAIRE, Benjamin O'Neil, Alexandra THABUIS, Nirmal Kandel, Sayed Himatt, Abdishakur Dek, Dorothée Obach, RAMAZANI KALUMBI RAMSES, Jean Claude Nshimiyimana, Mohamed Elsheikh.
+
+---
+
+### 9️⃣ 🔧 ARBRE DE TRAVAIL
+
+Fichiers modifiés par cette session : `marketing/content-log.md`, `marketing/linkedin-contacts.md`. **`git status` était vide à l'ouverture ; un commit d'une autre session (`fbe4901b`, code applicatif) est tombé à 17h23 pendant le run — laissé strictement intact, aucun fichier de `app/`, `lib/` ou `components/` touché ni stagé** (AGENTS.md : le code applicatif n'appartient à aucune routine documentaire). `marketing/qa/claimable-facts.json` régénéré, non suivi ; `tmp/` non suivi. **Branche : master.** Aucun verrou de code demandé.
+
+---
+
+
 ## 📅 Session linkedin-hwg-followup-check — 05/09/2026 (13h, 1er des 2 créneaux après-midi) — ❌ **0 commentaire publié, quota laissé à 2/7** — 2 candidats instruits jusqu'au bout et abandonnés sur des défauts de fond distincts ; ✅ **3 suivis, quota au plafond haut 10/10** ; ✅ **2 DM envoyés en fin de run sur ordre explicite de David** (détail et découverte majeure dans `linkedin-contacts.md`) ; ⚠️ **l'envoi d'invitation est inerte depuis ~14h alors qu'il fonctionnait à 11h**
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` datée du 05/09 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture ; les seules entrées du jour sont celles de `linkedin-hwg-monitoring` (9h) → **premier déclenchement de cette routine aujourd'hui**. Horloge à l'heure (`Sat Sep 5 13:03 2026`). Branche vérifiée : **master**. Registre de faits régénéré à 13h05 : **224 faits sur 106 lignes affichées, 3 périmés, 81 lignes `is_seed` exclues** — identique au relevé de 9h05 en volume, mais la ligne Ebola/RDC a été rafraîchie entre-temps par `morning-don-check` (**6 342 cas / 3 072 décès / létalité 48,4 % au 02/09**, source ECDC, contre 6 250 / 3 039 au 01/09 ce matin) : elle rejoint désormais le chiffre publié par Tambe Elvis Akem, dont le run de 9h notait l'écart.
