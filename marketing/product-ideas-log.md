@@ -3512,6 +3512,16 @@ lectures.
    puis « re-source sur la semaine 33 avec Tribune Online »). Détail complet
    dans la mémoire `project_ncdc_lassa_row_confidential_content_2026_09_04`.
 
+   **Vérification de la page publique demandée par David, deux trouvailles :**
+   (a) la pastille « Vérifié par HealthWatch » affichait « il y a 20j » juste
+   après une re-vérification à l'instant — bug générique de la page de détail
+   foyer, elle lisait `o.date` seul au lieu de `lastVerifiedIso()` (déjà
+   utilisé par le tableau depuis le 22/08). Corrigé, poussé (`703ba34f`),
+   déploiement confirmé (badge passé à « il y a 9 min »). (b) écart mineur
+   24,4 % (cité de Tribune Online) vs 24,3 % (calculé en direct par le site,
+   252/1035) — David a demandé l'alignement sur 24,3 % ; fait dans les 5
+   langues, vérifié sur la page publique.
+
 3. **RÉSOLU — `ncdc.gov.ng` interdit de citation, mais seulement pour les
    PDF de sitrep.** `FORBIDDEN_SOURCE_PATH_PATTERNS` dans `lib/source-trust.ts`
    (commit `5b8aeeb6`), vérifié après `FORBIDDEN_SOURCE_DOMAINS` dans
