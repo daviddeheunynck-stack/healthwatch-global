@@ -7,6 +7,16 @@ import * as Sentry from "@sentry/nextjs";
 Sentry.init({
   dsn: "https://ff3422719dcc565627288fa22104c45a@o4511456134496256.ingest.de.sentry.io/4511456149962832",
 
+  // A local `next dev` run has no NEXT_PUBLIC_VERCEL_ENV, so it reports here as
+  // environment "development" alongside real preview/production traffic — found
+  // 2026-09-05 via a "Jest worker encountered N child process exceptions" error,
+  // a Jest-internal crash on someone's machine with nothing to do with this
+  // app's code, captured only because it surfaced inside a browser setTimeout
+  // during a local dev session (environment: development, url: localhost:3000).
+  // Local dev noise like this has no fix in this codebase and no diagnostic
+  // value in the shared inbox — disabled outright rather than chased per-message.
+  enabled: process.env.NODE_ENV !== "development",
+
   integrations: [Sentry.replayIntegration({ maskAllText: true, blockAllMedia: true })],
 
   // NEXT_PUBLIC_VERCEL_ENV = production | preview | development (set via next.config.ts)
