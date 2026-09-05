@@ -3695,3 +3695,21 @@ seconde passe ciblée sur les 5 lignes Mpox, vérifié caractère par caractère
 avant écriture. Vérification finale : recherche des 4 motifs sur les 27
 lignes après écriture, 0 résidu. Aucune donnée chiffrée touchée — texte
 uniquement, sur les champs de traduction FR et ID.
+
+### Suite du même soir — 2 lignes avec une mauvaise traduction de « WHO » (« QUI » au lieu de « L'OMS »)
+
+En poursuivant la revue, trouvé un défaut distinct des 27 précédents (fetchers
+différents — WHO WPRO/Global Dengue Situation Update, pas les tableaux de
+bord shinyapps) : **Dengue/Nouvelle-Calédonie et Dengue/Laos** traduisaient
+l'acronyme anglais « WHO » comme le pronom interrogatif anglais « who »,
+donnant « **QUI** a signalé » en FR et « **التي** أبلغت عن » (« qui/laquelle
+a rapporté », grammaticalement bancal) en AR, au lieu de « L'OMS » /
+« منظمة الصحة العالمية ». ES était déjà correct sur les deux lignes. La ligne
+Nouvelle-Calédonie avait déjà été lue une première fois plus tôt ce soir sans
+que le défaut soit repéré — retrouvée cette fois en cherchant spécifiquement
+le motif « QUI » en majuscules isolées sur les 126 lignes affichées (2
+résultats, les 2 corrigés).
+
+Corrigé : FR et AR sur les 2 lignes, plus l'espacement de date ID (même
+défaut que les 27 lignes précédentes) et le résidu « DE la dengue » sur Laos.
+Vérifié sur la page publique après écriture.
