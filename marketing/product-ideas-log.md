@@ -3644,3 +3644,24 @@ aucune anomalie trouvée.
 1 clarification de texte (Diphtérie/Afrique du Sud), 1 vérification de
 changement concurrent sans incident (Diphtérie/Nigéria), 0 autre problème
 trouvé.**
+
+### Suite du même soir — 9 lignes polio Afrique corrigées (dates/lieux non traduits)
+
+En poursuivant la revue sur les lignes fraîches (Tchad, Somalie, Éthiopie
+polio), repéré un défaut systématique sur les **9 lignes cVDPV africaines**
+créées le 22/08 (`add-cvdpv-africa-gpei-2026-08-22.mjs`) : Tchad, Somalie,
+Éthiopie, Madagascar, Angola, Soudan, Togo, RCA, Niger. Les 4 champs de
+traduction (FR/ES/AR/ID) gardaient les dates en anglais telles quelles
+(« 19 May 2026 » au lieu de « 19 mai 2026 »), et les 3 lignes avec une phrase
+supplémentaire (Soudan, RCA) gardaient aussi des fragments de lieux non
+traduits (« Region 7 (positive environmental sample) », « Gezira, North
+Kordofan and Red Sea »). Sur les 2 lignes à 1 seul cas (Angola, Niger),
+l'accord grammatical était aussi faux en FR/ES (« 1 cas confirmés... signalés »
+— l'AR et l'ID n'infléchissent pas selon le nombre, non concernés).
+
+Corrigé : dates traduites dans les 4 langues (mois écrits, pas de format
+numérique), fragments de lieux traduits, accord singulier corrigé (trouvé et
+recorrigé en 2 passes : le premier script n'avait traité que « confirmés »,
+pas « signalés »/« notificados » plus loin dans la même phrase). Aucune
+donnée chiffrée touchée — uniquement le texte des 4 champs de traduction, sur
+les 9 lignes. Vérifié sur 2 pages publiques (Soudan, Angola) après écriture.
