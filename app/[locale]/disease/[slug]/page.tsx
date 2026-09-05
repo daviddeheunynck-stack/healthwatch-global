@@ -561,11 +561,14 @@ export default async function DiseasePage({
             </div>
           )}
 
-          {/* CFR reference */}
+          {/* CFR reference — cfr_ref is written in French by default; cfr_ref_en/cfr_ref_es
+              override it on those locales when the field carries French wording. */}
           {info.cfr_ref && (
             <div className="space-y-1">
               <p className="text-xs text-gray-500">{vl.cfrRef}</p>
-              <p className="text-sm text-white font-medium">{info.cfr_ref}</p>
+              <p className="text-sm text-white font-medium">
+                {l === "en" ? (info.cfr_ref_en ?? info.cfr_ref) : l === "es" ? (info.cfr_ref_es ?? info.cfr_ref) : info.cfr_ref}
+              </p>
             </div>
           )}
 

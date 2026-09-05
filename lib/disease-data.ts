@@ -32,7 +32,9 @@ export interface DiseaseInfo {
   incubationMax?: number;  // days
 
   // Clinical reference (historical / literature, not current outbreak)
-  cfr_ref?: string;        // e.g. "25–90 %"
+  cfr_ref?: string;        // e.g. "25–90 %" — displayed as-is on every locale by default
+  cfr_ref_en?: string;     // overrides cfr_ref on the en locale only, when cfr_ref carries French wording
+  cfr_ref_es?: string;     // overrides cfr_ref on the es locale only, same reason
   r0_ref?: string;         // basic reproduction number
 
   // Control
@@ -513,6 +515,8 @@ const DISEASE_MAP: Array<{ patterns: string[]; info: DiseaseInfo }> = [
       transmission: ["droplet", "contact"],
       incubationMin: 2, incubationMax: 5,
       cfr_ref: "5–10 % (enfants non vaccinés)",
+      cfr_ref_en: "5–10 % (unvaccinated children)",
+      cfr_ref_es: "5–10 % (niños no vacunados)",
       // Valeur "manuel" (Anderson & May 1982). Une revue 2020 (Truelove et al.) recalcule plus bas (~2.6) — débat méthodologique non tranché.
       r0_ref: "4–7",
       vaccine: "yes", vaccineName: "DTP / DT",
