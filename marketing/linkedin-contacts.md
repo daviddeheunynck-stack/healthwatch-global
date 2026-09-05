@@ -1,6 +1,73 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
+## 📅 Session linkedin-hwg-followup-check — 05/09/2026 (13h, 1er des 2 créneaux après-midi) — ✅ **3 suivis (quota 10/10, plafond haut)** — 🔒 **2 DM toujours en file, aucun touché, aucun message entrant à traiter** — ⚠️ **invitation impossible à émettre sur deux surfaces alors qu'une est partie à 11h** — ❌ 0 commentaire (détail des 5 jets dans `content-log.md`)
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` du 05/09 dans ce fichier ni dans `content-log.md` à l'ouverture ; seules les entrées de `linkedin-hwg-monitoring` (9h) y figuraient → **premier déclenchement de cette routine aujourd'hui**. Horloge `Sat Sep 5 13:03 2026`. Branche : **master**. Registre de faits régénéré à 13h05 (224 faits, 106 lignes affichées, 3 périmés).
+
+**Décision de régime : sans objet, aucun DM rédigé ce run.** Tranchée quand même en début de run (automation, par application du précédent du 04/09 13h : dernier commit à 11h30, soit 1 h 33 avant l'ouverture, aucun commit tombé pendant le run). Raisonnement complet et réserve associée dans `content-log.md` §1 — **avec un point à faire trancher par David**, les deux règles applicables pointant en sens contraires sur ce profil de trace.
+
+---
+
+### 1️⃣ ✅ MESSAGERIE — AUCUN MESSAGE ENTRANT À TRAITER
+
+Les **10 conversations les plus récentes** relues, plus le filtre « non lus » (`/messaging/?filter=unread`). Le seul non lu est une **offre promotionnelle LinkedIn Premium du 28 juillet** : promo hors sujet, ignorée sans réponse ni brouillon, conformément au SKILL.
+
+Les seules conversations dont le dernier message n'est pas de nous restent **John Omari Baso** (« Bonjour David. » du 03/09, salutation seule — décision du 04/09 maintenue, **ne rien envoyer avant qu'il écrive**) et **Isaias Fernandes Co** (« 👍 » du 03/09 — rien avant la semaine du 14/09). Aucun élément neuf sur ni l'un ni l'autre.
+
+**Suivi des envois récents, tous sans réponse :**
+- **Dr. Malachie MANAOUDA** — notre DM de 10h02 reste le dernier du fil.
+- **James Schlitt** (18h16 le 04/09) et **Christian BABOKO** (18h58 le 04/09), CTA envoyés à 23h20 sur ordre de David — **toujours les derniers messages**. Plus de 18 h de silence pour Schlitt, inhabituel (il répond en général sous 1 à 3 h).
+- **trésor Ndaye** (04/09), **SOUAD BELKACEMI.** (03/09), **Julien Tuba** (03/09), **Dossa Paul YAOÏTCHA** (02/09), **Harvey Basivikidi** (01/09) — nos messages restent les derniers, rien de dû.
+
+---
+
+### 2️⃣ 🔒 LES DEUX DM EN FILE N'ONT PAS ÉTÉ TOUCHÉS
+
+Aucune ambiguïté sur ce point, quel que soit le régime retenu par ailleurs : le SKILL est explicite, « un DM en attente ne part jamais automatiquement par une session suivante sans validation explicite de David en session interactive ». Les deux textes sont **inchangés**, rédigés et QA-validés par le run de 9h (12/12 relecteur chacun) :
+
+- 🔒 **Ngoy Guillaume** (`/in/ngoy-guillaume-76b8b2267/`), FR, vouvoiement, premier message — 4 jets. Texte intégral et QA en §3bis de l'entrée du run de 9h ci-dessous. **Ancienneté en file : quelques heures** (mis en file ce matin), très loin du seuil de revérification à 7 jours de la politique commune §9.
+- 🔒 **Dr. Siaka Condé** (`/in/drconde-who-afro/`), EN, relance après 7 jours de silence — 3 jets. Texte intégral et QA en §3ter de l'entrée du run de 9h. **Même ancienneté.**
+
+**Notification push renvoyée ce run** pour rappeler les deux textes en attente.
+
+**Arbitrage CTA, rappelé pour les deux (aucun n'a changé)** : omis dans les deux cas, chaque fois pour un **motif admis** de la politique commune §3 — Ngoy Guillaume, premier message sans échange de fond (CTA et lien interdits par construction) ; Dr. Siaka Condé, argumentaire produit + lien + essai **déjà servis dans ce fil le 28/08** (règle anti-répétition). Aucun des deux n'est une omission de commodité.
+
+---
+
+### 3️⃣ ✅ RÉSEAU — 3 SUIVIS (QUOTA 10/10 ATTEINT AU PLAFOND HAUT), 0 NOUVEL ABONNÉ, 0 INVITATION ÉMISE
+
+**Abonnés : 410, strictement inchangé depuis le run de 9h.** Les dix premiers de la liste triée par récence portent tous « Suivi » (Caroline Museka MPH, Boris Pavlin, Yuda Sule Paschal, Dr. Malachie MANAOUDA, Kevin S. PhD, Rocham Mulumbwe, Ghayyoor Sultan, Jacob Banda, Abubakar Sadiq Tahir, Julien Tuba). **Aucun nouvel abonné, aucun follow-back dû.**
+
+**Suivis : 7/7-10 à l'ouverture → 10/10 à la clôture.** Les trois profils sont issus de la recherche active de ce run et **aucun ne figurait dans `linkedin-candidates-tracker.md`** (vérifié avant instruction) :
+
+| # | Profil | Intitulé | Motif |
+|---|---|---|---|
+| 8 | **Yilkal Kebede** `/in/yilkal-kebede-10860878/` | *One Health Workforce Development Officer, Health Security Activity Project* | Addis-Abeba, 3 282 abonnés, **5 relations en commun**, Tufts University. Formation Project HOPE Ethiopia + Tufts sur la surveillance des zoonoses en Afar (Chifra Woreda, 3-7 septembre). Candidat commentaire abandonné ce run sur la charpente, **angle intact reporté à 17h**. |
+| 9 | **Nasir Bello Muhammad** `/in/nasirbm3/` | *Veterinarian & One Health Specialist \| AMR Research & Animal Welfare Advocate \| Founder, Bloodline Veterinary Konsult Nig LTD* | Gusau, Zamfara, Nigeria. Post de 3 h sur la validation OMS de l'élimination de la rage canine au Bhoutan (04/09/2026). |
+| 10 | **Chrissy Chabwera Banda** `/in/chrissy-chabwera-banda-47251759/` | *Blantyre District Council-Health Sector* | Blantyre, Malawi, 500+ relations, University of Malawi-The Polytechnic. Relaie la déclaration de fin des flambées choléra et mpox. Candidat commentaire abandonné sur le fond, **profil retenu**. |
+
+⚠️ **Méthode de clic durcie ce run, à conserver.** La vérification d'identité de ce matin passait par le `h1` de la page de profil : il a rendu `'?'` au premier essai, et **le garde-fou a bloqué le clic en sécurité** plutôt que de partir à l'aveugle — bon comportement, mais méthode fragile. Remplacée par la lecture de l'**`aria-label` du bouton lui-même** (`Suivre <nom exact>`), comparé **dans le même appel JS que le clic** (politique commune §7). Le bouton est isolé par la `section` ancêtre dont le texte **commence par** « Activité » et contient « abonnés » — le filtre `/^Activité/` est nécessaire : sans lui, la carte de profil du haut remonte aussi et expose **3 boutons « Suivre »** homonymes. Libellé « Suivi » revérifié après chaque clic. **Aucun suivi n'est parti sur une mauvaise cible.**
+
+**Invitations : 1/7, aucune émise ce run — et ce n'est pas un renoncement de pertinence.** Détail complet dans `content-log.md` §6. En résumé : « Se connecter » cliqué deux fois dans le menu « Plus » du profil de **Yilkal Kebede** (la 2e fois sur le vrai `a[role="menuitem"]`, la 1re ayant visé un `div` porteur du libellé), **aucun effet** dans les deux cas ; `/mynetwork/invitation-manager/sent/` relu **après chaque tentative**, la plus récente restant **Keneth Mugume, « Envoyé il y a 2 heures »** — donc **aucune invitation partie, aucun doublon créé**. Sur les résultats de recherche de personnes, sa fiche s'affiche mais **aucun bouton d'action n'est rendu**. Arrêt après deux surfaces, sans troisième clic à l'aveugle. **La capacité fonctionnait à 11h** sur ce compte et ce navigateur : plafond journalier atteint, ou file de **99 invitations en attente** qui bride l'émission — la seconde hypothèse est actionnable par David. **Plafond mensuel de notes personnalisées : distinct, toujours épuisé** (04/09, reconstaté au run de 9h).
+
+**Invitations reçues : 2, inchangées** — Zachariah G. Houdari et OLAOLUWA PHILIP. Décisions du 31/08 maintenues, aucun élément neuf, non rejugées.
+
+**Relations : aucune acceptation neuve** depuis le relevé du run de 9h.
+
+---
+
+### 4️⃣ 🔁 CARRY-OVER POUR LE CRÉNEAU DE 17h (05/09) — côté contacts
+
+1. 🔒 **DEUX DM EN FILE, inchangés et non touchés** : **Ngoy Guillaume** et **Dr. Siaka Condé** (textes en §3bis et §3ter de l'entrée du run de 9h). **Ne pas envoyer sans ordre explicite de David.** Notifications push envoyées.
+2. ⚠️ **Reconstater la capacité d'émission d'invitation AVANT d'instruire un candidat de connexion** (§3). Si elle est toujours inerte, ne pas dépenser de temps à en chercher : **6 créneaux ont été perdus ce run pour cette raison, pas par manque de profils**. Candidat prêt si elle revient : **Yilkal Kebede** (2e degré, 5 relations en commun, déjà suivi). Vérifier aussi la file de 99 invitations en attente, hypothèse de blocage la plus plausible.
+3. ⭐ **James Schlitt** et ⭐ **Christian BABOKO** — nos envois du 04/09 au soir restent les derniers messages de leurs fils à 13h. Silence de plus de 18 h, inhabituel pour Schlitt. **À revérifier à 17h.**
+4. ⭐⭐ **Yilkal Kebede** — meilleur candidat **commentaire** pour 17h, motif d'abandon non imputable au profil. Voir `content-log.md` carry-over point 2 pour l'angle validé et les trois charpentes à ne pas rejouer.
+5. 📌 **Signal Malawi toujours ouvert, pour `morning-don-check`** : ligne **Choléra/Malawi** `active: true`, `asOf: 2026-06-29` (68 jours), 3 150 cas / 30 décès ; **aucune ligne Mpox/Malawi**. Deux relais individuels concordants annoncent la clôture officielle des deux flambées (3 200 cas de choléra sur 18 districts, 162 cas de mpox). **Aucun n'est une source primaire**, le communiqué du ministère n'a pas été lu — rien à écrire en base avant cette lecture (politique commune §8).
+6. **Inchangés du run de 9h, à reporter tels quels** : ⭐ John Omari Baso (ne rien envoyer avant qu'il écrive, réexporter le fil en entier avant tout brouillon) ; ⭐⭐ Seynudé Jean-Fortune DAGNON (attendre l'acceptation) ; ➖ Yakoza Nyirenda (invitation sans note du 30/08 toujours en attente) ; ⭐⭐ Isaias Fernandes Co (rien avant la semaine du 14/09) ; ⭐⭐ Dr. Ibrahima Socé Fall (toujours sans hook honnête) ; ⭐⭐ Gail Carson (dossier clos, ne pas rouvrir sans élément neuf) ; ⭐⭐ Jacques Delors TOUMANSIE MFONKOU et ⭐⭐ Ofelia CAZACU ; 🕐 Alhassan Fouard Kanu (identité non levée, ne pas agir sans slug) ; ❌ **Dr R Hyacinthe ZABRE** (clos, hors périmètre, ne plus le proposer) ; ❌ Zachariah G. Houdari et OLAOLUWA PHILIP (invitations reçues, décisions du 31/08 maintenues).
+
+---
+
 ## 📅 Session linkedin-hwg-monitoring — 05/09/2026 (9h, reprise interactive « envoie le DM à Manaouda ») — ✅ **1 DM ENVOYÉ à 10h02, sur ordre explicite de David** (Dr. Malachie MANAOUDA, 2 jets) — ✅ **6 suivis**, ✅ **1 commentaire publié** (détail dans `content-log.md`) — ⚠️ **régime file de validation appliqué avant l'ordre : présence de David positivement établie**
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` datée du 05/09 dans ce fichier ni dans `content-log.md` à l'ouverture ; le seul commit LinkedIn du jour est `e7209a04` (00h00, envoi des 2 CTA en attente du 04/09) → **premier déclenchement de cette routine aujourd'hui**. Horloge à l'heure (`Sat Sep 5 09:03 2026`). Branche vérifiée : **master**. Registre de faits régénéré à 09h05 (224 faits, 106 lignes affichées, 3 périmés) ; registre produit régénéré également (19 formats de prix, 7 claims manuelles, 110 foyers / 74 pays / 19 maladies).

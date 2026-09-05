@@ -2,6 +2,150 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session linkedin-hwg-followup-check — 05/09/2026 (13h, 1er des 2 créneaux après-midi) — ❌ **0 commentaire publié, quota laissé à 2/7** — 2 candidats instruits jusqu'au bout et abandonnés sur des défauts de fond distincts ; ✅ **3 suivis, quota au plafond haut 10/10** ; 🔒 **2 DM toujours en file, aucun touché** ; ⚠️ **l'envoi d'invitation est inerte depuis ~14h alors qu'il fonctionnait à 11h**
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` datée du 05/09 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture ; les seules entrées du jour sont celles de `linkedin-hwg-monitoring` (9h) → **premier déclenchement de cette routine aujourd'hui**. Horloge à l'heure (`Sat Sep 5 13:03 2026`). Branche vérifiée : **master**. Registre de faits régénéré à 13h05 : **224 faits sur 106 lignes affichées, 3 périmés, 81 lignes `is_seed` exclues** — identique au relevé de 9h05 en volume, mais la ligne Ebola/RDC a été rafraîchie entre-temps par `morning-don-check` (**6 342 cas / 3 072 décès / létalité 48,4 % au 02/09**, source ECDC, contre 6 250 / 3 039 au 01/09 ce matin) : elle rejoint désormais le chiffre publié par Tambe Elvis Akem, dont le run de 9h notait l'écart.
+
+**Navigateur : nominal tout le run.** `_shared/browser-status.md` lu avant ouverture, dernière entrée **🟢 RÉTABLI (03/09 ~09h35)**. `list_connected_browsers` renvoie `23c7ecdd-26d7-4d25-b39b-1889eb0fa3bd` seul, sélectionné par deviceId (§7). Aucun timeout CDP, aucun refus du classifieur. **Aucune entrée à ajouter à `browser-status.md`** — le blocage d'invitation décrit en §6 est applicatif, pas un problème de pont (§7 : les deux pannes sont distinctes et ne se consignent pas au même endroit).
+
+---
+
+### 1️⃣ ⚠️ DÉCISION DE RÉGIME — SANS OBJET CE RUN, MAIS TRANCHÉE AVANT DE CHERCHER
+
+**Aucun DM n'a été rédigé ce run** (aucun message entrant à traiter, voir §2), donc la question file/automation n'a jamais eu à s'appliquer. Elle a tout de même été tranchée en début de run, comme `CLAUDE.md` l'exige (« décider du régime applicable est un acte du run, pas une évidence »), pour ne pas avoir à la trancher dans l'urgence si un candidat était apparu.
+
+**Régime retenu : automation**, par stricte application du précédent du 04/09 13h, qui portait sur la même routine, le même créneau, et une trace de présence d'ancienneté identique.
+
+- Dernier commit du dépôt : `7ce2decc`, **11h30** — soit **1 h 33** avant l'ouverture du run. Le 04/09, le run de 13h a retenu « aucune preuve de présence de David : dernier commit à 11h27 » et appliqué l'automation ; **David a confirmé cette décision le lendemain**.
+- Dernière activité d'une session interactive (`Hwg seo traffic followup 2026 09 06`) : **~11h50**. Rien tapé depuis.
+- **Aucun commit n'est tombé pendant le run** (revérifié à 13h43 : `git log` s'arrête toujours à `7ce2decc`), contrairement au run de 9h ce matin, où un commit horodaté en plein run avait établi sa présence et fait appliquer la file.
+
+⚠️ **Le contre-argument est réel et mérite d'être écrit** : David a travaillé sans interruption de 07h35 à 11h50 aujourd'hui, un samedi, et un creux d'1 h 13 un midi n'est pas une preuve d'absence. Si un DM avait effectivement dû partir, ce doute aurait mérité d'être arbitré plutôt que réglé par analogie — la clause « en cas de doute réel, la ligne de base du 23/07 l'emporte » et le précédent du 04/09 pointent en sens contraires sur exactement ce profil de trace. **Point à faire trancher explicitement par David**, plutôt que de le rejouer par analogie à chaque créneau de 13h : 🏷️HORS-ROUTINE : à partir de quelle ancienneté de trace (commit, frappe en session) un run de 13h doit-il basculer de la file vers l'automation ?
+
+**Les 2 DM en file du run de 9h n'ont pas été touchés**, et ce point-là n'a rien d'ambigu : le SKILL est explicite (« un DM en attente ne part jamais automatiquement par une session suivante sans validation explicite de David en session interactive »). Textes complets inchangés dans `linkedin-contacts.md`.
+
+---
+
+### 2️⃣ ✅ SUIVI DES ACTIONS DU JOUR ET DES FILS ACTIFS (§14) — **aucune réponse neuve nulle part**
+
+| Action suivie | État constaté à 13h |
+|---|---|
+| **DM Dr. Malachie MANAOUDA** (envoyé 10h02 sur ordre de David) | Notre message reste le dernier du fil. Aucune réponse. |
+| **Commentaire Tambe Elvis Akem** (~10h05) | Post rouvert, 5 commentaires au total : le nôtre (3 h, **4 impressions**), Basile Ngontcha et Firdaus Kharas avec les deux réponses de l'auteur, toutes antérieures au nôtre. **Il n'a pas répondu**, sous-fil toujours ouvert. |
+| **Commentaire Keneth Mugume** (~11h) | Post rouvert, **notre commentaire est toujours le seul du post**. Aucune réponse, aucune réaction. |
+| **Fil Ifedayo Adetifa** (`7501417483380113408`, §14) | Post rouvert directement, 8 commentaires énumérés : **notre réponse du 04/09 ~15h35 reste la dernière du sous-fil**. Deux commentaires postérieurs (Olusola Aruna, Abubakar Jafar Usman) sont des appréciations générales adressées à l'auteur, pas à nous. La mention « Ifedayo Adetifa vous mentionne » qui remonte encore en notifications (21 h) est bien sa réponse du 04/09 déjà traitée, **vérifiée cette fois sur le post lui-même et non sur l'horodatage de la notification**, dont l'arrondi rendait la lecture ambiguë (17 h ce matin, 21 h maintenant, pour le même item). |
+| **Fil Fassou Mathias Grovogui / post Pete Macharia** (`7501552252575215617`, §14) | Post rouvert, **notre réponse du 04/09 ~15h30 reste la dernière du sous-fil**. La notification « Meg Wirth et 1 autre personne ont réagi à votre commentaire » (18 h) porte sur notre commentaire top-level : **des réactions, pas une réponse**. Rien à traiter. |
+| **James Schlitt** et **Christian BABOKO** (carry-over de 9h) | Nos envois du 04/09 (18h16 et 18h58, CTA à 23h20) sont **toujours les derniers messages** de leurs fils. Plus de 18 h de silence pour Schlitt, inhabituel pour lui. Rien de dû. |
+
+**Notifications parcourues intégralement (12 items)** : aucun élément postérieur à ce que le run de 9h avait déjà traité. Le seul contenu neuf est un post de **Dr. Jean Kaseya** (3 h) sur la riposte Ebola/RDC après son passage à *Afrique Midi* sur RFI, **inexploitable en commentaire** : il est bloqué en hebdomadaire jusqu'au 08/09.
+
+---
+
+### 3️⃣ ❌ CANDIDAT COMMENTAIRE ABANDONNÉ (1/2) — **Chrissy Chabwera Banda**, fin des flambées choléra et mpox au Malawi — 2 jets, mêmes 4 défauts aux deux passages
+
+`urn:li:activity:7501629590273060865`, post de **21 h** (fenêtre 48 h), **3e degré**, **0 commentaire et 0 réaction avant nous** — aucune redondance possible (§5). *Blantyre District Council-Health Sector*, Blantyre, Malawi, 500+ relations, University of Malawi-The Polytechnic. Activité propre cohérente (PrEP/Peer Ambassadors à KuHeS il y a 6 j, événement IAS/Georgetown sur la santé numérique). **Légitimité établie.**
+
+C'était le meilleur candidat du run sur le papier : il recoupe directement le signal mis en carry-over ce matin (`linkedin-contacts.md`, carry-over de 9h point 6) et HWG y a une prise honnête — **notre ligne Choléra/Malawi est `active: true`, arrêtée au 29/06, 3 150 cas / 30 décès**, et **aucune ligne Mpox/Malawi n'existe en base**.
+
+- **Jet 1** — angle : la recherche active de cas figure dans sa liste d'interventions de riposte et c'est elle qui a produit les 28 jours sans cas confirmé ; que devient-elle une fois la déclaration faite ? Mécanique **PASS** (201 car., 2 §, en/en, 0 bloquant). Relecteur : **REECRIRE 1, 5, 7, 9, 11, 12**. 🔴 **(1)** « more than 28 » (un plancher) transformé en « the twenty-eight days » (un compte fermé), et le compteur détaché du choléra sous un post qui déclare **deux** flambées. 🔴 **(5)** son terme est « active surveillance », pas « active case finding » ; et son post attribue le résultat à un faisceau (« *various coordinated response interventions […] including* »), pas à une intervention seule. 🔴 **(7) et (12), les plus coûteux** : son **dernier paragraphe répond déjà** à la question (« *continued vigilance, surveillance […] remains essential* »). 🔴 **(11)** charpente identique au commentaire Keneth Mugume publié deux heures plus tôt.
+- **Jet 2** — angle changé : le critère choléra est dans l'annonce, celui du mpox n'y est pas ; lequel le mpox devait-il franchir ? Mécanique **PASS** (257 car.). Relecteur : **REECRIRE 5, 9, 11, 12** — **les quatre mêmes défauts qu'au jet 1**. 🔴 **(12), décisif** : la réponse existe. Notre propre relevé de ce matin (`linkedin-contacts.md:138`) porte « *mpox : 0 cas depuis 90+ jours* », attribué à la même déclaration ministérielle par un relais parallèle (Rebecca Karimu) — **la lacune que le brouillon pointait n'était que celle de son résumé à elle**. 🔴 **(9)** relever publiquement un manque dans un communiqué officiel, sous le post d'une agente de conseil de district qui le relaie, ne passe pas le silence exigé.
+
+❌ **Candidat abandonné, règle des deux essais (politique commune §5 item 6).** Ce n'est pas un défaut de rédaction rattrapable : l'angle est mort, la question ayant sa réponse publique. **Aucun commentaire publié, donc aucun blocage hebdomadaire créé.** Elle a en revanche été **suivie** (§5 ci-dessous) : le profil est bon, la porte reste ouverte.
+
+📌 **Effet de bord utile** : cette instruction confirme le signal Malawi du carry-over de 9h **sans le résoudre**. Les deux relais restent des reprises individuelles ; le communiqué primaire n'a pas été lu par cette session. Le point reste entier pour `morning-don-check`, et il est **plus net qu'hier** : notre ligne choléra est à 68 jours et porte encore `active: true` alors que deux relais concordants annoncent la clôture.
+
+---
+
+### 4️⃣ ❌ CANDIDAT COMMENTAIRE ABANDONNÉ (2/2) — **Yilkal Kebede**, épidémiologie participative en Afar — **3 jets, l'angle est bon, c'est le stock de charpentes du jour qui est épuisé**
+
+`urn:li:activity:7501851400176431104`, post de **7 h**, **2e degré**, 27 réactions / **2 commentaires** / 7 republications. *One Health Workforce Development Officer, Health Security Activity Project*, Addis-Abeba, 3 282 abonnés, 5 relations en commun, Tufts University. **Formation Project HOPE Ethiopia + Tufts sur la surveillance des zoonoses, Afar, Chifra Woreda, 3-7 septembre 2026**, par épidémiologie participative.
+
+**Les 2 commentaires existants lus en entier avant rédaction (§5)** : « Great Job! » (Yechale Teshome) et une assertion générale de Lian Wee LOO (« *Community knowledge becomes the detection layer, not a downstream input.* »). **Aucune question posée, aucun angle de fond pris.**
+
+- **Jet 1** — l'épidémiologie participative fait deux métiers à la fois (détection précoce / données génératrices d'hypothèses) ; qu'est-ce qu'un signal de *proportional piling* déclenche avant la validation ? Mécanique **PASS**. Relecteur : **11 PASS, REECRIRE 7** seul. 🔴 Son énumération est **triple**, pas double : le terme médian omis (« *informs spatiotemporal risk stratification* ») est précisément une chose que le signal enclenche avant validation.
+- **Jet 2** — les trois sorties reconnues, question déplacée sur la destination de la stratification. Mécanique **PASS**. Relecteur : **REECRIRE 7, 11**. 🔴 **(7)** ma seule phrase analytique redisait le commentaire déjà publié de Lian Wee. 🔴 **(11)** clôture « Where does X…? » **déclarée brûlée** dans le corpus, subordonnée « Once the … closes » déjà servie, ouverture restituant son triptyque.
+- **Jet 3** — angle resserré sur le critère de recevabilité côté surveillance vétérinaire formelle. Mécanique **PASS** (287 car.). Relecteur : **REECRIRE 5, 11**. 🔴 **(11), 2e échec d'affilée sur le même défaut** : l'armature « *A bridge only counts if…* » + question qui en remplit le paramètre est **celle du commentaire Keneth Mugume publié à 11h** (« *that comparison only holds if…* » + « *What stretch of the year…* ») ; et « *is the one that* » est un moule **déclaré brûlé** (`linkedin-contacts.md:198`) à **plus de vingt occurrences publiées**. 🔴 **(5)** la clause d'unicité prêtait à son énumération un ordre de dépendance absent de son texte.
+
+❌ **Candidat abandonné, règle des deux essais sur la question 11.** ⚠️ **Le motif n'est pas le candidat, et c'est ce qui compte pour la suite** : les questions 7 et 12 sont passées au jet 3, l'apport est réel et reconnu par le relecteur (« *le critère de recevabilité n'est présent ni dans le post ni dans les deux commentaires existants* »). Ce qui bloque, c'est que **deux commentaires ont déjà été publiés ce matin**, et que toute charpente encore disponible se heurte à l'une des deux. C'est le diagnostic déjà posé le 03/09 (« *ce n'est plus un problème de rédaction, c'est un problème de stock d'angles* »), ici à l'échelle d'une seule journée.
+
+➡️ **Reporté au créneau de 17h, avec une session au contexte neuf** : son post court jusqu'au **07/09 au matin**, il a été **suivi** ce run, et l'angle (sous quelle forme la stratification spatiotemporelle est-elle recevable par la surveillance vétérinaire formelle) est intact. Voir carry-over §7.
+
+---
+
+### 5️⃣ ✅ RÉSEAU — 3 SUIVIS, QUOTA AU PLAFOND HAUT (10/10), 0 NOUVEL ABONNÉ
+
+**Abonnés : 410, strictement inchangé depuis le run de 9h.** Les dix premiers de la liste triée par récence portent tous « Suivi ». **Aucun nouvel abonné, aucun follow-back dû.**
+
+**Suivis : 7/7-10 à l'ouverture → 10/10 à la clôture**, tous trois issus de la recherche active de ce run, tous trois absents de `linkedin-candidates-tracker.md` (vérifié avant instruction) :
+
+| # | Profil | Intitulé | Motif |
+|---|---|---|---|
+| 8 | **Yilkal Kebede** `/in/yilkal-kebede-10860878/` | *One Health Workforce Development Officer, Health Security Activity Project* | Addis-Abeba, 3 282 abonnés, 5 relations en commun, Tufts University. Surveillance des zoonoses en contexte pastoral. Commentaire abandonné (§4), **le suivi garde la porte ouverte** et l'angle est reporté à 17h. |
+| 9 | **Nasir Bello Muhammad** `/in/nasirbm3/` | *Veterinarian & One Health Specialist \| AMR Research & Animal Welfare Advocate \| Founder, Bloodline Veterinary Konsult Nig LTD* | Gusau, Zamfara, Nigeria. Post de 3 h sur la validation OMS de l'élimination de la rage transmise par le chien au Bhoutan (4 septembre 2026) et ce que le Nigeria peut en tirer. |
+| 10 | **Chrissy Chabwera Banda** `/in/chrissy-chabwera-banda-47251759/` | *Blantyre District Council-Health Sector* | Blantyre, Malawi, 500+ relations. Relaie la déclaration de fin des flambées choléra et mpox. Commentaire abandonné (§3), profil retenu. |
+
+**Méthode de clic** : celle corrigée ce matin (bouton dont la `section` ancêtre commence par « Activité » et contient « abonnés »), **durcie d'un cran ce run** — la vérification d'identité ne passe plus par le `h1` (qui a rendu `'?'` au premier essai et **a fait échouer le garde-fou en sécurité, sans clic**) mais par l'`aria-label` du bouton lui-même (`Suivre <nom exact>`), lu et comparé **dans le même appel JS que le clic** (§7). Libellé « Suivi » revérifié après chaque clic. **Aucun suivi n'est parti sur une mauvaise cible.**
+
+**Deux profils écartés en cours de recherche**, ajoutés au tracker :
+- ❌ **AHMED ABDELAZIZ** `/in/ahmedabdelaziz2010/` — *Global Health Scientist \| AI Surveillance \| Vector-Borne Disease Innovation*. Son post sur la dengue était le meilleur candidat de la première recherche. **Écarté sur la légitimité (§10)** : sa page d'activité montre **5 posts en une heure**, répartis entre santé publique, gouvernance d'entreprise, **information des investisseurs et court-termisme**, et adoption de l'IA en comité de direction. Le critère de cohérence avec le domaine santé publique/épidémiologie n'est pas rempli.
+- ❌ **Moe Myint Oo** `/in/moe-myint-oo-9696a417/` — financement de la santé, PPP et assurance maladie (Myanmar). Hors périmètre surveillance épidémiologique.
+
+---
+
+### 6️⃣ ⚠️ INVITATION IMPOSSIBLE À ÉMETTRE — inerte sur deux surfaces, **alors qu'une invitation est partie à 11h**
+
+Quota du jour : **1/7** (Keneth Mugume, sans note, run de 9h). Six créneaux restaient. **Aucune invitation n'a pu être émise**, et ce n'est pas un renoncement de pertinence : **Yilkal Kebede** est un candidat de connexion solide (2e degré, 5 relations en commun, suivi ce run).
+
+- **Surface 1, menu « Plus » du profil** : le menu s'ouvre et contient bien « Se connecter ». Premier clic sur un `div` porteur du libellé → sans effet. Deuxième clic sur le **vrai `a[role="menuitem"]`** → **également sans effet** : aucune modale, aucun toast, en-tête inchangé (« Message / Suivi / Plus », pas d'« En attente ») après attente à délai croissant.
+- **Vérification à la source, pas au symptôme** : `/mynetwork/invitation-manager/sent/` relu **après chaque tentative**. La plus récente reste **Keneth Mugume, « Envoyé il y a 2 heures »**. **Aucune invitation à Yilkal Kebede n'est partie**, donc **aucun risque de doublon** — c'est ce qui a permis de retenter une fois sans danger.
+- **Surface 2, résultats de recherche de personnes** : sa fiche s'affiche correctement (nom, intitulé, 2e degré, relations en commun) mais **aucun bouton d'action n'est rendu** — ni « Se connecter », ni « Suivre ». La capacité n'est pas exposée sur cette surface non plus.
+- **Arrêt après deux surfaces distinctes**, sans troisième clic à l'aveugle (politique commune §7 : un formulaire absent peut être une injection asynchrone, un 2e clic crée un doublon).
+
+**Ce qui rend le constat exploitable plutôt qu'un simple échec** : la capacité **fonctionnait à 11h ce matin** sur ce même compte et ce même navigateur. Deux hypothèses, non départagées par cette session : un **plafond journalier d'invitations** atteint, ou la file de **99 invitations en attente** (« Personnes (99) » sur la page des invitations envoyées) qui bride l'émission. La seconde est actionnable par David — retirer des invitations anciennes — et vaut d'être vérifiée avant de conclure à un plafond de plateforme. **Le plafond mensuel de notes personnalisées, lui, reste distinct et toujours épuisé** (constaté 04/09, reconstaté 05/09 9h).
+
+---
+
+### 7️⃣ 📌 INFOS NOTÉES POUR DE FUTURS POSTS
+
+1. **Rage / Bhoutan — fait daté et vérifiable, non exploité ce run.** Le **4 septembre 2026**, l'OMS a validé l'élimination par le Bhoutan de la rage humaine transmise par le chien en tant que problème de santé publique — **premier pays de la Région Asie du Sud-Est**. Relayé par Nasir Bello Muhammad (suivi ce run), qui en tire une lecture « systèmes » pour le Nigeria. **HWG ne porte aucune ligne rage** : à vérifier contre le communiqué OMS primaire avant tout usage, mais c'est un fait d'agenda propre et daté, utilisable en post de marque ou en commentaire chez un relais.
+2. **Kenya / El Niño — Nelly Saiti** (`/in/nelly-saiti-85020950/`, *Public Health Specialist*, 23 h) annonce des pluies intenses d'**octobre 2026 à janvier 2027** et anticipe des flambées hydriques (choléra, typhoïde) et vectorielles (paludisme, dengue, FVR). **Non instruit comme candidat commentaire ce run** faute de créneau de charpente disponible. Matière de saison à reprendre : HWG porte des lignes choléra et dengue.
+3. **ECDC / West Nile** — inchangé depuis le run de 9h : page ECDC bloquée jusqu'au **08/09**, HWG porte une ligne West Nile fever, Dorothée Obach (suivie ce matin) relaie le sujet.
+4. **Le compte X n'est pas concerné** : `x-hwg-monitoring` et `x-hwg-followup-check` restent éliminées depuis le 17/08, rien de ce qui précède n'appelle une action sur ce réseau.
+
+---
+
+### 8️⃣ 📊 QUOTAS À LA CLÔTURE (partagés entre les 3 sessions LinkedIn du jour)
+
+| Quota | Consommé | Plafond | Détail |
+|---|---|---|---|
+| **Commentaires** | **2** | 7 | Tambe Elvis Akem + Keneth Mugume, **tous deux du run de 9h**. 0 ce run : 2 candidats instruits jusqu'au bout (5 jets au total) et abandonnés sur des défauts de fond, motifs en §3 et §4. |
+| **DM** | **1 envoyé** | 8 | Dr. Malachie MANAOUDA (10h02, ordre explicite de David). **2 en file, non touchés** (Ngoy Guillaume, Dr. Siaka Condé). 0 rédigé ce run, aucun message entrant à traiter. |
+| **Suivis** | **10** | 7-10 | 7 au run de 9h + **3 ce run**. **Plafond haut atteint.** |
+| **Invitations** | **1** | 7 | Keneth Mugume (sans note, 9h). **6 créneaux perdus faute de capacité d'émission**, voir §6 — pas faute de candidat. |
+
+---
+
+### 9️⃣ 🔁 CARRY-OVER POUR LE CRÉNEAU DE 17h (05/09)
+
+1. 🔒 **DEUX DM EN FILE DE VALIDATION, inchangés** : **Ngoy Guillaume** et **Dr. Siaka Condé** (textes intégraux dans `linkedin-contacts.md`, run de 9h). **Ne pas envoyer sans ordre explicite de David.** Notification push renvoyée ce run.
+2. ⭐⭐⭐ **Yilkal Kebede** (`/in/yilkal-kebede-10860878/`) — **meilleur candidat commentaire du corpus pour 17h, et le motif d'abandon ne lui est pas imputable.** Post `urn:li:activity:7501851400176431104`, **fenêtre ouverte jusqu'au 07/09 au matin**, déjà suivi, aucun blocage. **Angle intact et validé sur le fond par le relecteur** : sous quelle forme la « spatiotemporal risk stratification » produite par l'épidémiologie participative est-elle recevable par la surveillance vétérinaire formelle — point absent de son post et des 2 commentaires existants. ⚠️ **Trois charpentes à ne pas rejouer** : « A/X only counts/holds if… » suivi de la question qui en remplit le paramètre (= le commentaire Keneth Mugume de 11h) ; « X is the one that… » (moule brûlé, 20+ occurrences) ; « Where does X…? » et « Once the … closes ». Et ne pas redire la thèse de Lian Wee LOO (la connaissance communautaire *est* la couche de détection).
+3. ⚠️ **Invitations : reconstater la capacité d'émission avant toute recherche de candidat** (§6). Si elle est toujours inerte, ne pas dépenser de temps à instruire des candidats de connexion — **6 créneaux ont déjà été perdus ce run pour cette raison, pas par manque de profils.** Candidat prêt si elle revient : **Yilkal Kebede** (2e degré, 5 relations en commun). Plafond mensuel de notes personnalisées : distinct, et toujours épuisé.
+4. ❌ **Ne pas rejouer les angles abandonnés** : chez **Chrissy Chabwera Banda**, les deux jets sont morts sur le fond (le critère mpox est public, sa continuation de la surveillance est écrite dans son post) — **ne pas la reproposer sans élément neuf**, elle reste suivie. Chez **Yilkal Kebede**, ne pas reprendre les charpentes du point 2.
+5. ⭐ **Tambe Elvis Akem** et ⭐ **Keneth Mugume** — sous-fils ouverts, **aucune réponse à 13h** (3 h et 2 h). À revérifier à 17h : Tambe répond habituellement à ses commentateurs.
+6. **Fils de commentaire des jours précédents (§14) : rien de neuf, vérifié sur les posts eux-mêmes.** Adetifa (`7501417483380113408`) et Grovogui/Macharia (`7501552252575215617`) rouverts directement, notre tour reste le dernier dans les deux. **La mention Adetifa qui remonte encore en notifications est un item déjà traité le 04/09** — ne pas la rouvrir une 3e fois sur la foi de l'horodatage de la notification, dont l'arrondi est trompeur.
+7. 📌 **Signal Malawi, toujours ouvert et plus net qu'hier — pour `morning-don-check`, pas pour cette routine.** Notre ligne **Choléra/Malawi** porte `active: true`, `asOf: 2026-06-29` (**68 jours**), 3 150 cas / 30 décès, source WHO cholera surveillance ; **aucune ligne Mpox/Malawi n'existe**. Deux relais individuels concordants (Chrissy Chabwera Banda `urn:li:activity:7501629590273060865`, Rebecca Karimu `/in/rebecca-karimu-a1a042107/`) donnent la clôture officielle des deux flambées, avec **3 200 cas de choléra sur 18 districts** et **162 cas de mpox confirmés**. **Aucun n'est une source primaire** : le communiqué du ministère n'a pas été lu par cette session, et rien ne doit être écrit en base avant cette lecture (§8).
+8. 📌 **Rage/Bhoutan (4 septembre 2026, validation OMS)** — voir §7 point 1, à vérifier contre le communiqué primaire avant tout usage.
+9. **Blocages hebdomadaires au 05/09, inchangés depuis le run de 9h** (aucun commentaire publié ce run, donc **aucun nouveau blocage créé**) : Tambe Elvis Akem, Keneth Mugume (12/09) ; Ifedayo Adetifa, Pete Macharia (11/09) ; Adesoye Emmanuel Tunde, Kyaw Thowai Prue Prince, Rocham Mulumbwe, Dr. Rashi Bhardwaj, Dr Fabrice KHADDY, Miriam Mbueshi (09/09) ; Dr. Jean Kaseya, page ECDC, Jacob Banda (08/09) ; Melvin Sanicas, Dossa Paul YAOÏTCHA, Mohammad Ilias Hossain (07/09, top-level, sous-fils ouverts). **Libres, et nouveaux au corpus ce run** : Yilkal Kebede, Nasir Bello Muhammad, Chrissy Chabwera Banda (suivis, aucun commentaire publié chez eux). Libres par ailleurs, inchangés : Global Health EDCTP3, French Healthcare Association, Health Policy Watch, SOUAD BELKACEMI, Oke Ikpekpe, Jason Kindrachuk, Dr Jeeven Kumar, Harvey Basivikidi, Robert Herriman, Patrick AYONGA, Oliver Morgan, page Africa CDC, page WHO AFRO, Vital Strategies, Tedros, Prof. Mohamed Janabi, INRB, Apoorva Wasnik, Johan Verheyden, Gaelle Gonzalez, Lori Peterson, Dr. Malachie MANAOUDA, James Schlitt, Martin Yakum, Julien Harneis, BANZA Freddy Mutoka, Jean-Paul Gonzalez, Delphine CASAMATTA, David Moreau, Christian BABOKO, Lenka Beňová, The Conversation Africa, Yap Boum II, Marie Roseline Darnycka BELIZAIRE, Benjamin O'Neil, Alexandra THABUIS, Nirmal Kandel, JEAN NACHEGA, Sayed Himatt, Abdishakur Dek, Dorothée Obach, RAMAZANI KALUMBI RAMSES, Jean Claude Nshimiyimana, Mohamed Elsheikh.
+10. **Inchangés du run de 9h, à reporter tels quels** : ⭐ **James Schlitt** et ⭐ **Christian BABOKO** (nos envois du 04/09 toujours les derniers, silence inhabituel pour Schlitt — à revérifier à 17h) ; ⭐ John Omari Baso (« Bonjour David. » du 03/09, **ne rien envoyer avant qu'il écrive**, réexporter le fil en entier avant tout brouillon) ; ⭐⭐ Céline FRANÇOIS (dès qu'elle republie) ; ⭐⭐ Delphine CASAMATTA et David Moreau (ne pas rejouer les angles morts du 04/09) ; ⭐⭐ Jacques Delors TOUMANSIE MFONKOU et ⭐⭐ Ofelia CAZACU ; ⭐⭐ Seynudé Jean-Fortune DAGNON (attendre l'acceptation) ; ⭐⭐ Dr. Ibrahima Socé Fall (toujours sans hook honnête) ; ➖ Yakoza Nyirenda (invitation sans note du 30/08 toujours en attente) ; ⭐⭐ Isaias Fernandes Co (rien avant la semaine du 14/09) ; ⭐ Oke Ikpekpe (décision du 04/09 maintenue) ; 🕐 **Alhassan Fouard Kanu** (identité non levée, ne pas agir sans slug) ; ⚠️ ne pas rejouer les 4 angles abandonnés chez **JEAN NACHEGA** (son post reste dans la fenêtre jusqu'au 06/09 au matin) ; ❌ **Dr R Hyacinthe ZABRE** (retiré définitivement, hors périmètre) ; ❌ ne pas reproposer sans élément neuf : Zachariah G. Houdari, OLAOLUWA PHILIP, Jean-Rodrigue NDONG, Haider Durrani, Kipchirchir Kigen, Victoria Kanana, Abdulrazaq Tanga, Herve Chatue kamga, Talaat Aladesawe, Ekokobe Forbin, Evélyne TOFFOHOSSOU, Pulcherie CODJO, **AHMED ABDELAZIZ** et **Moe Myint Oo** (ces deux derniers écartés ce run, motifs en §5).
+
+---
+
+### 🔟 🔧 ARBRE DE TRAVAIL
+
+Fichiers modifiés par cette session : `marketing/content-log.md`, `marketing/linkedin-contacts.md`, `marketing/linkedin-candidates-tracker.md`. **`git status` était vide à l'ouverture comme à la clôture hors mes propres fichiers — aucun fichier d'une autre routine trouvé dans l'arbre**, rien à signaler à ce titre. `marketing/qa/claimable-facts.json` régénéré, non suivi ; `tmp/` non suivi. **Branche : master.** Aucun verrou de code demandé (aucune édition de `app/`, `lib/`, `components/`).
+
+---
+
 ## 📅 Session linkedin-hwg-monitoring — 05/09/2026 (9h, reprise interactive « continue le run » ×2) — ✅ **2 commentaires publiés** (Tambe Elvis Akem 4 jets, Keneth Mugume 2 jets) — ligne d'événement Ebola/RDC (§16) close par un porteur atteignable ; ❌ **1 candidat abandonné après 4 jets** ; ⚠️ **le post WHO AFRO « Nizi / 80 lits » reste non ciblable, retesté par trois chemins**
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` datée du 05/09 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture ; `git log` du jour ne montre qu'un seul commit LinkedIn, `e7209a04` à 00h00 (envoi des 2 CTA en attente du 04/09, sur ordre de David) → **premier déclenchement de cette routine aujourd'hui**. Horloge à l'heure (`Sat Sep 5 09:03 2026`). Branche vérifiée : **master**. Registres régénérés à 09h05 : registre de faits **224 faits sur 106 lignes affichées, 3 périmés, 81 lignes `is_seed` exclues** ; registre produit **19 formats de prix, 7 claims manuelles, 110 foyers / 74 pays / 19 maladies / 32 hôtes source**.
