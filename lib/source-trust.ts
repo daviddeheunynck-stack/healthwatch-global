@@ -283,6 +283,12 @@ const AUTHORITATIVE_SOURCE_DOMAINS: ReadonlySet<string> = new Set([
   // Guatemala's official government TLD, same national-ministry shape as
   // minsa.gob.ni/dge.gob.pe above.
   "mspas.gob.gt",
+  // Chile Ministerio de Salud (MINSAL) — found 2026-09-05 via data-quality's provenance
+  // section, same shape as minsa.gob.ni/dge.gob.pe/mspas.gob.gt above: a Hantavirus/Chile
+  // row citing the ministry's own health-alert announcement page, demoted to "unverified"
+  // for lacking an allowlist entry, not for any real trust issue. Verified via SQL that no
+  // other row's source contains "minsal.cl" before adding it.
+  "minsal.cl",
   "endpolio.com.pk",     // Pakistan National Emergency Operation Centre (polio programme)
   // Sub-national health departments whose bulletins we cite. health.ny.gov's "Global Health
   // Update" is an official agency publication but a SECONDARY digest of PAHO/WHO figures —
