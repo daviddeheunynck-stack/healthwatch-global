@@ -584,6 +584,16 @@ export default async function LandingPage({ locale }: { locale: string }) {
             >
               {c.heroCtaDemo}
             </a>
+            {/* heroCtaSecondary was translated into all 5 locales but never rendered
+                anywhere — the pricing page had no link at all from the hero, the
+                first thing a visitor sees. Ghost-styled (third tier, after the two
+                colored CTAs) so it doesn't compete with the primary signup CTA. */}
+            <Link
+              href={`/${locale}/pricing`}
+              className="inline-flex items-center gap-2 border border-gray-700 hover:border-gray-500 text-gray-300 hover:text-white font-semibold px-8 py-4 rounded-xl transition-colors text-sm"
+            >
+              {c.heroCtaSecondary}
+            </Link>
           </div>
           <p className="text-xs text-gray-600">{c.heroNoCc}</p>
 
