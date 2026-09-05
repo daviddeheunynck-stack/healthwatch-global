@@ -356,6 +356,13 @@ const GENERAL_PRESS_DOMAINS: ReadonlySet<string> = new Set([
   // the district health officer, contact-tracing count, and taskforce meeting date for
   // the Yumbe cluster the substack post only summarized without sourcing.
   "monitor.co.ug",
+  // Tribune Online (Nigeria) — established national newsroom (Nigerian Tribune group,
+  // publishing since 1949), same tier as Leadership above. Added 2026-09-04 on David's
+  // explicit word, re-sourcing Lassa fever/Nigeria off the NCDC sitrep PDF whose
+  // confidentiality clause was found 2026-09-02 — see
+  // project_ncdc_lassa_row_confidential_content_2026_09_04. Article directly attributes
+  // NCDC's week-33 2026 figures (1,035 cases / 252 deaths).
+  "tribuneonlineng.com",
 ]);
 
 /**
