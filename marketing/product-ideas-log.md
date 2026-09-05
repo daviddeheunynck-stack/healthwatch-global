@@ -3485,21 +3485,32 @@ lectures.
    vérification manuelle déjà en place pour Afghanistan/Pakistan couvre
    désormais les 13 lignes africaines.
 
-2. **RÉSOLU (partiellement) — Lassa fever / Nigéria n'est plus affichée.**
-   `getOutbreaksCached()` gardait la ligne (1 056 cas, 253 décès) 60 jours après
-   sa désactivation du 02/09, `source_priority>=3` oblige — même piège que les
-   4 lignes ReliefWeb du 26/08. `source_priority` descendu à 0 en session
-   interactive (David : « lance-le toi-même via le compte admin », après un
-   premier refus du classificateur d'autorisation sur le même script quelques
-   minutes plus tôt). Écriture confirmée par `.select()` : `5 → 0`.
+2. **RÉSOLU — Lassa fever / Nigéria re-sourcée sur une citation publique.**
+   D'abord sortie de l'affichage (`source_priority` 5→0, même piège de fenêtre
+   de 60 jours que les 4 lignes ReliefWeb du 26/08), puis, David ayant demandé
+   « trouve une source publique pour la ligne Lassa », recherche web : aucune
+   couverture presse de la semaine 34 exacte (1 056/253, seule source =
+   le PDF NCDC confidentiel), mais Vanguard, Tribune Online, Premium Times et
+   Blueprint citent tous directement le NCDC pour la **semaine 33** (10-16 août) :
+   1 035 cas, 252 décès, CFR 24,4 %, 23 États/117 LGA, publié le 01-02/09.
 
-   **Ce que ça ne règle pas** : le nettoyage du 02/09 avait remplacé le lien
-   PDF confidentiel par la page de listing expurgée dans `source`, mais les
-   chiffres eux-mêmes restent extraits du document revendiqué confidentiel —
-   le commentaire de `sync-ncdc/route.ts` le dit lui-même, changer l'URL ne
-   change pas la provenance du contenu. La ligne n'a donc ni une source
-   légitimement publique, ni de décision de retrait. Détail dans la mémoire
-   `project_ncdc_lassa_row_confidential_content_2026_09_04`.
+   Signalé avant d'écrire : c'est un recul assumé (semaine antérieure, chiffres
+   plus bas) et aucun des quatre médias n'était encore dans la liste de
+   confiance. David a tranché : re-sourcer sur la semaine 33 via Tribune Online.
+   `tribuneonlineng.com` ajouté à `GENERAL_PRESS_DOMAINS` (commit `fcc04966`).
+   Ligne réécrite : `active` false→true, cases 1056→1035, deaths 253→252, date
+   22/08→16/08, `source_priority` 0→5, `verification_status`→confirmed,
+   `response_phase`→active_response, description (5 langues) explicitant le
+   recul et pourquoi les chiffres de semaine 34 ne sont pas repris. Écriture
+   confirmée par `.select()` ; `check-source-trust.mjs` classe désormais la
+   ligne `press`, correctement liée, sans régression ailleurs.
+
+   Les deux écritures en base (baisse de priorité, puis re-sourcing complet)
+   ont chacune été bloquées une première fois par le classificateur
+   d'autorisation et sont passées au second essai, après un ordre explicite
+   et frais de David à chaque fois (« lance-le toi-même via le compte admin »,
+   puis « re-source sur la semaine 33 avec Tribune Online »). Détail complet
+   dans la mémoire `project_ncdc_lassa_row_confidential_content_2026_09_04`.
 
 3. **RÉSOLU — `ncdc.gov.ng` interdit de citation, mais seulement pour les
    PDF de sitrep.** `FORBIDDEN_SOURCE_PATH_PATTERNS` dans `lib/source-trust.ts`
