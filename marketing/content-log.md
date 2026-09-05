@@ -94,7 +94,7 @@ Le carry-over du 04/09 17h désignait trois porteurs. État réel constaté ce m
 
 ### 6️⃣ 🔁 CARRY-OVER POUR LE CRÉNEAU DE 13h (05/09)
 
-1. 🔒 **UN DM EN FILE DE VALIDATION — Dr. Malachie MANAOUDA** (ministre de la Santé publique du Cameroun). Texte intégral, jets et QA dans `linkedin-contacts.md`, même run. **Notification push envoyée.** ⚠️ Ne pas l'envoyer sans ordre explicite de David.
+1. ✅ **CLOS EN COURS DE RUN — DM Dr. Malachie MANAOUDA envoyé à 10h02**, sur ordre explicite de David tapé en session (« envoie le DM à Manaouda »), quelques minutes après la mise en file. Texte intégral, jets et QA dans `linkedin-contacts.md`, même run. Plus rien à faire sur ce fil ; à revérifier à 13h seulement s'il a répondu.
 2. ⭐⭐⭐ **Dr R Hyacinthe ZABRE** — meilleur candidat DM du corpus aujourd'hui, voir §5 point 1. Vérifier d'abord s'il existe un fil de messagerie (aucun repéré dans les 10 conversations les plus récentes).
 3. ⭐ **Ngoy Guillaume** (`/in/ngoy-guillaume-76b8b2267/`) — **identité enfin levée (§12)**, clôt un carry-over ouvert depuis le 2026-08-11. *Officier de surveillance de la 17ᵉ épidémie de MVE*, Goma, **déjà relation de 1er degré**, 31 relations en commun. Aucun fil existant. Candidat DM sur la ligne d'événement Ebola/RDC.
 4. ⭐ **Tambe Elvis Akem** — commentaire publié à ~10h05, **sous-fil ouvert**, il répond habituellement à ses commentateurs (il l'a fait ce matin pour Basile Ngontcha). **À revérifier au créneau de 13h.**

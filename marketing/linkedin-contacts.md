@@ -1,7 +1,7 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
-## 📅 Session linkedin-hwg-monitoring — 05/09/2026 (9h) — 🔒 **1 DM EN FILE DE VALIDATION** (Dr. Malachie MANAOUDA, 2 jets) — ✅ **6 suivis**, ✅ **1 commentaire publié** (détail dans `content-log.md`) — ⚠️ **régime file de validation appliqué : présence de David positivement établie**
+## 📅 Session linkedin-hwg-monitoring — 05/09/2026 (9h, reprise interactive « envoie le DM à Manaouda ») — ✅ **1 DM ENVOYÉ à 10h02, sur ordre explicite de David** (Dr. Malachie MANAOUDA, 2 jets) — ✅ **6 suivis**, ✅ **1 commentaire publié** (détail dans `content-log.md`) — ⚠️ **régime file de validation appliqué avant l'ordre : présence de David positivement établie**
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` datée du 05/09 dans ce fichier ni dans `content-log.md` à l'ouverture ; le seul commit LinkedIn du jour est `e7209a04` (00h00, envoi des 2 CTA en attente du 04/09) → **premier déclenchement de cette routine aujourd'hui**. Horloge à l'heure (`Sat Sep 5 09:03 2026`). Branche vérifiée : **master**. Registre de faits régénéré à 09h05 (224 faits, 106 lignes affichées, 3 périmés) ; registre produit régénéré également (19 formats de prix, 7 claims manuelles, 110 foyers / 74 pays / 19 maladies).
 
@@ -24,7 +24,7 @@ Le dernier commit du dépôt (`bf9e1b7f`) date de **08h44**, soit **19 minutes a
 
 ---
 
-### 2️⃣ 🔒 DM 1/8 EN FILE DE VALIDATION — **Dr. Malachie MANAOUDA** (`/in/dr-malachie-manaouda-11893aa0/`), FR, vouvoiement, message de bienvenue après acceptation — **2 jets, relecteur 10/12 puis correction des 2 échecs**
+### 2️⃣ ✅ DM 1/8 ENVOYÉ À 10h02, SUR ORDRE EXPLICITE DE DAVID — **Dr. Malachie MANAOUDA** (`/in/dr-malachie-manaouda-11893aa0/`), FR, vouvoiement, message de bienvenue après acceptation — **2 jets, relecteur 10/12 puis correction des 2 échecs**
 
 ⭐⭐⭐ *Administrateur Civil Principal | **Ministre de la Santé Publique du Cameroun** 🇨🇲 | Commandeur de l'Ordre de la Valeur.* Relation de 1er degré depuis le **03/09 à 11h12**, date à laquelle il a accepté notre note de connexion du 02/09. **Il n'a jamais écrit dans ce fil** : la seule entrée est notre propre note. Fil et post source recopiés dans `tmp/thread-manaouda.txt`. *langue du fil = fr ; langue du brouillon = fr.*
 
@@ -38,7 +38,7 @@ Le dernier commit du dépôt (`bf9e1b7f`) date de **08h44**, soit **19 minutes a
   - **(11)** la clôture « *dispose-t-elle de A […] ou faut-il B ?* » rejouait la question fermée binaire « option noble ou option dégradée », charpente **massivement épuisée** : le relecteur compte **93 clôtures de cette forme** dans les textes cités de ce fichier, plus 9 dans l'archive, sur des messages **réellement envoyés à des destinataires distincts** (`:15062`, `:14290`). Même défaut, même correction, que le jet 2 du DM Ngoy deux jours plus tôt.
 - **Jet 2** — les deux corrections nommées appliquées, **et rien d'autre touché** : le mot « polio » ajouté à la clause Cameroun, et la clôture passée en **question ouverte**. Mécanique **PASS** (0 blocker, 0 warn ; restent deux `info` sur « 2 » et « 18 », faux positifs connus — ce sont des **dates d'arrêté**, pas des valeurs de cas, et le relecteur les a tracées une par une dans le champ `asOf`). Contre-grep indépendant sur la nouvelle clôture : **0 occurrence** pour « *s'y prend-elle* » et « *arrêter un état* » ; les 2 occurrences de « *à une date unique* » sont, vérification faite, **le brouillon non envoyé du 03/09 lui-même**. **Non resoumis** : les deux échecs avaient une correction minimale explicitement nommée, les dix autres réponses portaient sur du texte conservé sans modification — même conduite que les jets finaux BABOKO et Schlitt du 04/09.
 
-**🔒 Texte complet en file de validation — jamais envoyé par la routine :**
+**✅ Texte envoyé à 10h02 :**
 
 > Docteur, sur ce que vous rapportez d'Addis-Abeba, c'est le volet Bassin du Lac Tchad que je n'arrive pas à suivre proprement de mon côté.
 >
@@ -48,9 +48,11 @@ Le dernier commit du dépôt (`bf9e1b7f`) date de **08h44**, soit **19 minutes a
 
 **Arbitrage CTA : omis, et c'est l'un des trois motifs admis.** Politique commune §3, encadré « Aucune dérogation au CTA » : l'échange n'est **pas encore substantiel** — il n'a jamais écrit une ligne dans ce fil, l'acceptation d'une invitation n'étant pas un message. Le lien et l'essai restent interdits en premier message de bienvenue tant qu'il ne les demande pas. Le relecteur a validé l'omission en citant ce motif. **À rouvrir dès sa première réponse de fond.**
 
+**Envoi confirmé, sur ordre explicite de David tapé en session interactive (« envoie le DM à Manaouda »)**, après que le message a été mis en file conformément au régime déterminé en section 1 (David présent, donc pas d'automation). Identité et contenu vérifiés par deux voies distinctes : (a) capture d'écran du composeur avant clic, texte relu intégralement, 3 paragraphes conformes, aucune troncature ; (b) après envoi, page `linkedin.com/messaging/` rouverte en entier (`get_page_text`, pas le seul widget flottant) — aperçu de conversation « **MANAOUDA · 10:02 · Vous : Docteur, sur ce que vous rapportez d'Addis-Abeba...** », et fil complet confirmant l'horodatage exact (**10:02**), le destinataire (**Dr. Malachie MANAOUDA**), et une **seule occurrence** du texte, identique caractère pour caractère au brouillon validé au jet 2. ⚠️ **Incident de méthode, sans conséquence** : le premier clic sur le champ de saisie de la bulle flottante n'a pas donné le focus (`document.activeElement` resté sur le corps de page) — la frappe est passée dans le vide sans rien saisir ailleurs, détecté avant tout envoi. Un second clic a réussi.
+
 ⚠️ **Point de licence signalé à David, sans conséquence sur ce message.** L'angle s'appuie sur des lignes dont la source est `polioeradication.org`, dont le **cron a été retiré le 04/09** pour non-conformité aux CGU. Vérification faite par le relecteur : ce domaine relève de `RESTRICTED_FETCH_DOMAINS` (**« ne jamais récupérer automatiquement »**), **pas** de `FORBIDDEN_SOURCE_DOMAINS`, qui ne contient que `reliefweb.int` et les sitreps `ncdc.gov.ng`. **Citer ces lignes est licite** ; c'est leur récupération automatisée qui ne l'est pas. Rien à corriger, mais le fait est consigné.
 
-`QA : mécanique jet 1 FAIL sur ngram.history (2 séquences, toutes deux tracées au brouillon non envoyé du 03/09) ; jet 2 PASS (604 car., 3 paragraphes, fr/fr, 0 blocker, 0 warn, 2 info faux positifs sur des dates d'arrêté) | relecteur 1 passe, VERDICT: REECRIRE 4, 11 — 10 PASS sur 12, les 2 échecs corrigés à la lettre | faits cités : dates d'arrêté Polio Nigeria 2026-09-02, Tchad et Niger 2026-08-18, toutes trois vérifiées au champ asOf du registre ; aucune valeur de cas citée ; aucune affirmation produit | registre du 05/09 (09:05) | statut : **en file de validation**`
+`QA : mécanique jet 1 FAIL sur ngram.history (2 séquences, toutes deux tracées au brouillon non envoyé du 03/09) ; jet 2 PASS (604 car., 3 paragraphes, fr/fr, 0 blocker, 0 warn, 2 info faux positifs sur des dates d'arrêté) | relecteur 1 passe, VERDICT: REECRIRE 4, 11 — 10 PASS sur 12, les 2 échecs corrigés à la lettre | faits cités : dates d'arrêté Polio Nigeria 2026-09-02, Tchad et Niger 2026-08-18, toutes trois vérifiées au champ asOf du registre ; aucune valeur de cas citée ; aucune affirmation produit | registre du 05/09 (09:05) | statut : **envoyé le 05/09 à 10h02, sur ordre explicite de David**`
 
 ---
 
