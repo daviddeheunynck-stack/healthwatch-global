@@ -612,7 +612,7 @@ async function runSyncSpf(_req: NextRequest, supabase: SupabaseClient) {
   }
 
   // ── 3. Process items ──────────────────────────────────────────────────────
-  const results = { items: items.length, inserted: 0, updated: 0, skipped: 0, errors: 0 };
+  const results = { items: items.length, inserted: 0, updated: 0, skipped: 0, errors: 0, pagesFetched: 0 };
   type Log = { label: string; status: string; detail?: string };
   const log: Log[] = [];
   // Refusals from lockedRowRegressionGuard specifically (identified by its
@@ -631,12 +631,22 @@ async function runSyncSpf(_req: NextRequest, supabase: SupabaseClient) {
       continue;
     }
 
-    // Fetch article for full text
+    // Fetch article for full text. Counted regardless of outcome: this is the
+    // 12s-timeout call that pushed real runs to ~85-105s pre-2026-07-17 (see
+    // maxDuration comment above) — the metric that matters for confirming the
+    // slow path is exercised is "did this fetch happen", not "did the item end
+    // up written to outbreaks" (results.inserted/updated), since most items
+    // that reach this point are still skipped afterwards (wrong country,
+    // dedup, 0/0 cases...). Added 2026-09-05: pending-verifications.md had
+    // watched `rows` for 50 days waiting for proof the loop below ever runs —
+    // rows can stay 0 indefinitely while this fetch fires every tick.
     let pageText = `${item.title} ${item.description}`;
     try {
       const res = await fetch(item.url, { headers: FETCH_HEADERS, signal: AbortSignal.timeout(12_000) });
+      results.pagesFetched++;
       if (res.ok) pageText = `${item.title} ${item.description} ${htmlToText(extractSPFBody(await res.text()))}`;
     } catch (e) {
+      results.pagesFetched++;
       console.warn("[spf] fetch page:", errorMessage(e));
     }
 
@@ -813,6 +823,11 @@ async function runSyncSpf(_req: NextRequest, supabase: SupabaseClient) {
   await logCronRun(supabase, "sync-spf", results.errors > 0 || lockedGuardBlocked.length > 0 ? "error" : "ok", (results.inserted ?? 0) + (results.updated ?? 0),
     lockedGuardBlocked.length > 0
       ? `écriture bloquée par le garde anti-régression : ${lockedGuardBlocked.join(" | ")}`
-      : results.errors > 0 ? `${results.errors} écriture(s) en échec` : undefined);
+      : results.errors > 0 ? `${results.errors} écriture(s) en échec` : undefined,
+    // Same pattern as disease-alerts/watchlist-alerts (lib/cron-monitor.ts):
+    // stamps the last run where the slow per-article fetch loop actually
+    // executed, independent of whether anything got written — see the
+    // pagesFetched comment above for why `rows` alone can't answer this.
+    results.pagesFetched > 0 ? new Date().toISOString() : undefined);
   return NextResponse.json({ success: true, timestamp: new Date().toISOString(), guardBlocked: lockedGuardBlocked.length > 0 ? lockedGuardBlocked : undefined, ...results, log });
 }
