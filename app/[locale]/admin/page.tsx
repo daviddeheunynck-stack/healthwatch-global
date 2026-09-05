@@ -379,6 +379,7 @@ export default async function AdminPage({
   // David asked to stop seeing "david.deheunynck" occurrences here and in the Users table
   // below) so his testing doesn't drown out genuine visitor activity in this feed.
   const visibleProfiles = (profiles ?? []).filter((p) => !isFounderAccount(p.email));
+  const visibleSubscribers = (subscribers ?? []).filter((s) => !isFounderAccount(s.email));
   const productEventsList = (productEvents ?? []).filter((e) => !isFounderAccount(emailById[e.user_id]));
   const eventUserCount = new Set(productEventsList.map((e) => e.user_id)).size;
   const actionCounts: Record<string, number> = {};
@@ -790,7 +791,7 @@ export default async function AdminPage({
       {/* ── Digest subscribers ──────────────────────────────────────────────── */}
       <div className="space-y-4">
         <h2 className="text-white font-semibold text-lg">
-          Abonnés digest ({subscribers?.length ?? 0})
+          Abonnés digest ({visibleSubscribers.length})
         </h2>
         <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden overflow-x-auto">
           <table className="w-full text-sm min-w-[500px]">
@@ -804,7 +805,7 @@ export default async function AdminPage({
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-800">
-              {subscribers?.map((s) => (
+              {visibleSubscribers.map((s) => (
                 <tr key={s.id} className="hover:bg-gray-800/50 transition-colors">
                   <td className="px-4 py-3 text-white">{s.email}</td>
                   <td className="px-4 py-3 text-gray-400 capitalize">{s.region}</td>
