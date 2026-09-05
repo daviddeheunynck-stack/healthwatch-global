@@ -3665,3 +3665,33 @@ recorrigé en 2 passes : le premier script n'avait traité que « confirmés »,
 pas « signalés »/« notificados » plus loin dans la même phrase). Aucune
 donnée chiffrée touchée — uniquement le texte des 4 champs de traduction, sur
 les 9 lignes. Vérifié sur 2 pages publiques (Soudan, Angola) après écriture.
+
+### Suite du même soir — 27 lignes WHO Surveillance corrigées (4 artefacts de traduction)
+
+En poursuivant la revue sur les lignes fraîches (dashboards WHO Global
+Cholera/Dengue/Mpox Surveillance, `sync-who-regional`), repéré un défaut
+systématique cette fois côté **traduction automatique** (`translateDescription()`,
+appelée une fois à la création de chaque ligne) plutôt que côté données :
+
+1. FR — majuscule fautive en milieu de phrase (« L'OMS **A** signalé » au lieu
+   de « a signalé ») : **27/27 lignes concernées**.
+2. ID — espaces parasites autour des tirets de date (« 2026 -08 -10 » au lieu
+   de « 2026-08-10 ») : **27/27**.
+3. FR — même défaut de majuscule sur un autre mot (« Surveillance mondiale
+   **DE** la dengue ») : 12 lignes.
+4. FR — libellé « Source » resté en anglais (« OMS Global Mpox Surveillance »
+   au lieu de « OMS Surveillance mondiale du Mpox ») : les 5 lignes Mpox.
+
+ES et AR sont indemnes des 4 défauts — vérifié sur un échantillon avant de
+choisir la portée du correctif. Question posée à David (corriger les 2
+défauts systématiques seulement, les 4, ou rien) ; il a choisi les 4.
+
+Correctif appliqué en 2 passes : la première (défauts 1-3, par motif
+générique plutôt que ligne par ligne) a échoué silencieusement sur le défaut
+4 — l'ancre de remplacement utilisait un espace normal avant les deux-points
+alors que le texte réel porte une espace insécable (même piège que celui
+rencontré plus tôt ce soir sur le CFR de Lassa/Nigéria). Corrigé dans une
+seconde passe ciblée sur les 5 lignes Mpox, vérifié caractère par caractère
+avant écriture. Vérification finale : recherche des 4 motifs sur les 27
+lignes après écriture, 0 résidu. Aucune donnée chiffrée touchée — texte
+uniquement, sur les champs de traduction FR et ID.
