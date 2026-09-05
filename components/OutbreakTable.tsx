@@ -1337,7 +1337,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                         outbreak.cases > 0 ? outbreak.cases.toLocaleString(numLocale) : <span className="text-gray-600 italic text-xs">{l.noData}</span>
                       ) : (
                         <span className="inline-flex items-center gap-1 cursor-pointer" onClick={() => openModal("cases")} title="Pro — click to unlock">
-                          <span className="blur-sm select-none text-gray-500 pointer-events-none">{outbreak.cases.toLocaleString(numLocale)}</span>
+                          <span className="blur-sm select-none text-gray-500 pointer-events-none">{outbreak.cases.toLocaleString(numLocale).replace(/\d/g, "•")}</span>
                           <Lock className="w-2.5 h-2.5 text-amber-500/60 pointer-events-none shrink-0" />
                         </span>
                       )}
@@ -1366,7 +1366,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                         : <span className="text-gray-500 text-sm" title="Non rapporté dans cette source">—</span>
                     ) : (
                       <span className="inline-flex items-center gap-1 cursor-pointer" onClick={() => openModal("cases")} title="Pro — click to unlock">
-                        <span className="blur-sm select-none text-gray-500 pointer-events-none">{(outbreak.deaths ?? 0).toLocaleString(numLocale)}</span>
+                        <span className="blur-sm select-none text-gray-500 pointer-events-none">{(outbreak.deaths ?? 0).toLocaleString(numLocale).replace(/\d/g, "•")}</span>
                         <Lock className="w-2.5 h-2.5 text-amber-500/60 pointer-events-none shrink-0" />
                       </span>
                     )}
@@ -1387,7 +1387,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                     ) : (
                       outbreak.cases > 0 && outbreak.deaths !== null ? (
                         <span className="inline-flex items-center gap-1 cursor-pointer" onClick={() => openModal("cases")} title="Pro — click to unlock">
-                          <span className="blur-sm select-none text-gray-500 pointer-events-none text-sm font-medium">{(outbreak.deaths / outbreak.cases * 100).toFixed(1)}%</span>
+                          <span className="blur-sm select-none text-gray-500 pointer-events-none text-sm font-medium">{(outbreak.deaths / outbreak.cases * 100).toFixed(1).replace(/\d/g, "•")}%</span>
                           <Lock className="w-2.5 h-2.5 text-amber-500/60 pointer-events-none shrink-0" />
                         </span>
                       ) : (

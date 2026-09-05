@@ -457,7 +457,7 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
                   <span className="text-gray-300">{top.cases.toLocaleString(numLocale)} {snap.cases}</span>
                 ) : (
                   <Link href={`/${locale}/pricing`} className="cursor-pointer">
-                    <span className="blur-sm select-none text-gray-500">{top.cases.toLocaleString(numLocale)} {snap.cases}</span>
+                    <span className="blur-sm select-none text-gray-500">{top.cases.toLocaleString(numLocale).replace(/\d/g, "•")} {snap.cases}</span>
                   </Link>
                 )}
               </>
@@ -469,7 +469,7 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
                   <span className="text-red-400 font-medium">{cfr}% {snap.cfr}</span>
                 ) : (
                   <Link href={`/${locale}/pricing`} className="cursor-pointer">
-                    <span className="blur-sm select-none text-gray-500">{cfr}% {snap.cfr}</span>
+                    <span className="blur-sm select-none text-gray-500">{cfr.replace(/\d/g, "•")}% {snap.cfr}</span>
                   </Link>
                 )}
               </>
