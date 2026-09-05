@@ -3848,3 +3848,172 @@ rendu trouvés et corrigés (badge, lien source, fenêtre Lassa), 114 lignes de
 données corrigées pour artefacts de traduction (dont la source du bug
 corrigée à la racine dans `lib/translate.ts`), 1 doublon d'affichage corrigé,
 1 clarification de texte ajoutée, aucune anomalie résiduelle connue.
+
+---
+
+## 2026-09-05 — Proposition du jour
+
+Contexte : journée de gros chantier produit menée en session interactive
+(pricing, mur payant, deux fonctionnalités Pro, SEO) — 18 commits entre 08h59
+et 18h26, dont quatre correctifs successifs de fuite du mur payant. Sources
+relues : `product-feedback.md` (dernière entrée le 31/08, lepapapericles5,
+accessibilité — piste « digest allégé » déjà mesurée et close le 02/09),
+`ROADMAP.md`, `_shared/sources-interdites.md`, `git log -30`, l'état live des
+54 crons et 296 lignes `outbreaks` en prod.
+
+**Aucun cron en retard, aucune anomalie de données.** Relevé du jour : 54/54
+crons dans leur fenêtre (les cinq du lundi ont bien tourné le 31/08, puis
+manuellement le 02/09 au soir), 0 `deaths > cases`, 0 `recovered > cases`,
+0 CFR aberrant, 0 date future, 0 `source` non-URL, 0 région inconnue,
+0 doublon actif hors le triplet Avian Flu/États-Unis (connu et volontaire).
+`trigger-predictive-alerts` apparaît « jamais lancé » — c'est normal, il a
+été ajouté à 17h36 et son créneau (12h40 UTC) était déjà passé ; le
+correctif du 02/09 sur la supervision le tolère correctement.
+
+### 1. 🔴 Le mur payant construit aujourd'hui masque des chiffres que six autres surfaces publient sans authentification — il ne coûte qu'à ceux qui se sont inscrits
+
+**Signal.** Quatre commits successifs cet après-midi (`25a4ec81` 15h37,
+`91c8f3d5` 15h44, `16a7eaae` 18h08, `c04a158a` 18h26) pour empêcher les
+`cases`/`deaths`/CFR réels d'atteindre un compte gratuit : bulletage des
+chiffres, puis arrondi à l'ordre de grandeur côté serveur, puis route
+`/api/outbreak-stats/[id]` réservée aux payants pour la page permalien mise
+en cache ISR. Le travail est correct et chacune des quatre fuites était
+réelle.
+
+**Mais le chiffre exact reste servi publiquement, sans compte, sur six
+surfaces — vérifié une par une dans le code, et confirmé en direct sur la
+prod :**
+
+| Surface | Ce qu'elle publie | Auth |
+|---|---|---|
+| `/[locale]/disease/[slug]` | cas + décès par foyer (l. 697-698, 758), totaux agrégés et CFR (l. 542-544) | aucune, ISR 3600 |
+| `/[locale]/country/[slug]` | idem | aucune, ISR 3600 |
+| `/[locale]/region/[region]` | cas + décès par foyer (l. 341-342, 390) | aucune, ISR 3600 |
+| `/[locale]/outbreak/[id]` | corps arrondi ce soir, mais `generateMetadata` (l. 249-250) écrit « N cases, M deaths » dans la balise meta description, dans OpenGraph et dans Twitter, et le JSON-LD (l. 364) le refait — dans le même document HTML | aucune |
+| `/api/outbreak-card/[id]` | PNG 1200×630 avec cas, décès et CFR exacts — c'est l'image OpenGraph de la ligne au-dessus | aucune |
+| `/api/rss` | cas + CFR par entrée (l. 88-94) | aucune |
+
+Contrôle en direct : `curl https://healthwatch-global.com/fr/disease/cholera`
+sans cookie rend les comptes de cas exacts des sept foyers choléra affichés.
+
+**Ce que ça veut dire.** Les 121 lignes actives sont toutes rattachées à une
+page maladie, une page pays et une page région — donc **100 % de ce que le
+mur masque est atteignable en un clic, sans compte**. Le mur ne protège rien
+d'un visiteur anonyme ; il ne s'applique qu'aux gens qui se sont inscrits.
+C'est l'inverse de l'incitation recherchée : créer un compte gratuit
+*dégrade* aujourd'hui ce qu'on voit par rapport à ne pas en créer.
+
+**Ce n'est pas un reproche à la session de cet après-midi**, qui a vu le
+sujet : le message de `c04a158a` écarte explicitement le bulletage du teaser
+de la page d'accueil au motif que « the same figure is already public via the
+disease pages ». Le raisonnement est bon — il n'a simplement jamais été
+remonté au niveau où il change la conclusion : si l'argument vaut pour le
+teaser, il vaut pour le tableau de bord, et alors ce n'est pas d'un
+5ᵉ colmatage qu'il s'agit mais d'un arbitrage de packaging.
+
+**Deux sorties possibles, exclusives, et c'est un choix de David.**
+(a) **Assumer le public** — les pages maladie/pays/région, le flux RSS et les
+cartes de partage sont l'actif SEO du produit (trois commits de plus
+aujourd'hui : liens croisés, slugs courts, bloc de citation académique).
+Alors le mur sur les chiffres bruts n'a pas de sens et il faut le retirer,
+en gardant le payant sur ce qui est réellement exclusif : alertes,
+historique, export, API, prédictif — tout ce qui a été construit aujourd'hui,
+justement. (b) **Assumer le mur** — et il faut alors le porter aux six
+surfaces ci-dessus, ce qui revient à retirer du SEO tout ce qui fait venir
+les visiteurs. Le mi-chemin actuel prend le coût des deux.
+
+**Effort :** (a) petit — c'est un retrait, quelques dizaines de lignes.
+(b) moyen à gros, et destructeur pour l'acquisition.
+
+**Risque/inconnue :** la valeur du mur n'a jamais été mesurée (0 conversion
+essai→payant à ce jour, donc aucune donnée dans un sens ni dans l'autre).
+Je recommande (a), mais c'est un arbitrage de prix et de positionnement.
+
+**⛔ Délibérément NON construite — décision de pricing/packaging.** Le
+mandat de cette routine couvre la proposition d'idées de pricing, pas la
+modification unilatérale du modèle payant construit le jour même en session
+interactive. Un mot de David suffit pour l'appliquer.
+
+*Sous-constat mineur, indépendant de l'arbitrage :* les points 4 et 5 du
+tableau sont incohérents **avec eux-mêmes** quelle que soit l'option
+retenue — la page permalien arrondit ses chiffres dans son corps et les
+réimprime en clair dans sa propre balise meta description et dans son image
+OpenGraph. Si (b) est choisi, ces deux-là sont des oublis à corriger ; si
+(a) est choisi, ils deviennent sans objet.
+
+### 2. 🔴 L'alerte prédictive livrée il y a une heure annonce « en accélération » sur des foyers qui décélèrent — mesuré : 1 déclenchement sur 11
+
+**Signal.** `aef0129b` (17h36) ajoute les alertes de tendance prédictive,
+vendues sur la page de tarifs comme fonctionnalité Pro. Le cron
+`trigger-predictive-alerts` (`route.ts:65-70`) projette un temps de
+doublement à partir de la tendance 7 jours, puis envoie un e-mail titré
+« 📈 Alerte de tendance prédictive », avec une notification in-app libellée
+« — en accélération » (l. 105).
+
+**Le calcul est fait sur `outbreaks.cases`, qui est un compteur cumulatif.**
+Un cumul ne décroît jamais : il double même à incidence parfaitement
+constante. 100 cas au total avec 10 nouveaux cas par jour atteint 200 en
+exactement 10 jours, sans la moindre accélération — et le code en déduit
+« doublement projeté sous ~9 jours ». La formule n'est pas fausse
+arithmétiquement ; c'est l'affirmation posée dessus qui l'est. Pire, à
+incidence constante le temps de doublement du cumul **s'allonge**
+mécaniquement (100→200 en 10 j, 200→400 en 20 j) : l'alerte se déclenche
+tôt dans le suivi d'un foyer puis se tait, exactement l'inverse d'un signal
+d'alerte précoce.
+
+**Rejoué sur les données réelles** (`outbreak_snapshots`, 6 460 relevés,
+78 jours, 65 jours évaluables, 121 lignes actives), au seuil de 14 jours —
+celui que l'UI propose par défaut (`placeholder: "14"`,
+`OutbreakDetailModal.tsx:147`) :
+
+```
+déclenchements simulés (jour × foyer)                     : 341  sur 40 foyers
+  dont incidence 7 j NON croissante (aucune accélération) :  32  ( 9 %)
+  dont incidence 7 j en BAISSE (décélération franche)     :  28  ( 8 %)
+```
+
+Exemples, chacun un e-mail qui serait parti en disant l'inverse du terrain :
+
+```
+WNV / Espagne   22/08 : 39 nouveaux cas la semaine d'avant → 21 la semaine alertée
+                        « doublement sous ~12,0 j », « en accélération »
+WNV / Grèce     22/08 : 84 → 45          « doublement sous ~13,6 j »
+WNV / Roumanie  22/08 : 13 → 10          « doublement sous ~10,9 j »
+Chikungunya/FR  24/08 : 14 → 10          « doublement sous ~9,5 j »
+WNV / France    18/08 :  2 →  2 (plat, 11 jours d'affilée concernés)
+```
+
+**Pourquoi c'est grave ici et pas ailleurs.** Le lectorat de HWG, ce sont des
+épidémiologistes de terrain (OMS, Africa CDC, INSP nationaux). Dire
+« ce foyer accélère » d'un foyer dont l'incidence hebdomadaire a presque été
+divisée par deux est exactement le type d'erreur qui coûte la crédibilité du
+produit entier, pas seulement celle de la fonctionnalité. C'est la même
+classe de défaut que le badge vert « En déclin » posé sur une correction de
+données (28/08) ou le « QUI a signalé » des lignes mal traduites (04/09) :
+une affirmation rendue comme un fait, que la donnée ne soutient pas.
+
+**Correctif :** exiger que l'accélération existe réellement avant de tirer —
+comparer les nouveaux cas des 7 derniers jours à ceux des 7 jours précédents,
+et ne déclencher que si les premiers sont au moins égaux aux seconds. Le
+temps de doublement projeté reste ce qui fixe le seuil ; cette condition
+n'ajoute qu'un filtre de non-régression. Rien n'est ajouté à l'e-mail, seule
+la population de tir change.
+
+**Effort :** petit — une requête `outbreak_snapshots` de plus (bornée aux
+seuls foyers qui passeraient le seuil), une fonction pure, une condition.
+
+**Risque/inconnue :** (a) le filtre coupe 9 % des déclenchements et pourrait
+en coûter un légitime si un foyer accélère pile entre deux fenêtres
+hebdomadaires — mais un signal manqué vaut mieux qu'une affirmation fausse
+envoyée à un épidémiologiste ; (b) un foyer sans relevé à J-14 (ligne créée
+il y a moins de deux semaines) n'a pas de terme de comparaison : dans ce cas
+on ne tire pas, faute de pouvoir étayer le mot « accélération ».
+
+**Garde-fou 3 examiné explicitement avant de construire.** La règle réserve
+à une demande de David tout ce qui touche aux e-mails clients. Vérifié en
+base live avant toute écriture : `outbreak_predictive_alerts` **0 ligne**,
+`outbreak_tripwires` **0 ligne** — aucun abonné, aucun e-mail jamais envoyé
+par ce cron, qui n'a d'ailleurs jamais tourné. Le changement ne modifie le
+contenu d'aucun message, ne peut atteindre aucun client existant, et son
+seul effet est de **retenir** un envoi faux. Construit sur cette base, et
+signalé ici pour que l'arbitrage soit relisible.
