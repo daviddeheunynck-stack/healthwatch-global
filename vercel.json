@@ -133,6 +133,10 @@
       "schedule": "5,35 * * * *"
     },
     {
+      "path": "/api/cron/trigger-predictive-alerts",
+      "schedule": "40 12 * * *"
+    },
+    {
       "path": "/api/cron/trigger-subscriber-alerts",
       "schedule": "10,40 * * * *"
     },

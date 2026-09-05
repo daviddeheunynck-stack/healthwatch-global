@@ -136,6 +136,20 @@ const TRIPWIRE_COPY: Record<string, {
   id: { label: "Beri tahu saya saat kasus melebihi", placeholder: "5000", set: "Aktifkan", setting: "Mengaktifkan…", active: "Peringatan aktif", remove: "Hapus", linkCopied: "Tautan disalin!", copyLink: "Salin tautan" },
 };
 
+// P — Predictive trend alert: fires from the projected doubling time (7-day
+// growth trend extrapolated forward), not a manual case-count the user has
+// to guess — the forward-looking counterpart to the tripwire above it.
+const PREDICTIVE_COPY: Record<string, {
+  label: string; labelSuffix: string; placeholder: string; set: string; setting: string;
+  active: (days: string) => string; remove: string;
+}> = {
+  fr: { label: "M'alerter si ce foyer risque de doubler sous", labelSuffix: "jours", placeholder: "14", set: "Activer", setting: "Activation…", active: (d) => `Alerte prédictive active — doublement sous ${d} j`, remove: "Supprimer" },
+  en: { label: "Alert me if this outbreak may double within", labelSuffix: "days", placeholder: "14", set: "Set alert", setting: "Setting…", active: (d) => `Predictive alert active — doubling within ${d}d`, remove: "Remove" },
+  es: { label: "Alertarme si este brote podría duplicarse en", labelSuffix: "días", placeholder: "14", set: "Activar", setting: "Activando…", active: (d) => `Alerta predictiva activa — duplicación en ${d} días`, remove: "Eliminar" },
+  ar: { label: "تنبيهي إذا قد يتضاعف هذا التفشي خلال", labelSuffix: "يومًا", placeholder: "14", set: "تفعيل", setting: "جارٍ التفعيل…", active: (d) => `تنبيه تنبؤي نشط — تضاعف خلال ${d} يومًا`, remove: "حذف" },
+  id: { label: "Beri tahu saya jika wabah ini bisa berlipat ganda dalam", labelSuffix: "hari", placeholder: "14", set: "Aktifkan", setting: "Mengaktifkan…", active: (d) => `Peringatan prediktif aktif — berlipat ganda dalam ${d}h`, remove: "Hapus" },
+};
+
 const COMPARE_COPY: Record<string, { title: string; select: string; noHistory: string; metric: string; current: string; period: string; cases: string; deaths: string; cfr: string; risk: string; duration: string }> = {
   fr: { title: "Comparer avec un épisode précédent", select: "Sélectionner un épisode", noHistory: "Aucun épisode antérieur", metric: "Indicateur", current: "Actuel", period: "Période", cases: "Cas", deaths: "Décès", cfr: "Létalité", risk: "Risque", duration: "Durée (depuis début)" },
   en: { title: "Compare with a previous episode", select: "Select an episode", noHistory: "No previous episodes", metric: "Metric", current: "Current", period: "Period", cases: "Cases", deaths: "Deaths", cfr: "CFR", risk: "Risk", duration: "Duration (since onset)" },
@@ -303,6 +317,11 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
   const [tripwireInput, setTripwireInput] = useState<number | "">("");
   const [tripwireSaving, setTripwireSaving] = useState(false);
 
+  // Predictive trend alert state
+  const [predictiveAlert,   setPredictiveAlert]   = useState<{ id: string; doubling_within_days: number } | null>(null);
+  const [predictiveInput,   setPredictiveInput]   = useState<number | "">("");
+  const [predictiveSaving,  setPredictiveSaving]  = useState(false);
+
   // Comparison state
   const [compareIdx,   setCompareIdx]   = useState<number>(-1);
 
@@ -388,6 +407,21 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
       .then((d) => {
         const tw = d.tripwires?.[0];
         if (tw) { setTripwire(tw); setTripwireInput(tw.threshold_cases); }
+      })
+      .catch(() => {});
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [outbreak?.id, isPaid]);
+
+  // Fetch existing predictive trend alert for this outbreak
+  useEffect(() => {
+    if (!outbreak || !isPaid) return;
+    setPredictiveAlert(null);
+    setPredictiveInput("");
+    fetch(`/api/predictive-alerts?outbreak_id=${outbreak.id}`)
+      .then((r) => r.json())
+      .then((d) => {
+        const pa = d.predictive_alerts?.[0];
+        if (pa) { setPredictiveAlert(pa); setPredictiveInput(pa.doubling_within_days); }
       })
       .catch(() => {});
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -1369,6 +1403,61 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
                   className="text-xs px-2 py-1 bg-amber-700/40 hover:bg-amber-700/60 disabled:opacity-40 border border-amber-700/40 text-amber-300 rounded-lg transition-colors"
                 >
                   {tripwireSaving ? (TRIPWIRE_COPY[locale] ?? TRIPWIRE_COPY.en).setting : (TRIPWIRE_COPY[locale] ?? TRIPWIRE_COPY.en).set}
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* P — Predictive trend alert: fires from a projected doubling time, not a manual threshold */}
+        {isPaid && (
+          <div className="mx-5 mb-3 flex items-center gap-2 flex-wrap">
+            {predictiveAlert ? (
+              <div className="flex items-center gap-2 text-xs flex-wrap">
+                <span className="text-orange-400 font-medium">
+                  📈 {(PREDICTIVE_COPY[locale] ?? PREDICTIVE_COPY.en).active(String(predictiveAlert.doubling_within_days))}
+                </span>
+                <button
+                  onClick={async () => {
+                    await fetch(`/api/predictive-alerts/${outbreak.id}`, { method: "DELETE" });
+                    setPredictiveAlert(null);
+                    setPredictiveInput("");
+                  }}
+                  className="text-gray-600 hover:text-red-400 transition-colors text-[10px] underline underline-offset-2"
+                >
+                  {(PREDICTIVE_COPY[locale] ?? PREDICTIVE_COPY.en).remove}
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <span className="text-xs text-gray-500">{(PREDICTIVE_COPY[locale] ?? PREDICTIVE_COPY.en).label}</span>
+                <input
+                  type="number"
+                  min="1"
+                  value={predictiveInput}
+                  onChange={(e) => setPredictiveInput(e.target.value === "" ? "" : Number(e.target.value))}
+                  placeholder={(PREDICTIVE_COPY[locale] ?? PREDICTIVE_COPY.en).placeholder}
+                  className="w-16 bg-gray-800 border border-gray-700 rounded-lg px-2 py-1 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-orange-500"
+                />
+                <span className="text-xs text-gray-500">{(PREDICTIVE_COPY[locale] ?? PREDICTIVE_COPY.en).labelSuffix}</span>
+                <button
+                  disabled={predictiveInput === "" || predictiveSaving}
+                  onClick={async () => {
+                    if (predictiveInput === "") return;
+                    setPredictiveSaving(true);
+                    try {
+                      const res = await fetch("/api/predictive-alerts", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ outbreak_id: outbreak.id, doubling_within_days: Number(predictiveInput), email: "" }),
+                      });
+                      const d = await res.json();
+                      if (d.predictive_alert) setPredictiveAlert(d.predictive_alert);
+                    } catch { /* ignore */ } finally { setPredictiveSaving(false); }
+                  }}
+                  className="text-xs px-2 py-1 bg-orange-700/40 hover:bg-orange-700/60 disabled:opacity-40 border border-orange-700/40 text-orange-300 rounded-lg transition-colors"
+                >
+                  {predictiveSaving ? (PREDICTIVE_COPY[locale] ?? PREDICTIVE_COPY.en).setting : (PREDICTIVE_COPY[locale] ?? PREDICTIVE_COPY.en).set}
                 </button>
               </div>
             )}
