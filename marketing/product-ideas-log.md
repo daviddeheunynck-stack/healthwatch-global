@@ -3713,3 +3713,31 @@ résultats, les 2 corrigés).
 Corrigé : FR et AR sur les 2 lignes, plus l'espacement de date ID (même
 défaut que les 27 lignes précédentes) et le résidu « DE la dengue » sur Laos.
 Vérifié sur la page publique après écriture.
+
+### Suite du même soir — sweep final, 10 lignes supplémentaires (bug plus large qu'estimé)
+
+Après les 2 lignes « QUI », un sweep exhaustif final sur les 4 motifs
+connus + une regex ID élargie (tout « chiffre espace tiret chiffre », pas
+seulement les dates ISO à 4 chiffres) a trouvé **10 lignes de plus** :
+Rougeole/Pérou, Méningite (Nigéria, Tchad, Soudan du Sud, Burkina Faso),
+Diphtérie (Haïti, Pérou, Brésil), Rougeole (États-Unis, Mexique). Même
+défaut de traduction que les 27+2 précédents, mais sur d'autres formes de
+plage numérique : intervalle de confiance (« 0,87 -1,07 »), plage de
+semaines épidémiologiques (« minggu 1 -26 »), plage de références de
+citation (« (1 -3) »). Confirme que ce n'est pas un défaut propre à un
+fetcher précis mais un artefact général de `translateDescription()` sur
+toute plage numérique traduite vers l'indonésien.
+
+Corrigé, vérifié caractère par caractère avant écriture (10/10 lignes).
+**Sweep final relancé après coup sur les 126 lignes affichées avec les 4
+motifs + la regex ID élargie : 0 résidu.** La revue systématique des foyers
+affichés est considérée close ce soir.
+
+**Bilan complet de la revue systématique (04-05/09) :** 127 lignes passées en
+revue (parcours manuel + requêtes exhaustives) → 1 doublon d'affichage
+corrigé (Ebola/RDC), 1 clarification de texte sur choix explicite de David
+(CFR Afrique du Sud), 1 changement concurrent vérifié sans incident
+(Diphtérie/Nigéria), et **41 lignes corrigées pour des artefacts de
+traduction automatique** (9 polio Afrique + 27 WHO Surveillance + 2 QUI/WHO +
+10 sweep final au fil de la revue) — aucune donnée chiffrée modifiée dans ces
+41 cas, uniquement du texte de traduction.
