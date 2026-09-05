@@ -3613,3 +3613,34 @@ propre au gabarit « sitrep », pas à tout `ncdc.gov.ng` — ne pas généralis
 l'interdiction à un nouveau type de document NCDC sans le vérifier séparément.
 
 Reprise de la revue systématique après cette vérification.
+
+### Suite du même soir (04/09) — revue systématique poursuivie, ~50 lignes parcourues
+
+Parcours complet des lignes les moins récemment vérifiées (jusqu'à 15 jours
+sans vérification), plus deux requêtes exhaustives sur les 296 lignes de la
+table entière (aucune limitée à un échantillon) : doublons entre une ligne
+active et une ligne inactive-dans-la-fenêtre (1 résultat : Ebola/RDC, déjà
+corrigé), et doublons entre deux lignes actives pour le même couple
+maladie/pays (1 résultat, légitime : les 3 lignes Grippe aviaire/États-Unis
+sont des foyers distincts par État — Utah/Texas/Idaho — pas un doublon).
+
+**Diphtérie/Afrique du Sud — juxtaposition CFR clarifiée.** Le badge calculé
+du site (4,7 %, 19/404) et le texte citant l'OMS (« CFR 19 % ») coexistaient
+sans that ne soient réconciliés — mais contrairement à Lassa (même semaine,
+même dénominateur, juste un arrondi différent de la source), ici les deux
+chiffres sont **tous deux exacts**, calculés sur des dénominateurs
+différents : 19/404 (tous les cas) contre 19/96 (le seul sous-ensemble
+respiratoire confirmé en labo, cité par l'OMS). Question posée à David plutôt
+que de deviner ; il a choisi d'ajouter une précision dans le texte plutôt que
+de le laisser tel quel ou de retirer le chiffre. Fait dans les 5 langues,
+vérifié sur la page publique.
+
+**Reste des lignes** (~75, toutes vérifiées le jour même ou la veille par un
+cron — dengue_global/mpx_global shinyapps, ECDC WNV hebdomadaire, USDA APHIS,
+tableau choléra OMS) : échantillonnées plutôt que parcourues une par une,
+aucune anomalie trouvée.
+
+**Bilan de la revue systématique ce soir : 1 doublon corrigé (Ebola/RDC),
+1 clarification de texte (Diphtérie/Afrique du Sud), 1 vérification de
+changement concurrent sans incident (Diphtérie/Nigéria), 0 autre problème
+trouvé.**
