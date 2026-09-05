@@ -4299,3 +4299,76 @@ MX valides pour les 9 domaines retenus : `who.int` (Outlook), `helsam.uio.no` (s
 #### ⚠️ Post-scriptum — signature "dot com" corrigée après coup (David, en session, 06:45 UTC)
 
 Les 16 brouillons de ce run avaient été créés à 06:24–06:47 UTC avec la formule "Find us at healthwatch-global dot com", conforme à la règle en vigueur au moment de leur création. David a remplacé cette règle en session interactive juste après ("juste le mot 'healthwatch', il ajoute le lien lui-même") — voir mémoire `feedback_signature_just_healthwatch_word_2026_09_04`, SKILL.md mis à jour en parallèle par une autre session. **Les 16 brouillons ont été mis à jour via `update_draft` pour adopter la nouvelle formule** ("Find us at healthwatch."), vérifié sur un témoin (`r-1417452529842623936`) en contenu complet : aucun lien, aucun `.` littéral. IDs de brouillon inchangés (mise à jour en place, pas de recréation).
+
+---
+
+## 🔁 RELANCE J+10 — 2026-09-05, run automatique `daily-relance-check-healthwatch`
+
+**Résultat : 10 relances créées, l'arriéré reste vidé.** Seul lot arrivant à maturité aujourd'hui — **26/08 (10 contacts, J+10)** — traité intégralement. Aucune exclusion, aucun report, aucun orphelin.
+
+### 🚦 Frein de file — 0 en entrée, 10 en sortie
+
+`list_drafts` en tête de run, **deux appels** (métadonnées puis vue complète, consigne du 16/08 sur l'instabilité de l'outil) : **`{}` les deux fois — file totalement vide.** Aucune conclusion négative tirée d'un appel isolé. Les 26 brouillons laissés hier (16 de prospection + 10 relances) sont donc tous partis — vérifié en direct, voir plus bas. Sortie de run à **10 brouillons**, très en dessous du seuil de ~25.
+
+### 🔎 Vérification en direct des 10 — double contrôle appliqué
+
+- **Requêtes `to:` groupées** (2 appels, `includeTrash: true`) : **les 10 fils d'origine portent exactement 1 message, `labelIds: ["SENT"]`.** Aucune réponse rattachée, aucune relance antérieure.
+- **Requête `from:` groupée** sur les 7 domaines du lot plus les 2 adresses Gmail nominatives (`after:2026/08/25`, `includeTrash: true`) : **résultat vide, `{}`.** Aucune réponse humaine hors fil, aucun accusé automatique détaché, aucun bounce — le contrôle exigé depuis l'incident THL Finlande du 25/08.
+- **Anti-doublon** : grep par adresse sur l'ensemble du journal pour les 10 — **aucune n'apparaît dans une entrée « 🔁 RELANCE » antérieure**. Les occurrences multiples (`info@dahw.de` ×3, `per@paho.org` ×4, `domcomunicaciones@paho.org` ×3, `fhf@hollows.org` ×2) sont vérifiées ligne à ligne : listes de réserve des 22-24/08 et tableau anti-doublon du 26/08, jamais un envoi de relance.
+
+**Date d'envoi retenue : 2026-08-26, 12:27:31–12:29:31 UTC**, lue sur les fils eux-mêmes — pas la date de création des brouillons (06:21 le même jour). J+10 tombe donc bien aujourd'hui.
+
+### ✅ Les 10 relances créées (06:22:05 → 06:22:26 UTC)
+
+| # | Institution | Adresse | Langue | Fil d'origine | Brouillon |
+|---|---|---|---|---|---|
+| 1 | Epidemiology Unit, MoH Sri Lanka | `epidunit@sltnet.lk` | EN | `1a03cbae28a8ad20` | `r-9012978488386920453` |
+| 2 | Bureau of Epidemiology / DDC Thaïlande | `boe.moph@gmail.com` | EN | `1a03cbaf045fc29b` | `r5358507018615041206` |
+| 3 | MoH — CMOH St George West, Trinité | `cmoh-stgeorgewest@health.gov.tt` | EN | `1a03cbafa63ffa0d` | `r520637384901320022` |
+| 4 | VvE — Vereniging voor Epidemiologie | `secretariaat@epidemiologie.nl` | EN | `1a03cbb0962f75cc` | `r-3308916948587289426` |
+| 5 | IAKMI Indonésie | `ppiakmi@gmail.com` | EN | `1a03cbb126ece3bd` | `r-3802576499834947327` |
+| 6 | DAHW Allemagne | `info@dahw.de` | EN | `1a03cbb2b607cfb3` | `r-236215527550748194` |
+| 7 | NLR International | `info@nlrinternational.org` | EN | `1a03cbb375d70872` | `r-4183482515374384525` |
+| 8 | OPS/PAHO — bureau Pérou | `per@paho.org` | ES | `1a03cbb4598866e4` | `r7110412169650246364` |
+| 9 | OPS/PAHO — bureau Rép. dominicaine | `domcomunicaciones@paho.org` | ES | `1a03cbb53ed84ef4` | `r4617938058184117228` |
+| 10 | The Fred Hollows Foundation | `fhf@hollows.org` | EN | `1a03cbb5dc297e74` | `r8193181384371356537` |
+
+**Gabarit générique du SKILL.md** pour les 10 : salutation identique à l'original (`Hi team,` ×8, `Estimado equipo,` ×2), une phrase de rappel, une ligne sur l'accès Pro toujours ouvert sans engagement, **la question de clôture de l'original reprise à l'identique**, signature `David Deheunynck — HealthWatch Global`. La phrase de rappel est variée d'un contact à l'autre (« Quick follow-up » / « Just following up » / « A short follow-up » / « Following up briefly », et deux formulations espagnoles distinctes) plutôt que copiée dix fois.
+
+**Aucune mention du site dans le texte neuf** — règle du 03/09, renforcée le 04/09 : le lien figure déjà dans le bloc cité juste en dessous. Ni « dot com », ni « point com », ni le mot seul.
+
+**Conformité de forme, vérifiée par `list_drafts` en vue complète après création** : les 10 portent `labelIds: ["DRAFT"]`, **aucun n'est passé en `SENT`** (contrôle du bug d'envoi instantané du connecteur : **négatif**). Aucun `htmlBody` passé à `create_draft` ; celui régénéré par Gmail ne contient que `<div dir="auto">` et des `<br/>`. **Zéro balise `<a>` et zéro `.` littéral dans le texte neuf des 10.** Les `<a href="https://healthwatch-global.com/…">` visibles dans les blocs `gmail_quote` sont les originaux du 26/08 — insérés à la main par David avant envoi, hors périmètre de contrôle, et **jamais comptés comme un défaut de ces brouillons** (précision du 05/09 au SKILL.md, après le faux positif du 03/09).
+
+### 📊 Bilan cumulé
+
+**✅ Envoi des 10 relances et des 16 contacts de prospection du 04/09 vérifié en direct.** Balayage `in:sent` sur la journée du 04/09 (corbeille incluse) : les **10 relances du lot 25/08 sont parties entre 12:59:43 et 13:00:17 UTC** (écart création → envoi ~6 h 35, lot entier en ordre de relecture inverse — profil « relecture humaine », **pas** le bug d'envoi instantané), et les **16 contacts de prospection entre 13:00:57 et 13:03:16 UTC**, d'une traite. La cadence remontée à 20 tient un 2e jour de suite : rien ne reste en file.
+
+**Balayage des bounces** (`from:mailer-daemon`, `from:postmaster`, `subject:"Delivery Status Notification"`, `subject:Undeliverable`, `subject:"Undelivered Mail"`, `subject:"Mail delivery failed"`, `newer_than:3d`, corbeille incluse) : **1 seul fil, celui de PNG (02/09)**, déjà consigné et déjà écarté définitivement. **Aucun bounce neuf** — rien sur les 16 contacts partis hier, rien sur les 10 relances.
+
+**Bilan bounces cumulés depuis le 02/08 : 22** — recalculé depuis la liste nominative, **inchangé par rapport au 04/09**. Aucune entrée neuve (l. 3053 pour les 20 premières, plus Antigua en 21e et NDoH PNG en 22e).
+
+**Totaux au 2026-09-05, 06:25 UTC :**
+- **Prospectés : 360** = 344 (état du 04/09) **+ 16** (le lot du 04/09, envoi vérifié en direct ce run).
+- **Envoyés : 360** = 344 **+ 16**. Les 10 brouillons de relance créés ce run ne sont pas partis.
+- **Délivrés : 338** = 360 envoyés − 22 (taille de la liste nominative de bounces), recompté dans le même mouvement que la liste, pas repris d'une ligne précédente.
+- **Taux de délivrabilité : 93,9 % (338/360)** — +0,3 pt sur le 04/09 (93,6 %), les 16 envois d'hier n'ayant produit aucun bounce.
+- **⚠️ Réserve maintenue** : les 360 envoyés comptent **4 envois vers des institutions déjà contactées** (incident du 22/08), **1 seconde tentative sur Antigua** et **1 sur PNG**. Le nombre d'**institutions distinctes** atteintes reste inférieur d'autant.
+- **Relances : 247 envoyées** (237 au 04/09 + les 10 du lot du 25/08, parties hier), **10 en attente d'envoi** (lot du 26/08, créées ce run) — **total cumulé de relances créées depuis le début : 257** = 247 + 10.
+- **Réponses institutionnelles : aucune nouvelle** depuis le refus Neumann du 01/09.
+
+**Profondeur de file en fin de run : 10 brouillons** — les 10 relances de ce run, la prospection du jour n'ayant pas encore tourné à cette heure.
+
+### 📅 Prochains lots
+
+- **27/08** (10 contacts) → J+10 le **06/09**, demain. Envoi à reconfirmer en direct par le run, l'entrée du 27/08 s'arrête à « 10 brouillons ».
+- **28/08 et 29/08** : frein de file déclenché les deux jours, **aucun contact neuf** — rien à relancer à ces échéances.
+- **30/08** (7 contacts, envoyés le 01/09) et **01/09** (9 délivrés sur 10) → J+10 le **11/09**.
+- **02/09** (9 délivrés + CAPRISA) → **12/09** ; `health_ministry@health.gov.pg` **écarté définitivement**.
+- **03/09** (16 contacts) → **13/09** ; **04/09** (16 contacts, envoi vérifié ce run) → **14/09**.
+- **Fiona Walsh** (`fiona.walsh@uni-heidelberg.de`) → statut comptable toujours en attente d'arbitrage, laissée en « sans réponse ». Sans effet opérationnel, sa relance unique est consommée.
+
+### ⚠️ Signalements
+
+- **Aucun incident technique.** `list_drafts` stable ce run (4 appels concordants), aucune recréation de brouillon, aucun doublon.
+- **Le faux positif « lien cliquable » du 03/09 ne se reproduit pas** : le grep de conformité a été mené sur le texte neuf seul, le bloc cité explicitement exclu. Les liens des originaux du 26/08 restent ceux insérés par David avant envoi — rien touché, rien à corriger.
+- **✅ Arbre de travail propre en fin de run, pour la première fois depuis le 02/09.** En début de run, `lib/disease-data.ts` apparaissait modifié — **laissé tel quel** (règle `AGENTS.md`) ; il a été commité par une autre session pendant ce run (`492b26ef`). Les trois fichiers signalés 3 runs de suite ont eux aussi été traités entre-temps : `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` commités en `e2243379`, `marketing/qa/product-claims.manual.json` plus dans l'arbre. **Le signalement tombe**, rien de cette routine n'a touché à ces fichiers.
