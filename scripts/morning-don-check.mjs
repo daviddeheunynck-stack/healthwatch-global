@@ -1111,15 +1111,18 @@ const MANUAL_ROW_CHECKED = {
   // local (Rano, Tudun Wada, Kibiya, Bunkure, Bebeji, Kiru) — un bilan local, sans nombre de cas
   // associé, sans période de référence et sans reprise par le NCDC. Il ne peut ni remplacer ni
   // corriger un cumul national depuis 2022, et l'écrire dans `deaths` mélangerait deux cadrages.
-  // Diphtérie/Nigéria : re-instruit le 05/09. ⚠️ La prémisse des signalements précédents était
-  // FAUSSE : le NCDC ne s'est pas tu depuis janvier. La série dédiée « Update of Diphtheria
-  // Outbreak in Nigeria » (ncdc.gov.ng/diseases/sitreps/?cat=18) s'est bien arrêtée, mais le
-  // « Weekly Epidemiological Report » (ncdc.gov.ng/reports/weekly) paraît chaque semaine et porte
-  // la diphtérie, tableau année-à-date compris. Édition lue : Vol. 16 n°32, semaine 32
-  // (3-9/08/2026), Table 19 — 2026 : 12 977 cas suspects / 10 476 confirmés / 406 décès (CFR
-  // 3,1 %) ; 2025 : 13 436 / 9 080 / 978 (7,3 %). ⚠️ CADRAGE DIFFÉRENT de la ligne, qui porte un
-  // cumul depuis 2022 (65 759 suspects / 2 229 décès) : ne PAS écrire 12 977 par-dessus, ce
-  // serait le piège Rougeole/États-Unis. Arbitrage remonté à David le 05/09.
+  // Diphtérie/Nigéria : re-instruit le 05/09, puis BASCULÉE le jour même sur ordre explicite de
+  // David. ⚠️ La prémisse des signalements précédents était FAUSSE : le NCDC ne s'est pas tu
+  // depuis janvier. La série dédiée « Update of Diphtheria Outbreak in Nigeria »
+  // (ncdc.gov.ng/diseases/sitreps/?cat=18) s'est bien arrêtée, mais le « Weekly Epidemiological
+  // Report » (ncdc.gov.ng/reports/weekly) paraît chaque semaine et porte la diphtérie, tableau
+  // année-à-date compris. La ligne a quitté le cadrage « cumul depuis 2022 » (65 759 suspects /
+  // 2 229 décès, sourcé leadership.ng) pour le cadrage NCDC année-à-date : 12 977 suspects /
+  // 10 476 confirmés / 406 décès (CFR 3,1 %), Vol. 16 n°32, semaine 32 (3-9/08/2026), source
+  // désormais ncdc.gov.ng/themes/common/docs/wers/. `cases` porte le compte de suspects (10 476
+  // confirmés cité dans la description), comme pour l'ancien cadrage — convention inchangée.
+  // Prochain run : chercher l'édition NCDC suivante (Vol. 16 n°33+), comparer le total
+  // année-à-date, PAS le cumul depuis 2022 qui n'est plus la référence de cette ligne.
   "1ca31b07-6f83-4967-9f59-b599f7574642": "2026-09-05",
   // Chikungunya/France, Dengue/France, West Nile/France : vérifiées une 2e fois le 22/08, cette
   // fois sur signalement d'un contact LinkedIn (Pierre PARNEIX, 21/08) plutôt que par le contrôle
