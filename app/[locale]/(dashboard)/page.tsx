@@ -287,6 +287,23 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
   const activeOutbreaks = outbreaks.filter((o) => o.active);
   const stats = getStats(activeOutbreaks);
 
+  // Free-plan cases/deaths are only ever meant to be blurred, not actually
+  // delivered — but WorldMap/OutbreakTable are client components, so any
+  // real number passed as a prop still lands in the page's RSC payload
+  // (readable via view-source) no matter what the UI renders on top of it.
+  // Round to an order of magnitude before it ever reaches a client
+  // component: keeps every `cases > 0` / sort / trend-badge check that
+  // already relies on this field working (unlike zeroing it out), while
+  // the exact figure never leaves the server for a free account.
+  const magnitudeBucket = (n: number) => (n > 0 ? Math.pow(10, Math.floor(Math.log10(n))) : 0);
+  const mapTableOutbreaks = isPaid
+    ? outbreaks
+    : outbreaks.map((o) => ({
+        ...o,
+        cases: magnitudeBucket(o.cases),
+        deaths: o.deaths === null ? null : magnitudeBucket(o.deaths),
+      }));
+
   // 7-day directional signal (▲/▼/→) — infrastructure has been live since 2026-06-05;
   // getOutbreakTrend returns "unknown" until outbreak_snapshots holds enough history,
   // so this stays a harmless no-op today and starts rendering on its own once the
@@ -541,7 +558,7 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
 
       <NewThisWeekWidget outbreaks={outbreaks} locale={locale} trends={trends} isPaid={isPaid} />
 
-      <WorldMap outbreaks={outbreaks} locale={locale} isPaid={isPaid} popupLabels={popupLabels} riskLabels={riskLabels} />
+      <WorldMap outbreaks={mapTableOutbreaks} locale={locale} isPaid={isPaid} popupLabels={popupLabels} riskLabels={riskLabels} />
 
       <div>
         <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
@@ -583,7 +600,7 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
         )}
 
         <OutbreakTable
-          outbreaks={outbreaks}
+          outbreaks={mapTableOutbreaks}
           locale={locale}
           isPaid={isPaid}
           labels={tableLabels}
