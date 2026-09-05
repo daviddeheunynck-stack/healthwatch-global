@@ -3522,6 +3522,46 @@ lectures.
    252/1035) — David a demandé l'alignement sur 24,3 % ; fait dans les 5
    langues, vérifié sur la page publique.
 
+### Revue systématique des foyers affichés (demandée par David, en cours)
+
+Worklist construite : 127 lignes affichées triées par `lastVerifiedIso` croissant
+(les moins récemment vérifiées d'abord — même logique que ce qui a fait
+remonter Lassa). Parcours commencé par le navigateur, 3e ligne :
+
+**🔴 Doublon d'affichage trouvé et corrigé — Ebola/RD Congo.** Deux lignes pour
+le même événement (l'urgence Bundibugyo 2026) affichées simultanément :
+`bd1c3a46-…` (le foyer PHEIC officiel, `active=true`, ECDC, 6 250 cas/3 039
+décès, 01/09) et `6a5e9fc9-…` (`active=false` mais encore dans la fenêtre de
+60 jours, Africa CDC, 4 120 cas/1 887, 07/08) — même piège que Lassa et les 4
+lignes ReliefWeb du 26/08, mais ici sans question légale : un simple snapshot
+périmé du même événement, jamais redescendu sous `source_priority=3` après
+avoir été supplanté. David a confirmé : `source_priority` 5→0. Vérifié sur
+`/fr/disease/ebola-virus-disease` : « Foyers en cours » n'affiche plus que la
+ligne à jour ; le snapshot périmé reste visible dans « Historique des
+épidémies » (surface différente, comportement voulu). Détail dans la mémoire
+`project_ebola_drc_stale_duplicate_fixed_2026_09_05`.
+
+**Requête systématique lancée immédiatement après** (plutôt que de compter sur
+le parcours page par page pour retomber dessus par hasard) : toute ligne
+`active=false` mais encore dans la fenêtre de 60 jours, avec recherche d'une
+ligne sœur active pour le même couple maladie/pays. **5 autres lignes
+correspondent au premier critère** (Nipah/Inde, Chikungunya/Mayotte,
+Ebola/Ouganda, Choléra/Zambie, Ebola/Allemagne) mais **aucune n'a de ligne
+active concurrente** — ce sont des foyers légitimement clos, affichés avec le
+bandeau « Foyer terminé », pas des doublons. Un seul cas réel ce soir.
+
+Automatisation testée en parallèle sur les 127 descriptions (comparaison des
+premiers chiffres cas/décès mentionnés contre les champs `cases`/`deaths`) :
+15 signalements, **tous des faux positifs** de la regex (trop étroite pour
+gérer des qualificatifs comme « laboratory-confirmed » ou des chiffres
+secondaires légitimes plus loin dans le texte — ex. le trio Diphtérie
+Haïti/Pérou/Brésil partage la même citation PAHO régionale, dont chaque ligne
+cite bien son propre sous-total). Aucune vraie dérive numérique trouvée par
+cette méthode ce soir ; méthode gardée en réserve mais pas fiable telle
+quelle sans une extraction plus soignée.
+
+Revue en pause après ces 3 lignes — reprise à confirmer avec David.
+
 3. **RÉSOLU — `ncdc.gov.ng` interdit de citation, mais seulement pour les
    PDF de sitrep.** `FORBIDDEN_SOURCE_PATH_PATTERNS` dans `lib/source-trust.ts`
    (commit `5b8aeeb6`), vérifié après `FORBIDDEN_SOURCE_DOMAINS` dans
