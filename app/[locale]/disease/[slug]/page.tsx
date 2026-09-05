@@ -18,6 +18,7 @@ import DiseaseAlertNudge from "@/components/DiseaseAlertNudge";
 import ShareOutbreakButton from "@/components/ShareOutbreakButton";
 import WatchButton from "@/components/WatchButton";
 import WatchDiseaseButton from "@/components/WatchDiseaseButton";
+import CitationBlock from "@/components/CitationBlock";
 
 export const revalidate = 3600;
 
@@ -44,6 +45,7 @@ const LABELS = {
     cases_unit: "cas", deaths_unit: "décès",
     noData: "N/D",
     daysAgo: (n: number) => n === 0 ? "aujourd'hui" : n === 1 ? "hier" : `${n}j`,
+    citeLabel: "Citer cette page (Vancouver)", citeCopy: "Copier la citation", citeCopied: "Copié !",
   },
   en: {
     activeBadge: (n: number) => n === 1 ? "1 active outbreak" : `${n} active outbreaks`,
@@ -60,6 +62,7 @@ const LABELS = {
     cases_unit: "cases", deaths_unit: "deaths",
     noData: "N/A",
     daysAgo: (n: number) => n === 0 ? "today" : n === 1 ? "yesterday" : `${n}d`,
+    citeLabel: "Cite this page (Vancouver)", citeCopy: "Copy citation", citeCopied: "Copied!",
   },
   es: {
     activeBadge: (n: number) => n === 1 ? "1 brote activo" : `${n} brotes activos`,
@@ -76,6 +79,7 @@ const LABELS = {
     cases_unit: "casos", deaths_unit: "fallecidos",
     noData: "N/D",
     daysAgo: (n: number) => n === 0 ? "hoy" : n === 1 ? "ayer" : `${n}d`,
+    citeLabel: "Citar esta página (Vancouver)", citeCopy: "Copiar cita", citeCopied: "¡Copiado!",
   },
   ar: {
     activeBadge: (n: number) => n === 1 ? "تفشٍّ نشط واحد" : `${n} تفشيات نشطة`,
@@ -92,6 +96,7 @@ const LABELS = {
     cases_unit: "حالة", deaths_unit: "وفاة",
     noData: "غ/م",
     daysAgo: (n: number) => n === 0 ? "اليوم" : n === 1 ? "أمس" : `${n}ي`,
+    citeLabel: "اقتبس هذه الصفحة (فانكوفر)", citeCopy: "نسخ الاقتباس", citeCopied: "تم النسخ!",
   },
   id: {
     activeBadge: (n: number) => n === 1 ? "1 wabah aktif" : `${n} wabah aktif`,
@@ -108,6 +113,7 @@ const LABELS = {
     cases_unit: "kasus", deaths_unit: "kematian",
     noData: "T/S",
     daysAgo: (n: number) => n === 0 ? "hari ini" : n === 1 ? "kemarin" : `${n}h`,
+    citeLabel: "Kutip halaman ini (Vancouver)", citeCopy: "Salin kutipan", citeCopied: "Disalin!",
   },
 } as const;
 
@@ -805,6 +811,19 @@ export default async function DiseasePage({
           </div>
         </section>
       )}
+
+      {/* Citation académique — disease pages are the stable, evergreen reference
+          (unlike a single outbreak, which resolves/archives); a researcher citing
+          "HWG's Ebola tracker" should cite this URL, not one specific outbreak
+          instance. Same CitationBlock component as the outbreak page, aggregate
+          wording since this page spans every source across every active/historical
+          outbreak for the disease rather than one row with one source. */}
+      <CitationBlock
+        label={lb.citeLabel}
+        copyLabel={lb.citeCopy}
+        copiedLabel={lb.citeCopied}
+        citation={`HealthWatch Global. ${diseaseName} — global outbreak surveillance [Internet]. [cited YYYY Mon DD]. Available from: ${BASE_URL}/${l}/disease/${slug}.`}
+      />
 
       {/* Email capture CTA */}
       <EmailCapture locale={l} region="all" title={lb.ctaTitle} body={lb.ctaBody} proTitle={diseaseProTitle[l]} />
