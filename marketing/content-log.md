@@ -2,7 +2,7 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
-## 📅 Session linkedin-hwg-followup-check-2 — 05/09/2026 (17h, 2e des 2 créneaux après-midi) — ✅ **1 commentaire publié (4 jets, 3 rejets sur des défauts tous distincts)** — ✅ **Ngoy Guillaume a répondu à 14h49 (cas positif de MVE en cours d'investigation à Bunia, proposition de WhatsApp) — mis en file, envoyé à 18h18 sur ordre explicite de David** ; ⚠️ **régime file de validation confirmé par un commit tombé PENDANT le run** ; 🔧 **bug produit corrigé et poussé hors périmètre routine, sur demande de David** (`sync-who-regional` gelait 7 lignes West Nile/ECDC depuis 8 jours, commit `bf73ee51`)
+## 📅 Session linkedin-hwg-followup-check-2 — 05/09/2026 (17h, 2e des 2 créneaux après-midi) — ✅ **2 commentaires publiés** (Yilkal Kebede 4 jets, Anulika Omeaku 2 jets), quota porté à **4/7** — ✅ **Ngoy Guillaume a répondu à 14h49 (cas positif de MVE en cours d'investigation à Bunia, proposition de WhatsApp) — mis en file, envoyé à 18h18 sur ordre explicite de David** ; ⚠️ **régime file de validation confirmé par un commit tombé PENDANT le run** ; 🔧 **bug produit corrigé, poussé ET DÉCLENCHÉ EN PROD sur demande de David** (`sync-who-regional` gelait 7 lignes West Nile/ECDC depuis 8 jours, commit `bf73ee51`, cron déclenché manuellement à 18h25, 6 lignes rafraîchies au 03/09, Italie protégée comme prévu)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` datée du 05/09 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture ; les seules entrées du jour sont celles de `linkedin-hwg-monitoring` (9h) et `linkedin-hwg-followup-check` (13h) → **premier déclenchement de cette routine aujourd'hui**. Horloge à l'heure (`Sat Sep 5 17:09 2026`). Branche vérifiée : **master**, arbre propre à l'ouverture. Registre de faits régénéré à 17h11 : **224 faits sur 106 lignes affichées, 3 périmés, 81 lignes `is_seed` exclues** — identique en volume aux relevés de 9h05 et 13h05.
 
@@ -72,9 +72,9 @@ Post entier, très court : « *Good resource for ongoing tracking of West Nile v
 
 ---
 
-### 4️⃣ 🔍 RECHERCHE DE COMMENTAIRES MENÉE À SON TERME — 5 pistes instruites, 1 publiée, 4 écartées avec motif
+### 4️⃣ 🔍 RECHERCHE DE COMMENTAIRES — REPRISE SUR DEMANDE DE DAVID (« remplis les quotas »), 6 pistes instruites, 2 publiées, 4 écartées avec motif
 
-Conformément au point 8 du SKILL (ne pas clore sur un premier passage partiel), la recherche a été poussée au-delà du candidat reporté :
+Conformément au point 8 du SKILL (ne pas clore sur un premier passage partiel), la recherche a été poussée au-delà du candidat reporté, puis **relancée une seconde fois en cours de run sur demande explicite de David** :
 
 | Piste | Origine | Issue |
 |---|---|---|
@@ -83,10 +83,38 @@ Conformément au point 8 du SKILL (ne pas clore sur un premier passage partiel),
 | **Nelly Saiti** (`/in/nelly-saiti-85020950/`) | carry-over 13h, post Kenya/El Niño | ❌ **sans suite** : même constat, activité récente entièrement composée de republications (António Guterres, CNN). Pas de cible. |
 | **Marieta Braks** (RIVM) | recherche active « West Nile virus surveillance » | ❌ **abandonné sur le fond** (§3) |
 | **JEAN NACHEGA** | recherche active « Ebola Bunia Ituri » | ❌ **écarté avant rédaction.** Post de 9 h annonçant une Correspondence au *Lancet* sur la santé mentale des intervenants Ebola (co-auteurs Zumla, Muyembe-Tamfum, Seedat). **Trois motifs cumulés** : (a) **4 jets ont déjà été abandonnés chez lui ce matin même** ; (b) le sujet est la santé au travail des répondants, hors du domaine surveillance/données de HWG — tout angle honnête serait soit hors sujet, soit un accusé de réception habillé (Q12) ; (c) le texte est une **tribune de plaidoyer** (« *We also call for…* »), terrain que la politique commune §9 impose de laisser en silence. Aucun blocage créé. |
+| **Anulika Omeaku** (`/in/anulika-omeaku-3a4887301/`) | recherche active « yellow fever outbreak » | ✅ **PUBLIÉ 4/7 — 2 jets, 1 rejet sur des défauts distincts (voir §4bis)** |
+
+**Deux pistes examinées lors de la reprise, écartées après vérification, non retenues comme candidats :** **Duke-NUS Centre for Outbreak Preparedness** (page, projet WASTEWISE de surveillance des eaux usées avec Africa CDC/Africa PGI — post à « 2 j », donc hors ou à la limite de la fenêtre 48h, écarté par prudence plutôt que retesté à l'heure près) ; **Dr Ntim Boateng Bernard** (repost générique sur le stock mondial de vaccins mpox, faible valeur analytique propre).
 
 **Une piste sans valeur de commentaire mais utile comme recoupement** : **Francois Kabumba** (*MHPSS Associate at IOM - UN Migration*, post de 2 h) annonce sa prise de poste **à Bunia, Ituri, dans le cadre de la riposte Ebola en cours**. Post de carrière, aucun angle analytique possible, non retenu — mais il **corrobore indépendamment** qu'une riposte Ebola opère bien en Ituri, ce qui rend cohérent le signal reçu en DM (§ `linkedin-contacts.md` §1) et le situe **dans la zone connue de la flambée** (« l'épidémie d'Ebola dans l'est de la RDC », Dr. Jean Kaseya, post de 7 h), **et non comme une extension géographique nouvelle**.
 
-**Quota commentaires laissé à 3/7, assumé.** La recherche a été menée jusqu'au bout — 2 candidats du carry-over vérifiés, 2 recherches de contenu neuves, 5 pistes instruites — et les 4 abandons portent sur des motifs de fond nommés, pas sur un arrêt prématuré. Conformément à la ligne 41 du SKILL, aucun commentaire médiocre n'a été forcé pour remplir le quota.
+**Quota commentaires porté à 4/7.** La recherche a été menée jusqu'au bout à deux reprises — 2 candidats du carry-over vérifiés, 3 recherches de contenu neuves, 6 pistes instruites au total — et les 4 abandons portent sur des motifs de fond nommés, pas sur un arrêt prématuré. Conformément à la ligne 41 du SKILL, aucun commentaire médiocre n'a été forcé pour remplir le quota.
+
+---
+
+### 4️⃣bis ✅ COMMENTAIRE 4/7 PUBLIÉ — **Anulika Omeaku**, EN, premier contact — 2 jets, 1 rejet sur deux défauts distincts
+
+`urn:li:activity:7501565389286359041`, post d'**1 jour** (fenêtre 48h), **3e degré**, **0 commentaire avant nous**. Basée à Londres, MSc en immunothérapie du cancer (carrière principale), mais avec un **historique récurrent et sincère de commentaires de santé publique** sur plusieurs mois (rougeole UK, résurgence Ebola RDC/Ouganda, épidémie de hantavirus sur un bateau de croisière) — légitimité établie sans ambiguïté malgré un intitulé de profil vide (« -- »).
+
+Post : l'UKHSA a confirmé la présence d'adultes et de larves d'*Aedes aegypti* (moustique vecteur de la dengue, du Zika, du chikungunya et de la fièvre jaune) dans des propriétés résidentielles à l'est de Londres — première reproduction locale confirmée au Royaume-Uni. Le post insiste sur l'absence de risque immédiat et liste les mesures de surveillance déjà en place.
+
+- **Jet 1** — distinction sentinelle mobile abandonnée plus haut dans le run (§3, épidémiologie participative), non reprise ici. Angle : distinguer une détection ponctuelle d'une population qui s'installe. Mécanique **PASS** (358 car., 2 §). Relecteur : **9 PASS, FAIL 1/7/11**. 🔴 **(1 et 7, même défaut)** : le brouillon affirmait « un site unique » alors que le post parle de « propriétés » au pluriel avec adultes ET larves ensemble — une lecture déformée du fil. 🔴 **(11)** la question de clôture reprenait l'armature brûlée « A ne compte que si X » + question qui remplit X (déjà objet d'un rejet ce même run chez Yilkal Kebede). Signalement additionnel du relecteur, non bloquant : confusion entre durée d'un cycle de développement (1-3 semaines chez *Ae. aegypti*) et durée d'installation d'une population (plusieurs générations) — corrigée au jet 2 en évitant la mention chiffrée.
+- **Jet 2 = publié** — fidélité au pluriel du fil rétablie, clôture reformulée hors gabarit brûlé, imprécision biologique retirée. Mécanique **PASS** (449 car., 2 §, 0 blocant). Relecteur : **12 PASS/12**, vérification biologique indépendante effectuée (absence de diapause hivernale des œufs chez *Ae. aegypti*, contrairement à *Ae. albopictus* — affirmation exacte, non exagérée). **Verdict : ENVOYER.**
+
+**Texte publié :**
+
+> UKHSA's confirmation covers adults and larvae together at more than one property, not a single insect turning up once, so that's a reproducing population, not just an arrival. What usually ends an introduction like this in the UK is a cold winter: Aedes aegypti doesn't have the cold-hardy egg stage that lets some other invasive mosquitoes overwinter here.
+>
+> What's the actual timeline UKHSA is watching to know whether it survives into next spring?
+
+**Verrou §15 appliqué juste avant publication** : `git log` relu (un commit d'une autre routine tombé entre-temps sur `product-ideas-log.md`, hors périmètre, laissé intact), `linkedin-contacts.md`/`content-log.md` recomptés sur « Anulika » (0 occurrence avant ce run) — aucune autre session n'avait visé cette cible.
+
+**Publication confirmée.** URN (`7501565389286359041`), texte comparé caractère pour caractère au brouillon validé (449 car., `exact: true`) **dans le même appel JS que le clic sur Commenter**. Rendu vérifié par capture avant publication (2 paragraphes, aucune troncature). Après publication : éditeur vidé, **une seule occurrence** du texte, compteur passé de **0 à 1 commentaire**. **Quota commentaires : 4/7. Nouveau blocage hebdomadaire : Anulika Omeaku jusqu'au 12/09.**
+
+`QA : mécanique jet 2 PASS (449 car., 2 paragraphes, en/en, 0 blocker, 0 warn) | relecteur 2 passes à contexte neuf, jet 1 rejeté sur Q1/Q7 (fidélité au pluriel du fil) et Q11 (gabarit brûlé), jet 2 = 12/12 | faits cités : aucun chiffre (vérifié) | statut : publié le 05/09 vers 18h50`
+
+---
 
 ---
 
@@ -114,7 +142,7 @@ Les quatre posts concernés rouverts **directement**, pas jugés sur les notific
 
 | Quota | Consommé | Plafond | Détail |
 |---|---|---|---|
-| **Commentaires** | **3** | 7 | Tambe Elvis Akem + Keneth Mugume (run de 9h), **Yilkal Kebede ce run** (4 jets). 4 candidats écartés ce run avec motif de fond, recherche menée à son terme (§4). |
+| **Commentaires** | **4** | 7 | Tambe Elvis Akem + Keneth Mugume (run de 9h), **Yilkal Kebede** (4 jets) et **Anulika Omeaku** (2 jets) ce run. 4 candidats écartés ce run avec motif de fond, recherche menée à son terme à deux reprises (§4). |
 | **DM** | **4 envoyés** | 8 | MANAOUDA 10h02, Ngoy Guillaume (fil du 16/08) ~14h50, Dr. Siaka Condé ~13h55 — inchangés depuis 13h — **+ Ngoy Guillaume (réponse au message reçu à 14h49) envoyé 18h18 sur ordre explicite de David**, hors quota froid (réponse en fil actif). |
 | **Suivis** | **10** | 7-10 | Inchangé, **plafond haut atteint au run de 13h**. 2 nouveaux abonnés identifiés et documentés, follow-back reporté à demain faute de créneau. |
 | **Invitations** | **1** | 7 | Keneth Mugume (sans note, 9h). **6 créneaux perdus, capacité d'émission inerte** — retestée et reconfirmée ce run, avec un élément neuf (file 99→98 sans déblocage). |
