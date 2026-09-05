@@ -4,10 +4,12 @@
  * For each active predictive alert, projects the outbreak's doubling time
  * from its 7-day growth trend (lib/outbreak-trend.ts, backed by
  * outbreak_snapshots) and fires if that projection is under the user's
- * configured window. Unlike outbreak_tripwires (a manual case-count
- * threshold, checked every 30 min), this is forward-looking and only ever
- * changes once a day — one snapshot/day per outbreak — so it only needs to
- * run once a day itself.
+ * configured window AND the outbreak's week-over-week case count actually
+ * grew (see isAccelerating below — the projection alone is not evidence of
+ * acceleration on a cumulative counter). Unlike outbreak_tripwires (a manual
+ * case-count threshold, checked every 30 min), this is forward-looking and
+ * only ever changes once a day — one snapshot/day per outbreak — so it only
+ * needs to run once a day itself.
  *
  * Re-arms 7 days after a firing, or immediately if the trend resets to
  * "unknown"/non-"up" and later turns "up" again — mirrors the
@@ -67,6 +69,88 @@ function projectedDoublingDays(deltaPercent: number, daysBack: number): number |
   const dailyRate = Math.pow(1 + deltaPercent / 100, 1 / daysBack) - 1;
   if (dailyRate <= 0) return null;
   return Math.log(2) / Math.log(1 + dailyRate);
+}
+
+// ── Is it actually accelerating? ─────────────────────────────────────────────
+// `outbreaks.cases` is a CUMULATIVE counter, so a projected doubling OF IT is
+// not evidence of acceleration: at a perfectly constant incidence the
+// cumulative total still doubles — 100 cases growing by 10/day reaches 200 in
+// exactly 10 days — and projectedDoublingDays() above reports that as "~9
+// days". Worse, at constant incidence the cumulative doubling time keeps
+// LENGTHENING (100→200 in 10d, then 200→400 in 20d), so the alert fires early
+// in a row's tracked life and goes quiet afterwards: the opposite of an early
+// warning. The arithmetic isn't wrong; the claim laid on top of it is — the
+// email is titled "Predictive Trend Alert" and the in-app notification reads
+// "— accelerating".
+//
+// Measured against prod 2026-09-05 by replaying this cron over the full
+// snapshot history (outbreak_snapshots: 6,460 rows, 78 days, 65 of them
+// evaluable, 121 active rows) at the 14-day window the UI offers by default:
+// of 341 firings, 32 (9%) were on rows whose week-over-week case count was
+// flat or falling and 28 (8%) frankly falling. West Nile/Spain on 22/08 would
+// have been mailed "projected to double in ~12.0 days · accelerating" with
+// new cases down from 39 the previous week to 21.
+//
+// The projection still sets the threshold. This only refuses to call
+// something acceleration when the weekly case count did not in fact grow.
+function isAccelerating(recentWeekCases: number, priorWeekCases: number): boolean {
+  return recentWeekCases >= priorWeekCases;
+}
+
+// New cases over the week BEFORE the one lib/outbreak-trend.ts measures, per
+// outbreak. The J-7 boundary is fetched with the same window and ordering as
+// getOutbreakTrendsBulk's `oldest` query, so the row picked here is the same
+// one its delta is measured from and the two weeks are contiguous rather than
+// overlapping. Returns nothing for an outbreak with under two weeks of
+// snapshots — no comparison term means the claim can't be supported, so it
+// isn't made.
+async function getPriorWeekCases(
+  supabase: SupabaseClient,
+  outbreakIds: string[],
+): Promise<Map<string, number>> {
+  const dayStr = (daysAgo: number) => {
+    const d = new Date();
+    d.setDate(d.getDate() - daysAgo);
+    return d.toISOString().split("T")[0];
+  };
+
+  // Paged: one snapshot per outbreak per day means 121 active rows × an 8-day
+  // window already sits within a few dozen rows of Supabase's 1,000-row reply
+  // cap, and a truncated reply comes back as a success (see
+  // reference_supabase_caps_queries_at_1000_rows).
+  const fetchWindow = async (fromDaysAgo: number, toDaysAgo: number) => {
+    const rows: { outbreak_id: string; cases: number; snapped_at: string }[] = [];
+    for (let offset = 0; ; offset += 1000) {
+      const { data } = await supabase
+        .from("outbreak_snapshots")
+        .select("outbreak_id, cases, snapped_at")
+        .in("outbreak_id", outbreakIds)
+        .gte("snapped_at", dayStr(fromDaysAgo))
+        .lte("snapped_at", dayStr(toDaysAgo))
+        .order("snapped_at", { ascending: false })
+        .range(offset, offset + 999);
+      if (!data?.length) break;
+      rows.push(...data);
+      if (data.length < 1000) break;
+    }
+    // Most recent row per outbreak within the window.
+    const byId = new Map<string, number>();
+    for (const r of rows) if (!byId.has(r.outbreak_id)) byId.set(r.outbreak_id, r.cases);
+    return byId;
+  };
+
+  // Same [2×DAYS_BACK, DAYS_BACK] window as getOutbreakTrendsBulk, then the
+  // one before it — the same width, so a skipped snapshot cron is tolerated
+  // identically on both sides of the comparison.
+  const [atWeek1, atWeek2] = await Promise.all([fetchWindow(14, 7), fetchWindow(28, 14)]);
+
+  const priorWeek = new Map<string, number>();
+  for (const [id, week1Cases] of atWeek1) {
+    const week2Cases = atWeek2.get(id);
+    if (week2Cases === undefined) continue;
+    priorWeek.set(id, week1Cases - week2Cases);
+  }
+  return priorWeek;
 }
 
 const COPY: Record<string, {
@@ -214,20 +298,21 @@ async function runPredictiveAlerts(supabase: SupabaseClient) {
   for (const o of (outbreaks ?? []) as Outbreak[]) oMap.set(o.id, o);
 
   const trends = await getOutbreakTrendsBulk(supabase, outbreakIds);
+  const priorWeekCases = await getPriorWeekCases(supabase, outbreakIds);
   const blockedEmails = await getBlockedEmailSet(supabase);
 
   let fired = 0;
   let blockedSkipped = 0;
   let errors = 0;
+  let notAccelerating = 0;
 
   for (const a of alerts as PredictiveAlert[]) {
     const o = oMap.get(a.outbreak_id);
     if (!o) continue;
 
     const trend = trends.get(a.outbreak_id);
-    const projected = trend && trend.direction === "up"
-      ? projectedDoublingDays(trend.deltaPercent, trend.daysBack)
-      : null;
+    const rising = trend && trend.direction === "up" ? trend : null;
+    const projected = rising ? projectedDoublingDays(rising.deltaPercent, rising.daysBack) : null;
 
     const eligible = projected !== null && projected <= a.doubling_within_days;
 
@@ -240,6 +325,17 @@ async function runPredictiveAlerts(supabase: SupabaseClient) {
           .update({ last_projected_days: null })
           .eq("id", a.id);
       }
+      continue;
+    }
+
+    // The projection cleared the user's window — but on a cumulative counter
+    // that alone doesn't mean the outbreak is accelerating (see
+    // isAccelerating above). Confirm against the actual week-over-week case
+    // count before making that claim, and stay silent when there's nothing to
+    // confirm it with.
+    const priorWeek = priorWeekCases.get(a.outbreak_id);
+    if (!rising || priorWeek === undefined || !isAccelerating(rising.deltaCases, priorWeek)) {
+      notAccelerating++;
       continue;
     }
 
@@ -318,5 +414,5 @@ async function runPredictiveAlerts(supabase: SupabaseClient) {
 
   await logCronRun(supabase, "trigger-predictive-alerts", errors > 0 ? "error" : "ok", fired,
     errors > 0 ? `${errors} alerte(s) prédictive(s) en échec` : undefined);
-  return NextResponse.json({ ok: true, fired, blockedSkipped, errors });
+  return NextResponse.json({ ok: true, fired, blockedSkipped, notAccelerating, errors });
 }
