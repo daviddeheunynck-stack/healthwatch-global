@@ -110,11 +110,29 @@ Le dernier commit du dépôt (`bf9e1b7f`) date de **08h44**, soit **19 minutes a
 
 ---
 
+### 3️⃣ter 🔒 DM 3/8 EN FILE DE VALIDATION — **Dr. Siaka Condé** (`/in/drconde-who-afro/`), EN, relance après 7 jours de silence — **3 jets, 2 rejets sur des défauts distincts**
+
+*Head of WHO Country Emergency Program*, Lomé, Togo, relation de 1er degré. Fil verbatim dans `tmp/thread-siaka.txt`. *langue du fil = en ; langue du brouillon = en.* **Dernier échange** : le 28/08, nous demandions si le reporting de l'unité de soutien d'urgence a un lectorat en dehors des structures de riposte, avec le CTA (produit + lien + essai) déjà servi ; sa réponse du 29/08, **le dernier message du fil**, tenait en une phrase : « *Let me look at this for a moment* ». **7 jours de silence.**
+
+**Les trois jets :**
+- **Jet 1** — « no rush on this, just checking whether... ». Mécanique PASS. Relecteur : **REECRIRE 11, 12**. 🔴 **(11)** gabarit de relance déjà utilisé mot pour mot avec un autre destinataire (Eva Kamau, `linkedin-contacts-archive-avant17juillet.md:811`, « *No rush if you're still finding the time. I'm mainly curious what stands out...* »). **(12)** ne fait que répéter la question du 28/08 sans rien ajouter — accusé d'impatience habillé en check-in.
+- **Jet 2** — gabarit retiré, porte de sortie ajoutée (« if it turns out to be internal-only, that's a fine answer too »). Relecteur : **REECRIRE 12** seul. 🔴 Le message ne posait plus aucune question et refermait unilatéralement le fil à sa place — contraire à la politique commune §3 (« toujours essayer de relancer poliment la discussion sur le fond ») puisque rien n'indique qu'il soit « visiblement fermé ou désintéressé ».
+- **Jet 3** — la porte de sortie conservée, une vraie question de suivi à réponse courte rattachée (« is that roughly what you are finding so far? »). **Relecteur : VERDICT ENVOYER, 12/12 PASS.**
+
+**🔒 Texte complet en file de validation — jamais envoyé par la routine :**
+
+> Siaka, if the emergency support unit's reporting turns out to be internal-only, that is a perfectly good answer too, is that roughly what you are finding so far?
+
+**Arbitrage CTA : omis, motif admis.** Déjà servi dans ce fil le 28/08 — règle anti-répétition §3, pas un oubli.
+
+`QA : mécanique jet 3 PASS (161 car., 1 paragraphe, en/en, 0 blocker, 0 warn) | relecteur 3 passes, jets 1-2 rejetés sur des défauts distincts (gabarit de relance déjà servi à Eva Kamau + relance creuse ; clôture unilatérale sans question), jet 3 = VERDICT ENVOYER 12/12 | faits cités : aucun chiffre | registre du 05/09 (09:05) | statut : **en file de validation**`
+
+---
+
 ### 4️⃣ 🔁 CARRY-OVER POUR LE CRÉNEAU DE 13h (05/09) — côté contacts
 
-1. 🔒 **DEUX DM EN FILE DE VALIDATION** : **Dr. Malachie MANAOUDA** (texte en §2 — ⚠️ mise à jour : **envoyé à 10h02 sur ordre explicite de David**, voir la note de statut de la section 2, donc **retiré de cette file**) et **Ngoy Guillaume** (texte en §3bis, **toujours en attente**). **Notification push envoyée pour Ngoy Guillaume.** Ne pas envoyer sans ordre explicite de David.
+1. 🔒 **TROIS DM EN FILE DE VALIDATION** : **Ngoy Guillaume** (texte en §3bis) et **Dr. Siaka Condé** (texte en §3ter). **Dr. Malachie MANAOUDA a été envoyé à 10h02 sur ordre explicite de David** (voir §2), donc **retiré de cette file**. **Notifications push envoyées.** Ne pas envoyer sans ordre explicite de David.
 2. ❌ **Dr R Hyacinthe ZABRE** (`/in/dr-r-hyacinthe-zabre/`) — **CLOS, tranché par David en session (« ce fil est du hors périmètre, laisse tomber »).** Le fil découvert ce run (14 août) est en réalité du **support de compte** : ZABRE a un accès Pro HWG **provisionné gratuitement** par David mi-juillet — il ne paie rien, **ce n'est pas un client** (déjà documenté `linkedin-contacts.md:9263`, 14/08 ; correction du terme le 05/09 en session, voir [[project_zabre_hwg_free_access_not_prospect_2026_09_05]]). **Ne plus le proposer comme candidat DM/commentaire marketing.** Reste suivi (relation de 1er degré), rien d'autre à faire.
-3. **Dr. Siaka Condé** — relance en cours de rédaction en fin de run (2 jets, voir texte le cas échéant en `content-log.md` ou reporté ci-dessous si non finalisé). Dernier échange : sa réponse du 29/08 (« *Let me look at this for a moment* »), 7 jours de silence.
 4. ⭐ **James Schlitt** et ⭐ **Christian BABOKO** — nos envois du 04/09 au soir (18h16 et 18h58, les deux CTA envoyés à 23h20 sur ordre de David) sont **toujours les derniers messages** de leurs fils. Schlitt répond en général sous 1 à 3 h ; plus de 15 h de silence est inhabituel pour lui. À revérifier à 13h.
 5. 🔴 **Plafond mensuel d'invitations personnalisées : non revérifié ce run** (aucune invitation émise). Lire le compteur dans la modale avant toute rédaction de note.
 6. 📌 **Signal à vérifier par `morning-don-check`, pas par cette routine** : deux posts LinkedIn indépendants (Chrissy Chabwera Banda, Rebecca Karimu, 19-21h) rapportent que le **Malawi Ministry of Health** a déclaré la **fin officielle** des flambées choléra ET mpox (choléra : 0 cas confirmé depuis 28+ jours, total cumulé **3 200 cas** cité ; mpox : 0 cas depuis 90+ jours, **162 cas confirmés** au total). **Notre ligne Choléra/Malawi est `active: true`, `asOf: 2026-06-29` (68 jours, stale), 3 150 cas / 30 décès** — cohérent avec un cumul antérieur à la clôture, mais jamais mis à jour vers un statut clos. **Aucune ligne Mpox/Malawi n'existe en base.** Sources vues ne sont que des reprises individuelles (pas le communiqué officiel du ministère ni un bulletin OMS/Africa CDC primaire) — **à vérifier contre une source primaire avant toute écriture**, cette routine ne le fait pas elle-même (politique commune §8).
