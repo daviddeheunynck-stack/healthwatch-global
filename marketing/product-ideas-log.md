@@ -3741,3 +3741,42 @@ corrigé (Ebola/RDC), 1 clarification de texte sur choix explicite de David
 traduction automatique** (9 polio Afrique + 27 WHO Surveillance + 2 QUI/WHO +
 10 sweep final au fil de la revue) — aucune donnée chiffrée modifiée dans ces
 41 cas, uniquement du texte de traduction.
+
+### Suite du même soir — sweep étendu aux lignes archivées (demandé par David)
+
+Étendu le sweep de traduction aux 170 lignes archivées (296 au total). Trouvé
+**51 lignes archivées de plus** touchées par les mêmes artefacts, dont un
+groupe partagé important : les **10 lignes de l'événement « préparation pour
+nourrissons contaminée à la toxine céréulide »** (Singapour, Italie, Hong
+Kong, Brésil, Belgique, Autriche, Espagne, Tchéquie, France, Royaume-Uni)
+partagent toutes le même texte, avec « Nouvelles **DE** l'OMS » au lieu de
+« de ».
+
+**Incident évité de justesse — un premier essai de correctif générique
+(`\bA\b` → minuscule sur tout le texte) a été testé en dry-run avant toute
+écriture, et a révélé qu'il aurait corrompu deux choses réelles :**
+- **« grippe A(H5N1) », « A(H3N2) »** — la lettre « A » du sous-type grippal,
+  qui doit rester majuscule (Type A vs Type B) ;
+- **« Hépatite A »** — un nom de maladie (vs hépatite B, C…), qui doit rester
+  majuscule.
+
+Le dry-run a servi précisément à ça : rien n'a été écrit avant d'avoir vu le
+diff complet. Corrigé en dressant d'abord la liste exhaustive de tous les
+mots suivant un « A » isolé dans les 296 lignes (`signalé`, `estimé`,
+`notifié`, `été`, `reçu` = vrais bugs ; `au`, `(VHA)` = faux positifs
+Hépatite A) puis en n'corrigeant que les 5 verbes confirmés. Même méthode de
+vérification exhaustive pour DE/QUI/YANG (aucun faux positif trouvé pour ces
+trois-là sur l'ensemble de la table).
+
+**Bilan du sweep archivé : 51 + 22 (espacement ID trouvé dans une seconde
+passe) = 73 lignes archivées corrigées**, aucune donnée chiffrée touchée.
+Vérifié : sweep final sur les 296 lignes (affichées + archivées), tous
+motifs confondus — **0 résidu**. Une ligne archivée re-vérifiée directement
+par son URL (Grippe aviaire/États-Unis, Wisconsin) : accessible, date
+correctement affichée.
+
+**Bilan complet de la soirée, revue systématique + sweeps de traduction :**
+114 lignes corrigées au total (41 affichées + 73 archivées) sur les 296 que
+compte la table, plus 1 doublon d'affichage, 1 clarification de texte, 1
+changement concurrent vérifié. Aucune écriture de données chiffrées en dehors
+des 3 premières.
