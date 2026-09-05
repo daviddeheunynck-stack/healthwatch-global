@@ -11,6 +11,7 @@ import ConsentAwareAnalytics from "@/components/ConsentAwareAnalytics";
 import PHLaunchBar from "@/components/PHLaunchBar";
 import SentryUserIdentifier from "@/components/SentryUserIdentifier";
 import TrialBannerLoader from "@/components/TrialBannerLoader";
+import UpgradeModalAutoTrigger from "@/components/UpgradeModalAutoTrigger";
 import "../globals.css";
 
 const META: Record<string, { title: string; description: string }> = {
@@ -126,6 +127,7 @@ export default async function LocaleLayout({
             <main className="max-w-7xl mx-auto px-4 py-8 flex-1 w-full">{children}</main>
             <Footer locale={locale} />
             <CookieBanner locale={locale} />
+            <UpgradeModalAutoTrigger />
           </UpgradeModalProvider>
         </NextIntlClientProvider>
         <SentryUserIdentifier locale={locale} />

@@ -155,13 +155,15 @@ export default function Navbar() {
 
   const navLinks: { href: string; label: string; icon: React.ElementType | null }[] = [
     { href: `/${locale}`,           label: t("dashboard"), icon: null },
+    // Moved up from 8th of 9 to 2nd, 2026-09-06 (David) — pricing needs to be
+    // seen, not found at the end of a long row after every feature link.
+    { href: `/${locale}/pricing`, label: t("pricing"),   icon: null },
     { href: `/${locale}/diseases`,  label: t("diseases"),  icon: null },
     { href: `/${locale}/countries`,   label: t("countries"), icon: null },
     { href: `/${locale}/travel-risk`, label: t("travel"),   icon: null },
     { href: `/${locale}/alerts`,      label: t("alerts"),   icon: null },
     { href: `/${locale}/compare`, label: t("compare"),   icon: null },
     { href: `/${locale}/reports`, label: t("reports"),   icon: null },
-    { href: `/${locale}/pricing`, label: t("pricing"),   icon: null },
     { href: `/${locale}/about`,   label: ABOUT_LABEL[locale] ?? "About", icon: null },
     ...(["pro", "team", "enterprise"].includes(plan ?? "")
       ? [{ href: `/${locale}/docs`, label: "API Docs", icon: null }]
