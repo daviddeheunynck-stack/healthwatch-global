@@ -761,14 +761,17 @@ function parseEcdcDate(s: string): string | null {
 }
 
 interface WnvSeason {
-  weekMatch:     RegExpMatchArray;
-  producedMatch: RegExpMatchArray;
-  date:          string;
-  byCountry:     Map<string, { cases: number; areas: number }>;
-  sorted:        [string, { cases: number; areas: number }][];
-  totalCases:    number;
-  totalAreas:    number;
-  countryList:   string;
+  weekMatch:    RegExpMatchArray;
+  cutoffMatch:  RegExpMatchArray;
+  // The page's own "Produced on"/"Published on" date — cosmetic attribution
+  // in the description text only. `date` (below) uses cutoffMatch, never this.
+  publishLabel: string | null;
+  date:         string;
+  byCountry:    Map<string, { cases: number; areas: number }>;
+  sorted:       [string, { cases: number; areas: number }][];
+  totalCases:   number;
+  totalAreas:   number;
+  countryList:  string;
 }
 
 // Module-level cache for the ONE WNV weekly-page fetch AND parse shared by
@@ -796,14 +799,34 @@ async function getWnvSeason(): Promise<WnvSeason | null> {
         const html = await res.text();
 
         // "Week 32, 2026" / "Produced on 7 August 2026 at 10:00, based on data
-        // submitted up until and including 5 August 2026." The exact data-cutoff
-        // date (the second one) didn't survive a plain regex reliably — some markup
-        // splits that specific phrase — so `date` uses the produced-on date
-        // instead, which is always present and only ever 1-2 days later.
-        const weekMatch     = html.match(/Week\s+(\d+),\s*(\d{4})/);
-        const producedMatch = html.match(/Produced on\s+(\d{1,2}\s+\w+\s+\d{4})/);
-        if (!weekMatch || !producedMatch) return null;
-        const date = parseEcdcDate(producedMatch[1]);
+        // submitted up until and including 5 August 2026." ECDC changed this
+        // line's wording sometime before 2026-09-05, without notice, to
+        // "Published on 4 September 2026, based on data submitted\nup until
+        // and including 3 September 2026." (no "at HH:MM", different verb) —
+        // the old `/Produced on\s+.../` regex simply stopped matching, so this
+        // whole function returned null on EVERY run, silently freezing all 7
+        // ECDC WNV rows at whatever `date` they last held (2026-08-27, over a
+        // week stale) with nothing to show for it: this fetcher has no
+        // "outbreak declared over" signal to notice a freeze (see the comment
+        // on fetchWNVEcdc below). Found 2026-09-05 while sourcing a LinkedIn
+        // comment draft against this page.
+        //
+        // Fix: match either wording for the publish line (cosmetic, used only
+        // in the description text below), and — more importantly — extract
+        // the actual data-cutoff date ("data submitted up until and including
+        // …") as `date` instead of the publish date, which was always 1-2
+        // days later and never the real reference point for the numbers. The
+        // cutoff phrase didn't survive a plain-space regex before because the
+        // source HTML breaks it across two lines inside the same `<h4>`
+        // ("data submitted\nup until and including …") — `\s+` (not a literal
+        // space) between every word bridges that.
+        const weekMatch      = html.match(/Week\s+(\d+),\s*(\d{4})/);
+        const producedMatch  = html.match(/Produced on\s+(\d{1,2}\s+\w+\s+\d{4})/);
+        const publishedMatch = html.match(/Published on\s+(\d{1,2}\s+\w+\s+\d{4})/);
+        const publishLabel   = producedMatch?.[1] ?? publishedMatch?.[1] ?? null;
+        const cutoffMatch    = html.match(/submitted\s+up\s+until\s+and\s+including\s+(\d{1,2}\s+\w+\s+\d{4})/);
+        if (!weekMatch || !cutoffMatch) return null;
+        const date = parseEcdcDate(cutoffMatch[1]);
         if (!date) return null;
 
         const jsonMatch = html.match(/<script type="application\/json"[^>]*>([\s\S]*?)<\/script>/);
@@ -830,7 +853,7 @@ async function getWnvSeason(): Promise<WnvSeason | null> {
         for (const [, v] of sorted) { totalCases += v.cases; totalAreas += v.areas; }
         const countryList = sorted.map(([c, v]) => `${c} ${v.cases}`).join(", ");
 
-        return { weekMatch, producedMatch, date, byCountry, sorted, totalCases, totalAreas, countryList };
+        return { weekMatch, cutoffMatch, publishLabel, date, byCountry, sorted, totalCases, totalAreas, countryList };
       } catch {
         return null;
       }
@@ -860,7 +883,7 @@ function fetchWNVEcdc(countryEn: string): () => Promise<Found | null> {
       deaths: 0,
       date: season.date,
       source: "https://wnv-weekly.ecdc.europa.eu/",
-      description: `West Nile virus, ${season.weekMatch[2]} European transmission season: ${target.cases} locally acquired human cases reported in ${countryEn} as at ${season.producedMatch[1]}, across ${target.areas} affected area${target.areas === 1 ? "" : "s"}. Season total across ${season.sorted.length} European countries: ${season.totalCases} cases in ${season.totalAreas} affected areas (${season.countryList}). Source: ECDC, Surveillance of West Nile Virus infections in humans in Europe, weekly report, week ${season.weekMatch[1]}, produced ${season.producedMatch[1]}.`,
+      description: `West Nile virus, ${season.weekMatch[2]} European transmission season: ${target.cases} locally acquired human cases reported in ${countryEn}, data submitted up until and including ${season.cutoffMatch[1]}, across ${target.areas} affected area${target.areas === 1 ? "" : "s"}. Season total across ${season.sorted.length} European countries: ${season.totalCases} cases in ${season.totalAreas} affected areas (${season.countryList}). Source: ECDC, Surveillance of West Nile Virus infections in humans in Europe, weekly report, week ${season.weekMatch[1]}${season.publishLabel ? `, published ${season.publishLabel}` : ""}.`,
     };
   };
 }
