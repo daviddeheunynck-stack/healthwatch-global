@@ -521,6 +521,13 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
   const description = getLocalizedDescription(outbreak, locale);
   const hasData    = outbreak.cases > 0;
   const cfr        = hasData && outbreak.deaths !== null ? (outbreak.deaths / outbreak.cases * 100).toFixed(1) : null;
+  // For a masked (bucketed) row, `cfr` above would divide two independently
+  // rounded numbers and can print a nonsense "100%" — use the precomputed,
+  // real-figure-derived value instead. Only meaningful when !isPaid &&
+  // !is_free_featured, i.e. exactly where the blurred branches below use it.
+  const maskedCfr = outbreak.masked_cfr_pct !== null && outbreak.masked_cfr_pct !== undefined
+    ? outbreak.masked_cfr_pct.toFixed(0)
+    : null;
   const incidence  = getIncidenceRate(outbreak.cases, outbreak.country_en);
 
   // Data freshness. `new Date()` (not `Date.now()`) keeps this pure for
@@ -787,14 +794,15 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
           <div className="bg-white/5 rounded-xl p-3 text-center space-y-1">
             <TrendingUp className="w-4 h-4 text-amber-400 mx-auto" />
             <p className="text-xs text-gray-500">{c.cfr}</p>
-            <p className={`text-lg font-bold ${
-              cfr && parseFloat(cfr) > 10 ? "text-red-400" :
-              cfr && parseFloat(cfr) > 3  ? "text-amber-400" : "text-gray-300"
-            }`}>
+            <p className={`text-lg font-bold ${(() => {
+              const shown = (isPaid || outbreak.is_free_featured) ? cfr : maskedCfr;
+              return shown && parseFloat(shown) > 10 ? "text-red-400" :
+                     shown && parseFloat(shown) > 3  ? "text-amber-400" : "text-gray-300";
+            })()}`}>
               {(isPaid || outbreak.is_free_featured)
                 ? (cfr ? `${cfr}%` : <span className="text-gray-600 text-sm italic">{c.noData}</span>)
-                : cfr
-                  ? <span className="blur-sm select-none cursor-pointer" onClick={() => openModal("cases")}>{cfr.replace(/\d/g, "•")}%</span>
+                : maskedCfr
+                  ? <span className="blur-sm select-none cursor-pointer" onClick={() => openModal("cases")}>{maskedCfr.replace(/\d/g, "•")}%</span>
                   : <span className="text-gray-600 text-sm italic">{c.noData}</span>
               }
             </p>

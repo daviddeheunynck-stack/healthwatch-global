@@ -21,6 +21,19 @@ export function magnitudeBucket(n: number): number {
   return n > 0 ? Math.pow(10, Math.floor(Math.log10(n))) : 0;
 }
 
+// CFR for a masked (free-plan) view — rounded to the nearest 5 points from
+// the REAL cases/deaths, not derived from two independently-bucketed
+// figures. Deriving it from magnitudeBucket(cases)/magnitudeBucket(deaths)
+// looks right per-field but silently produces nonsense whenever cases and
+// deaths round to the same order of magnitude (common for a severe
+// outbreak — e.g. 6,342 cases / 3,072 deaths, both bucket to 1,000, giving
+// a false "100% fatality"). Found 2026-09-05 verifying the outbreak
+// permalink page. Coarse enough that it isn't the exact figure either.
+export function maskedCfrPercent(cases: number, deaths: number | null): number | null {
+  if (cases <= 0 || deaths === null) return null;
+  return Math.round((deaths / cases) * 100 / 5) * 5;
+}
+
 function getServerClient() {
   return createClient(
     clean(process.env.NEXT_PUBLIC_SUPABASE_URL),
@@ -99,13 +112,56 @@ export interface Outbreak {
   ihr_event_id:  string | null; // WHO IHR event reference (Article 6/7)
   verification_status: string; // suspected | under_investigation | confirmed | closed
   response_phase:      string; // monitoring | investigating | active_response | contained
-  // Derived, request-scoped flag set by app/[locale]/(dashboard)/page.tsx for
-  // free-plan accounts only — never persisted, never present on rows fetched
-  // any other way. True for the one "showcase" disease per continent whose
-  // real cases/deaths/CFR stay unlocked as a free sample; every other row is
-  // magnitude-bucketed before it reaches a client component. See
-  // `magnitudeBucket`/`featuredDiseaseByRegion` in that file.
+  // Derived, request-scoped flag set by the dashboard and outbreak permalink
+  // pages for free-plan (or anonymous, on the permalink page) viewers only —
+  // never persisted, never present on rows fetched any other way. True for
+  // the one "showcase" disease per continent whose real cases/deaths/CFR
+  // stay unlocked as a free sample; every other row is magnitude-bucketed
+  // before it reaches a client component or a shared cached page. See
+  // `magnitudeBucket`/`pickFeaturedDiseases` below.
   is_free_featured?: boolean;
+  // Precomputed masked CFR (see maskedCfrPercent) for a bucketed row — set
+  // alongside is_free_featured so OutbreakTable/OutbreakDetailModal don't
+  // re-derive a misleading ratio from two independently-rounded fields.
+  masked_cfr_pct?: number | null;
+}
+
+// One free "showcase" disease per continent — real cases/deaths/CFR stay
+// unlocked for it (see `is_free_featured` above), everything else on the
+// free plan is magnitude-bucketed. Picks the disease that best justifies
+// showing it off: a live PHEIC beats plain high risk beats raw case volume,
+// each tier only used to break ties in the tier above it. Shared by the
+// dashboard and the outbreak permalink page so the same outbreak reads as
+// "featured" (or not) on both.
+const FEATURED_RISK_WEIGHT: Record<string, number> = { high: 2, medium: 1, low: 0 };
+
+export function pickFeaturedDiseases(active: Outbreak[]): Map<string, string> {
+  const byRegion = new Map<string, Map<string, { cases: number; pheic: boolean; risk: number }>>();
+  for (const o of active) {
+    const diseaseKey = o.disease_en || o.disease;
+    const diseases = byRegion.get(o.region) ?? new Map();
+    const agg = diseases.get(diseaseKey) ?? { cases: 0, pheic: false, risk: 0 };
+    agg.cases += o.cases;
+    agg.pheic = agg.pheic || o.is_pheic;
+    agg.risk = Math.max(agg.risk, FEATURED_RISK_WEIGHT[o.risk_level] ?? 0);
+    diseases.set(diseaseKey, agg);
+    byRegion.set(o.region, diseases);
+  }
+  const featured = new Map<string, string>();
+  for (const [region, diseases] of byRegion) {
+    let bestKey: string | null = null;
+    let best: { cases: number; pheic: boolean; risk: number } | null = null;
+    for (const [key, agg] of diseases) {
+      const better =
+        !best ||
+        (agg.pheic && !best.pheic) ||
+        (agg.pheic === best.pheic && agg.risk > best.risk) ||
+        (agg.pheic === best.pheic && agg.risk === best.risk && agg.cases > best.cases);
+      if (better) { best = agg; bestKey = key; }
+    }
+    if (bestKey) featured.set(region, bestKey);
+  }
+  return featured;
 }
 
 // The outbreak dataset is identical for every visitor (no user-specific data),

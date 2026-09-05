@@ -675,7 +675,7 @@ export default async function LandingPage({ locale }: { locale: string }) {
                   <td className="px-5 py-3"><RiskBadge level={outbreak.risk_level as "high" | "medium" | "low"} /></td>
                   <td className="px-5 py-3 text-right">
                     <span className="blur-sm select-none text-gray-500 text-xs">
-                      {outbreak.cases.toLocaleString(locale === "ar" ? "ar-SA" : locale)} {locale === "fr" ? "cas" : locale === "es" ? "casos" : locale === "ar" ? "حالة" : locale === "id" ? "kasus" : "cases"}
+                      {outbreak.cases.toLocaleString(locale === "ar" ? "ar-SA" : locale).replace(/\d/g, "•")} {locale === "fr" ? "cas" : locale === "es" ? "casos" : locale === "ar" ? "حالة" : locale === "id" ? "kasus" : "cases"}
                     </span>
                   </td>
                 </tr>

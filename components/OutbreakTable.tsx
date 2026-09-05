@@ -1393,9 +1393,9 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                         <span className="text-gray-600 italic text-xs">{l.noData}</span>
                       )
                     ) : (
-                      outbreak.cases > 0 && outbreak.deaths !== null ? (
+                      outbreak.masked_cfr_pct !== null && outbreak.masked_cfr_pct !== undefined ? (
                         <span className="inline-flex items-center gap-1 cursor-pointer" onClick={() => openModal("cases")} title="Pro — click to unlock">
-                          <span className="blur-sm select-none text-gray-500 pointer-events-none text-sm font-medium">{(outbreak.deaths / outbreak.cases * 100).toFixed(1).replace(/\d/g, "•")}%</span>
+                          <span className="blur-sm select-none text-gray-500 pointer-events-none text-sm font-medium">{outbreak.masked_cfr_pct.toFixed(0).replace(/\d/g, "•")}%</span>
                           <Lock className="w-2.5 h-2.5 text-amber-500/60 pointer-events-none shrink-0" />
                         </span>
                       ) : (

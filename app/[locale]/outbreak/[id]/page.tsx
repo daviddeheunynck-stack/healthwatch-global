@@ -12,7 +12,7 @@ import CitationBlock from "@/components/CitationBlock";
 import OutbreakStatsGrid from "@/components/OutbreakStatsGrid";
 import ShareOutbreakButton from "@/components/ShareOutbreakButton";
 import OutbreakCasesChart from "@/components/OutbreakCasesChart";
-import { getLocalizedDisease, getLocalizedCountry, getLocalizedDescription, sourceStatus, sourceName, publishableSourceName, publishableSourceUrl, staleOutbreakDays, isSourceConfirmed, lastVerifiedIso, magnitudeBucket } from "@/lib/outbreaks";
+import { getOutbreaks, getLocalizedDisease, getLocalizedCountry, getLocalizedDescription, sourceStatus, sourceName, publishableSourceName, publishableSourceUrl, staleOutbreakDays, isSourceConfirmed, lastVerifiedIso, magnitudeBucket, maskedCfrPercent, pickFeaturedDiseases } from "@/lib/outbreaks";
 import { diseaseToSlug, matchDisease } from "@/lib/disease-data";
 import { jsonLdHtml } from "@/lib/json-ld";
 import { countryToSlug } from "@/lib/country-utils";
@@ -297,7 +297,7 @@ export default async function OutbreakPage({
   params: Promise<{ locale: string; id: string }>;
 }) {
   const { locale, id } = await params;
-  const [o, snapshots, trend] = await Promise.all([getOutbreak(id), getSnapshots(id), getTrend(id)]);
+  const [o, snapshots, trend, allOutbreaks] = await Promise.all([getOutbreak(id), getSnapshots(id), getTrend(id), getOutbreaks()]);
   if (!o) notFound();
 
   const l       = LABELS[locale as keyof typeof LABELS] ?? LABELS.en;
@@ -305,12 +305,27 @@ export default async function OutbreakPage({
   const disease = getLocalizedDisease(o, locale) ?? o.disease_en ?? o.disease;
   const country = getLocalizedCountry(o, locale) ?? o.country_en ?? o.country;
   const hasData = o.cases > 0;
-  // Derived from the bucketed figures, not the real ones — this value is a
-  // prop on a client component embedded in an ISR-cached page (see the
-  // OutbreakStatsGrid call below), so it's public the moment it's rendered.
-  const bucketedCases  = magnitudeBucket(o.cases);
-  const bucketedDeaths = o.deaths !== null ? magnitudeBucket(o.deaths) : null;
-  const cfr = hasData && bucketedDeaths !== null ? ((bucketedDeaths / bucketedCases) * 100).toFixed(1) + "%" : l.noData;
+
+  // Same "one free showcase disease per continent" the dashboard unlocks
+  // (see pickFeaturedDiseases) — computed here too so a featured outbreak
+  // doesn't look locked on this page after being unlocked on the dashboard.
+  // Safe to embed the real figure directly in this page's shared ISR cache
+  // for a featured outbreak: it's the one case where showing real data to
+  // every visitor (anonymous included) is the intended free sample, same
+  // spirit as the disease pages already being fully public.
+  const featuredDiseaseByRegion = pickFeaturedDiseases(allOutbreaks.filter((x) => x.active));
+  const isFeatured = featuredDiseaseByRegion.get(o.region) === (o.disease_en || o.disease);
+
+  // Bucketed figures for everyone else — this value is a prop on a client
+  // component embedded in an ISR-cached page (see the OutbreakStatsGrid call
+  // below), so it's public the moment it's rendered.
+  const bucketedCases  = isFeatured ? o.cases : magnitudeBucket(o.cases);
+  const bucketedDeaths = isFeatured ? o.deaths : (o.deaths !== null ? magnitudeBucket(o.deaths) : null);
+  const cfr = hasData
+    ? (isFeatured
+        ? (o.deaths !== null ? (o.deaths / o.cases * 100).toFixed(1) + "%" : l.noData)
+        : (maskedCfrPercent(o.cases, o.deaths) !== null ? maskedCfrPercent(o.cases, o.deaths) + "%" : l.noData))
+    : l.noData;
   const donRef  = o.source ? DON_PATTERN.exec(o.source)?.[1] : null;
   const status  = sourceStatus(o);
 
@@ -469,6 +484,7 @@ export default async function OutbreakPage({
           viewer is actually paid. */}
       <OutbreakStatsGrid
         outbreakId={o.id}
+        isFeatured={isFeatured}
         cases={hasData ? bucketedCases.toLocaleString(locale === "ar" ? "ar-SA" : locale) : l.noData}
         deaths={hasData && bucketedDeaths !== null ? bucketedDeaths.toLocaleString(locale === "ar" ? "ar-SA" : locale) : l.noData}
         cfr={cfr}

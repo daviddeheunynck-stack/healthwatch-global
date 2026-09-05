@@ -15,6 +15,12 @@ type AuthStatus = "loading" | "anon" | "free" | "expired" | "paid";
 
 interface Props {
   outbreakId: string;
+  // This outbreak is the one free "showcase" disease for its continent (see
+  // pickFeaturedDiseases in lib/outbreaks.ts) — the `cases`/`deaths`/`cfr`
+  // props are already the real figures in that case (safe: same page already
+  // embeds them in its shared cache for every visitor), so never blur them,
+  // matching how the dashboard leaves a featured row unlocked.
+  isFeatured: boolean;
   cases: string;
   deaths: string;
   cfr: string;
@@ -38,7 +44,7 @@ const SUBSCRIBE_LABEL: Record<string, string> = {
   en: "Subscribe to Pro →",
 };
 
-export default function OutbreakStatsGrid({ outbreakId, cases, deaths, cfr, labels, locale }: Props) {
+export default function OutbreakStatsGrid({ outbreakId, isFeatured, cases, deaths, cfr, labels, locale }: Props) {
   const [status, setStatus] = useState<AuthStatus>("loading");
   // Real figures — this component's `cases`/`deaths`/`cfr` props are a
   // magnitude-bucketed placeholder (the page that renders them is ISR-cached
@@ -68,14 +74,14 @@ export default function OutbreakStatsGrid({ outbreakId, cases, deaths, cfr, labe
   }, []);
 
   useEffect(() => {
-    if (status !== "paid") return;
+    if (status !== "paid" || isFeatured) return; // featured rows already carry the real figures in `cases`/`deaths`/`cfr`
     fetch(`/api/outbreak-stats/${outbreakId}`)
       .then((r) => (r.ok ? r.json() : null))
       .then((d) => { if (d) setRealStats({ cases: d.cases, deaths: d.deaths }); })
       .catch(() => {});
-  }, [status, outbreakId]);
+  }, [status, outbreakId, isFeatured]);
 
-  const blurred = status === "anon" || status === "free" || status === "expired";
+  const blurred = !isFeatured && (status === "anon" || status === "free" || status === "expired");
 
   const numLocale = locale === "ar" ? "ar-SA" : locale;
   const realCfr = realStats && realStats.cases > 0 && realStats.deaths !== null
