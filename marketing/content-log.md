@@ -2,7 +2,7 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
-## 📅 Session linkedin-hwg-followup-check — 05/09/2026 (13h, 1er des 2 créneaux après-midi) — ❌ **0 commentaire publié, quota laissé à 2/7** — 2 candidats instruits jusqu'au bout et abandonnés sur des défauts de fond distincts ; ✅ **3 suivis, quota au plafond haut 10/10** ; 🔒 **2 DM toujours en file, aucun touché** ; ⚠️ **l'envoi d'invitation est inerte depuis ~14h alors qu'il fonctionnait à 11h**
+## 📅 Session linkedin-hwg-followup-check — 05/09/2026 (13h, 1er des 2 créneaux après-midi) — ❌ **0 commentaire publié, quota laissé à 2/7** — 2 candidats instruits jusqu'au bout et abandonnés sur des défauts de fond distincts ; ✅ **3 suivis, quota au plafond haut 10/10** ; ✅ **2 DM envoyés en fin de run sur ordre explicite de David** (détail et découverte majeure dans `linkedin-contacts.md`) ; ⚠️ **l'envoi d'invitation est inerte depuis ~14h alors qu'il fonctionnait à 11h**
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` datée du 05/09 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture ; les seules entrées du jour sont celles de `linkedin-hwg-monitoring` (9h) → **premier déclenchement de cette routine aujourd'hui**. Horloge à l'heure (`Sat Sep 5 13:03 2026`). Branche vérifiée : **master**. Registre de faits régénéré à 13h05 : **224 faits sur 106 lignes affichées, 3 périmés, 81 lignes `is_seed` exclues** — identique au relevé de 9h05 en volume, mais la ligne Ebola/RDC a été rafraîchie entre-temps par `morning-don-check` (**6 342 cas / 3 072 décès / létalité 48,4 % au 02/09**, source ECDC, contre 6 250 / 3 039 au 01/09 ce matin) : elle rejoint désormais le chiffre publié par Tambe Elvis Akem, dont le run de 9h notait l'écart.
 
@@ -119,7 +119,7 @@ Quota du jour : **1/7** (Keneth Mugume, sans note, run de 9h). Six créneaux res
 | Quota | Consommé | Plafond | Détail |
 |---|---|---|---|
 | **Commentaires** | **2** | 7 | Tambe Elvis Akem + Keneth Mugume, **tous deux du run de 9h**. 0 ce run : 2 candidats instruits jusqu'au bout (5 jets au total) et abandonnés sur des défauts de fond, motifs en §3 et §4. |
-| **DM** | **1 envoyé** | 8 | Dr. Malachie MANAOUDA (10h02, ordre explicite de David). **2 en file, non touchés** (Ngoy Guillaume, Dr. Siaka Condé). 0 rédigé ce run, aucun message entrant à traiter. |
+| **DM** | **3 envoyés** | 8 | Dr. Malachie MANAOUDA (10h02, run de 9h). **Ngoy Guillaume et Dr. Siaka Condé envoyés ~13h55-14h50 sur ordre explicite de David tapé en session**, en toute fin de run — 0 rédigé pendant le run lui-même (aucun message entrant à traiter), les deux textes venaient de la file du matin. **Ngoy Guillaume envoyé sous une forme différente de celle archivée le matin même** : découverte d'un vrai fil actif depuis le 16/08, invisible à la recherche `/messaging/` — détail complet dans `linkedin-contacts.md` §2. |
 | **Suivis** | **10** | 7-10 | 7 au run de 9h + **3 ce run**. **Plafond haut atteint.** |
 | **Invitations** | **1** | 7 | Keneth Mugume (sans note, 9h). **6 créneaux perdus faute de capacité d'émission**, voir §6 — pas faute de candidat. |
 

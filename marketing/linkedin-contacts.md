@@ -1,7 +1,7 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
-## 📅 Session linkedin-hwg-followup-check — 05/09/2026 (13h, 1er des 2 créneaux après-midi) — ✅ **3 suivis (quota 10/10, plafond haut)** — 🔒 **2 DM toujours en file, aucun touché, aucun message entrant à traiter** — ⚠️ **invitation impossible à émettre sur deux surfaces alors qu'une est partie à 11h** — ❌ 0 commentaire (détail des 5 jets dans `content-log.md`)
+## 📅 Session linkedin-hwg-followup-check — 05/09/2026 (13h, 1er des 2 créneaux après-midi) — ✅ **2 DM envoyés en fin de run, sur ordre explicite de David tapé en session** (Dr. Siaka Condé, Ngoy Guillaume) — ✅ **3 suivis (quota 10/10, plafond haut)** — ⚠️ **invitation impossible à émettre sur deux surfaces alors qu'une est partie à 11h** — ❌ 0 commentaire (détail des 5 jets dans `content-log.md`) — 🔴 **découverte majeure : le brouillon Ngoy Guillaume mis en file ce matin était faux, un vrai fil actif depuis le 16/08 existait, invisible à la recherche `/messaging/`**
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` du 05/09 dans ce fichier ni dans `content-log.md` à l'ouverture ; seules les entrées de `linkedin-hwg-monitoring` (9h) y figuraient → **premier déclenchement de cette routine aujourd'hui**. Horloge `Sat Sep 5 13:03 2026`. Branche : **master**. Registre de faits régénéré à 13h05 (224 faits, 106 lignes affichées, 3 périmés).
 
@@ -22,16 +22,34 @@ Les seules conversations dont le dernier message n'est pas de nous restent **Joh
 
 ---
 
-### 2️⃣ 🔒 LES DEUX DM EN FILE N'ONT PAS ÉTÉ TOUCHÉS
+### 2️⃣ ✅ LES DEUX DM ONT ÉTÉ ENVOYÉS EN FIN DE RUN, SUR ORDRE EXPLICITE DE DAVID TAPÉ EN SESSION
 
-Aucune ambiguïté sur ce point, quel que soit le régime retenu par ailleurs : le SKILL est explicite, « un DM en attente ne part jamais automatiquement par une session suivante sans validation explicite de David en session interactive ». Les deux textes sont **inchangés**, rédigés et QA-validés par le run de 9h (12/12 relecteur chacun) :
+David a tapé « envoie les 2 DM en file » directement dans cette session interactive — validation explicite au sens de `_shared/report-conventions.md` (une instruction tapée dans la session compte comme une validation, même règle qu'en session séparée). Traité un par un, avec une découverte majeure en cours de route.
 
-- 🔒 **Ngoy Guillaume** (`/in/ngoy-guillaume-76b8b2267/`), FR, vouvoiement, premier message — 4 jets. Texte intégral et QA en §3bis de l'entrée du run de 9h ci-dessous. **Ancienneté en file : quelques heures** (mis en file ce matin), très loin du seuil de revérification à 7 jours de la politique commune §9.
-- 🔒 **Dr. Siaka Condé** (`/in/drconde-who-afro/`), EN, relance après 7 jours de silence — 3 jets. Texte intégral et QA en §3ter de l'entrée du run de 9h. **Même ancienneté.**
+**a) Dr. Siaka Condé (`/in/drconde-who-afro/`), EN, relance après 7 jours de silence — envoyé sans changement.** Avant de taper, fil rouvert par lecture directe du DOM (pas seulement la bulle flottante) pour écarter le risque exact rencontré juste après avec Ngoy Guillaume : dernier message confirmé « *Let me look at this for a moment* » (29/08), CTA déjà servi le 28/08 — conforme à l'archive du run de 9h (§3ter). Texte envoyé, identique à celui validé 12/12 :
 
-**Notification push renvoyée ce run** pour rappeler les deux textes en attente.
+> Siaka, if the emergency support unit's reporting turns out to be internal-only, that is a perfectly good answer too, is that roughly what you are finding so far?
 
-**Arbitrage CTA, rappelé pour les deux (aucun n'a changé)** : omis dans les deux cas, chaque fois pour un **motif admis** de la politique commune §3 — Ngoy Guillaume, premier message sans échange de fond (CTA et lien interdits par construction) ; Dr. Siaka Condé, argumentaire produit + lien + essai **déjà servis dans ce fil le 28/08** (règle anti-répétition). Aucun des deux n'est une omission de commodité.
+Identité et texte comparés caractère pour caractère **dans le même appel JS que le clic sur Envoyer**. Après clic : éditeur vidé, **une seule occurrence** du texte dans la page. **Statut : envoyé le 05/09 vers 13h55, sur ordre explicite de David.**
+
+**b) Ngoy Guillaume (`/in/ngoy-guillaume-76b8b2267/`) — 🔴 le brouillon en file était FAUX, envoyé sous une forme entièrement différente après découverte du vrai fil.**
+
+Avant de taper le brouillon du matin (premier contact sur la rumeur du vaccin antipaludique, voir §3bis de l'entrée du run de 9h), la bulle de messagerie ouverte depuis son profil affichait un contenu **totalement incohérent** avec ce brouillon — sujet DPS/zone de santé, jamais mentionné. Vérification par lecture directe du DOM (deep-query traversant les shadow roots, la recherche `/messaging/` classique renvoyant **zéro résultat** pour « Ngoy » comme pour « Guillaume », pour une raison non élucidée) : **un fil réel et substantiel existe depuis le 16/08**, invisible à la recherche standard.
+
+- **16/08 17h34** — DM de bienvenue déjà envoyé par une session antérieure, citant HealthWatch Global.
+- **16/08 18h20** — **il a répondu** avec du contenu de fond : les données détaillées par province/zone de santé existent au niveau de la DPS et du PEV, mais ne sont pas toujours publiées, l'agrégation nationale les absorbe.
+- **17/08 10h43** — relance envoyée avec **CTA déjà servi** (healthwatch-global.com, essai Pro) et une question restée sans réponse : « *quand la DPS transmet au niveau central, la ventilation par zone de santé monte-t-elle avec, ou est-elle déjà agrégée au départ de la province ?* »
+- **Silence depuis, jamais relancé** — 19 jours au 05/09.
+
+Le brouillon du matin, rédigé sans connaissance de ce fil par le run de 9h (§3bis ci-dessous), aurait traité un contact déjà engagé comme un parfait inconnu et répété un CTA déjà servi. **Il n'a pas été envoyé.** Signalé à David en session, qui a tranché : **reprendre littéralement la question du 17/08 restée sans réponse**, plutôt qu'une nouvelle reformulation (deux jets de reformulation avaient déjà été rejetés par le relecteur sur l'absence d'apport réel — voir le fil de conversation pour le détail des 4 jets successifs). Un dernier ajustement (reconnaissance du silence + abaissement du seuil de réponse acceptable) a fait passer le relecteur de 10/12 à 11/12, puis correction d'un point de registre (salutation manquante). **Texte envoyé :**
+
+> Bonjour Guillaume, je reviens sur une question restée sans réponse depuis quelques semaines, même une réponse partielle m'aiderait déjà : quand la DPS transmet au niveau central, la ventilation par zone de santé monte-t-elle avec, ou est-elle déjà agrégée au départ de la province ?
+
+Identité et texte comparés caractère pour caractère **dans le même appel JS que le clic sur Envoyer**. Après clic : **une seule occurrence** du texte dans la page, les deux éditeurs de composition (Ngoy + Siaka Condé) vides. **Statut : envoyé le 05/09 vers 14h50, sur ordre explicite de David, sur un fil différent de celui archivé ce matin.**
+
+⚠️ **Le blocker `ngram.history` du contrôle mécanique (11 séquences déjà servies) est un faux positif attendu et documenté** : la reprise est littéralement celle de la propre question de David du 17/08, dans le même fil, au même destinataire — pas un gabarit recyclé entre inconnus. Le relecteur l'a explicitement validé en connaissance de cause (Q11 PASS).
+
+**🔴 À signaler pour la suite du dispositif** : la recherche `/messaging/` a échoué à indexer un fil pourtant réel et actif (dernier message il y a 19 jours, pas archivé, pas bloqué, pas spam) pour deux requêtes distinctes (« Ngoy », « Guillaume »). Cause non identifiée. **Conséquence pour toute routine future : ne jamais conclure « aucun échange » sur la seule foi de la recherche de messagerie — toujours ouvrir la bulle depuis le profil ET, en cas de doute sur son contenu, vérifier par lecture directe du DOM (deep-query traversant les shadow roots) avant de rédiger un brouillon de premier contact.** Ce point mérite d'être ajouté à `hwg-social-policy.md` §7 ou §4 — non fait ce run faute de règle communautaire encore stabilisée sur un seul incident, mais à surveiller si ça se reproduit.
 
 ---
 
@@ -59,7 +77,7 @@ Aucune ambiguïté sur ce point, quel que soit le régime retenu par ailleurs : 
 
 ### 4️⃣ 🔁 CARRY-OVER POUR LE CRÉNEAU DE 17h (05/09) — côté contacts
 
-1. 🔒 **DEUX DM EN FILE, inchangés et non touchés** : **Ngoy Guillaume** et **Dr. Siaka Condé** (textes en §3bis et §3ter de l'entrée du run de 9h). **Ne pas envoyer sans ordre explicite de David.** Notifications push envoyées.
+1. ✅ **CLOS EN COURS DE RUN — les deux DM ont été envoyés** (Dr. Siaka Condé ~13h55, Ngoy Guillaume ~14h50), sur ordre explicite de David tapé en session. Voir §2 pour le détail complet, y compris la découverte du vrai fil Ngoy Guillaume qui a changé le texte envoyé. Plus rien à faire sur ces deux fils ce run ; à revérifier à 17h s'ils ont répondu.
 2. ⚠️ **Reconstater la capacité d'émission d'invitation AVANT d'instruire un candidat de connexion** (§3). Si elle est toujours inerte, ne pas dépenser de temps à en chercher : **6 créneaux ont été perdus ce run pour cette raison, pas par manque de profils**. Candidat prêt si elle revient : **Yilkal Kebede** (2e degré, 5 relations en commun, déjà suivi). Vérifier aussi la file de 99 invitations en attente, hypothèse de blocage la plus plausible.
 3. ⭐ **James Schlitt** et ⭐ **Christian BABOKO** — nos envois du 04/09 au soir restent les derniers messages de leurs fils à 13h. Silence de plus de 18 h, inhabituel pour Schlitt. **À revérifier à 17h.**
 4. ⭐⭐ **Yilkal Kebede** — meilleur candidat **commentaire** pour 17h, motif d'abandon non imputable au profil. Voir `content-log.md` carry-over point 2 pour l'angle validé et les trois charpentes à ne pas rejouer.
