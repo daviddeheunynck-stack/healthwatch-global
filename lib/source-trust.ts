@@ -100,6 +100,40 @@ const FORBIDDEN_SOURCE_DOMAINS: ReadonlySet<string> = new Set([
   "reliefweb.int",
 ]);
 
+// ── Éditeurs interdits UNIQUEMENT sur un chemin précis ───────────────────────
+// ncdc.gov.ng ne peut pas entrer dans FORBIDDEN_SOURCE_DOMAINS ci-dessus : la
+// clause de confidentialité (trouvée 2026-09-02) est imprimée sur les PDF de
+// sitrep eux-mêmes — « confidential, privileged … may not be used, published, or
+// redistributed to the public » — et revendique le CONTENU, pas seulement la
+// mise en forme du fichier. La page de listing expurgée du même domaine
+// (ncdc.gov.ng/diseases/sitreps) ne porte pas cette clause et reste citable ;
+// c'est elle qui a remplacé le PDF confidentiel dans le champ `source` de la
+// ligne Fièvre de Lassa/Nigeria ce jour-là. Interdire tout le domaine aurait
+// démoté cette page aussi, sans raison légale.
+//
+// Trouvé en écrivant ce garde-fou (2026-09-04) : ce remplacement de champ
+// n'a pas résolu le fond du problème — le commentaire de sync-ncdc/route.ts
+// le dit lui-même, « pointer vers [la page de listing] sans changer ce qui
+// est extrait du PDF ne résoudrait pas le problème : le contenu lui-même,
+// pas seulement l'URL du fichier, est revendiqué confidentiel ». La ligne
+// Lassa/Nigeria reste donc à traiter côté données (voir
+// project_ncdc_lassa_row_confidential_content_2026_09_04) ; ce garde-fou
+// empêche seulement qu'une future re-source pointe de nouveau vers le PDF
+// lui-même sans que le classificateur le remarque.
+const FORBIDDEN_SOURCE_PATH_PATTERNS: ReadonlyArray<{ host: string; pathTest: RegExp; why: string }> = [
+  {
+    host:     "ncdc.gov.ng",
+    pathTest: /\/sitreps\/.*\.pdf$/i,
+    why:      "Sitrep NCDC (Nigeria) — clause de confidentialité imprimée sur le PDF, voir legal_ncdc_nigeria_confidential_sitreps_2026_09_02. La page de listing (ncdc.gov.ng/diseases/sitreps) n'est pas concernée.",
+  },
+];
+
+function isForbiddenSourcePath(host: string, pathname: string): boolean {
+  return FORBIDDEN_SOURCE_PATH_PATTERNS.some(
+    (p) => hostMatchesDomain(host, new Set([p.host])) && p.pathTest.test(pathname),
+  );
+}
+
 // ── Éditeurs qu'on n'a pas le droit de RÉCUPÉRER automatiquement ─────────────
 // Catégorie distincte de la précédente, et jusqu'ici la seule des deux à n'avoir
 // aucune existence en code. Ces éditeurs peuvent être cités — une vérification
@@ -158,10 +192,12 @@ export const RESTRICTED_FETCH_DOMAINS: ReadonlyArray<{ domain: string; since: st
  * reasons — placeholder text, a blog, http:// — and only this one is a legal matter).
  */
 export function isForbiddenSourceHost(source: string | null | undefined): boolean {
-  const url = sourceUrl(source);
-  if (!url) return false; // not a URL at all — no host to forbid
+  const src = sourceUrl(source);
+  if (!src) return false; // not a URL at all — no host to forbid
   try {
-    return hostMatchesDomain(new URL(url).hostname.toLowerCase(), FORBIDDEN_SOURCE_DOMAINS);
+    const url = new URL(src);
+    const host = url.hostname.toLowerCase();
+    return hostMatchesDomain(host, FORBIDDEN_SOURCE_DOMAINS) || isForbiddenSourcePath(host, url.pathname);
   } catch {
     return false;
   }
@@ -355,9 +391,11 @@ export function sourceStatusOf(source: string | null | undefined): SourceStatus 
   if (FAKE_SEED_DON.test(src)) return 'unverified';
 
   let host: string;
+  let pathname: string;
   try {
     const url = new URL(src);
     host = url.hostname.toLowerCase();
+    pathname = url.pathname;
     if (url.protocol === "http:") {
       if (!KNOWN_PRESS_DOMAINS_HTTP_OK.has(host)) return 'unverified';
     } else if (url.protocol !== "https:") {
@@ -369,6 +407,7 @@ export function sourceStatusOf(source: string | null | undefined): SourceStatus 
 
   // Legal ban first: no allowlist below may rescue a forbidden publisher.
   if (hostMatchesDomain(host, FORBIDDEN_SOURCE_DOMAINS)) return 'unverified';
+  if (isForbiddenSourcePath(host, pathname)) return 'unverified';
 
   if (AUTHORITATIVE_SOURCE_HOSTS.has(host)) return 'official';
   if (hostMatchesDomain(host, AUTHORITATIVE_SOURCE_DOMAINS)) return 'official';
