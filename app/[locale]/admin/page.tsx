@@ -374,7 +374,12 @@ export default async function AdminPage({
     return `il y a ${Math.floor(hours / 24)}j`;
   }
 
-  const productEventsList = productEvents ?? [];
+  // David's own account generates real dashboard/outbreak/pricing views while testing the
+  // site — isFounderAccount already exists above for revenue metrics, reused here (2026-09-05,
+  // David asked to stop seeing "david.deheunynck" occurrences here and in the Users table
+  // below) so his testing doesn't drown out genuine visitor activity in this feed.
+  const visibleProfiles = (profiles ?? []).filter((p) => !isFounderAccount(p.email));
+  const productEventsList = (productEvents ?? []).filter((e) => !isFounderAccount(emailById[e.user_id]));
   const eventUserCount = new Set(productEventsList.map((e) => e.user_id)).size;
   const actionCounts: Record<string, number> = {};
   for (const e of productEventsList) actionCounts[e.action] = (actionCounts[e.action] ?? 0) + 1;
@@ -723,7 +728,7 @@ export default async function AdminPage({
 
       {/* ── Users ───────────────────────────────────────────────────────────── */}
       <div className="space-y-4">
-        <h2 className="text-white font-semibold text-lg">Utilisateurs ({userCount})</h2>
+        <h2 className="text-white font-semibold text-lg">Utilisateurs ({visibleProfiles.length})</h2>
         <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden overflow-x-auto">
           <table className="w-full text-sm min-w-[500px]">
             <thead>
@@ -737,7 +742,7 @@ export default async function AdminPage({
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-800">
-              {profiles?.map((p) => {
+              {visibleProfiles.map((p) => {
                 const trialDate = p.trial_ends_at ? new Date(p.trial_ends_at) : null;
                 const trialExpired = trialDate && trialDate < now;
                 return (
