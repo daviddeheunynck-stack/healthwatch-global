@@ -152,6 +152,15 @@ export async function generateMetadata({
         ...Object.fromEntries(LOCALES.map((l) => [l, `https://healthwatch-global.com/${l}`])),
         "x-default": "https://healthwatch-global.com/en",
       },
+      // Redeclared here because Next.js does not merge `alternates` between
+      // layout and page generateMetadata — a page-level `alternates` object
+      // fully replaces the layout's, silently dropping the RSS autodiscovery
+      // link (app/[locale]/layout.tsx alternates.types) on the one page most
+      // likely to be crawled. Verified missing from the live <head> on
+      // healthwatch-global.com/en before this fix (2026-09-06).
+      types: {
+        "application/rss+xml": `https://healthwatch-global.com/api/feed?locale=${locale}`,
+      },
     },
     openGraph: {
       type: "website",
