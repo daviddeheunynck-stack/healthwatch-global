@@ -436,6 +436,25 @@ export default async function DiseasePage({
     fr: "Maladies", en: "Diseases", es: "Enfermedades", ar: "الأمراض", id: "Penyakit",
   };
 
+  // Related diseases — same pathogen family (e.g. other Filoviridae for Ebola),
+  // the only internal cross-link disease pages had until now besides country
+  // chips below. Same-family diseases are the ones a reader (or a search
+  // crawler) most plausibly wants next, and it strengthens the internal link
+  // graph across HWG's strongest indexable asset without any outreach.
+  const RELATED_LABEL: Record<Locale, string> = {
+    fr: "Maladies apparentées", en: "Related diseases", es: "Enfermedades relacionadas",
+    ar: "أمراض ذات صلة", id: "Penyakit terkait",
+  };
+  const NAME_FIELD: Record<Locale, keyof typeof info> = {
+    en: "name_en", fr: "name_fr", es: "name_es", ar: "name_ar", id: "name_id",
+  };
+  const relatedDiseases = info.family
+    ? allDiseases()
+        .filter((d) => d.family === info.family && d.name_en !== info.name_en)
+        .sort((a, b) => a.name_en.localeCompare(b.name_en))
+        .slice(0, 6)
+    : [];
+
   const diseaseProTitle: Record<Locale, string> = {
     en: `Track ${diseaseName} outbreaks continuously`,
     fr: `Surveiller les foyers de ${diseaseName} en continu`,
@@ -763,6 +782,24 @@ export default async function DiseasePage({
               >
                 {hasActive && <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse shrink-0" />}
                 {country_en}
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Related diseases — same pathogen family */}
+      {relatedDiseases.length > 0 && (
+        <section className="space-y-3">
+          <h2 className="text-lg font-semibold text-white">{RELATED_LABEL[l]}</h2>
+          <div className="flex flex-wrap gap-2">
+            {relatedDiseases.map((d) => (
+              <Link
+                key={d.name_en}
+                href={`/${l}/disease/${diseaseToSlug(d.name_en)}`}
+                className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full border border-gray-800 bg-gray-900/50 text-gray-400 transition-colors hover:scale-[1.03] hover:border-gray-600 hover:text-gray-200"
+              >
+                {(d[NAME_FIELD[l]] as string) || d.name_en}
               </Link>
             ))}
           </div>
