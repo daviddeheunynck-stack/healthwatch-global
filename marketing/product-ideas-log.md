@@ -3626,7 +3626,7 @@ sont des foyers distincts par État — Utah/Texas/Idaho — pas un doublon).
 
 **Diphtérie/Afrique du Sud — juxtaposition CFR clarifiée.** Le badge calculé
 du site (4,7 %, 19/404) et le texte citant l'OMS (« CFR 19 % ») coexistaient
-sans that ne soient réconciliés — mais contrairement à Lassa (même semaine,
+sans être réconciliés — mais contrairement à Lassa (même semaine,
 même dénominateur, juste un arrondi différent de la source), ici les deux
 chiffres sont **tous deux exacts**, calculés sur des dénominateurs
 différents : 19/404 (tous les cas) contre 19/96 (le seul sous-ensemble
