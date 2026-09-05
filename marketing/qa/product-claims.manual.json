@@ -46,6 +46,26 @@
       "text": "La colonne CFR (case fatality ratio) d'une ligne active sur healthwatch-global.com est calculee par la seule division deces/cas x 100, arrondie a une decimale, sans seuil minimal de cas et sans intervalle de confiance : une flambee a 1 cas et 1 deces affiche 100 %, au meme titre qu'une flambee a plusieurs milliers de cas. Le code colore ce pourcentage en rouge des que le ratio depasse 10 %, sans distinguer les deux cas ci-dessus. La fourchette de reference publiee par ailleurs sur la fiche maladie (`cfr_ref`, ex. Marburg 24-88 %, tiree de la litterature epidemiologique) est un champ distinct, jamais rapproche automatiquement du CFR calcule sur une ligne donnee.",
       "provenance": "components/OutbreakTable.tsx lignes ~1375-1390 (calcul deces/cas*100 et seuils de couleur 0.1/0.03) ; scripts/build-claimable-facts.mjs ligne 183 (meme formule pour le registre) ; lib/disease-data.ts (champ cfr_ref, Marburg = '24-88 %') ; app/[locale]/disease/[slug]/page.tsx lignes 565-568 (cfr_ref affiche sur la fiche maladie publique). Verifie en lecture de code le 2026-08-31 par le run linkedin-hwg-content-proposal.",
       "expiresOn": null
+    },
+    {
+      "text": "HealthWatch Global conserve un instantane quotidien de chaque ligne de foyer dans la table outbreak_snapshots, ce qui donne la trajectoire du chiffre tel que le site l'a publie jour apres jour, en plus de la valeur courante de la ligne. Mesure sur la production le 2026-08-28 sur l'integralite de l'historique disponible (61 jours, 127 lignes actives, 5 443 instantanes) : la totalite des baisses d'un jour sur l'autre du compteur de cas etaient des corrections de la donnee par HealthWatch Global elle-meme (re-sourcages, corrections de chiffres), aucune n'etait un foyer en recul. Un compteur cumulatif ne baisse pas sur le terrain.",
+      "provenance": "lib/outbreak-trend.ts, doc de la fonction de direction de tendance (mesure prod du 2026-08-28 : 61 jours, 127 lignes actives, 5 443 instantanes, 17 baisses jour-sur-jour toutes identifiees comme corrections) ; table outbreak_snapshots. Verifie en lecture de code le 2026-08-31 par le run linkedin-hwg-followup-check-2.",
+      "expiresOn": null
+    },
+    {
+      "text": "La ligne d'un foyer chez HealthWatch Global (interface Outbreak de lib/outbreaks.ts) porte maladie, pays, region, coordonnees, cas, deces, une date, une source, un statut de verification (suspected / under_investigation / confirmed / closed) et une phase de riposte. Aucun champ n'enregistre la definition de cas qui a produit le compteur : rien ne distingue un total de cas confirmes seuls d'un total confirmes + probables, et il n'existe aucun champ separe pour les cas ou deces probables. Ce critere d'inclusion n'existe que dans le document source situe au bout du lien.",
+      "provenance": "lib/outbreaks.ts, interface Outbreak (liste exhaustive des champs, aucun champ de definition de cas ni de compteur probable ; verification_status porte le statut du foyer, pas le critere d inclusion des cas). Verifie en lecture de code le 2026-08-31 par le run linkedin-hwg-followup-check-2.",
+      "expiresOn": null
+    },
+    {
+      "text": "La fiche maladie publique de healthwatch-global.com affiche un badge vaccin qui tient compte de la souche du foyer actif : si un foyer actif est cause par une souche non couverte par le vaccin liste (Bundibugyo face a Ervebo, liste comme 'Ervebo (Zaire strain only)'), le badge est retrograde et affiche 'Not available for active strain' (FR : 'Non disponible pour la souche active'). La ligne du foyer dans le tableau, elle, n'affiche pas la souche : elle porte le nom de maladie generique 'Ebola virus disease' / 'Maladie a virus Ebola'.",
+      "provenance": "app/[locale]/disease/[slug]/page.tsx (cle vaccineStrainWarning dans les 5 locales ; override de badge specifique a la souche, commentaire lignes ~387-388) ; lib/disease-data.ts (entree patterns ['ebola','bundibugyo'], vaccineName 'Ervebo (Zaire strain only)'). Verifie en direct sur https://healthwatch-global.com/en/disease/ebola-virus-disease le 2026-09-02 par le run linkedin-hwg-content-proposal : badge rendu 'Not available for active strain'.",
+      "expiresOn": null
+    },
+    {
+      "text": "La fiche maladie publique de healthwatch-global.com affiche un champ 'Treatment' distinct du champ vaccin, a quatre valeurs possibles : disponible, non disponible, soins de support ('Supportive care'), experimental. Pour la ligne Ebola virus disease active en RD Congo (souche Bundibugyo), ce champ affiche 'Experimental'. Ce champ n'est pas retrograde par souche comme le badge vaccin : il n'existe qu'une seule valeur de traitement par maladie dans lib/disease-data.ts, pas une valeur par foyer actif.",
+      "provenance": "lib/disease-data.ts (champ treatment: TreatmentStatus par entree de la DISEASE_MAP, entree ['ebola','bundibugyo'] = 'experimental') ; app/[locale]/disease/[slug]/page.tsx lignes ~121-153 (treatmentStatus, 4 valeurs sur les 5 locales) et lignes ~600-602 (rendu TREATMENT_COLOR[info.treatment]). Verifie en direct sur https://healthwatch-global.com/en/disease/ebola-virus-disease le 2026-09-02 par le run linkedin-hwg-content-proposal : champ Treatment rendu 'Experimental'.",
+      "expiresOn": null
     }
   ],
   "numbers": [
