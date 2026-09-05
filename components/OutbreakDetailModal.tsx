@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { X, ExternalLink, AlertTriangle, TrendingUp, Users, Skull, Calendar, Globe, Clock, Activity, ImageDown, FileText, Link as LinkIcon, Check, Copy, Info } from "lucide-react";
+import { X, ExternalLink, AlertTriangle, TrendingUp, Users, Skull, Calendar, Globe, Clock, Activity, ImageDown, FileText, Link as LinkIcon, Check, Copy, Info, Download } from "lucide-react";
 import WatchlistButton from "@/components/WatchlistButton";
 import { getIncidenceRate } from "@/lib/population-data";
 import type { Outbreak } from "@/lib/outbreaks";
@@ -272,12 +272,12 @@ const SITREP_COPY: Record<string, {
   },
 };
 
-const HISTORY_COPY: Record<string, { curve: string; past: string; peak: string; noHistory: string }> = {
-  fr: { curve: "Courbe épidémique", past: "Épisodes précédents", peak: "pic", noHistory: "Aucun épisode antérieur enregistré" },
-  en: { curve: "Epidemic curve",    past: "Previous episodes",   peak: "peak", noHistory: "No previous episode on record" },
-  es: { curve: "Curva epidémica",   past: "Episodios anteriores", peak: "pico", noHistory: "Sin episodios anteriores registrados" },
-  ar: { curve: "المنحنى الوبائي",  past: "الحلقات السابقة",    peak: "ذروة", noHistory: "لا توجد حلقات سابقة مسجلة" },
-  id: { curve: "Kurva epidemi",     past: "Episode sebelumnya",  peak: "puncak", noHistory: "Tidak ada episode sebelumnya" },
+const HISTORY_COPY: Record<string, { curve: string; past: string; peak: string; noHistory: string; exportCsv: string }> = {
+  fr: { curve: "Courbe épidémique", past: "Épisodes précédents", peak: "pic", noHistory: "Aucun épisode antérieur enregistré", exportCsv: "Exporter l'historique CSV" },
+  en: { curve: "Epidemic curve",    past: "Previous episodes",   peak: "peak", noHistory: "No previous episode on record", exportCsv: "Export history CSV" },
+  es: { curve: "Curva epidémica",   past: "Episodios anteriores", peak: "pico", noHistory: "Sin episodios anteriores registrados", exportCsv: "Exportar historial CSV" },
+  ar: { curve: "المنحنى الوبائي",  past: "الحلقات السابقة",    peak: "ذروة", noHistory: "لا توجد حلقات سابقة مسجلة", exportCsv: "تصدير السجل CSV" },
+  id: { curve: "Kurva epidemi",     past: "Episode sebelumnya",  peak: "puncak", noHistory: "Tidak ada episode sebelumnya", exportCsv: "Ekspor riwayat CSV" },
 };
 
 const NOTES_COPY: Record<string, {
@@ -855,7 +855,18 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
         {/* ── Epidemic curve (Pro) ──────────────────────────────────────── */}
         {isPaid && (
           <div className="px-5 pb-4">
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">{hc.curve}</p>
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">{hc.curve}</p>
+              {snapshots.length > 0 && (
+                <a
+                  href={`/api/export-history?outbreak_id=${outbreak.id}&format=csv`}
+                  className="text-[11px] text-gray-500 hover:text-red-400 transition-colors inline-flex items-center gap-1"
+                >
+                  <Download className="w-3 h-3" />
+                  {hc.exportCsv}
+                </a>
+              )}
+            </div>
             {historyLoading ? (
               <div className="flex items-center justify-center h-[180px]">
                 <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-red-500" />
