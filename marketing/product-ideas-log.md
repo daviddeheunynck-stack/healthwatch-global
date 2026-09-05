@@ -3485,28 +3485,30 @@ lectures.
    vérification manuelle déjà en place pour Afghanistan/Pakistan couvre
    désormais les 13 lignes africaines.
 
-2. **Lassa fever / Nigéria est toujours sur le site public** — 1 056 cas,
-   253 décès. La ligne a été désactivée le 02/09 quand la clause de
-   confidentialité des sitreps NCDC a été trouvée, mais `active=false` ne la
-   retire pas de l'affichage : `getOutbreaksCached()` garde une ligne
-   `source_priority>=3` pendant 60 jours, et l'écriture de désactivation a
-   elle-même rafraîchi la moitié `updated_at` de cette fenêtre. Exactement le
-   piège documenté le 26/08 pour les 4 lignes ReliefWeb. Son `source` pointe
-   aujourd'hui vers la page de listing publique (la version expurgée, pas le
-   PDF confidentiel) — donc pas une citation interdite en soi, mais les
-   chiffres affichés viennent bien du sitrep. La sortir demande soit de la
-   re-sourcer, soit de descendre `source_priority` sous 3 : deux écritures de
-   données en prod, hors de ce que cette routine se permet seule.
+2. **RÉSOLU (partiellement) — Lassa fever / Nigéria n'est plus affichée.**
+   `getOutbreaksCached()` gardait la ligne (1 056 cas, 253 décès) 60 jours après
+   sa désactivation du 02/09, `source_priority>=3` oblige — même piège que les
+   4 lignes ReliefWeb du 26/08. `source_priority` descendu à 0 en session
+   interactive (David : « lance-le toi-même via le compte admin », après un
+   premier refus du classificateur d'autorisation sur le même script quelques
+   minutes plus tôt). Écriture confirmée par `.select()` : `5 → 0`.
 
-3. **`ncdc.gov.ng` n'est pas dans `FORBIDDEN_SOURCE_DOMAINS`**, et ne peut pas
-   y entrer tel quel : la règle du 02/09 est **au niveau du chemin** (les PDF
-   `…/sitreps/*.pdf` portent la clause, la page de listing expurgée non),
-   alors que la liste construite le 26/08 ne connaît que des domaines. La
-   section 4m de l'audit quotidien est donc structurellement incapable de
-   nommer une ligne re-sourcée vers un de ces PDF. Étendre la liste aux motifs
-   de chemin est un petit chantier — non fait ce soir parce qu'il touche à la
-   qualification juridique d'une source, et que le périmètre exact (tout
-   `ncdc.gov.ng` ? seulement les PDF ?) est une décision, pas une mécanique.
+   **Ce que ça ne règle pas** : le nettoyage du 02/09 avait remplacé le lien
+   PDF confidentiel par la page de listing expurgée dans `source`, mais les
+   chiffres eux-mêmes restent extraits du document revendiqué confidentiel —
+   le commentaire de `sync-ncdc/route.ts` le dit lui-même, changer l'URL ne
+   change pas la provenance du contenu. La ligne n'a donc ni une source
+   légitimement publique, ni de décision de retrait. Détail dans la mémoire
+   `project_ncdc_lassa_row_confidential_content_2026_09_04`.
+
+3. **RÉSOLU — `ncdc.gov.ng` interdit de citation, mais seulement pour les
+   PDF de sitrep.** `FORBIDDEN_SOURCE_PATH_PATTERNS` dans `lib/source-trust.ts`
+   (commit `5b8aeeb6`), vérifié après `FORBIDDEN_SOURCE_DOMAINS` dans
+   `sourceStatusOf()` et dans `isForbiddenSourceHost()` — les huit surfaces qui
+   utilisent déjà cette dernière (via `publishableSourceUrl`/`Name`) héritent du
+   garde-fou sans modification. La page de listing expurgée reste citable, seul
+   `…/sitreps/*.pdf` est banni. 5 cas unitaires passent, rejeu des 295 lignes
+   réelles sans régression.
 
 4. **Deux crons en `no_data` prolongé**, relevés à nouveau sans être traités :
    `check-mpox-sitrep` et `sync-drc-sitrep`. Aucun n'est en `error`. Inchangé
