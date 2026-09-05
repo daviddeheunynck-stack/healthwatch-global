@@ -39,6 +39,7 @@ const LABELS: Record<string, Record<string, string | string[]>> = {
     active: "actif(s)",
     high: "Élevé", medium: "Moyen", low: "Faible",
     cta: "Voir le tableau de bord complet →",
+    forward: "Un(e) collègue suit aussi les mêmes régions ? Transférez-lui simplement cet email.",
     unsubscribe: "Se désabonner",
     sources: "Sources : OMS · ECDC · PAHO · Africa CDC",
     proTitle: "Passez à Pro — alertes instantanées & rapports PDF",
@@ -58,6 +59,7 @@ const LABELS: Record<string, Record<string, string | string[]>> = {
     active: "active",
     high: "High", medium: "Medium", low: "Low",
     cta: "View full dashboard →",
+    forward: "Know a colleague tracking the same regions? Just forward them this email.",
     unsubscribe: "Unsubscribe",
     sources: "Sources: WHO · ECDC · PAHO · Africa CDC",
     proTitle: "Go Pro — instant alerts & PDF reports",
@@ -77,6 +79,7 @@ const LABELS: Record<string, Record<string, string | string[]>> = {
     active: "activo(s)",
     high: "Alto", medium: "Medio", low: "Bajo",
     cta: "Ver el panel completo →",
+    forward: "¿Un colega sigue las mismas regiones? Reenvíele este email.",
     unsubscribe: "Cancelar suscripción",
     sources: "Fuentes: OMS · ECDC · PAHO · Africa CDC",
     proTitle: "Pase a Pro — alertas instantáneas e informes PDF",
@@ -96,6 +99,7 @@ const LABELS: Record<string, Record<string, string | string[]>> = {
     active: "نشط",
     high: "عالي", medium: "متوسط", low: "منخفض",
     cta: "← عرض لوحة التحكم الكاملة",
+    forward: "هل يتابع أحد زملائك المناطق نفسها؟ أعد توجيه هذا البريد إليه.",
     unsubscribe: "إلغاء الاشتراك",
     sources: "المصادر: WHO · ECDC · PAHO · Africa CDC",
     proTitle: "انتقل إلى Pro — تنبيهات فورية وتقارير PDF",
@@ -115,6 +119,7 @@ const LABELS: Record<string, Record<string, string | string[]>> = {
     active: "aktif",
     high: "Tinggi", medium: "Sedang", low: "Rendah",
     cta: "Lihat dasbor lengkap →",
+    forward: "Ada kolega yang memantau wilayah yang sama? Teruskan saja email ini kepadanya.",
     unsubscribe: "Berhenti berlangganan",
     sources: "Sumber: WHO · ECDC · PAHO · Africa CDC",
     proTitle: "Upgrade ke Pro — peringatan instan & laporan PDF",
@@ -251,6 +256,7 @@ export function buildDigestEmail(
 
     <!-- Footer -->
     <div style="padding:20px 32px;border-top:1px solid #334155;">
+      <p style="margin:0 0 10px;font-size:12px;color:#64748b;">${l.forward}</p>
       <p style="margin:0 0 4px;font-size:11px;color:#475569;">${l.sources}</p>
       <p style="margin:0;font-size:11px;color:#475569;">
         ${unsubUrl
