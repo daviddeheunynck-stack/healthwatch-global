@@ -12,7 +12,7 @@ import CitationBlock from "@/components/CitationBlock";
 import OutbreakStatsGrid from "@/components/OutbreakStatsGrid";
 import ShareOutbreakButton from "@/components/ShareOutbreakButton";
 import OutbreakCasesChart from "@/components/OutbreakCasesChart";
-import { getLocalizedDisease, getLocalizedCountry, getLocalizedDescription, sourceStatus, sourceName, publishableSourceName, publishableSourceUrl, staleOutbreakDays, isSourceConfirmed } from "@/lib/outbreaks";
+import { getLocalizedDisease, getLocalizedCountry, getLocalizedDescription, sourceStatus, sourceName, publishableSourceName, publishableSourceUrl, staleOutbreakDays, isSourceConfirmed, lastVerifiedIso } from "@/lib/outbreaks";
 import { diseaseToSlug, matchDisease } from "@/lib/disease-data";
 import { jsonLdHtml } from "@/lib/json-ld";
 import { countryToSlug } from "@/lib/country-utils";
@@ -576,15 +576,24 @@ export default async function OutbreakPage({
           <span className="text-gray-600">↗</span>
         </div>
       )}
-      {/* Last synced timestamp — reads o.date (the source bulletin's own date), not
-          o.updated_at (our last DB write). Until 2026-08-18 this used updated_at,
-          so any incidental row touch (a QC edit, a locale backfill) reset the
-          claim without a single figure changing — see freshOutbreakHours in
-          lib/outbreaks.ts for the matching fix on the dashboard badge. */}
+      {/* Last synced timestamp — reads lastVerifiedIso(o) (the later of the source
+          bulletin's own date and source_confirmed_at, the moment a human or cron last
+          reopened the source and found nothing newer), not o.updated_at (our last DB
+          write, see the 2026-08-18 fix below) and not o.date alone. Found 2026-09-05
+          re-sourcing Lassa fever/Nigeria: source_confirmed_at was bumped to "just now"
+          on re-verification but this badge, reading o.date only, still showed the
+          bulletin's date (20 days old) — the exact case source_confirmed_at and
+          lastVerifiedIso() were introduced for on 2026-08-22, and that
+          OutbreakTable.tsx's stale-days badge already uses (see lastVerifiedIso in
+          lib/outbreaks.ts). This detail page had not been updated to match.
+          Pre-2026-08-18 this badge read o.updated_at, so any incidental row touch
+          (a QC edit, a locale backfill) reset the claim without a single figure
+          changing — see freshOutbreakHours in lib/outbreaks.ts for the matching fix
+          on the dashboard badge. */}
       {o.date && (
         <div className="mb-6 text-xs text-gray-500 flex items-center gap-1">
           <span>🔄</span>
-          <span suppressHydrationWarning>{l.lastSynced} : {l.syncedAgo(Math.round((Date.now() - new Date(o.date).getTime()) / 60_000))}</span>
+          <span suppressHydrationWarning>{l.lastSynced} : {l.syncedAgo(Math.round((Date.now() - new Date(lastVerifiedIso(o)).getTime()) / 60_000))}</span>
         </div>
       )}
 
