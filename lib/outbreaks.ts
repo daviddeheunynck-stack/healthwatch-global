@@ -10,6 +10,17 @@ import type { OutbreakTrend } from "./outbreak-trend";
 const BOM   = String.fromCharCode(65279);
 const clean = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM), "").trim();
 
+// Rounds a case/death count to its order of magnitude (10, 100, 1000…) —
+// the free-plan substitute for the exact figure everywhere one would
+// otherwise be sent to the client (dashboard page, outbreak permalink page).
+// Never send the real number in a server-rendered prop or a cached page for
+// a non-paid viewer; this is what goes in its place. See page.tsx's
+// `mapTableOutbreaks` comment for why a client-component prop isn't safe
+// even when the UI blurs it.
+export function magnitudeBucket(n: number): number {
+  return n > 0 ? Math.pow(10, Math.floor(Math.log10(n))) : 0;
+}
+
 function getServerClient() {
   return createClient(
     clean(process.env.NEXT_PUBLIC_SUPABASE_URL),

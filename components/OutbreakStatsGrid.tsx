@@ -14,6 +14,7 @@ import CheckoutButton from "@/components/CheckoutButton";
 type AuthStatus = "loading" | "anon" | "free" | "expired" | "paid";
 
 interface Props {
+  outbreakId: string;
   cases: string;
   deaths: string;
   cfr: string;
@@ -37,8 +38,14 @@ const SUBSCRIBE_LABEL: Record<string, string> = {
   en: "Subscribe to Pro →",
 };
 
-export default function OutbreakStatsGrid({ cases, deaths, cfr, labels, locale }: Props) {
+export default function OutbreakStatsGrid({ outbreakId, cases, deaths, cfr, labels, locale }: Props) {
   const [status, setStatus] = useState<AuthStatus>("loading");
+  // Real figures — this component's `cases`/`deaths`/`cfr` props are a
+  // magnitude-bucketed placeholder (the page that renders them is ISR-cached
+  // and shared across every visitor, see app/[locale]/outbreak/[id]/page.tsx),
+  // fetched here client-side, only once `status` is confirmed "paid", from
+  // the Pro-gated /api/outbreak-stats/[id].
+  const [realStats, setRealStats] = useState<{ cases: number; deaths: number | null } | null>(null);
 
   useEffect(() => {
     const supabase = createClient();
@@ -60,7 +67,26 @@ export default function OutbreakStatsGrid({ cases, deaths, cfr, labels, locale }
     });
   }, []);
 
+  useEffect(() => {
+    if (status !== "paid") return;
+    fetch(`/api/outbreak-stats/${outbreakId}`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => { if (d) setRealStats({ cases: d.cases, deaths: d.deaths }); })
+      .catch(() => {});
+  }, [status, outbreakId]);
+
   const blurred = status === "anon" || status === "free" || status === "expired";
+
+  const numLocale = locale === "ar" ? "ar-SA" : locale;
+  const realCfr = realStats && realStats.cases > 0 && realStats.deaths !== null
+    ? ((realStats.deaths / realStats.cases) * 100).toFixed(1) + "%"
+    : null;
+  const displayCases  = realStats ? realStats.cases.toLocaleString(numLocale) : cases;
+  // Falls back to the original (bucketed-or-noData) prop when the real value
+  // is null — that prop already correctly distinguishes "0 deaths reported"
+  // from "not reported" (see hasData/o.deaths handling in the parent page).
+  const displayDeaths = realStats && realStats.deaths !== null ? realStats.deaths.toLocaleString(numLocale) : deaths;
+  const displayCfr    = realStats ? (realCfr ?? cfr) : cfr;
 
   const ctaBtn =
     status === "expired"
@@ -71,9 +97,9 @@ export default function OutbreakStatsGrid({ cases, deaths, cfr, labels, locale }
     <>
       <div className="grid grid-cols-3 gap-4 mb-6">
         {([
-          { label: labels.cases,  value: cases,  cls: "text-white"     },
-          { label: labels.deaths, value: deaths, cls: "text-red-400"   },
-          { label: labels.cfr,    value: cfr,    cls: "text-amber-400" },
+          { label: labels.cases,  value: displayCases,  cls: "text-white"     },
+          { label: labels.deaths, value: displayDeaths, cls: "text-red-400"   },
+          { label: labels.cfr,    value: displayCfr,    cls: "text-amber-400" },
         ] as const).map(({ label, value, cls }) => (
           <div key={label} className="bg-gray-800/50 rounded-lg p-4 border border-gray-700/50 text-center">
             <div className="text-xs text-gray-400 uppercase tracking-wide mb-1">{label}</div>

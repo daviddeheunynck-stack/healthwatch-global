@@ -2,7 +2,7 @@ import { getTranslations, getLocale } from "next-intl/server";
 import { headers } from "next/headers";
 import Link from "next/link";
 import { Activity, Globe, AlertTriangle } from "lucide-react";
-import { getOutbreaks, getStats, getLastSync, getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
+import { getOutbreaks, getStats, getLastSync, getLocalizedDisease, getLocalizedCountry, magnitudeBucket } from "@/lib/outbreaks";
 import type { Outbreak } from "@/lib/outbreaks";
 import { ISO_REGION } from "@/lib/geo-data";
 import { getOutbreakTrendsBulkCached } from "@/lib/outbreak-trend";
@@ -335,7 +335,6 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
   // for one showcase disease per continent (`featuredDiseaseByRegion`),
   // which stays real end to end so the free plan gives a genuine, if
   // narrow, taste of the data rather than a wall of bullets everywhere.
-  const magnitudeBucket = (n: number) => (n > 0 ? Math.pow(10, Math.floor(Math.log10(n))) : 0);
   const featuredDiseaseByRegion = isPaid ? new Map<string, string>() : pickFeaturedDiseases(activeOutbreaks);
   const isFreeFeatured = (o: Outbreak) => featuredDiseaseByRegion.get(o.region) === (o.disease_en || o.disease);
   const mapTableOutbreaks = isPaid

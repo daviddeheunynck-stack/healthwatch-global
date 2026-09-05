@@ -12,7 +12,7 @@ import CitationBlock from "@/components/CitationBlock";
 import OutbreakStatsGrid from "@/components/OutbreakStatsGrid";
 import ShareOutbreakButton from "@/components/ShareOutbreakButton";
 import OutbreakCasesChart from "@/components/OutbreakCasesChart";
-import { getLocalizedDisease, getLocalizedCountry, getLocalizedDescription, sourceStatus, sourceName, publishableSourceName, publishableSourceUrl, staleOutbreakDays, isSourceConfirmed, lastVerifiedIso } from "@/lib/outbreaks";
+import { getLocalizedDisease, getLocalizedCountry, getLocalizedDescription, sourceStatus, sourceName, publishableSourceName, publishableSourceUrl, staleOutbreakDays, isSourceConfirmed, lastVerifiedIso, magnitudeBucket } from "@/lib/outbreaks";
 import { diseaseToSlug, matchDisease } from "@/lib/disease-data";
 import { jsonLdHtml } from "@/lib/json-ld";
 import { countryToSlug } from "@/lib/country-utils";
@@ -305,7 +305,12 @@ export default async function OutbreakPage({
   const disease = getLocalizedDisease(o, locale) ?? o.disease_en ?? o.disease;
   const country = getLocalizedCountry(o, locale) ?? o.country_en ?? o.country;
   const hasData = o.cases > 0;
-  const cfr     = hasData && o.deaths !== null ? ((o.deaths / o.cases) * 100).toFixed(1) + "%" : l.noData;
+  // Derived from the bucketed figures, not the real ones — this value is a
+  // prop on a client component embedded in an ISR-cached page (see the
+  // OutbreakStatsGrid call below), so it's public the moment it's rendered.
+  const bucketedCases  = magnitudeBucket(o.cases);
+  const bucketedDeaths = o.deaths !== null ? magnitudeBucket(o.deaths) : null;
+  const cfr = hasData && bucketedDeaths !== null ? ((bucketedDeaths / bucketedCases) * 100).toFixed(1) + "%" : l.noData;
   const donRef  = o.source ? DON_PATTERN.exec(o.source)?.[1] : null;
   const status  = sourceStatus(o);
 
@@ -455,10 +460,17 @@ export default async function OutbreakPage({
         )}
       </div>
 
-      {/* Stats — blurred for anonymous visitors, unblurred client-side when authenticated */}
+      {/* Stats — this page is ISR-cached (revalidate=3600) and serves the
+          same HTML to every visitor, so it can never embed the real figures
+          in a prop no matter what the UI blurs on top (see magnitudeBucket's
+          doc comment). Bucketed placeholders go in the initial render;
+          OutbreakStatsGrid fetches the real numbers itself, client-side,
+          from the Pro-gated /api/outbreak-stats/[id] once it knows the
+          viewer is actually paid. */}
       <OutbreakStatsGrid
-        cases={hasData ? o.cases.toLocaleString(locale === "ar" ? "ar-SA" : locale) : l.noData}
-        deaths={hasData && o.deaths !== null ? o.deaths.toLocaleString(locale === "ar" ? "ar-SA" : locale) : l.noData}
+        outbreakId={o.id}
+        cases={hasData ? bucketedCases.toLocaleString(locale === "ar" ? "ar-SA" : locale) : l.noData}
+        deaths={hasData && bucketedDeaths !== null ? bucketedDeaths.toLocaleString(locale === "ar" ? "ar-SA" : locale) : l.noData}
         cfr={cfr}
         labels={{
           cases:      l.cases,
