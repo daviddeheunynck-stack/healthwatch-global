@@ -762,11 +762,11 @@ export default async function MethodologyPage({
            "Validate it on your real use cases"}
         </h2>
         <p className="text-gray-400 text-sm leading-relaxed">
-          {l === "fr" ? "Programme pilote gratuit : 5 accès Pro pendant 35 jours pour équipes de surveillance institutionnelles. Onboarding guidé inclus. Sans carte bancaire." :
-           l === "es" ? "Programa piloto gratuito: 5 accesos Pro durante 35 días para equipos de vigilancia institucional. Incorporación guiada incluida. Sin tarjeta de crédito." :
-           l === "ar" ? "برنامج تجريبي مجاني: 5 مقاعد Pro لمدة 35 يوماً لفرق المراقبة المؤسسية. تأهيل مُوجَّه مشمول. بدون بطاقة ائتمانية." :
-           l === "id" ? "Program pilot gratis: 5 akses Pro selama 35 hari untuk tim surveilans institusional. Onboarding terpandu termasuk. Tanpa kartu kredit." :
-           "Free pilot program: 5 Pro seats for 35 days for institutional surveillance teams. Guided onboarding included. No credit card."}
+          {l === "fr" ? "Programme pilote gratuit : 5 accès Pro pendant 14 jours pour équipes de surveillance institutionnelles. Onboarding guidé inclus. Sans carte bancaire." :
+           l === "es" ? "Programa piloto gratuito: 5 accesos Pro durante 14 días para equipos de vigilancia institucional. Incorporación guiada incluida. Sin tarjeta de crédito." :
+           l === "ar" ? "برنامج تجريبي مجاني: 5 مقاعد Pro لمدة 14 يوماً لفرق المراقبة المؤسسية. تأهيل مُوجَّه مشمول. بدون بطاقة ائتمانية." :
+           l === "id" ? "Program pilot gratis: 5 akses Pro selama 14 hari untuk tim surveilans institusional. Onboarding terpandu termasuk. Tanpa kartu kredit." :
+           "Free pilot program: 5 Pro seats for 14 days for institutional surveillance teams. Guided onboarding included. No credit card."}
         </p>
         <Link
           href={`/${l}/pilot`}

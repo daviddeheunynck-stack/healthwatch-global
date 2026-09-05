@@ -7,7 +7,7 @@ const clean = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM)
 // environment that can reach these routes, same pattern as lib/unsubscribe-token.ts.
 const SECRET = clean(process.env.SUPABASE_SERVICE_ROLE_KEY);
 
-// /api/pilot previously activated the 35-day Pro trial straight from an
+// /api/pilot previously activated the 14-day Pro trial straight from an
 // unauthenticated POST keyed only on a submitted email address — anyone who
 // knew a registered user's email could trigger it on their behalf. The token
 // makes the emailed link itself the credential: only whoever controls that

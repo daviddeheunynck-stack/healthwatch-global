@@ -75,7 +75,7 @@ export async function POST(req: NextRequest) {
     // reach this branch. Never let it downgrade an existing paying customer: a team/
     // enterprise plan, or any plan backed by an active Stripe subscription, must be
     // left untouched. Only a free-tier account (no active subscription) is eligible
-    // for the 35-day Pro pilot trial.
+    // for the 14-day Pro pilot trial.
     const higherPlan = profile?.stripe_subscription_id || profile?.plan === "team" || profile?.plan === "enterprise";
 
     if (profile && !higherPlan) {

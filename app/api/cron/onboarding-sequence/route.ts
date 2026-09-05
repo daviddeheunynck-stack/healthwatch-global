@@ -132,10 +132,20 @@ async function runOnboardingSequence(req: NextRequest, supabase: SupabaseClient)
   // depending on run order. buildJ7Email is left in lib/onboarding-emails,
   // unreferenced — same disposition as buildJ12Email.
   //
-  // J+32 guard: trial_ends_at must be within 4 days — by day 32 regular
-  // self-serve pro users (7-day trial) have long since been downgraded to
-  // free by expire-trials, so plan=pro + created_at ~32 days ago + no stripe
-  // sub uniquely identifies pilot users (35-day trial).
+  // J+32 (label kept, no longer literally day 32 — see below): fires when a
+  // pilot's trial_ends_at is within 4 days. Used to identify "this pro user
+  // is a pilot" via a created_at ~32-days-ago heuristic, sized for the
+  // pilot's old 35-day trial. That heuristic broke the moment the pilot
+  // trial was shortened to 14 days on 2026-09-06: pilots created 14 days ago
+  // are already back on plan=free (expire-trials), so the created_at window
+  // would never match anyone again — a silent, permanent 0-sent regression
+  // of the exact kind this codebase's own audits keep flagging ("a cron that
+  // runs clean but sends nothing relevant is the real risk"). Switched to
+  // the direct `is_pilot` column instead (already the authoritative signal
+  // in winback-sequence's isEligible, added 2026-08-01 to replace this same
+  // class of fragile day-count heuristic) — correct regardless of trial
+  // length, and transition-safe for the pilots still on their original
+  // 35-day trial_ends_at from before this change.
   const j32WindowEnd = new Date(Date.now() + 4 * 86_400_000).toISOString();
 
   const [
@@ -168,13 +178,12 @@ async function runOnboardingSequence(req: NextRequest, supabase: SupabaseClient)
       .from("profiles")
       .select("id, email, plan, locale, trial_ends_at, display_filters, pilot_organization")
       .eq("plan", "pro")
+      .eq("is_pilot", true)
       .not("trial_ends_at", "is", null)
       .lt("trial_ends_at", j32WindowEnd)
       .gt("trial_ends_at", new Date().toISOString())
       .is("stripe_subscription_id", null)
-      .is("email_blocked_at", null)
-      .filter("created_at", "gte", new Date(Date.now() - 32.5 * 86400_000).toISOString())
-      .filter("created_at", "lt",  new Date(Date.now() - 31.5 * 86400_000).toISOString()),
+      .is("email_blocked_at", null),
   ]);
 
   if (j1Err) {

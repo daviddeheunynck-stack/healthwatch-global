@@ -3,8 +3,9 @@ import * as Sentry from "@sentry/nextjs";
 import { buildSignupDigestEmail } from "@/lib/signup-digest-email";
 import { isRealProduction } from "@/lib/cron-monitor";
 
-// Lowered from 14 to 7 on 2026-09-05 (David, self-serve only — pilot's
-// 35-day trial and personally-offered/admin-invited trials are untouched).
+// Lowered from 14 to 7 on 2026-09-05 (David, self-serve only). Pilot's own
+// trial length (app/api/pilot/confirm/route.ts, app/api/admin/invite/route.ts)
+// was separately lowered from 35 to 14 on 2026-09-06.
 const TRIAL_DAYS = 7;
 const RISK_RANK: Record<string, number> = { high: 3, medium: 2, low: 1 };
 export const ALL_REGIONS = ["africa", "asia", "americas", "europe", "oceania"] as const;

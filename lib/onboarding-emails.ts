@@ -314,7 +314,7 @@ const J12_CONTENT: Record<string, {
     altText: "Des questions sur l'offre ou un tarif ONG ?",
     altLink: "Contactez-nous →",
     pilotText: "Ministère, ONG ou institution ? Pas de procurement nécessaire.",
-    pilotLink: "Programme Pilot 35 jours gratuits →",
+    pilotLink: "Programme Pilot 14 jours gratuits →",
     closing: "Bonne surveillance,\nL'équipe HealthWatch Global",
     unsubNote: "Vous recevez cet email car vous avez créé un compte sur healthwatch-global.com.",
   },
@@ -336,7 +336,7 @@ const J12_CONTENT: Record<string, {
     altText: "Questions about the plans or an NGO rate?",
     altLink: "Contact us →",
     pilotText: "Ministry, NGO, or institution? No procurement process required.",
-    pilotLink: "35-day free Pilot programme →",
+    pilotLink: "14-day free Pilot programme →",
     closing: "Stay safe,\nThe HealthWatch Global Team",
     unsubNote: "You're receiving this email because you created an account on healthwatch-global.com.",
   },
@@ -358,7 +358,7 @@ const J12_CONTENT: Record<string, {
     altText: "¿Preguntas sobre los planes o una tarifa ONG?",
     altLink: "Contáctenos →",
     pilotText: "¿Ministerio, ONG o institución? Sin proceso de compras.",
-    pilotLink: "Programa Pilot 35 días gratuitos →",
+    pilotLink: "Programa Pilot 14 días gratuitos →",
     closing: "Cuídese,\nEl equipo de HealthWatch Global",
     unsubNote: "Recibe este correo porque creó una cuenta en healthwatch-global.com.",
   },
@@ -380,7 +380,7 @@ const J12_CONTENT: Record<string, {
     altText: "أسئلة حول الخطط أو سعر المنظمات غير الحكومية؟",
     altLink: "← اتصل بنا",
     pilotText: "وزارة أو منظمة غير حكومية أو مؤسسة؟ لا إجراءات شراء مطلوبة.",
-    pilotLink: "← برنامج تجريبي مجاني 35 يوماً",
+    pilotLink: "← برنامج تجريبي مجاني 14 يوماً",
     closing: "مع السلامة،\nفريق HealthWatch Global",
     unsubNote: "تتلقى هذا البريد لأنك أنشأت حساباً على healthwatch-global.com.",
   },
@@ -402,7 +402,7 @@ const J12_CONTENT: Record<string, {
     altText: "Pertanyaan tentang paket atau tarif LSM?",
     altLink: "Hubungi kami →",
     pilotText: "Kementerian, LSM, atau institusi? Tidak perlu proses pengadaan.",
-    pilotLink: "Program Pilot 35 hari gratis →",
+    pilotLink: "Program Pilot 14 hari gratis →",
     closing: "Jaga kesehatan,\nTim HealthWatch Global",
     unsubNote: "Anda menerima email ini karena membuat akun di healthwatch-global.com.",
   },
@@ -442,7 +442,7 @@ const TRIAL_EXPIRED_CONTENT: Record<string, {
     altText: "Tarif ONG ou gouvernemental disponible.",
     altLink: "Contactez-nous →",
     pilotText: "Ministère, ONG ou institution ? Pas de procurement nécessaire.",
-    pilotLink: "Programme Pilot institutionnel 35 jours →",
+    pilotLink: "Programme Pilot institutionnel 14 jours →",
     closing: "L'équipe HealthWatch Global",
     unsubNote: "Vous recevez cet email car vous avez créé un compte sur healthwatch-global.com.",
   },
@@ -463,7 +463,7 @@ const TRIAL_EXPIRED_CONTENT: Record<string, {
     altText: "NGO or government pricing available.",
     altLink: "Contact us →",
     pilotText: "Ministry, NGO, or institution? No procurement process required.",
-    pilotLink: "35-day institutional Pilot programme →",
+    pilotLink: "14-day institutional Pilot programme →",
     closing: "The HealthWatch Global Team",
     unsubNote: "You're receiving this email because you created an account on healthwatch-global.com.",
   },
@@ -484,7 +484,7 @@ const TRIAL_EXPIRED_CONTENT: Record<string, {
     altText: "Precios para ONG o gobierno disponibles.",
     altLink: "Contáctenos →",
     pilotText: "¿Ministerio, ONG o institución? Sin proceso de compras.",
-    pilotLink: "Programa Pilot institucional 35 días →",
+    pilotLink: "Programa Pilot institucional 14 días →",
     closing: "El equipo de HealthWatch Global",
     unsubNote: "Recibe este correo porque creó una cuenta en healthwatch-global.com.",
   },
@@ -505,7 +505,7 @@ const TRIAL_EXPIRED_CONTENT: Record<string, {
     altText: "أسعار خاصة للمنظمات غير الحكومية والحكومات.",
     altLink: "← اتصل بنا",
     pilotText: "وزارة أو منظمة غير حكومية أو مؤسسة؟ لا إجراءات شراء مطلوبة.",
-    pilotLink: "← البرنامج التجريبي المؤسسي 35 يوماً",
+    pilotLink: "← البرنامج التجريبي المؤسسي 14 يوماً",
     closing: "فريق HealthWatch Global",
     unsubNote: "تتلقى هذا البريد لأنك أنشأت حساباً على healthwatch-global.com.",
   },
@@ -526,7 +526,7 @@ const TRIAL_EXPIRED_CONTENT: Record<string, {
     altText: "Harga khusus untuk LSM atau pemerintah tersedia.",
     altLink: "Hubungi kami →",
     pilotText: "Kementerian, LSM, atau institusi? Tidak perlu proses pengadaan.",
-    pilotLink: "Program Pilot institusional 35 hari →",
+    pilotLink: "Program Pilot institusional 14 hari →",
     closing: "Tim HealthWatch Global",
     unsubNote: "Anda menerima email ini karena membuat akun di healthwatch-global.com.",
   },
@@ -684,8 +684,9 @@ export function buildJ12Email(locale: string, userId: string): { subject: string
 }
 
 // ─── Pilot J+32 : 3 days left → upgrade to Team ──────────────────────────────
-// Sent to pilot users (35-day trial) at day 32, before expire-trials kicks in.
-// By day 32, regular 7-day pro users are already on free — plan=pro here = pilot.
+// Sent to pilot users (14-day trial) shortly before their trial ends, before
+// expire-trials kicks in — see the is_pilot-based cohort in
+// app/api/cron/onboarding-sequence/route.ts (no longer a fixed "day 32").
 
 const PILOT_CONVERSION_CONTENT: Record<string, {
   banner: string;

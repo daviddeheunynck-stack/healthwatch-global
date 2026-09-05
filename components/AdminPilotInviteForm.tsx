@@ -50,7 +50,7 @@ export default function AdminPilotInviteForm({ locale: _locale }: { locale: stri
       <div className="flex items-center gap-2">
         <FlaskConical className="w-5 h-5 text-red-400" />
         <h2 className="text-base font-semibold text-white">Pilot Invites</h2>
-        <span className="text-xs bg-red-500/10 text-red-400 border border-red-500/20 rounded-full px-2 py-0.5">Pro · 35 jours</span>
+        <span className="text-xs bg-red-500/10 text-red-400 border border-red-500/20 rounded-full px-2 py-0.5">Pro · 14 jours</span>
       </div>
 
       <form onSubmit={handleSend} className="space-y-3">

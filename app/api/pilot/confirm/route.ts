@@ -69,9 +69,9 @@ export async function GET(req: NextRequest) {
   }
 
   // Idempotent: a double-click, or an email-security scanner prefetching the
-  // link, must not repeatedly reset the 35-day trial window.
+  // link, must not repeatedly reset the 14-day trial window.
   if (!profile.is_pilot) {
-    const trialEndsAt = new Date(Date.now() + 35 * 86_400_000).toISOString();
+    const trialEndsAt = new Date(Date.now() + 14 * 86_400_000).toISOString();
     await supabase
       .from("profiles")
       .update({

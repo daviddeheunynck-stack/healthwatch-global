@@ -17,7 +17,7 @@ const PILOT_EMAIL = {
     heading: "Welcome to the HealthWatch Global Pilot Program",
     body: (name: string, org: string) => `
       <p>Hi ${name},</p>
-      <p>Your 35-day Pro access to <strong>HealthWatch Global</strong> is now active for <strong>${org}</strong>.</p>
+      <p>Your 14-day Pro access to <strong>HealthWatch Global</strong> is now active for <strong>${org}</strong>.</p>
       <p>Click the button below to set up your account and log in — no password required, this link is valid for 1 hour:</p>
     `,
     cta: "Access the platform →",
@@ -34,7 +34,7 @@ const PILOT_EMAIL = {
     heading: "Bienvenue dans le programme pilote HealthWatch Global",
     body: (name: string, org: string) => `
       <p>Bonjour ${name},</p>
-      <p>Votre accès Pro de 35 jours à <strong>HealthWatch Global</strong> est maintenant actif pour <strong>${org}</strong>.</p>
+      <p>Votre accès Pro de 14 jours à <strong>HealthWatch Global</strong> est maintenant actif pour <strong>${org}</strong>.</p>
       <p>Cliquez sur le bouton ci-dessous pour configurer votre compte et vous connecter — sans mot de passe, ce lien est valable 1 heure :</p>
     `,
     cta: "Accéder à la plateforme →",
@@ -96,7 +96,7 @@ export async function POST(req: NextRequest) {
     userId = created.user.id;
   }
 
-  // 2. Set Pro plan for 35 days
+  // 2. Set Pro plan for 14 days
   // This route's own email copy (PILOT_EMAIL above) always brands the invite
   // as "pilot access" — every invite sent through here is conceptually a
   // pilot, yet the profile never recorded is_pilot/pilot_organization. That
@@ -104,7 +104,7 @@ export async function POST(req: NextRequest) {
   // self-serve framing in lib/trial-ending-email.ts / lib/trial-value-nudge-
   // email.ts instead of the institutional Team-plan framing both already
   // branch on via is_pilot.
-  const trialEnd = new Date(Date.now() + 35 * 86_400_000).toISOString();
+  const trialEnd = new Date(Date.now() + 14 * 86_400_000).toISOString();
   const { error: profileErr } = await admin.from("profiles").upsert({
     id:                 userId,
     email,

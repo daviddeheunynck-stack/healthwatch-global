@@ -150,8 +150,8 @@ export async function POST(req: NextRequest) {
     const trialDaysRemaining = dbTrialEndsAt
       ? Math.min(7, Math.max(0, Math.ceil((new Date(dbTrialEndsAt).getTime() - Date.now()) / 86_400_000)))
       : 7; // no DB trial → first-time user: give the standard 7-day trial
-    // Cap at 7: pilot users have a 35-day DB trial; without the cap they would
-    // inherit the full remaining pilot duration as a Stripe trial (up to 34 days).
+    // Cap at 7: pilot users have a 14-day DB trial; without the cap they would
+    // inherit the full remaining pilot duration as a Stripe trial (up to 13 days).
     if (trialDaysRemaining > 0) {
       params.set("subscription_data[trial_period_days]", String(trialDaysRemaining));
       params.set("subscription_data[trial_settings][end_behavior][missing_payment_method]", "cancel");

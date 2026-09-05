@@ -492,7 +492,7 @@ export default async function AboutPage({
             {locale === "fr" ? "Vous représentez une organisation ?" : locale === "es" ? "¿Representa una organización?" : locale === "ar" ? "هل تمثل مؤسسة؟" : locale === "id" ? "Mewakili sebuah organisasi?" : "Representing an organization?"}
           </p>
           <p className="text-gray-400 text-xs mt-0.5">
-            {locale === "fr" ? "Programme pilote : 5 accès Pro gratuits, 35 jours, pour agences de santé internationales, ONG et ministères." : locale === "es" ? "Programa piloto: 5 accesos Pro gratis, 35 días, para agencias internacionales de salud, ONG y ministerios." : locale === "ar" ? "البرنامج التجريبي: 5 مقاعد Pro مجانية لمدة 35 يوماً لوكالات الصحة الدولية والمنظمات غير الحكومية والوزارات." : locale === "id" ? "Program pilot: 5 akses Pro gratis, 35 hari, untuk lembaga kesehatan internasional, LSM, dan kementerian." : "Pilot program: 5 free Pro seats, 35 days, for international health agencies, NGOs and ministries."}
+            {locale === "fr" ? "Programme pilote : 5 accès Pro gratuits, 14 jours, pour agences de santé internationales, ONG et ministères." : locale === "es" ? "Programa piloto: 5 accesos Pro gratis, 14 días, para agencias internacionales de salud, ONG y ministerios." : locale === "ar" ? "البرنامج التجريبي: 5 مقاعد Pro مجانية لمدة 14 يوماً لوكالات الصحة الدولية والمنظمات غير الحكومية والوزارات." : locale === "id" ? "Program pilot: 5 akses Pro gratis, 14 hari, untuk lembaga kesehatan internasional, LSM, dan kementerian." : "Pilot program: 5 free Pro seats, 14 days, for international health agencies, NGOs and ministries."}
           </p>
         </div>
         <Link

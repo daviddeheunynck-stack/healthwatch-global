@@ -89,7 +89,8 @@ const GMAIL_TYPO_KEEP: Record<string, string> = {
 // Le mot « essai » recouvre deux objets distincts, et c'est la vraie source de
 // la confusion : (1) l'acces Pro offert, pose par activateTrial() a
 // l'inscription (7 jours pour un essai self-serve standard depuis le
-// 2026-09-05, ex-14 ; 35 jours pour le programme pilote), sans aucun objet
+// 2026-09-05, ex-14 ; 14 jours pour le programme pilote depuis le
+// 2026-09-06, ex-35), sans aucun objet
 // Stripe, donc sans carte possible ; (2) l'abonnement souscrit depuis
 // /pricing, avec carte, non debite avant la fin de l'essai. Ces libelles ne
 // promettent plus que le premier.
