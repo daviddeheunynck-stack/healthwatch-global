@@ -88,6 +88,13 @@ export interface Outbreak {
   ihr_event_id:  string | null; // WHO IHR event reference (Article 6/7)
   verification_status: string; // suspected | under_investigation | confirmed | closed
   response_phase:      string; // monitoring | investigating | active_response | contained
+  // Derived, request-scoped flag set by app/[locale]/(dashboard)/page.tsx for
+  // free-plan accounts only — never persisted, never present on rows fetched
+  // any other way. True for the one "showcase" disease per continent whose
+  // real cases/deaths/CFR stay unlocked as a free sample; every other row is
+  // magnitude-bucketed before it reaches a client component. See
+  // `magnitudeBucket`/`featuredDiseaseByRegion` in that file.
+  is_free_featured?: boolean;
 }
 
 // The outbreak dataset is identical for every visitor (no user-specific data),

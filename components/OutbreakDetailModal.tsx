@@ -718,9 +718,9 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
             <Users className="w-4 h-4 text-blue-400 mx-auto" />
             <p className="text-xs text-gray-500">{c.cases}</p>
             <p className="text-lg font-bold text-white">
-              {isPaid
+              {(isPaid || outbreak.is_free_featured)
                 ? (hasData ? outbreak.cases.toLocaleString(numLocale) : <span className="text-gray-600 text-sm italic">{c.noData}</span>)
-                : <span className="blur-sm select-none cursor-pointer" onClick={() => openModal("cases")}>{outbreak.cases.toLocaleString(numLocale)}</span>
+                : <span className="blur-sm select-none cursor-pointer" onClick={() => openModal("cases")}>{outbreak.cases.toLocaleString(numLocale).replace(/\d/g, "•")}</span>
               }
             </p>
             {isPaid && trend && trend.direction !== "unknown" && (
@@ -738,12 +738,12 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
             <Skull className="w-4 h-4 text-red-400 mx-auto" />
             <p className="text-xs text-gray-500">{c.deaths}</p>
             <p className="text-lg font-bold text-red-400">
-              {isPaid
+              {(isPaid || outbreak.is_free_featured)
                 ? outbreak.deaths !== null
                   ? outbreak.deaths.toLocaleString(numLocale)
                   : <span className="text-gray-500 text-sm" title="Non rapporté dans cette source">—</span>
                 : outbreak.deaths !== null
-                  ? <span className="blur-sm select-none cursor-pointer" onClick={() => openModal("cases")}>{outbreak.deaths.toLocaleString(numLocale)}</span>
+                  ? <span className="blur-sm select-none cursor-pointer" onClick={() => openModal("cases")}>{outbreak.deaths.toLocaleString(numLocale).replace(/\d/g, "•")}</span>
                   : <span className="text-gray-600 text-sm">—</span>
               }
             </p>
@@ -757,10 +757,10 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
               cfr && parseFloat(cfr) > 10 ? "text-red-400" :
               cfr && parseFloat(cfr) > 3  ? "text-amber-400" : "text-gray-300"
             }`}>
-              {isPaid
+              {(isPaid || outbreak.is_free_featured)
                 ? (cfr ? `${cfr}%` : <span className="text-gray-600 text-sm italic">{c.noData}</span>)
                 : cfr
-                  ? <span className="blur-sm select-none cursor-pointer" onClick={() => openModal("cases")}>{cfr}%</span>
+                  ? <span className="blur-sm select-none cursor-pointer" onClick={() => openModal("cases")}>{cfr.replace(/\d/g, "•")}%</span>
                   : <span className="text-gray-600 text-sm italic">{c.noData}</span>
               }
             </p>

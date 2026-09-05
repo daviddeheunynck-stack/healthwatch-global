@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import Link from "next/link";
 import { Activity, Globe, AlertTriangle } from "lucide-react";
 import { getOutbreaks, getStats, getLastSync, getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
+import type { Outbreak } from "@/lib/outbreaks";
 import { ISO_REGION } from "@/lib/geo-data";
 import { getOutbreakTrendsBulkCached } from "@/lib/outbreak-trend";
 import { createClient } from "@/lib/supabase-server";
@@ -104,6 +105,42 @@ const OG_LOCALE: Record<string, string> = {
 // the same fallback i18n.ts already does for next-intl's own getLocale().
 function resolveLocale(raw: string): string {
   return (LOCALES as readonly string[]).includes(raw) ? raw : "en";
+}
+
+// One free "showcase" disease per continent — real cases/deaths/CFR stay
+// unlocked for it (see `is_free_featured` on Outbreak), everything else on
+// the free plan is magnitude-bucketed. Picks the disease that best justifies
+// showing it off: a live PHEIC beats plain high risk beats raw case volume,
+// each tier only used to break ties in the tier above it.
+const RISK_WEIGHT: Record<string, number> = { high: 2, medium: 1, low: 0 };
+
+function pickFeaturedDiseases(active: Outbreak[]): Map<string, string> {
+  const byRegion = new Map<string, Map<string, { cases: number; pheic: boolean; risk: number }>>();
+  for (const o of active) {
+    const diseaseKey = o.disease_en || o.disease;
+    const diseases = byRegion.get(o.region) ?? new Map();
+    const agg = diseases.get(diseaseKey) ?? { cases: 0, pheic: false, risk: 0 };
+    agg.cases += o.cases;
+    agg.pheic = agg.pheic || o.is_pheic;
+    agg.risk = Math.max(agg.risk, RISK_WEIGHT[o.risk_level] ?? 0);
+    diseases.set(diseaseKey, agg);
+    byRegion.set(o.region, diseases);
+  }
+  const featured = new Map<string, string>();
+  for (const [region, diseases] of byRegion) {
+    let bestKey: string | null = null;
+    let best: { cases: number; pheic: boolean; risk: number } | null = null;
+    for (const [key, agg] of diseases) {
+      const better =
+        !best ||
+        (agg.pheic && !best.pheic) ||
+        (agg.pheic === best.pheic && agg.risk > best.risk) ||
+        (agg.pheic === best.pheic && agg.risk === best.risk && agg.cases > best.cases);
+      if (better) { best = agg; bestKey = key; }
+    }
+    if (bestKey) featured.set(region, bestKey);
+  }
+  return featured;
 }
 
 export async function generateMetadata({
@@ -294,15 +331,24 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
   // Round to an order of magnitude before it ever reaches a client
   // component: keeps every `cases > 0` / sort / trend-badge check that
   // already relies on this field working (unlike zeroing it out), while
-  // the exact figure never leaves the server for a free account.
+  // the exact figure never leaves the server for a free account — except
+  // for one showcase disease per continent (`featuredDiseaseByRegion`),
+  // which stays real end to end so the free plan gives a genuine, if
+  // narrow, taste of the data rather than a wall of bullets everywhere.
   const magnitudeBucket = (n: number) => (n > 0 ? Math.pow(10, Math.floor(Math.log10(n))) : 0);
+  const featuredDiseaseByRegion = isPaid ? new Map<string, string>() : pickFeaturedDiseases(activeOutbreaks);
+  const isFreeFeatured = (o: Outbreak) => featuredDiseaseByRegion.get(o.region) === (o.disease_en || o.disease);
   const mapTableOutbreaks = isPaid
     ? outbreaks
-    : outbreaks.map((o) => ({
-        ...o,
-        cases: magnitudeBucket(o.cases),
-        deaths: o.deaths === null ? null : magnitudeBucket(o.deaths),
-      }));
+    : outbreaks.map((o) =>
+        isFreeFeatured(o)
+          ? { ...o, is_free_featured: true }
+          : {
+              ...o,
+              cases: magnitudeBucket(o.cases),
+              deaths: o.deaths === null ? null : magnitudeBucket(o.deaths),
+            }
+      );
 
   // 7-day directional signal (▲/▼/→) — infrastructure has been live since 2026-06-05;
   // getOutbreakTrend returns "unknown" until outbreak_snapshots holds enough history,
@@ -449,6 +495,7 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
         const d24h        = topTrend?.delta24h ?? null;
         const numLocale   = locale === "ar" ? "ar-SA" : locale;
         const isRtl = locale === "ar";
+        const topUnlocked = isPaid || isFreeFeatured(top);
         return (
           <div
             dir={isRtl ? "rtl" : undefined}
@@ -470,7 +517,7 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
             {top.cases > 0 && (
               <>
                 <span className="text-gray-600">·</span>
-                {isPaid ? (
+                {topUnlocked ? (
                   <span className="text-gray-300">{top.cases.toLocaleString(numLocale)} {snap.cases}</span>
                 ) : (
                   <Link href={`/${locale}/pricing`} className="cursor-pointer">
@@ -482,7 +529,7 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
             {cfr && (
               <>
                 <span className="text-gray-600">·</span>
-                {isPaid ? (
+                {topUnlocked ? (
                   <span className="text-red-400 font-medium">{cfr}% {snap.cfr}</span>
                 ) : (
                   <Link href={`/${locale}/pricing`} className="cursor-pointer">

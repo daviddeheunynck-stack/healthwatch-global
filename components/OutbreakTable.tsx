@@ -1183,6 +1183,14 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                           {{ fr: "NOUVEAU", en: "NEW", es: "NUEVO", ar: "جديد", id: "BARU" }[locale] ?? "NEW"}
                         </span>
                       )}
+                      {!isPaid && outbreak.is_free_featured && (
+                        <span
+                          title={{ fr: "Chiffres réels débloqués — un foyer vedette par continent", en: "Real figures unlocked — one showcase outbreak per continent", es: "Cifras reales desbloqueadas — un brote destacado por continente", ar: "أرقام حقيقية غير مقيّدة — بؤرة بارزة واحدة لكل قارة", id: "Angka asli terbuka — satu wabah unggulan per benua" }[locale] ?? "Real figures unlocked — one showcase outbreak per continent"}
+                          className="inline-flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-900/50 border border-emerald-700/50 text-emerald-300 shrink-0 cursor-help"
+                        >
+                          {{ fr: "APERÇU GRATUIT", en: "FREE SAMPLE", es: "MUESTRA GRATIS", ar: "عرض مجاني", id: "CONTOH GRATIS" }[locale] ?? "FREE SAMPLE"}
+                        </span>
+                      )}
                       {outbreak.is_pheic && (
                         <span title="PHEIC — Public Health Emergency of International Concern" className="inline-flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded bg-purple-900/50 border border-purple-700/50 text-purple-300 shrink-0 cursor-help">
                           🚨 PHEIC
@@ -1333,7 +1341,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                   </td>
                   <td className="px-4 py-3 text-gray-300">
                     <div className="flex items-center gap-1.5">
-                      {isPaid ? (
+                      {(isPaid || outbreak.is_free_featured) ? (
                         outbreak.cases > 0 ? outbreak.cases.toLocaleString(numLocale) : <span className="text-gray-600 italic text-xs">{l.noData}</span>
                       ) : (
                         <span className="inline-flex items-center gap-1 cursor-pointer" onClick={() => openModal("cases")} title="Pro — click to unlock">
@@ -1360,7 +1368,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                     </div>
                   </td>
                   <td className="px-4 py-3 text-red-400 hidden sm:table-cell">
-                    {isPaid ? (
+                    {(isPaid || outbreak.is_free_featured) ? (
                       outbreak.deaths !== null
                         ? outbreak.deaths.toLocaleString(numLocale)
                         : <span className="text-gray-500 text-sm" title="Non rapporté dans cette source">—</span>
@@ -1373,7 +1381,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                   </td>
                   {/* CFR */}
                   <td className="px-4 py-3 hidden sm:table-cell">
-                    {isPaid ? (
+                    {(isPaid || outbreak.is_free_featured) ? (
                       outbreak.cases > 0 && outbreak.deaths !== null ? (
                         <span className={`text-sm font-medium ${
                           (outbreak.deaths / outbreak.cases) > 0.1 ? "text-red-400" :
