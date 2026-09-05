@@ -53,7 +53,15 @@ export async function POST(req: Request) {
   const outbreak_id = typeof body.outbreak_id === "string" ? body.outbreak_id.trim() : "";
   const threshold_cases = typeof body.threshold_cases === "number" && body.threshold_cases > 0
     ? Math.round(body.threshold_cases) : 0;
-  const email = typeof body.email === "string" ? body.email.trim().slice(0, 320) : user.email ?? "";
+  // The UI (OutbreakDetailModal) always sends `email: ""` — an explicit empty
+  // string, not an absent field — so `typeof === "string"` alone always won
+  // this ternary and the `user.email` fallback below could never actually
+  // run. Every tripwire ever created from the "Activer" button 400'd here
+  // silently (the button's catch swallows the error with no user-visible
+  // feedback), so the feature never worked end to end. Found 2026-09-05
+  // while verifying the sibling predictive-alerts route, which copied the
+  // same bug — fixed there too.
+  const email = typeof body.email === "string" && body.email.trim() ? body.email.trim().slice(0, 320) : user.email ?? "";
 
   if (!outbreak_id || threshold_cases <= 0 || !email)
     return NextResponse.json({ error: "Invalid parameters" }, { status: 400 });

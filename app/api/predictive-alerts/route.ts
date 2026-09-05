@@ -53,7 +53,10 @@ export async function POST(req: Request) {
   const outbreak_id = typeof body.outbreak_id === "string" ? body.outbreak_id.trim() : "";
   const doubling_within_days = typeof body.doubling_within_days === "number" && body.doubling_within_days > 0
     ? Math.round(body.doubling_within_days) : 0;
-  const email = typeof body.email === "string" ? body.email.trim().slice(0, 320) : user.email ?? "";
+  // Empty string ("" from the UI's default request body) must fall through
+  // to user.email, not be treated as a provided value — see the tripwires
+  // route fix (2026-09-05) for the incident this pattern caused there.
+  const email = typeof body.email === "string" && body.email.trim() ? body.email.trim().slice(0, 320) : user.email ?? "";
 
   if (!outbreak_id || doubling_within_days <= 0 || !email)
     return NextResponse.json({ error: "Invalid parameters" }, { status: 400 });

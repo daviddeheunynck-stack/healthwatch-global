@@ -44,6 +44,12 @@ export async function GET(request: NextRequest) {
   const outbreakId = searchParams.get("outbreak_id");
   const format = searchParams.get("format");
   if (!outbreakId) return new NextResponse("Missing outbreak_id", { status: 400 });
+  // outbreak_snapshots.outbreak_id is a uuid column — anything else fails the
+  // query at the Postgres type-cast layer and surfaces as a bare 500. Never
+  // reachable from the app's own UI (always a real outbreak.id), but a
+  // hand-edited URL shouldn't get an opaque server error for an invalid id.
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(outbreakId))
+    return new NextResponse("Invalid outbreak_id", { status: 400 });
 
   // outbreak_snapshots has RLS with no public policy — needs service role,
   // same as /api/outbreak-history.

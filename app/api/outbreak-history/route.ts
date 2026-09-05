@@ -24,6 +24,14 @@ export async function GET(req: Request) {
   const countryEn  = searchParams.get("country_en");
 
   if (!outbreakId) return NextResponse.json({ error: "Missing outbreak_id" }, { status: 400 });
+  // outbreak_snapshots.outbreak_id is a uuid column — anything else fails the
+  // query at the Postgres type-cast layer and surfaced as a bare 500. Found
+  // 2026-09-05 while verifying the new /api/export-history (same table, same
+  // gap) — never reachable from the app's own UI (always a real outbreak.id
+  // clicked from the table/map), but a hand-edited URL shouldn't get an
+  // opaque server error for an invalid id.
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(outbreakId))
+    return NextResponse.json({ error: "Invalid outbreak_id" }, { status: 400 });
 
   // outbreak_snapshots has RLS with no public policy — needs service role
   const service = createService(
