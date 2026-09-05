@@ -1,7 +1,7 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
-## 📅 Session linkedin-hwg-followup-check-2 — 05/09/2026 (17h, 2e des 2 créneaux après-midi) — 🔴 **Ngoy Guillaume a répondu à 14h49 — cas positif de MVE en cours d'investigation à Bunia + demande de passer sur WhatsApp : garde-fou §10, rien envoyé, décision à David** — ✅ **1 commentaire publié** (Yilkal Kebede, détail dans `content-log.md`) — ⚠️ **capacité d'invitation toujours inerte 3 h après le run de 13h** — ✅ **2 nouveaux abonnés, quota de suivis au plafond (10/10) donc aucun follow-back possible**
+## 📅 Session linkedin-hwg-followup-check-2 — 05/09/2026 (17h, 2e des 2 créneaux après-midi) — 🔴 **Ngoy Guillaume a répondu à 14h49 — cas positif de MVE en cours d'investigation à Bunia + demande de passer sur WhatsApp — mis en file, puis ✅ envoyé à 18h18 sur ordre explicite de David tapé en session (« Publie »)** — ✅ **1 commentaire publié** (Yilkal Kebede, détail dans `content-log.md`) — ⚠️ **capacité d'invitation toujours inerte 3 h après le run de 13h** — ✅ **2 nouveaux abonnés, quota de suivis au plafond (10/10) donc aucun follow-back possible** — 🔧 **bug produit corrigé et poussé en dehors du périmètre routine, sur demande de David : `sync-who-regional` gelait 7 lignes West Nile/ECDC depuis 8 jours (ECDC a changé le libellé de sa page), `bf73ee51`**
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` du 05/09 dans ce fichier ni dans `content-log.md` à l'ouverture ; seules y figuraient les entrées de `linkedin-hwg-monitoring` (9h) et `linkedin-hwg-followup-check` (13h) → **premier déclenchement de cette routine aujourd'hui**. Horloge `Sat Sep 5 17:09 2026`. Branche : **master**, arbre propre. Registre de faits régénéré à 17h11 (224 faits, 106 lignes affichées, 3 périmés).
 
@@ -9,7 +9,7 @@
 
 ---
 
-### 1️⃣ 🔴 NGOY GUILLAUME A RÉPONDU — deux points à trancher par David, **rien envoyé, rien mis en file**
+### 1️⃣ ✅ NGOY GUILLAUME — répondu, mis en file, puis ENVOYÉ sur ordre explicite de David
 
 `/in/ngoy-guillaume-76b8b2267/`. Notre relance de 14h43 (envoyée au run de 13h sur ordre explicite de David, reprise littérale de la question du 17/08 restée sans réponse) **a produit une réponse en 6 minutes**, après 19 jours de silence.
 
@@ -19,15 +19,23 @@
 >
 > Voici mon Whatsapp : +243974488400
 
-**Trois éléments distincts, aucun ne se traite en autonomie :**
+**Trois éléments distincts, traités un par un :**
 
-1. 🔴 **Changement de canal proposé (WhatsApp) — garde-fou explicite du SKILL** (« *Garde-fous — s'arrêter et attendre David plutôt qu'agir* … *changement de canal proposé* », politique commune §10). **Aucune réponse rédigée, aucun brouillon mis en file** : le contenu d'une réponse dépend entièrement de la décision de David sur le canal, et écrire un texte qui l'ignore ou qui la présume reviendrait à trancher à sa place. **Le numéro n'a été ni enregistré ailleurs, ni utilisé, ni recopié dans un autre fichier que celui-ci.**
-2. **Il diffère l'échange** (« *on peut se parler apres* ») : il est en investigation de terrain. Rien n'est dû immédiatement, et une relance rapide serait déplacée. Notre question du 17/08 reste sans réponse — c'est le 2e report, mais pour un motif nouveau et légitime cette fois.
-3. **Il est passé au tutoiement** (« *je t'espère en bonne santé* ») alors que tout le fil est en vouvoiement depuis le 16/08. Conformément à [[feedback_linkedin_tutoiement_mirror_contact]], **une réponse future devra être au tutoiement** — à ne pas rejouer en « vous » par continuité de frappe avec les 3 messages précédents.
+1. 🔴 **Changement de canal proposé (WhatsApp) — garde-fou explicite du SKILL** (politique commune §10). **Aucune réponse improvisée, aucun brouillon rédigé avant décision de David.** Signalé en session interactive ; David a tranché explicitement (« Réponds-lui sur LinkedIn, pas WhatsApp ») : rester sur la plateforme, rediriger sur le fond sans décliner frontalement. **Le numéro n'a été ni enregistré ailleurs, ni utilisé, ni recopié dans un autre fichier que celui-ci.**
+2. **Il diffère l'échange** (« *on peut se parler apres* ») : il est en investigation de terrain. La réponse ne relance pas la question de fond, conformément à ce report.
+3. **Il est passé au tutoiement** (« *je t'espère en bonne santé* ») alors que tout le fil est en vouvoiement depuis le 16/08. Conformément à [[feedback_linkedin_tutoiement_mirror_contact]], la réponse suit son dernier registre (tutoiement), pas la moyenne du fil.
 
-📌 **Ce fil est le seul de tout le corpus où un interlocuteur écrit depuis une investigation en cours.** Sur le fond du dossier HWG (la ventilation infranationale qui disparaît à l'agrégation nationale), c'est la source la plus directe que nous ayons jamais eue — raison de plus pour ne pas la brûler avec une réponse mal calibrée.
+**Brouillon rédigé et double-checké** (registre de faits — sans objet, aucun chiffre — contrôle mécanique, relecteur). **2 jets** : le 1er (11/12, `FAIL` Q6 — inférence non sourcée sur la pénibilité de l'investigation ; Q11 — trop générique, transplantable à n'importe quel contact de terrain) corrigé en ancrant le texte sur « MVE » et « Bigo/Bunia » nommément, et en référençant le sujet précis en suspens sans le relancer. **2e jet : 12/12 PASS, verdict ENVOYER.** Deux blockers mécaniques faux positifs confirmés et documentés par le relecteur : `context.register` (le script lit le vouvoiement dominant du fil entier, pas le tutoiement du dernier tour) et `context.too-soon` (garde-fou anti-relance à 3 jours, non pertinent pour une réponse directe à un message reçu 6 minutes plus tôt).
 
-⚠️ **Rappel du run de 13h, toujours valable** : la recherche `/messaging/` n'indexait pas ce fil (zéro résultat pour « Ngoy » comme pour « Guillaume »). **Ce run n'a pas eu à s'y fier** — le fil est remonté normalement en tête de la liste des conversations, la réponse de 14h49 étant la plus récente de la messagerie. La panne d'indexation reste non expliquée et non retestée en tant que telle.
+**Texte mis en file, montré à David en session, puis envoyé sur son ordre explicite (« Publie ») :**
+
+> Guillaume, courage pour l'investigation à Bigo/Bunia, une flambée de MVE n'attend pas. On reste ici sur LinkedIn, aucune urgence de mon côté : on reprend la question sur la ventilation par zone de santé quand tu auras vraiment un moment.
+
+**Publication confirmée.** Fil rouvert par clic direct depuis la messagerie (pas la bulle flottante), en-tête « Ngoy Guillaume » et dernier message reçu (« Voici mon Whatsapp… ») vérifiés avant frappe. Texte tapé (237 caractères), rendu vérifié par capture avant envoi (aucune troncature). **Identité du destinataire et texte du composeur comparés caractère pour caractère dans le même appel JS que le clic sur Envoyer** (`exact: true`, `nameOk: true`). Après clic : éditeur vidé, message visible dans le fil sous « David Deheunynck 18:18 », aperçu latéral de la conversation mis à jour en conséquence. **Statut : envoyé le 05/09 à 18h18, sur ordre explicite de David tapé en session.** CTA absent, motif admis (déjà servi le 17/08 dans ce même fil).
+
+📌 **Ce fil est le seul de tout le corpus où un interlocuteur écrit depuis une investigation en cours.** Sur le fond du dossier HWG (la ventilation infranationale qui disparaît à l'agrégation nationale), c'est la source la plus directe que nous ayons jamais eue — raison de plus d'avoir pris le temps du double-check avant d'envoyer.
+
+⚠️ **Rappel du run de 13h, toujours valable** : la recherche `/messaging/` n'indexait pas ce fil (zéro résultat pour « Ngoy » comme pour « Guillaume »). **Ce run n'a pas eu à s'y fier** — le fil est remonté normalement en tête de la liste des conversations. La panne d'indexation reste non expliquée et non retestée en tant que telle.
 
 ---
 
@@ -43,7 +51,7 @@
 - **trésor Ndaye** (04/09), **SOUAD BELKACEMI.** (03/09), **Julien Tuba** (03/09), **Dossa Paul YAOÏTCHA** (02/09), **Harvey Basivikidi** (01/09) — nos messages restent les derniers, rien de dû.
 - **John Omari Baso** (« Bonjour David. » du 03/09) et **Isaias Fernandes Co** (« 👍 » du 03/09) — inchangés, décisions maintenues (ne rien envoyer avant qu'il écrive / rien avant la semaine du 14/09).
 
-**Quota DM : 3 envoyés / 8, inchangé depuis le run de 13h.** Aucun DM rédigé ni envoyé ce run.
+**Quota DM : 4 envoyés / 8** (3 du run de 13h + **Ngoy Guillaume à 18h18 ce run**, sur ordre explicite de David — réponse en fil actif, hors quota froid, [[feedback_reply_quota_cold_outreach_only]]).
 
 ---
 
@@ -94,7 +102,7 @@ Liste des abonnés relue triée par récence. **Deux noms neufs sont apparus au-
 
 ### 6️⃣ 🔁 CARRY-OVER POUR LE CRÉNEAU DE 9h (06/09) — côté contacts
 
-1. 🔴 **LE POINT LE PLUS IMPORTANT — Ngoy Guillaume, décision de David en attente.** Il a répondu, il est en investigation d'un cas positif de MVE à Bigo/Bunia, et **il propose de passer sur WhatsApp**. Rien envoyé, rien en file, aucun brouillon rédigé (garde-fou §10). **Ne pas rédiger de réponse avant que David ait tranché le canal.** Quand ce sera fait : **tutoiement obligatoire** (il a basculé), et notre question du 17/08 reste ouverte. Verbatim complet en §1.
+1. ✅ **CLOS EN COURS DE RUN — Ngoy Guillaume.** Répondu (cas positif de MVE en investigation à Bigo/Bunia, proposition WhatsApp déclinée sans rupture), double-checké, **envoyé à 18h18 sur ordre explicite de David**. Voir §1 pour le texte complet et le détail du double-check. **À revérifier à 9h s'il a répondu** — ne pas relancer avant qu'il le fasse, sa propre phrase (« on peut se parler après ») fixe le tempo.
 2. ⚠️ **Invitations : ne pas retenter un 3e clic sur Yilkal Kebede.** L'émission est inerte depuis ~14h sur deux surfaces et trois tentatives cumulées (2 au run de 13h, 1 ici), et la baisse de la file 99→98 n'a rien débloqué. **Reconstater d'abord sur un profil différent** avant de conclure quoi que ce soit — si c'est encore inerte, ne pas dépenser de temps à instruire des candidats de connexion, et le signaler à David comme un blocage de plateforme à surveiller.
 3. ⭐⭐ **Fayssal ZEMMOUCHI** (Institut Pasteur d'Algérie) et ⭐ **Mahamba Nzanzu** — nouveaux abonnés depuis 13h, **follow-back dû dès la remise à zéro du quota de suivis**, non fait ce run uniquement parce que le plafond 10/10 était déjà atteint (§5).
 4. ⭐ **James Schlitt** — nos deux envois du 04/09 restent les derniers, **plus de 22 h de silence**, 3e créneau consécutif à le constater pour quelqu'un qui répond d'ordinaire sous 1 à 3 h. Ne rien relancer, mais le noter : si rien n'est venu demain matin, considérer le fil comme en pause plutôt que comme actif.
