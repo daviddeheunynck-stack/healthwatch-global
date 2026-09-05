@@ -56,7 +56,7 @@ Le dernier commit du dépôt (`bf9e1b7f`) date de **08h44**, soit **19 minutes a
 
 ---
 
-### 3️⃣ ✅ RÉSEAU — 7 SUIVIS (QUOTA ATTEINT), 0 NOTE DE CONNEXION, 0 INVITATION TRAITÉE
+### 3️⃣ ✅ RÉSEAU — 7 SUIVIS (QUOTA ATTEINT), 1 INVITATION SANS NOTE, 0 INVITATION REÇUE TRAITÉE
 
 **Suivis : 7/7-10, quota atteint** — la recherche a été menée sur **cinq filons de mots-clés distincts** avant d'atteindre le quota, pas après un passage unique. Le facteur limitant n'était pas la barre de pertinence, c'est que **la majorité des profils au bon intitulé sont dormants** : sur les candidats neufs instruits, plusieurs ont été écartés pour absence d'activité récente et d'autres étaient déjà relations de 1er degré (donc déjà suivis).
 
@@ -72,7 +72,7 @@ Le dernier commit du dépôt (`bf9e1b7f`) date de **08h44**, soit **19 minutes a
 
 ⚠️ **Méthode de clic corrigée en cours de run, à retenir.** Le premier suivi (Abdishakur Dek) a été cliqué depuis la **page d'activité**, où **5 boutons « Suivre » coexistent** (l'auteur, les auteurs republiés, la sidebar) : le clic est parti sur `b[0]` sans certitude sur la cible, et il a fallu **rouvrir la page de profil pour vérifier** que c'était bien lui (bouton « Suivre » disparu, mention « Abonné » sur sa carte). **Correction appliquée aux quatre suivants** : cliquer depuis la **page de profil**, et cibler le bouton dont la `section` ancêtre contient à la fois « Activité » et « abonnés » — sélecteur qui isole sans ambiguïté le bouton de suivi du profil visité. Vérification systématique du libellé « Suivi » après chaque clic. **Aucun suivi n'est parti sur une mauvaise cible.**
 
-**Notes de connexion : 0/7, aucune invitation émise.** Le plafond de plateforme constaté le 04/09 (**1 seule invitation personnalisée par mois**, consommée ce jour-là pour Christian BABOKO) n'a **pas été revérifié ce run** : aucun candidat de connexion n'a été retenu, donc aucune modale d'invitation n'a été ouverte, et le SKILL demande de lire ce compteur **dans la modale, avant d'engager la rédaction d'une note** — pas d'ouvrir une modale d'invitation pour la seule curiosité du compteur, puisque le bouton « Se connecter » d'une sidebar envoie sans confirmation. **À reconstater au premier candidat de connexion réel.**
+**Notes de connexion : 1/7 (sans note).** Plafond mensuel **revérifié et toujours à 0** (« Vos messages d'invitation personnalisés gratuits sont épuisés », modale Premium) — inchangé depuis sa consommation le 04/09 pour Christian BABOKO. Conformément à l'autorisation de David du 23/07, invitation envoyée **sans note** à **Keneth Mugume** (`/in/keneth-mugume-32ab88145/`), *Epidemiology | Vaccine Pharmacovigilance | Health Systems Strengthening*, CDC, Kampala, vérifié, 2 relations en commun — même barre de pertinence qu'avec note : contact du jour (commentaire publié en §4bis de `content-log.md`), profil institutionnel solide. **Confirmé** : toast « Invitation envoyée à Keneth Mugume » après clic sur le bouton principal du profil (pas la sidebar). Compte dans le quota de 7/jour.
 
 **Invitations reçues : 2, inchangées** — Zachariah G. Houdari (services financiers) et OLAOLUWA PHILIP (géospatial/climat sans santé publique), relues en direct sur `/mynetwork/invitation-manager/received/`. **Décisions du 31/08 maintenues, aucun élément neuf, non rejugées.**
 
