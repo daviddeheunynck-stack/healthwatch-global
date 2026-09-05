@@ -25,7 +25,12 @@ Sentry.init({
   tracesSampleRate: 0.1,
   enableLogs: true,
   replaysSessionSampleRate: 0.01,
-  replaysOnErrorSampleRate: 1.0,
+  // Replays quota (50/billing period) hit 100% on 2026-09-05, with this rate capturing a
+  // replay for every single erroring session rather than a sample — Sentry drops any
+  // replay past the cap anyway, so this only stops the SDK from spending client-side work
+  // starting recordings that go nowhere until the period resets. Temporary, until the
+  // period's own reset date; David chose lowering this over paying for more budget.
+  replaysOnErrorSampleRate: Date.now() < Date.parse("2026-09-08T00:00:00Z") ? 0.2 : 1.0,
   sendDefaultPii: false,
   // "Object Not Found Matching Id:N, MethodName:update, ParamCount:4" — reported
   // 15/08/2026 on the public outbreak page. Not our code: this exact signature
