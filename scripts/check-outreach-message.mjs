@@ -190,7 +190,7 @@ for (const entry of [...lex.banned, ...lex.confusables]) {
 // ── 3. Véracité : tout chiffre doit venir du registre ou du fil ──────────────
 // Les nombres du registre produit (prix, durée d'essai, couverture, copie
 // publique du site) sont citables au même titre que les chiffres de flambée.
-// Sans ça, « 29 € » et « 14 jours » seraient bloqués comme non sourcés.
+// Sans ça, « 29 € » et « 7 jours » seraient bloqués comme non sourcés.
 const claimNumbers = new Map();
 for (const n of claimsDoc?.numbers ?? []) {
   const key = String(n.value);

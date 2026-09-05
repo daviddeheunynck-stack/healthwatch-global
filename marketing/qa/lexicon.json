@@ -103,7 +103,8 @@
       "Agrège les bulletins publiés par WHO (DON), ECDC, PAHO, Africa CDC, WHO AFRO, WHO EMRO.",
       "Couvre notamment Ebola, Marburg, choléra, mpox, MERS, hantavirus, dengue, chikungunya, West Nile, diphtérie, poliovirus (cVDPV).",
       "Badge chaque ligne selon la source (DON, source officielle, presse, non vérifiée) via lib/source-trust.ts.",
-      "Essai Pro de deux semaines sans carte bancaire.",
+      "Essai Pro de 7 jours sans carte bancaire.",
+      "Programme pilote institutionnel : accès Pro gratuit de 14 jours pour jusqu'à 5 membres.",
       "Projet porté par David Deheunynck, un seul développeur, pas une organisation.",
       "Site multilingue (i18n), alertes email et push."
     ],

@@ -71,8 +71,8 @@
   "numbers": [
     {
       "_example": true,
-      "value": 14,
-      "label": "durée de l'essai Pro en jours",
+      "value": 7,
+      "label": "durée de l'essai Pro self-serve en jours",
       "provenance": "lib/activate-trial.ts"
     }
   ]

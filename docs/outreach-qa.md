@@ -131,9 +131,11 @@ témoignage sur son propre produit. Et tout ce qui est daté ou temporaire porte
 un `expiresOn`, sans quoi la routine annoncerait en octobre une nouveauté
 d'août ; le build signale et retire ce qui a expiré.
 
-Concrètement, dans un brouillon : « 29 € » et « 14 jours » passent, sourcés sur
-`lib/pricing.ts` et sur la FAQ du site. « 340 clients actifs » est bloqué deux
-fois — chiffre non sourcé, et chiffre de traction interdit en sortant.
+Concrètement, dans un brouillon : « 29 € » et « 7 jours » passent, sourcés sur
+`lib/pricing.ts` et sur la FAQ du site (essai self-serve ; le pilote
+institutionnel, lui, est à 14 jours depuis le 2026-09-06 — ne pas confondre
+les deux durées). « 340 clients actifs » est bloqué deux fois — chiffre non
+sourcé, et chiffre de traction interdit en sortant.
 
 **Ce que le contrôle mécanique ne fait pas ici** : juger une affirmation en
 langue naturelle. Il vérifie l'origine des nombres et remonte chaque phrase
