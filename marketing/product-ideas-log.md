@@ -3780,3 +3780,36 @@ correctement affichée.
 compte la table, plus 1 doublon d'affichage, 1 clarification de texte, 1
 changement concurrent vérifié. Aucune écriture de données chiffrées en dehors
 des 3 premières.
+
+### Suite du même soir — le cron aurait bien réécrasé les corrections, corrigé à la source
+
+David a demandé de vérifier que le cron ne réécrase pas les 114 corrections.
+**Réponse : il l'aurait fait.** `sync-who-regional/route.ts` (~ligne 1677)
+annule les 4 champs de traduction dès qu'une ligne reçoit un nouveau texte
+anglais (nouveaux cas/décès), et la passe suivante de `sync-outbreaks` les
+retraduit via `translateDescription()` — MyMemory, un service de **mémoire**
+de traduction (pas un LLM) : la même phrase anglaise produit
+déterministement la même sortie. Les 114 lignes corrigées à la main se
+seraient donc recassées à la prochaine mise à jour de leurs chiffres.
+
+**Corrigé à la source** (`b3dad6bf`) : `sanitizeFr()`/`sanitizeId()` dans
+`lib/translate.ts` lui-même — le seul point d'appel partagé par tous les
+crons qui écrivent une description — plutôt qu'en aval sur chaque ligne.
+Portée volontairement étroite, construite sur le tri exhaustif mené ce soir
+sur les 296 lignes (mêmes garde-fous que pour les corrections manuelles :
+« A » seulement suivi d'un des 5 verbes confirmés, jamais un blanket qui
+aurait cassé « grippe A(H5N1) » ou « Hépatite A »).
+
+**Piège trouvé en écrivant CE correctif, pas en prod** : le premier jet du
+regex FR gardait un `\b` final après l'alternance de verbes — qui échoue
+silencieusement quand le verbe se termine par une lettre accentuée (même
+piège que celui déjà rencontré deux fois plus tôt ce soir dans des scripts
+jetables). Conséquence : « A signalé »/« A estimé »/« A notifié »/« A été »
+ne matchaient jamais, seul « A reçu » passait. Attrapé par 13 tests unitaires
+avant tout commit.
+
+**Ce qui n'est pas couvert** : le cas plus rare où MyMemory traduit « WHO »
+par l'anglais interrogatif « who » plutôt que « OMS » (rendu « QUI »/« التي »
+— un mot faux, pas juste une casse fautive) reste un correctif manuel au cas
+par cas ; un remplacement générique serait dangereux sur les usages
+légitimes de « qui » en français.
