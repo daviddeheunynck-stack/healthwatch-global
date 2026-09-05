@@ -4599,3 +4599,26 @@ Contrôle fait sur le **contenu réellement stocké** (`list_drafts` / `get_draf
 **⚠️ Aucun brouillon créé.** Le plafond OMS de 8 bureaux pays/lot est déjà à 8/8 pour le lot du 05/09 (7 le matin + Serbie ajoutée en cours de journée). Les 22 bureaux pays + les 4 boîtes Pacifique du complément précédent (WPRO/SEARO) forment désormais un vivier de **26 bureaux pays OMS vérifiés, jamais utilisés**, immédiatement mobilisable sur les prochains lots (au plafond de 8/lot, soit plus de 3 lots complets rien qu'avec ce vivier). Les 3 unités techniques (Venise, Barcelone, Athènes Quality of Care) s'y ajoutent séparément, hors plafond bureaux pays.
 
 **Compteur du vivier OMS mis à jour** : 26 bureaux pays (22 EURO + 4 WPRO/Pacifique) + 3 unités techniques EURO, à ajouter aux 6 boîtes EURO déjà comptées avant ce run (qui font partie des 22). **Le facteur limitant du vivier institutionnel (446 domaines, épuisement signalé le 04-05/09) ne s'applique plus au segment OMS** : ce segment est désormais le mieux pourvu de tous, à l'inverse du diagnostic du 04/09. Le vivier réellement tendu reste celui des organisations hors OMS (universités, ONG, agences).
+
+---
+
+### Complément du 2026-09-05 (suite) — 4 boîtes du vivier OMS consommées à l'avance pour le lot du 06/09
+
+À la demande explicite de David : préparer 4 contacts du vivier OMS trouvé aujourd'hui, comptant pour le lot du **06/09**, pas celui du 05/09 (déjà à 8/8 sur le plafond bureaux pays).
+
+**Choix : les 4 boîtes Pacifique/WPRO plutôt qu'EURO**, pour diversifier — le lot du 05/09 était déjà chargé EURO (Tadjikistan, Turkménistan, Türkiye, Serbie) + SEARO (Bangladesh, Bhoutan, Myanmar, Inde). Le vivier EURO (22 bureaux pays) reste donc intact pour les lots suivants.
+
+| Institution | Pays/Région couverts | Email | Brouillon Gmail |
+|---|---|---|---|
+| OMS — bureau Japon/Australie | Japon, Australie / WPRO | `wprocsu@who.int` | oui — `r-2009335702603121853` |
+| OMS — bureau Fidji (Pacifique Sud) | Fidji, Nauru, Kiribati, Tuvalu / WPRO | `wpfjiwr@who.int` | oui — `r532281208907734453` |
+| OMS — bureau de liaison Tonga | Tonga / WPRO | `wptonclo@who.int` | oui — `r5848994519071741262` |
+| OMS — bureau Micronésie | États fédérés de Micronésie, Îles Marshall, Palaos / WPRO | `wpfsmclo@who.int` | oui — `r-2698619866756822394` |
+
+**Conformité mécanique vérifiée** (`list_drafts` en vue complète, les 4 relus) : aucun `htmlBody`, aucune balise `<a>`, aucun `.` littéral, signature « Find us at healthwatch. », objets sous 60 caractères, clôture par question explicite.
+
+**Ces 4 comptent pour le lot du 06/09, pas celui du 05/09.** Le run automatisé de demain devra lire cette entrée : ces 4 boîtes sont déjà envoyées en brouillon, donc à exclure de sa propre recherche (l'anti-doublon habituel — grep par domaine/organisation — les détectera naturellement puisqu'elles figurent désormais au tableau ci-dessus), et son compteur « bureaux pays OMS du lot » doit partir de 4/8 déjà consommés plutôt que de 0/8, avant même sa propre recherche du jour.
+
+**Vivier OMS restant après ce prélèvement** : 22 bureaux pays EURO (Ukraine, Albanie, Macédoine du Nord, Bosnie-Herzégovine, Monténégro, Biélorussie, Bulgarie, Croatie, Chypre, Tchéquie, Estonie, Grèce, Hongrie, Lettonie, Lituanie, Moldavie, Pologne, Roumanie, Russie, Slovaquie, Slovénie) + 3 unités techniques EURO (Venise, Barcelone, Athènes Quality of Care) — inchangés, non touchés par ce prélèvement.
+
+**Profondeur de file après ce complément** : les brouillons du jour totalisent désormais 15 (matin) + 4 (PAHO) + 4 (Pacifique, pour demain) = 23, plus les 10 relances de l'autre routine = **33 brouillons en attente**, toujours sous le seuil de ~40, mais à surveiller — c'est le chiffre le plus haut depuis l'instauration du frein de file.
