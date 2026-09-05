@@ -3588,3 +3588,28 @@ intervention sur l'arbre.
 **Statut : 2 idées PROPOSÉES ET CONSTRUITES.** Aucune idée écartée par un
 garde-fou ce soir ; le seul point volontairement non tranché est l'arbitrage
 juridique du point 1 ci-dessus.
+
+### Suite du même soir (04/09, poursuite de la revue systématique) — session concurrente sur Diphtérie/Nigéria, vérifié sans incident
+
+En poursuivant la revue (5e-30e lignes de la worklist), la ligne Diphtérie/
+Nigéria a changé de valeurs entre deux lectures — chiffres différents, source
+passée d'une citation presse (Leadership) à une URL `ncdc.gov.ng/…/wers/….pdf`.
+Vérification immédiate : `git log` montre que c'est une **session concurrente**
+(`morning-don-check`, commit `23e01bf6`) qui a fait ce changement, sur ordre
+explicite de David en session interactive — pas une régression ni un cron
+fantôme.
+
+**Vérifié malgré tout, vu le sujet de la soirée** (citation NCDC = terrain
+sensible) : le PDF cité est un **NCDC Weekly Epidemiological Report** (« WER »,
+volume 16 n°32), une série de documents différente des « sitreps » concernés
+par la clause de confidentialité du 02/09. Les 14 pages du PDF lues
+intégralement : aucune clause de confidentialité nulle part — bulletin public
+classique (page de garde, photos d'atelier, carte du Nigéria, tableaux par
+maladie). `check-source-trust.mjs` confirme la ligne classée `official`, la
+page publique rend correctement (chiffres, lien, badge « Vérifié » à jour —
+hérite automatiquement du correctif du badge fait plus tôt ce soir). Mémoire
+`legal_ncdc_nigeria_confidential_sitreps_2026_09_02` complétée : la clause est
+propre au gabarit « sitrep », pas à tout `ncdc.gov.ng` — ne pas généraliser
+l'interdiction à un nouveau type de document NCDC sans le vérifier séparément.
+
+Reprise de la revue systématique après cette vérification.
