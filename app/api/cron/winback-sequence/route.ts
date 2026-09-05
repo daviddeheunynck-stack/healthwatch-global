@@ -69,7 +69,7 @@ const COPY: Record<string, {
   fr: {
     subject: "Vous pensez encore à HealthWatch ? L'accès Pro est toujours disponible",
     headline: "Votre essai s'est terminé il y a 3 jours.",
-    intro: "Vous avez utilisé HealthWatch Pro pendant 14 jours. Depuis, vous n'avez plus accès aux données complètes. Est-ce que quelque chose vous a empêché de vous abonner ?",
+    intro: "Vous avez utilisé HealthWatch Pro pendant 7 jours. Depuis, vous n'avez plus accès aux données complètes. Est-ce que quelque chose vous a empêché de vous abonner ?",
     questionLabel: "La question qu'on se pose",
     question: "S'agit-il du prix ? Du besoin d'un devis institutionnel ? Ou simplement du bon moment ?",
     offerLabel: "Ce que vous perdez chaque jour sans Pro",
@@ -90,7 +90,7 @@ const COPY: Record<string, {
   en: {
     subject: "Still thinking about HealthWatch? Pro access is still available",
     headline: "Your trial ended 3 days ago.",
-    intro: "You used HealthWatch Pro for 14 days. Since then, you no longer have access to the full data. Is something holding you back from subscribing?",
+    intro: "You used HealthWatch Pro for 7 days. Since then, you no longer have access to the full data. Is something holding you back from subscribing?",
     questionLabel: "Our honest question",
     question: "Is it the price? Do you need an institutional quote? Or is it just not the right time?",
     offerLabel: "What you're missing every day without Pro",
@@ -111,7 +111,7 @@ const COPY: Record<string, {
   es: {
     subject: "¿Aún pensando en HealthWatch? El acceso Pro sigue disponible",
     headline: "Su prueba terminó hace 3 días.",
-    intro: "Usó HealthWatch Pro durante 14 días. Desde entonces, ya no tiene acceso a los datos completos. ¿Hay algo que le impida suscribirse?",
+    intro: "Usó HealthWatch Pro durante 7 días. Desde entonces, ya no tiene acceso a los datos completos. ¿Hay algo que le impida suscribirse?",
     questionLabel: "Nuestra pregunta honesta",
     question: "¿Es el precio? ¿Necesita un presupuesto institucional? ¿O simplemente no es el momento adecuado?",
     offerLabel: "Lo que pierde cada día sin Pro",
@@ -132,7 +132,7 @@ const COPY: Record<string, {
   ar: {
     subject: "لا تزال تفكر في HealthWatch؟ الوصول Pro لا يزال متاحاً",
     headline: "انتهت تجربتك منذ 3 أيام.",
-    intro: "استخدمت HealthWatch Pro لمدة 14 يوماً. منذ ذلك الحين، لم تعد تتمكن من الوصول إلى البيانات الكاملة. هل هناك ما يمنعك من الاشتراك؟",
+    intro: "استخدمت HealthWatch Pro لمدة 7 أيام. منذ ذلك الحين، لم تعد تتمكن من الوصول إلى البيانات الكاملة. هل هناك ما يمنعك من الاشتراك؟",
     questionLabel: "سؤالنا الصادق",
     question: "هل هو السعر؟ هل تحتاج إلى عرض مؤسسي؟ أم أن التوقيت غير مناسب؟",
     offerLabel: "ما تخسره كل يوم بدون Pro",
@@ -153,7 +153,7 @@ const COPY: Record<string, {
   id: {
     subject: "Masih memikirkan HealthWatch? Akses Pro masih tersedia",
     headline: "Masa percobaan Anda berakhir 3 hari lalu.",
-    intro: "Anda menggunakan HealthWatch Pro selama 14 hari. Sejak saat itu, Anda tidak lagi memiliki akses ke data lengkap. Apakah ada yang menghalangi Anda untuk berlangganan?",
+    intro: "Anda menggunakan HealthWatch Pro selama 7 hari. Sejak saat itu, Anda tidak lagi memiliki akses ke data lengkap. Apakah ada yang menghalangi Anda untuk berlangganan?",
     questionLabel: "Pertanyaan jujur kami",
     question: "Apakah masalah harga? Apakah Anda membutuhkan penawaran institusional? Atau memang belum waktunya?",
     offerLabel: "Yang Anda lewatkan setiap hari tanpa Pro",

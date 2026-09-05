@@ -238,7 +238,7 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
           "billingDuration": "P1M",
           "referenceQuantity": { "@type": "QuantitativeValue", "value": 1, "unitCode": "MON" },
         },
-        "description": "All regions, instant alerts, Slack/Teams integration, unlimited CSV export. 14-day free trial.",
+        "description": "All regions, instant alerts, Slack/Teams integration, unlimited CSV export. 7-day free trial.",
       },
     ],
   };

@@ -72,35 +72,35 @@ export async function generateMetadata({
 // Inline copy for paywall UI — avoids touching 5 message files
 const PAYWALL_COPY: Record<string, { desc: string; descExpired: string; cta: string; lockedDownload: string; lockedList: string }> = {
   en: {
-    desc: "Exact case counts and fatality rates reveal how fast each outbreak is evolving. Available on Pro — 14-day free trial, no credit card.",
+    desc: "Exact case counts and fatality rates reveal how fast each outbreak is evolving. Available on Pro — 7-day free trial, no credit card.",
     descExpired: "Your trial ended. Subscribe to Pro to get back access to exact case counts, fatality rates and PDF reports.",
     cta: "Unlock Pro →",
     lockedDownload: "Pro/Team — unlock to download",
     lockedList: "Pro/Team — unlock full list",
   },
   fr: {
-    desc: "Les chiffres exacts et les taux de létalité révèlent la vitesse d'évolution de chaque foyer. Disponibles sur Pro — 14 jours gratuits, sans CB.",
+    desc: "Les chiffres exacts et les taux de létalité révèlent la vitesse d'évolution de chaque foyer. Disponibles sur Pro — 7 jours gratuits, sans CB.",
     descExpired: "Votre essai est terminé. Abonnez-vous à Pro pour retrouver l'accès aux chiffres exacts, létalité et rapports PDF.",
     cta: "Débloquer Pro →",
     lockedDownload: "Pro/Team — débloquer le téléchargement",
     lockedList: "Pro/Team — voir la liste complète",
   },
   es: {
-    desc: "Los datos exactos y la tasa de letalidad revelan la rapidez de evolución de cada brote. Disponibles en Pro — 14 días gratis, sin tarjeta.",
+    desc: "Los datos exactos y la tasa de letalidad revelan la rapidez de evolución de cada brote. Disponibles en Pro — 7 días gratis, sin tarjeta.",
     descExpired: "Su prueba ha terminado. Suscríbase a Pro para recuperar el acceso a datos exactos, letalidad e informes PDF.",
     cta: "Desbloquear Pro →",
     lockedDownload: "Pro/Team — desbloquear descarga",
     lockedList: "Pro/Team — lista completa",
   },
   ar: {
-    desc: "الأرقام الدقيقة ومعدلات الوفيات تكشف مدى سرعة تطور كل تفشٍّ. متاحة في Pro — 14 يوماً مجاناً، بدون بطاقة.",
+    desc: "الأرقام الدقيقة ومعدلات الوفيات تكشف مدى سرعة تطور كل تفشٍّ. متاحة في Pro — 7 أيام مجاناً، بدون بطاقة.",
     descExpired: "انتهت فترة تجربتك. اشترك في Pro لاستعادة الوصول إلى الأرقام الدقيقة ومعدلات الوفيات وتنزيلات PDF.",
     cta: "← فتح Pro",
     lockedDownload: "Pro/Team — فتح التنزيل",
     lockedList: "Pro/Team — عرض القائمة الكاملة",
   },
   id: {
-    desc: "Angka kasus dan tingkat fatalitas mengungkap seberapa cepat setiap wabah berkembang. Tersedia di Pro — 14 hari gratis, tanpa kartu.",
+    desc: "Angka kasus dan tingkat fatalitas mengungkap seberapa cepat setiap wabah berkembang. Tersedia di Pro — 7 hari gratis, tanpa kartu.",
     descExpired: "Masa percobaan Anda telah berakhir. Berlangganan Pro untuk mendapatkan kembali akses ke angka kasus, tingkat fatalitas, dan laporan PDF.",
     cta: "Buka Pro →",
     lockedDownload: "Pro/Team — buka untuk mengunduh",

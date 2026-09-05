@@ -110,7 +110,7 @@ export async function GET(req: NextRequest) {
           .eq("id", user.id)
           .single();
 
-        // Activate 14-day Pro trial for users who never had one — routed through
+        // Activate 7-day Pro trial for users who never had one — routed through
         // the same helper as /api/activate-trial (see lib/activate-trial.ts) so
         // OAuth signups get the same regional-alert enrollment + signup digest as
         // email signups. Before 2026-08-01 this set plan/trial_ends_at inline

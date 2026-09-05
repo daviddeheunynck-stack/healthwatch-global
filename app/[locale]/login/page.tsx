@@ -303,11 +303,11 @@ export default function LoginPage() {
               du parcours. Le libelle dit desormais ce qui est sans carte : la
               creation du compte. */}
           <p className="text-center text-xs text-gray-600 -mt-4">
-            {locale === "fr" ? "14 jours d'accès Pro offerts · Aucune carte pour créer un compte" :
-             locale === "es" ? "14 días de acceso Pro gratis · Sin tarjeta para crear una cuenta" :
-             locale === "ar" ? "14 يوماً من الوصول إلى Pro مجاناً · لا حاجة لبطاقة لإنشاء حساب" :
-             locale === "id" ? "14 hari akses Pro gratis · Tanpa kartu untuk membuat akun" :
-             "14 days of Pro access, free · No card to create an account"}
+            {locale === "fr" ? "7 jours d'accès Pro offerts · Aucune carte pour créer un compte" :
+             locale === "es" ? "7 días de acceso Pro gratis · Sin tarjeta para crear una cuenta" :
+             locale === "ar" ? "7 أيام من الوصول إلى Pro مجاناً · لا حاجة لبطاقة لإنشاء حساب" :
+             locale === "id" ? "7 hari akses Pro gratis · Tanpa kartu untuk membuat akun" :
+             "7 days of Pro access, free · No card to create an account"}
           </p>
           <InstitutionalContactLink locale={locale} source="login" />
         </div>

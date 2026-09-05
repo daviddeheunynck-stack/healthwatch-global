@@ -154,7 +154,7 @@ const COPY: Record<Locale, {
     eiosSub: "EIOS and similar WHO tools are designed for WHO analysts and affiliated institutions. HealthWatch Global serves a different audience — here is how they differ.",
     eiosItems: [
       { label: "Access", hwg: "Open to any organization — no WHO credentials or affiliation required", other: "EIOS requires WHO affiliation or national IHR focal point access" },
-      { label: "Cost", hwg: `${PRICE_DISPLAY.en_eur.proMonthly}/month Pro — 14-day free trial, no commitment`, other: "Free for WHO member states & accredited institutions only — not available to NGOs, humanitarian organizations, or private sector without WHO institutional credentials" },
+      { label: "Cost", hwg: `${PRICE_DISPLAY.en_eur.proMonthly}/month Pro — 7-day free trial, no commitment`, other: "Free for WHO member states & accredited institutions only — not available to NGOs, humanitarian organizations, or private sector without WHO institutional credentials" },
       { label: "Target user", hwg: "Operational teams: NGO coordinators, humanitarian staff, health programme managers", other: "Epidemiological analysts with WHO/institutional training" },
       { label: "Proactive alerts", hwg: "Automated email + Slack/Teams alerts per monitored region", other: "No proactive alert system — requires active daily monitoring" },
       { label: "Languages", hwg: "English, French, Spanish, Arabic, Indonesian", other: "Primarily English" },
@@ -246,7 +246,7 @@ const COPY: Record<Locale, {
     eiosSub: "EIOS et les outils OMS similaires sont conçus pour les analystes OMS et les institutions affiliées. HealthWatch Global s'adresse à un public différent — voici les différences clés.",
     eiosItems: [
       { label: "Accès", hwg: "Ouvert à toute organisation — sans credentials OMS ni affiliation", other: "EIOS requiert une affiliation OMS ou un accès de point focal national RSI" },
-      { label: "Coût", hwg: `${PRICE_DISPLAY.fr.proMonthly}/mois Pro — essai 14 jours gratuit, sans engagement`, other: "Gratuit pour les États membres OMS et institutions accréditées uniquement — inaccessible aux ONG, organisations humanitaires ou secteur privé sans credentials OMS institutionnels" },
+      { label: "Coût", hwg: `${PRICE_DISPLAY.fr.proMonthly}/mois Pro — essai 7 jours gratuit, sans engagement`, other: "Gratuit pour les États membres OMS et institutions accréditées uniquement — inaccessible aux ONG, organisations humanitaires ou secteur privé sans credentials OMS institutionnels" },
       { label: "Utilisateur cible", hwg: "Équipes opérationnelles : coordinateurs ONG, agents humanitaires, responsables de programmes santé", other: "Analystes épidémiologiques avec formation OMS/institutionnelle" },
       { label: "Alertes proactives", hwg: "Alertes email + Slack/Teams automatiques par région surveillée", other: "Aucun système d'alerte proactif — nécessite une surveillance active quotidienne" },
       { label: "Langues", hwg: "Anglais, français, espagnol, arabe, indonésien", other: "Principalement anglais" },
@@ -322,7 +322,7 @@ const COPY: Record<Locale, {
     eiosSub: "EIOS y herramientas similares de la OMS están diseñadas para analistas de la OMS e instituciones afiliadas. HealthWatch Global sirve a un público diferente.",
     eiosItems: [
       { label: "Acceso", hwg: "Abierto a cualquier organización — sin credenciales OMS", other: "EIOS requiere afiliación OMS o acceso de punto focal nacional RSI" },
-      { label: "Coste", hwg: `${PRICE_DISPLAY.es.proMonthly}/mes Pro — 14 días de prueba gratuita, sin compromiso`, other: "Gratuito para estados miembros OMS e instituciones acreditadas únicamente — no disponible para ONG, organizaciones humanitarias o sector privado sin credenciales OMS institucionales" },
+      { label: "Coste", hwg: `${PRICE_DISPLAY.es.proMonthly}/mes Pro — 7 días de prueba gratuita, sin compromiso`, other: "Gratuito para estados miembros OMS e instituciones acreditadas únicamente — no disponible para ONG, organizaciones humanitarias o sector privado sin credenciales OMS institucionales" },
       { label: "Usuario objetivo", hwg: "Equipos operativos: coordinadores ONG, personal humanitario, responsables de programas de salud", other: "Analistas epidemiológicos con formación OMS" },
       { label: "Alertas proactivas", hwg: "Alertas automáticas por email + Slack/Teams por región", other: "Sin sistema de alertas proactivas — requiere monitoreo activo diario" },
       { label: "Idiomas", hwg: "Inglés, francés, español, árabe, indonesio", other: "Principalmente inglés" },
@@ -398,7 +398,7 @@ const COPY: Record<Locale, {
     eiosSub: "صُمِّم EIOS وأدوات مماثلة لمحللي منظمة الصحة العالمية والمؤسسات المنتسبة. تخدم HealthWatch Global جمهوراً مختلفاً.",
     eiosItems: [
       { label: "الوصول", hwg: "مفتوح لأي منظمة — دون بيانات اعتماد OMS أو انتساب", other: "EIOS يتطلب انتسابًا لمنظمة الصحة العالمية أو صلاحية نقطة التواصل الوطنية RSI" },
-      { label: "التكلفة", hwg: `${PRICE_DISPLAY.ar.proMonthly}/شهر Pro — تجربة مجانية 14 يوماً، بدون التزام`, other: "مجاني للدول الأعضاء في منظمة الصحة العالمية والمؤسسات المعتمدة فقط — غير متاح للمنظمات غير الحكومية أو الهيئات الإنسانية أو القطاع الخاص دون بيانات اعتماد مؤسسية لمنظمة الصحة العالمية" },
+      { label: "التكلفة", hwg: `${PRICE_DISPLAY.ar.proMonthly}/شهر Pro — تجربة مجانية 7 أيام، بدون التزام`, other: "مجاني للدول الأعضاء في منظمة الصحة العالمية والمؤسسات المعتمدة فقط — غير متاح للمنظمات غير الحكومية أو الهيئات الإنسانية أو القطاع الخاص دون بيانات اعتماد مؤسسية لمنظمة الصحة العالمية" },
       { label: "المستخدم المستهدف", hwg: "الفرق التشغيلية: منسقو المنظمات غير الحكومية، العاملون الإنسانيون، مديرو برامج الصحة", other: "محللون وبائيون مع تدريب OMS/مؤسسي" },
       { label: "تنبيهات استباقية", hwg: "تنبيهات بريد إلكتروني + Slack/Teams تلقائية حسب المنطقة", other: "لا يوجد نظام تنبيه استباقي — يتطلب مراقبة يومية نشطة" },
       { label: "اللغات", hwg: "الإنجليزية والفرنسية والإسبانية والعربية والإندونيسية", other: "الإنجليزية بصورة رئيسية" },
@@ -474,7 +474,7 @@ const COPY: Record<Locale, {
     eiosSub: "EIOS dan alat WHO serupa dirancang untuk analis WHO dan institusi afiliasi. HealthWatch Global melayani audiens yang berbeda.",
     eiosItems: [
       { label: "Akses", hwg: "Terbuka untuk organisasi mana pun — tanpa kredensial WHO", other: "EIOS memerlukan afiliasi WHO atau akses focal point RSI nasional" },
-      { label: "Biaya", hwg: `${PRICE_DISPLAY.id.proMonthly}/bulan Pro — uji coba gratis 14 hari, tanpa komitmen`, other: "Gratis untuk negara anggota WHO & lembaga terakreditasi saja — tidak tersedia untuk LSM, organisasi kemanusiaan, atau sektor swasta tanpa kredensial institusional WHO" },
+      { label: "Biaya", hwg: `${PRICE_DISPLAY.id.proMonthly}/bulan Pro — uji coba gratis 7 hari, tanpa komitmen`, other: "Gratis untuk negara anggota WHO & lembaga terakreditasi saja — tidak tersedia untuk LSM, organisasi kemanusiaan, atau sektor swasta tanpa kredensial institusional WHO" },
       { label: "Pengguna target", hwg: "Tim operasional: koordinator LSM, staf kemanusiaan, manajer program kesehatan", other: "Analis epidemiologi dengan pelatihan WHO/institusional" },
       { label: "Peringatan proaktif", hwg: "Peringatan email + Slack/Teams otomatis per wilayah", other: "Tidak ada sistem peringatan proaktif — memerlukan pemantauan aktif harian" },
       { label: "Bahasa", hwg: "Inggris, Prancis, Spanyol, Arab, Indonesia", other: "Terutama Inggris" },

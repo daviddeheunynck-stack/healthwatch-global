@@ -49,7 +49,7 @@ const COPY: Record<string, {
       },
       {
         title: "Débloquez la surveillance complète",
-        body: "Cas confirmés · Décès · Rapports PDF · Alertes instantanées · Export CSV. Essai Pro 14 jours — carte requise, aucun débit avant la fin de l'essai.",
+        body: "Cas confirmés · Décès · Rapports PDF · Alertes instantanées · Export CSV. Essai Pro 7 jours — carte requise, aucun débit avant la fin de l'essai.",
         cta: "C'est parti →",
       },
     ],
@@ -81,7 +81,7 @@ const COPY: Record<string, {
       },
       {
         title: "Unlock full surveillance",
-        body: "Confirmed cases · Deaths · PDF reports · Instant alerts · CSV export. 14-day Pro trial — card required, no charge until it ends.",
+        body: "Confirmed cases · Deaths · PDF reports · Instant alerts · CSV export. 7-day Pro trial — card required, no charge until it ends.",
         cta: "Let's go →",
       },
     ],
@@ -113,7 +113,7 @@ const COPY: Record<string, {
       },
       {
         title: "Desbloquee la vigilancia completa",
-        body: "Casos confirmados · Fallecidos · Informes PDF · Alertas instantáneas · Exportación CSV. Prueba Pro de 14 días — tarjeta requerida, sin cobro hasta que termine.",
+        body: "Casos confirmados · Fallecidos · Informes PDF · Alertas instantáneas · Exportación CSV. Prueba Pro de 7 días — tarjeta requerida, sin cobro hasta que termine.",
         cta: "¡Vamos! →",
       },
     ],
@@ -145,7 +145,7 @@ const COPY: Record<string, {
       },
       {
         title: "افتح المراقبة الكاملة",
-        body: "الحالات المؤكدة · الوفيات · تقارير PDF · تنبيهات فورية · تصدير CSV. تجربة Pro 14 يوماً — البطاقة مطلوبة، لا خصم قبل انتهاء التجربة.",
+        body: "الحالات المؤكدة · الوفيات · تقارير PDF · تنبيهات فورية · تصدير CSV. تجربة Pro 7 أيام — البطاقة مطلوبة، لا خصم قبل انتهاء التجربة.",
         cta: "لنبدأ →",
       },
     ],
@@ -177,7 +177,7 @@ const COPY: Record<string, {
       },
       {
         title: "Buka pemantauan lengkap",
-        body: "Kasus terkonfirmasi · Kematian · Laporan PDF · Peringatan instan · Ekspor CSV. Uji coba Pro 14 hari — kartu diperlukan, tidak ada tagihan sebelum uji coba berakhir.",
+        body: "Kasus terkonfirmasi · Kematian · Laporan PDF · Peringatan instan · Ekspor CSV. Uji coba Pro 7 hari — kartu diperlukan, tidak ada tagihan sebelum uji coba berakhir.",
         cta: "Ayo mulai →",
       },
     ],

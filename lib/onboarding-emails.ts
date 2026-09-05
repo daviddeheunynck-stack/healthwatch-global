@@ -685,7 +685,7 @@ export function buildJ12Email(locale: string, userId: string): { subject: string
 
 // ─── Pilot J+32 : 3 days left → upgrade to Team ──────────────────────────────
 // Sent to pilot users (35-day trial) at day 32, before expire-trials kicks in.
-// By day 32, regular 14-day pro users are already on free — plan=pro here = pilot.
+// By day 32, regular 7-day pro users are already on free — plan=pro here = pilot.
 
 const PILOT_CONVERSION_CONTENT: Record<string, {
   banner: string;

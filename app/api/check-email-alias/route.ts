@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 // Supabase Auth treats john.doe@gmail.com, johndoe@gmail.com and
 // john+trial@gmail.com as three distinct accounts, even though Gmail
 // delivers all three to the same inbox — each would otherwise qualify for
-// its own fresh 14-day Pro trial (activateTrial()'s idempotence guard in
+// its own fresh 7-day Pro trial (activateTrial()'s idempotence guard in
 // lib/activate-trial.ts only blocks reactivation on the SAME account).
 // Audited 2026-08-19: not yet exploited in the real user base, but nothing
 // stopped it. This treats the local part as a Gmail-style alias only for

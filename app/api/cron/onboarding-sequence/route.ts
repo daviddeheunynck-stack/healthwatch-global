@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
-import { buildJ1Email, buildJ3Email, buildJ7Email, buildPilotConversionEmail } from "@/lib/onboarding-emails";
+import { buildJ1Email, buildJ3Email, buildPilotConversionEmail } from "@/lib/onboarding-emails";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction, isLiveCronInvocation, claimEmailSend, releaseEmailSend, pingHeartbeatIfHealthy } from "@/lib/cron-monitor";
 import { sendBrevoEmail } from "@/lib/brevo-send";
@@ -105,10 +105,10 @@ async function runOnboardingSequence(req: NextRequest, supabase: SupabaseClient)
   // See lib/cron-monitor.ts for what this does and does not guarantee.
   const isLive = isLiveCronInvocation(req);
 
-  // Four cohort queries (J+1/J+3/J+7/J+32) — same table, different date-window
+  // Three cohort queries (J+1/J+3/J+32) — same table, different date-window
   // filters, none depends on another's result — fetched concurrently instead of
   // one after another. Error checks below preserve the original fail-fast order
-  // (abort on the first of the four that errored, same as when they ran in series).
+  // (abort on the first that errored, same as when they ran in series).
   //
   // J+12 ("2 days left — subscribe now") was REMOVED on 2026-08-22. It was
   // anchored on created_at, so for a standard 14-day trial it fired at
@@ -122,16 +122,25 @@ async function runOnboardingSequence(req: NextRequest, supabase: SupabaseClient)
   // now — unreferenced, but cheaper to revive than to rewrite if the cadence is
   // ever revisited.
   //
-  // J+32 guard: trial_ends_at must be within 4 days — by day 32 regular 14-day
-  // pro users have already been downgraded to free by expire-trials, so
-  // plan=pro + created_at ~32 days ago + no stripe sub uniquely identifies
-  // pilot users (35-day trial).
+  // J+7 ("mid-trial check-in — PDF report spotlight") was REMOVED on
+  // 2026-09-05, same reasoning as J+12 above: the self-serve trial shortened
+  // from 14 to 7 days (lib/activate-trial.ts TRIAL_DAYS), so a step anchored
+  // on created_at+7 now fires exactly AT trial_ends_at instead of mid-trial —
+  // squarely on top of trial-reminders' J-1 ("1 day left") and right as
+  // expire-trials starts downgrading the same cohort to plan=free, which
+  // would silently drop them from this step's `.eq("plan", "pro")` filter
+  // depending on run order. buildJ7Email is left in lib/onboarding-emails,
+  // unreferenced — same disposition as buildJ12Email.
+  //
+  // J+32 guard: trial_ends_at must be within 4 days — by day 32 regular
+  // self-serve pro users (7-day trial) have long since been downgraded to
+  // free by expire-trials, so plan=pro + created_at ~32 days ago + no stripe
+  // sub uniquely identifies pilot users (35-day trial).
   const j32WindowEnd = new Date(Date.now() + 4 * 86_400_000).toISOString();
 
   const [
     { data: j1Users,  error: j1Err },
     { data: j3Users,  error: j3Err },
-    { data: j7Users,  error: j7Err },
     { data: j32Users, error: j32Err },
   ] = await Promise.all([
     // ── J+1 : First action — configure alert regions ───────────────────────
@@ -154,16 +163,6 @@ async function runOnboardingSequence(req: NextRequest, supabase: SupabaseClient)
       .is("email_blocked_at", null)
       .filter("created_at", "gte", new Date(Date.now() - 3.5 * 86400_000).toISOString())
       .filter("created_at", "lt",  new Date(Date.now() - 2.5 * 86400_000).toISOString()),
-    // ── J+7 : Mid-trial check-in — PDF report spotlight ─────────────────────
-    supabase
-      .from("profiles")
-      .select("id, email, plan, locale, trial_ends_at, display_filters")
-      .eq("plan", "pro")
-      .not("trial_ends_at", "is", null)
-      .is("stripe_subscription_id", null)
-      .is("email_blocked_at", null)
-      .filter("created_at", "gte", new Date(Date.now() - 7.5 * 86400_000).toISOString())
-      .filter("created_at", "lt",  new Date(Date.now() - 6.5 * 86400_000).toISOString()),
     // ── J+32 : Pilot conversion — 3 days left → upgrade to Team ─────────────
     supabase
       .from("profiles")
@@ -190,12 +189,6 @@ async function runOnboardingSequence(req: NextRequest, supabase: SupabaseClient)
     await logCronRun(supabase, "onboarding-sequence", "error", 0, j3Err.message);
     return NextResponse.json({ error: j3Err.message }, { status: 500 });
   }
-  if (j7Err) {
-    console.error("[onboarding] J+7 query error:", j7Err);
-    Sentry.captureException(j7Err, { tags: { cron: "onboarding-sequence", step: "j7-query" } });
-    await logCronRun(supabase, "onboarding-sequence", "error", 0, j7Err.message);
-    return NextResponse.json({ error: j7Err.message }, { status: 500 });
-  }
   if (j32Err) {
     console.error("[onboarding] J+32 query error:", j32Err);
     Sentry.captureException(j32Err, { tags: { cron: "onboarding-sequence", step: "j32-query" } });
@@ -205,7 +198,6 @@ async function runOnboardingSequence(req: NextRequest, supabase: SupabaseClient)
 
   let j1Sent = 0, j1Failed = 0;
   let j3Sent = 0, j3Failed = 0;
-  let j7Sent = 0, j7Failed = 0;
   let j32Sent = 0, j32Failed = 0;
   // Claimed-but-already-sent, i.e. a duplicate Vercel invocation of this same
   // scheduled run — see claimEmailSend() in lib/cron-monitor.ts.
@@ -289,31 +281,6 @@ async function runOnboardingSequence(req: NextRequest, supabase: SupabaseClient)
     }
   }
 
-  // ── Send J+7 emails ───────────────────────────────────────────────────────
-  for (const user of j7Users ?? []) {
-    if (!user.email || hasOptedOut(user)) continue;
-    try {
-      const locale = user.locale || "en";
-      const { subject, html, unsubUrl } = buildJ7Email(locale, user.id);
-      if (isRealProduction && isLive) {
-        if (await claimAndSend(supabase, user.id, "j7", user.email, subject, html, unsubUrl)) {
-          j7Sent++;
-        } else {
-          deduped++;
-        }
-      } else if (isRealProduction) {
-        dryRunRecipients.push(`j7:${user.email}`);
-      } else {
-        j7Sent++;
-      }
-      await new Promise((r) => setTimeout(r, 150));
-    } catch (err) {
-      console.error(`[onboarding] J+7 failed for ${user.email}:`, err);
-      Sentry.captureException(err, { tags: { cron: "onboarding-sequence", step: "j7", user_id: user.id } });
-      j7Failed++;
-    }
-  }
-
   // ── Send J+32 pilot conversion emails ────────────────────────────────────
   for (const user of j32Users ?? []) {
     if (!user.email || hasOptedOut(user)) continue;
@@ -339,27 +306,26 @@ async function runOnboardingSequence(req: NextRequest, supabase: SupabaseClient)
     }
   }
 
-  const onboardingSent   = j1Sent + j3Sent + j7Sent + j32Sent;
-  const onboardingFailed = j1Failed + j3Failed + j7Failed + j32Failed;
+  const onboardingSent   = j1Sent + j3Sent + j32Sent;
+  const onboardingFailed = j1Failed + j3Failed + j32Failed;
   pingHeartbeatIfHealthy(process.env.BETTERSTACK_HB_ONBOARDING, onboardingFailed, onboardingSent + onboardingFailed);
 
   if (dryRunRecipients.length > 0) {
     console.log(`[onboarding] dry run (not a recognized live invocation) — would have sent: ${dryRunRecipients.join(", ")}`);
   }
 
-  const totalSent = j1Sent + j3Sent + j7Sent + j32Sent;
-  const totalFailed = j1Failed + j3Failed + j7Failed + j32Failed;
+  const totalSent = j1Sent + j3Sent + j32Sent;
+  const totalFailed = j1Failed + j3Failed + j32Failed;
   // Was hardcoded "ok" — each step's Failed counter was tracked but never
   // consulted, so a genuine send failure in any of the stages still
   // logged "ok".
   await logCronRun(supabase, "onboarding-sequence", totalFailed > 0 ? "error" : "ok", totalSent,
     totalFailed > 0 ? `${totalFailed} email(s) en échec` : undefined);
-  console.log(`[onboarding] J+1: ${j1Sent}/${j1Failed} | J+3: ${j3Sent}/${j3Failed} | J+7: ${j7Sent}/${j7Failed} | J+32: ${j32Sent}/${j32Failed}`);
+  console.log(`[onboarding] J+1: ${j1Sent}/${j1Failed} | J+3: ${j3Sent}/${j3Failed} | J+32: ${j32Sent}/${j32Failed}`);
 
   return NextResponse.json({
     j1:  { sent: j1Sent,  failed: j1Failed,  total: (j1Users  ?? []).length },
     j3:  { sent: j3Sent,  failed: j3Failed,  total: (j3Users  ?? []).length },
-    j7:  { sent: j7Sent,  failed: j7Failed,  total: (j7Users  ?? []).length },
     j32: { sent: j32Sent, failed: j32Failed, total: (j32Users ?? []).length },
     deduped,
     live: isLive,

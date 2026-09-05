@@ -459,11 +459,11 @@ export default async function AboutPage({
       {/* Pro trial CTA */}
       <section className="bg-gradient-to-r from-red-950/40 via-red-900/20 to-transparent border border-red-700/30 rounded-2xl p-8 space-y-4 text-center">
         <p className="text-white font-bold text-xl">
-          {locale === "fr" ? "Commencez votre essai Pro — 14 jours gratuits" :
-           locale === "es" ? "Inicie su prueba Pro — 14 días gratis" :
-           locale === "ar" ? "ابدأ تجربة Pro — 14 يوماً مجانية" :
-           locale === "id" ? "Mulai uji coba Pro — 14 hari gratis" :
-           "Start your Pro trial — 14 days free"}
+          {locale === "fr" ? "Commencez votre essai Pro — 7 jours gratuits" :
+           locale === "es" ? "Inicie su prueba Pro — 7 días gratis" :
+           locale === "ar" ? "ابدأ تجربة Pro — 7 أيام مجانية" :
+           locale === "id" ? "Mulai uji coba Pro — 7 hari gratis" :
+           "Start your Pro trial — 7 days free"}
         </p>
         <p className="text-gray-400 text-sm">
           {locale === "fr" ? "Sans carte bancaire · Accès immédiat · Annulation à tout moment" :

@@ -15,7 +15,7 @@ const COPY: Record<string, {
   pilotDesc: (org: string) => string;
 }> = {
   fr: {
-    title: "Passez à Pro — essai 14 jours gratuit",
+    title: "Passez à Pro — essai 7 jours gratuit",
     sub: "Chiffres exacts de cas & décès · Alertes instantanées · Rapports PDF · Export CSV",
     missed: (n) => `🔔 ${n} alerte${n > 1 ? "s" : ""} ont été envoyées aux utilisateurs Pro cette semaine — vous les auriez reçues sous 8h.`,
     missedNames: (names) => `🔔 Alertes manquées cette semaine : ${names}`,
@@ -28,7 +28,7 @@ const COPY: Record<string, {
     pilotDesc: (org) => `Pour continuer au-delà du pilote pour ${org}, répondez à l'email reçu.`,
   },
   en: {
-    title: "Upgrade to Pro — 14-day free trial",
+    title: "Upgrade to Pro — 7-day free trial",
     sub: "Exact case & death figures · Instant alerts · PDF reports · CSV export",
     missed: (n) => `🔔 ${n} alert${n > 1 ? "s" : ""} fired this week — Pro users were notified within 8h.`,
     missedNames: (names) => `🔔 Missed alerts this week: ${names}`,
@@ -41,7 +41,7 @@ const COPY: Record<string, {
     pilotDesc: (org) => `To continue beyond the pilot for ${org}, just reply to the email you received.`,
   },
   es: {
-    title: "Pasa a Pro — 14 días de prueba gratis",
+    title: "Pasa a Pro — 7 días de prueba gratis",
     sub: "Cifras exactas de casos y fallecidos · Alertas instantáneas · Informes PDF · Exportación CSV",
     missed: (n) => `🔔 ${n} alerta${n > 1 ? "s" : ""} esta semana — usuarios Pro notificados en menos de 8h.`,
     missedNames: (names) => `🔔 Alertas perdidas esta semana: ${names}`,
@@ -54,7 +54,7 @@ const COPY: Record<string, {
     pilotDesc: (org) => `Para continuar más allá del piloto para ${org}, responda al email recibido.`,
   },
   ar: {
-    title: "انتقل إلى Pro — تجربة 14 يوماً مجاناً",
+    title: "انتقل إلى Pro — تجربة 7 أيام مجاناً",
     sub: "أرقام دقيقة للحالات والوفيات · تنبيهات فورية · تقارير PDF · تصدير CSV",
     missed: (n) => `🔔 ${n} تنبيه${n > 1 ? "ات" : ""} هذا الأسبوع — أُرسلت لمستخدمي Pro خلال 8 ساعات.`,
     missedNames: (names) => `🔔 تنبيهات فائتة هذا الأسبوع: ${names}`,
@@ -67,7 +67,7 @@ const COPY: Record<string, {
     pilotDesc: (org) => `للاستمرار بعد التجربة لـ ${org}، فقط ردوا على البريد الذي تلقيتموه.`,
   },
   id: {
-    title: "Upgrade ke Pro — uji coba 14 hari gratis",
+    title: "Upgrade ke Pro — uji coba 7 hari gratis",
     sub: "Angka kasus & kematian tepat · Peringatan instan · Laporan PDF · Ekspor CSV",
     missed: (n) => `🔔 ${n} peringatan minggu ini — pengguna Pro menerima notifikasi dalam 8 jam.`,
     missedNames: (names) => `🔔 Peringatan yang terlewat minggu ini: ${names}`,

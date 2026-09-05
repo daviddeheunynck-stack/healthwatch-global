@@ -40,7 +40,7 @@ const COPY: Record<string, Record<string, PlanCopy>> = {
       secondaryLabel: "Configurer Slack →",
       secondaryUrl:   `${APP_URL}/fr/account`,
       closing:  "Bonne surveillance,\nL'équipe HealthWatch Global",
-      trialNote: "Votre essai Pro de 14 jours est en cours. Aucun prélèvement ne sera effectué avant la fin de la période d'essai.",
+      trialNote: "Votre essai Pro de 7 jours est en cours. Aucun prélèvement ne sera effectué avant la fin de la période d'essai.",
     },
     en: {
       subject:  "Welcome to HealthWatch Pro ⚡",
@@ -59,7 +59,7 @@ const COPY: Record<string, Record<string, PlanCopy>> = {
       secondaryLabel: "Connect Slack →",
       secondaryUrl:   `${APP_URL}/en/account`,
       closing:  "Stay vigilant,\nThe HealthWatch Global team",
-      trialNote: "Your 14-day Pro trial is running. No charge will be made until the trial period ends.",
+      trialNote: "Your 7-day Pro trial is running. No charge will be made until the trial period ends.",
     },
     es: {
       subject:  "Bienvenido a HealthWatch Pro ⚡",
@@ -78,7 +78,7 @@ const COPY: Record<string, Record<string, PlanCopy>> = {
       secondaryLabel: "Conectar Slack →",
       secondaryUrl:   `${APP_URL}/es/account`,
       closing:  "Permanezca alerta,\nEl equipo de HealthWatch Global",
-      trialNote: "Su prueba Pro de 14 días está en marcha. No se realizará ningún cobro hasta el final del período de prueba.",
+      trialNote: "Su prueba Pro de 7 días está en marcha. No se realizará ningún cobro hasta el final del período de prueba.",
     },
     ar: {
       subject:  "مرحباً بك في HealthWatch Pro ⚡",
@@ -97,7 +97,7 @@ const COPY: Record<string, Record<string, PlanCopy>> = {
       secondaryLabel: "← إعداد Slack",
       secondaryUrl:   `${APP_URL}/ar/account`,
       closing:  "ابقوا يقظين،\nفريق HealthWatch Global",
-      trialNote: "تجربة Pro لمدة 14 يوماً جارية. لن يتم أي خصم قبل انتهاء فترة التجربة.",
+      trialNote: "تجربة Pro لمدة 7 أيام جارية. لن يتم أي خصم قبل انتهاء فترة التجربة.",
     },
     id: {
       subject:  "Selamat datang di HealthWatch Pro ⚡",
@@ -116,7 +116,7 @@ const COPY: Record<string, Record<string, PlanCopy>> = {
       secondaryLabel: "Hubungkan Slack →",
       secondaryUrl:   `${APP_URL}/id/account`,
       closing:  "Tetap waspada,\nTim HealthWatch Global",
-      trialNote: "Uji coba Pro 14 hari Anda sedang berjalan. Tidak ada tagihan hingga masa uji coba berakhir.",
+      trialNote: "Uji coba Pro 7 hari Anda sedang berjalan. Tidak ada tagihan hingga masa uji coba berakhir.",
     },
   },
 
@@ -140,7 +140,7 @@ const COPY: Record<string, Record<string, PlanCopy>> = {
       secondaryLabel: "Inviter des collaborateurs →",
       secondaryUrl:   `${APP_URL}/fr/account`,
       closing:  "Bonne surveillance,\nL'équipe HealthWatch Global",
-      trialNote: "Votre essai Team de 14 jours est en cours. Aucun prélèvement ne sera effectué avant la fin de la période d'essai.",
+      trialNote: "Votre essai Team de 7 jours est en cours. Aucun prélèvement ne sera effectué avant la fin de la période d'essai.",
     },
     en: {
       subject:  "Welcome to HealthWatch Team 🤝",
@@ -160,7 +160,7 @@ const COPY: Record<string, Record<string, PlanCopy>> = {
       secondaryLabel: "Invite team members →",
       secondaryUrl:   `${APP_URL}/en/account`,
       closing:  "Stay vigilant,\nThe HealthWatch Global team",
-      trialNote: "Your 14-day Team trial is running. No charge will be made until the trial period ends.",
+      trialNote: "Your 7-day Team trial is running. No charge will be made until the trial period ends.",
     },
     es: {
       subject:  "Bienvenido a HealthWatch Team 🤝",
@@ -180,7 +180,7 @@ const COPY: Record<string, Record<string, PlanCopy>> = {
       secondaryLabel: "Invitar colaboradores →",
       secondaryUrl:   `${APP_URL}/es/account`,
       closing:  "Permanezca alerta,\nEl equipo de HealthWatch Global",
-      trialNote: "Su prueba Team de 14 días está en marcha. No se realizará ningún cobro hasta el final del período de prueba.",
+      trialNote: "Su prueba Team de 7 días está en marcha. No se realizará ningún cobro hasta el final del período de prueba.",
     },
     ar: {
       subject:  "مرحباً بك في HealthWatch Team 🤝",
@@ -200,7 +200,7 @@ const COPY: Record<string, Record<string, PlanCopy>> = {
       secondaryLabel: "← دعوة أعضاء الفريق",
       secondaryUrl:   `${APP_URL}/ar/account`,
       closing:  "ابقوا يقظين،\nفريق HealthWatch Global",
-      trialNote: "تجربة Team لمدة 14 يوماً جارية. لن يتم أي خصم قبل انتهاء فترة التجربة.",
+      trialNote: "تجربة Team لمدة 7 أيام جارية. لن يتم أي خصم قبل انتهاء فترة التجربة.",
     },
     id: {
       subject:  "Selamat datang di HealthWatch Team 🤝",
@@ -220,7 +220,7 @@ const COPY: Record<string, Record<string, PlanCopy>> = {
       secondaryLabel: "Undang anggota tim →",
       secondaryUrl:   `${APP_URL}/id/account`,
       closing:  "Tetap waspada,\nTim HealthWatch Global",
-      trialNote: "Uji coba Team 14 hari Anda sedang berjalan. Tidak ada tagihan hingga masa uji coba berakhir.",
+      trialNote: "Uji coba Team 7 hari Anda sedang berjalan. Tidak ada tagihan hingga masa uji coba berakhir.",
     },
   },
 

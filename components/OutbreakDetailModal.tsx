@@ -996,7 +996,7 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
                 locale === "es" ? "Iniciar prueba gratuita →" :
                 locale === "ar" ? "← ابدأ التجربة المجانية" :
                 locale === "id" ? "Mulai uji coba gratis →" :
-                "Start 14-day free trial →"
+                "Start 7-day free trial →"
               }
               variant="banner"
             />

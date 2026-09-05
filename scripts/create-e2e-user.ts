@@ -40,9 +40,9 @@ async function run() {
     process.exit(1);
   }
 
-  // Set Pro trial (14 days)
+  // Set Pro trial (7 days)
   const trialEnd = new Date();
-  trialEnd.setDate(trialEnd.getDate() + 14);
+  trialEnd.setDate(trialEnd.getDate() + 7);
   const { error: updateErr } = await supabase
     .from("profiles")
     .update({ plan: "pro", trial_ends_at: trialEnd.toISOString() })

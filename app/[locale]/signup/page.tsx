@@ -26,11 +26,11 @@ const UNEXPECTED_ERROR: Record<string, string> = {
 };
 
 const TRIAL_START_NOTE: Record<string, string> = {
-  en: "Your 14-day Pro trial starts as soon as you confirm your email.",
-  fr: "Votre essai Pro de 14 jours commence dès que vous confirmez votre email.",
-  es: "Su prueba Pro de 14 días comienza en cuanto confirme su email.",
-  ar: "تجربتك المجانية لمدة 14 يوماً تبدأ بمجرد تأكيد بريدك الإلكتروني.",
-  id: "Uji coba Pro 14 hari Anda dimulai segera setelah mengkonfirmasi email.",
+  en: "Your 7-day Pro trial starts as soon as you confirm your email.",
+  fr: "Votre essai Pro de 7 jours commence dès que vous confirmez votre email.",
+  es: "Su prueba Pro de 7 días comienza en cuanto confirme su email.",
+  ar: "تجربتك المجانية لمدة 7 أيام تبدأ بمجرد تأكيد بريدك الإلكتروني.",
+  id: "Uji coba Pro 7 hari Anda dimulai segera setelah mengkonfirmasi email.",
 };
 
 // Catches Gmail lookalike domains at signup — added 2026-08-19 after
@@ -87,13 +87,15 @@ const GMAIL_TYPO_KEEP: Record<string, string> = {
 // d'un appat, au moment du parcours ou il coute le plus cher.
 //
 // Le mot « essai » recouvre deux objets distincts, et c'est la vraie source de
-// la confusion : (1) l'acces Pro offert 14 jours pose par activateTrial() a
-// l'inscription, sans aucun objet Stripe, donc sans carte possible ; (2)
-// l'abonnement souscrit depuis /pricing, avec carte, non debite avant la fin
-// de l'essai. Ces libelles ne promettent plus que le premier.
+// la confusion : (1) l'acces Pro offert, pose par activateTrial() a
+// l'inscription (7 jours pour un essai self-serve standard depuis le
+// 2026-09-05, ex-14 ; 35 jours pour le programme pilote), sans aucun objet
+// Stripe, donc sans carte possible ; (2) l'abonnement souscrit depuis
+// /pricing, avec carte, non debite avant la fin de l'essai. Ces libelles ne
+// promettent plus que le premier.
 const VALUE_PROPS: Record<string, { trial: string; items: string[]; noCard: string; gdpr: string; alreadyRegistered: { text: string; signIn: string; or: string; reset: string } }> = {
   en: {
-    trial: "14 days of Pro access, free — no card",
+    trial: "7 days of Pro access, free — no card",
     items: [
       "Exact case & death figures",
       "Instant regional alerts",
@@ -104,7 +106,7 @@ const VALUE_PROPS: Record<string, { trial: string; items: string[]; noCard: stri
     alreadyRegistered: { text: "An account already exists for this email.", signIn: "Sign in", or: "or", reset: "reset your password" },
   },
   fr: {
-    trial: "14 jours d'accès Pro offerts — sans carte",
+    trial: "7 jours d'accès Pro offerts — sans carte",
     items: [
       "Chiffres exacts cas & décès",
       "Alertes régionales instantanées",
@@ -115,7 +117,7 @@ const VALUE_PROPS: Record<string, { trial: string; items: string[]; noCard: stri
     alreadyRegistered: { text: "Un compte existe déjà pour cet email.", signIn: "Se connecter", or: "ou", reset: "réinitialiser votre mot de passe" },
   },
   es: {
-    trial: "14 días de acceso Pro gratis — sin tarjeta",
+    trial: "7 días de acceso Pro gratis — sin tarjeta",
     items: [
       "Cifras exactas de casos y fallecidos",
       "Alertas regionales instantáneas",
@@ -126,7 +128,7 @@ const VALUE_PROPS: Record<string, { trial: string; items: string[]; noCard: stri
     alreadyRegistered: { text: "Ya existe una cuenta con este email.", signIn: "Iniciar sesión", or: "o", reset: "restablecer tu contraseña" },
   },
   ar: {
-    trial: "14 يوماً من الوصول إلى Pro مجاناً — بدون بطاقة",
+    trial: "7 أيام من الوصول إلى Pro مجاناً — بدون بطاقة",
     items: [
       "أرقام دقيقة للحالات والوفيات",
       "تنبيهات إقليمية فورية",
@@ -137,7 +139,7 @@ const VALUE_PROPS: Record<string, { trial: string; items: string[]; noCard: stri
     alreadyRegistered: { text: "يوجد حساب مرتبط بهذا البريد الإلكتروني.", signIn: "تسجيل الدخول", or: "أو", reset: "إعادة تعيين كلمة المرور" },
   },
   id: {
-    trial: "14 hari akses Pro gratis — tanpa kartu",
+    trial: "7 hari akses Pro gratis — tanpa kartu",
     items: [
       "Angka kasus & kematian tepat",
       "Peringatan regional instan",

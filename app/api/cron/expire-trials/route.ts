@@ -85,7 +85,7 @@ async function runExpireTrials(req: NextRequest, supabase: SupabaseClient) {
 
   const ids = expired.map((p) => p.id);
   // Keep trial_ends_at as-is (expired date). If we null it out, the checkout
-  // route sees dbTrialEndsAt=null and re-grants a fresh 14-day Stripe trial to
+  // route sees dbTrialEndsAt=null and re-grants a fresh 7-day Stripe trial to
   // users who already consumed their DB trial — a second free trial they never
   // earned. With the expired date preserved, the checkout route calculates
   // trialDaysRemaining=0 and skips the Stripe trial entirely.

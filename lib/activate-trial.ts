@@ -3,7 +3,9 @@ import * as Sentry from "@sentry/nextjs";
 import { buildSignupDigestEmail } from "@/lib/signup-digest-email";
 import { isRealProduction } from "@/lib/cron-monitor";
 
-const TRIAL_DAYS = 14;
+// Lowered from 14 to 7 on 2026-09-05 (David, self-serve only — pilot's
+// 35-day trial and personally-offered/admin-invited trials are untouched).
+const TRIAL_DAYS = 7;
 const RISK_RANK: Record<string, number> = { high: 3, medium: 2, low: 1 };
 export const ALL_REGIONS = ["africa", "asia", "americas", "europe", "oceania"] as const;
 
@@ -35,7 +37,7 @@ interface ActivateTrialResult {
   trial_ends_at?: string;
 }
 
-// Shared by every path that can grant Pro access (standard 14-day trial via
+// Shared by every path that can grant Pro access (standard 7-day trial via
 // activateTrial() below, admin-invited pilots, self-serve pilot confirmation).
 // One retry on transient failure before giving up — found 2026-07-25: a real
 // signup silently ended up with 0 alert regions for their whole trial with no
@@ -121,7 +123,7 @@ export async function activateTrial(
   // Before this, 0 of the 11 real signups ever configured an alert region themselves,
   // so the personalized re-engagement emails the product promises at signup never
   // fired for anyone. "medium" balances enough signal to prove value during the
-  // 14-day trial against flooding a brand-new inbox. Best-effort: a failure here
+  // 7-day trial against flooding a brand-new inbox. Best-effort: a failure here
   // shouldn't fail trial activation itself.
   //
   // Targeted by default when the signup form collected a priority region

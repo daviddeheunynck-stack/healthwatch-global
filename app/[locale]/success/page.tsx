@@ -44,7 +44,7 @@ const LABELS: Record<string, LocaleLabels> = {
   en: {
     trial: {
       title:    "Free trial activated!",
-      subtitle: "Your 14-day Pro trial starts now.",
+      subtitle: "Your 7-day Pro trial starts now.",
       note:     "No payment required. You'll be notified before the trial ends.",
     },
     paid: {
@@ -62,7 +62,7 @@ const LABELS: Record<string, LocaleLabels> = {
   fr: {
     trial: {
       title:    "Essai gratuit activé !",
-      subtitle: "Votre essai Pro de 14 jours commence maintenant.",
+      subtitle: "Votre essai Pro de 7 jours commence maintenant.",
       note:     "Aucun paiement requis. Vous serez prévenu avant la fin de l'essai.",
     },
     paid: {
@@ -80,7 +80,7 @@ const LABELS: Record<string, LocaleLabels> = {
   es: {
     trial: {
       title:    "¡Prueba gratuita activada!",
-      subtitle: "Su prueba Pro de 14 días comienza ahora.",
+      subtitle: "Su prueba Pro de 7 días comienza ahora.",
       note:     "Sin pago requerido. Se le notificará antes del fin de la prueba.",
     },
     paid: {
@@ -98,7 +98,7 @@ const LABELS: Record<string, LocaleLabels> = {
   ar: {
     trial: {
       title:    "تم تفعيل التجربة المجانية!",
-      subtitle: "تبدأ تجربتك المجانية لمدة 14 يومًا الآن.",
+      subtitle: "تبدأ تجربتك المجانية لمدة 7 أيام الآن.",
       note:     "لا يلزم دفع أي مبلغ. ستُخطَر قبل انتهاء الفترة التجريبية.",
     },
     paid: {
@@ -116,7 +116,7 @@ const LABELS: Record<string, LocaleLabels> = {
   id: {
     trial: {
       title:    "Uji coba gratis diaktifkan!",
-      subtitle: "Uji coba Pro 14 hari Anda dimulai sekarang.",
+      subtitle: "Uji coba Pro 7 hari Anda dimulai sekarang.",
       note:     "Tidak perlu pembayaran. Anda akan diberitahu sebelum masa uji coba berakhir.",
     },
     paid: {
@@ -188,7 +188,7 @@ export default async function SuccessPage({
   }
 
   // Determine trial vs paid — query Stripe if session_id is available.
-  // Default to trialing: all our checkouts start with a 14-day free trial.
+  // Default to trialing: all our checkouts start with a 7-day free trial.
   let isTrial = true;
   if (session_id) {
     const status = await getSubscriptionStatus(session_id);

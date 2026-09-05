@@ -122,11 +122,11 @@ export default async function SitrepPage({
       .slice(0, 5);
 
     const TC: Record<string, { headline: string; sub: string; pilot: string; trial: string; home: string; haveAccount: string; signIn: string }> = {
-      en: { headline: "Full report — restricted access", sub: "14-day free trial or request institutional pilot access.", pilot: "Institutional pilot →", trial: "Free trial →", home: "Home", haveAccount: "Already have an account?", signIn: "Sign in" },
-      fr: { headline: "Rapport complet — accès restreint", sub: "Essai gratuit 14 jours ou demandez un accès pilote institutionnel.", pilot: "Pilote institutionnel →", trial: "Essai gratuit →", home: "Accueil", haveAccount: "Déjà un compte ?", signIn: "Se connecter" },
-      es: { headline: "Informe completo — acceso restringido", sub: "Prueba gratuita 14 días o solicite acceso piloto institucional.", pilot: "Piloto institucional →", trial: "Prueba gratuita →", home: "Inicio", haveAccount: "¿Ya tiene cuenta?", signIn: "Iniciar sesión" },
-      ar: { headline: "التقرير الكامل — وصول مقيّد", sub: "تجربة مجانية 14 يوماً أو اطلب وصولاً تجريبياً مؤسسياً.", pilot: "← التجريبي المؤسسي", trial: "← تجربة مجانية", home: "الرئيسية", haveAccount: "لديك حساب؟", signIn: "تسجيل الدخول" },
-      id: { headline: "Laporan lengkap — akses terbatas", sub: "Uji coba gratis 14 hari atau minta akses pilot institusional.", pilot: "Pilot institusional →", trial: "Uji coba gratis →", home: "Beranda", haveAccount: "Sudah punya akun?", signIn: "Masuk" },
+      en: { headline: "Full report — restricted access", sub: "7-day free trial or request institutional pilot access.", pilot: "Institutional pilot →", trial: "Free trial →", home: "Home", haveAccount: "Already have an account?", signIn: "Sign in" },
+      fr: { headline: "Rapport complet — accès restreint", sub: "Essai gratuit 7 jours ou demandez un accès pilote institutionnel.", pilot: "Pilote institutionnel →", trial: "Essai gratuit →", home: "Accueil", haveAccount: "Déjà un compte ?", signIn: "Se connecter" },
+      es: { headline: "Informe completo — acceso restringido", sub: "Prueba gratuita 7 días o solicite acceso piloto institucional.", pilot: "Piloto institucional →", trial: "Prueba gratuita →", home: "Inicio", haveAccount: "¿Ya tiene cuenta?", signIn: "Iniciar sesión" },
+      ar: { headline: "التقرير الكامل — وصول مقيّد", sub: "تجربة مجانية 7 أيام أو اطلب وصولاً تجريبياً مؤسسياً.", pilot: "← التجريبي المؤسسي", trial: "← تجربة مجانية", home: "الرئيسية", haveAccount: "لديك حساب؟", signIn: "تسجيل الدخول" },
+      id: { headline: "Laporan lengkap — akses terbatas", sub: "Uji coba gratis 7 hari atau minta akses pilot institusional.", pilot: "Pilot institusional →", trial: "Uji coba gratis →", home: "Beranda", haveAccount: "Sudah punya akun?", signIn: "Masuk" },
     };
     const tc = TC[locale] ?? TC.en;
 

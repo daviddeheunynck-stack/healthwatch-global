@@ -65,7 +65,7 @@ const COPY = {
     successTitleActivated: "Almost there.",
     successDescActivated: "Check your email and click the confirmation link to activate your 35-day Pro access.",
     backLink: "← Back to pricing",
-    trialFallback: "Not an institution? Try the 14-day free trial →",
+    trialFallback: "Not an institution? Try the 7-day free trial →",
   },
   fr: {
     tag: "Programme Pilote Institutionnel",
@@ -107,7 +107,7 @@ const COPY = {
     successTitleActivated: "Presque prêt.",
     successDescActivated: "Vérifiez votre email et cliquez sur le lien de confirmation pour activer votre accès Pro de 35 jours.",
     backLink: "← Retour aux tarifs",
-    trialFallback: "Pas d'institution ? Essai gratuit 14 jours →",
+    trialFallback: "Pas d'institution ? Essai gratuit 7 jours →",
   },
   es: {
     tag: "Programa Piloto Institucional",
@@ -149,7 +149,7 @@ const COPY = {
     successTitleActivated: "Casi listo.",
     successDescActivated: "Revise su correo y haga clic en el enlace de confirmación para activar su acceso Pro de 35 días.",
     backLink: "← Volver a precios",
-    trialFallback: "¿No es una institución? Prueba gratuita de 14 días →",
+    trialFallback: "¿No es una institución? Prueba gratuita de 7 días →",
   },
   ar: {
     tag: "برنامج التجربة المؤسسية",
@@ -191,7 +191,7 @@ const COPY = {
     successTitleActivated: "خطوة أخيرة.",
     successDescActivated: "راجع بريدك الإلكتروني واضغط على رابط التأكيد لتفعيل وصول Pro لمدة 35 يوماً.",
     backLink: "→ العودة إلى الأسعار",
-    trialFallback: "← لست مؤسسة؟ جرّب مجاناً لمدة 14 يوماً",
+    trialFallback: "← لست مؤسسة؟ جرّب مجاناً لمدة 7 أيام",
   },
   id: {
     tag: "Program Pilot Institusional",
@@ -233,7 +233,7 @@ const COPY = {
     successTitleActivated: "Hampir selesai.",
     successDescActivated: "Cek email Anda dan klik tautan konfirmasi untuk mengaktifkan akses Pro 35 hari Anda.",
     backLink: "← Kembali ke harga",
-    trialFallback: "Bukan institusi? Coba uji coba gratis 14 hari →",
+    trialFallback: "Bukan institusi? Coba uji coba gratis 7 hari →",
   },
 } as const;
 
