@@ -141,6 +141,14 @@ const nextConfig: NextConfig = {
       ["avian-flu",  "avian-influenza"],
       ["h5n1",                 "avian-influenza"],
       ["avian-influenza-h5n1", "avian-influenza"],
+      ["covid",             "covid-19"],
+      ["coronavirus",       "covid-19"],
+      ["mers",              "mers-cov"],
+      // Common/lay name, not the technical one people actually search.
+      ["sleeping-sickness", "trypanosomiasis"],
+      ["rmsf",              "rocky-mountain-spotted-fever"],
+      ["powassan",          "powassan-virus-disease"],
+      ["rotavirus",         "rotavirus-infection"],
     ];
     return aliases.map(([short, canonical]) => ({
       source:      `/:locale/disease/${short}`,
