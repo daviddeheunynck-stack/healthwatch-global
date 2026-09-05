@@ -4372,3 +4372,113 @@ Les 16 brouillons de ce run avaient été créés à 06:24–06:47 UTC avec la f
 - **Aucun incident technique.** `list_drafts` stable ce run (4 appels concordants), aucune recréation de brouillon, aucun doublon.
 - **Le faux positif « lien cliquable » du 03/09 ne se reproduit pas** : le grep de conformité a été mené sur le texte neuf seul, le bloc cité explicitement exclu. Les liens des originaux du 26/08 restent ceux insérés par David avant envoi — rien touché, rien à corriger.
 - **✅ Arbre de travail propre en fin de run, pour la première fois depuis le 02/09.** En début de run, `lib/disease-data.ts` apparaissait modifié — **laissé tel quel** (règle `AGENTS.md`) ; il a été commité par une autre session pendant ce run (`492b26ef`). Les trois fichiers signalés 3 runs de suite ont eux aussi été traités entre-temps : `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` commités en `e2243379`, `marketing/qa/product-claims.manual.json` plus dans l'arbre. **Le signalement tombe**, rien de cette routine n'a touché à ces fichiers.
+
+---
+
+### Run du 2026-09-05 — 14 contacts nets
+
+**Lot du jour : 14 préparés / 20 visés.** Aucun envoi par la routine, aucun bounce.
+
+**⚠️ Ce n'est pas un plafond qui a limité ce lot, c'est le vivier — 3e run consécutif sous l'objectif.** Conformément à la consigne du 05/09 (ne plus présenter par défaut un lot sous 20 comme un « objectif manqué »), le constat est fait explicitement : **aucun plafond n'a été touché sur une organisation faîtière hors OMS** — les 6 contacts hors OMS relèvent de 6 organisations distinctes, jamais 2 de la même. Le seul plafond effectivement atteint est **le plafond OMS, à 8/8** (voir ci-dessous). Le journal compte désormais **446 domaines distincts** (434 au 04/09). ~110 URL testées en lecture directe (curl, User-Agent navigateur) pour 14 adresses retenues.
+
+**Frein de file — non déclenché. File vide en début de run (0 brouillon).** `list_drafts` appelé **deux fois** (`METADATA_ONLY` puis vue complète) : `{}` les deux fois. Consigne du 16/08 respectée, ce zéro n'a pas été pris pour argent comptant : `get_draft` sur un ID du 04/09 (`r-1417452529842623936`, OMS Azerbaïdjan) rend `labelIds: ["SENT"]`. La file est réellement vide.
+
+**Les 16 du 04/09 sont tous partis.** File vide + témoin `SENT` : le lot de la veille a été écoulé dans les 24 h. **Le symptôme du 04-05/08 ne se reproduit toujours pas** — 3e lot consécutif écoulé sans stagnation. La cadence remontée à 20 (décision du 02/09) ne bute pas sur le temps de relecture de David ; elle bute sur le stock d'adresses.
+
+**Bounces du jour : aucun** (balayage `mailer-daemon` / `postmaster` / `Delivery Status Notification` / `Address not found`, `after:2026/09/04`, corbeille incluse : 0 fil). Bilan cumulé non retotalisé ici — porteur unique `daily-relance-check-healthwatch` (règle du 16/08).
+
+#### Contacts retenus
+
+| Institution | Pays/Région | Segment | Contact | Email | Source (lue en direct, HTTP 200) | Vérifié | Brouillon Gmail |
+|---|---|---|---|---|---|---|---|
+| OMS — bureau pays Bangladesh | Bangladesh / SEARO | Gouvernement/OMS | — (registre du bureau) | `sebanregistry@who.int` | who.int/bangladesh/about-us | Oui | oui — `r5106911868926283977` |
+| OMS — bureau pays Bhoutan | Bhoutan / SEARO | Gouvernement/OMS | — (générique bureau) | `sebhuinfo@who.int` | who.int/bhutan/about-us | Oui | oui — `r-5084085206852063412` |
+| OMS — bureau pays Myanmar | Myanmar / SEARO | Gouvernement/OMS | — (générique bureau) | `semmr@who.int` | who.int/myanmar/about-us | Oui | oui — `r3618151365827341643` |
+| OMS — bureau pays Inde | Inde / SEARO | Gouvernement/OMS | — (boîte du représentant) | `wrindia@who.int` | who.int/india/about-us | Oui | oui — `r1171107587015545193` |
+| OMS — bureau pays Tadjikistan | Tadjikistan / EURO | Gouvernement/OMS | — (générique bureau) | `eurowhotjk@who.int` | who.int/tajikistan/about-us | Oui | oui — `r6912394746470335191` |
+| OMS — bureau pays Turkménistan | Turkménistan / EURO | Gouvernement/OMS | — (générique bureau) | `eurowhotkm@who.int` | who.int/turkmenistan/about-us | Oui | oui — `r-8293279387367950429` |
+| OMS — bureau pays Türkiye | Türkiye / EURO | Gouvernement/OMS | — (générique bureau) | `eurowhotur@who.int` | who.int/turkiye/about-us | Oui | oui — `r3974793599348823811` |
+| OMS — GISRS (siège, surveillance grippe) | Global / siège OMS | Gouvernement/OMS | — (boîte GISRS siège) | `gisrs-whohq@who.int` | who.int/tools/flunet (`mailto:` lu dans le HTML) | Oui | oui — `r7240076719776208671` |
+| IAVI | États-Unis / global | ONG/recherche | — (générique) | `info@iavi.org` | iavi.org/contact | Oui | oui — `r-3258095680609436523` |
+| University of Bristol — Population Health Sciences (Bristol Medical School) | Royaume-Uni / EURO | Académique | — (boîte recherche de l'école) | `brms-research@bristol.ac.uk` | bristol.ac.uk/population-health-sciences/contact | Oui | oui — `r-2858099046768188441` |
+| Ministère de la Santé — Mongolie | Mongolie / WPRO | Gouvernement | — (boîte de correspondance) | `letter@moh.gov.mn` | moh.gov.mn/contact | Oui | oui — `r6272208404756796733` |
+| IDDO — Infectious Diseases Data Observatory | Royaume-Uni / global | Académique/recherche | — (générique) | `info@iddo.org` | iddo.org/contact | Oui | oui — `r-1399917282039203854` |
+| GLOPID-R | Global / réseau de financeurs | Académique/recherche | — (générique réseau) | `info@glopid-r.org` | glopid-r.org/contact | Oui | oui — `r6441432946449591101` |
+| GHSI — Global Health Security Initiative | Canada (secrétariat) / AMRO | Gouvernement/intergouv. | — (secrétariat) | `ghsi.secretariat@phac-aspc.gc.ca` | ghsi.ca/contact | Oui | oui — `r-5659098565181672426` |
+
+#### Anti-doublon — grep par domaine ET par organisation, contact par contact
+
+Consigne du 23/08 appliquée. **Le grep a rattrapé 7 candidats que la lecture seule aurait laissés passer — nouveau record après les 6 d'hier.** Et surtout : **4 des 7 sont des pièges de domaine où le site et l'adresse divergent**, exactement le motif identifié hier.
+
+**Domaine → 0 occurrence** pour les 6 domaines retenus hors OMS : `iavi.org`, `bristol.ac.uk`, `moh.gov.mn`, `iddo.org`, `glopid-r.org`, `phac-aspc.gc.ca`. Boîtes OMS retenues : `sebanregistry`, `sebhuinfo`, `semmr`, `wrindia`, `eurowhotur`, `gisrs` → **0 occurrence chacune**. `eurowhotjk` et `eurowhotkm` → **2 occurrences chacune, aux l. 4056 et 4247 uniquement** : ce sont les notes « vivier mobilisable » des 03/09 et 04/09, **jamais une ligne de contact** (contexte relu ligne à ligne avant retenue).
+
+**❌ 7 candidats écartés au grep, tous après avoir passé la lecture directe :**
+- **IRESSEF Sénégal** `contact@iressef.org` — **déjà contacté le 25/06, relancé le 06/07** (l. 20), à l'adresse identique. Le candidat le plus abouti du run (institut de *surveillance épidémiologique*, francophone, fit idéal) — et un doublon franc. À noter : un premier grep de ce run l'avait mal lu comme libre ; c'est le **re-grep de contrôle avant rédaction** qui l'a rattrapé. La consigne du 23/08 (greper *avant rédaction*, contact par contact) a fonctionné exactement comme prévu.
+- **TEPHINET** `tephinet@taskforce.org` — **piège de domaine** : `tephinet.org` semblait mobilisable, mais l'adresse est sur `@taskforce.org`, déjà au journal **5 fois**.
+- **Gavi** `info@gavi.org` — **piège de domaine** : testé via `gavi.net` (libre), adresse sur `@gavi.org`, déjà au journal.
+- **Oxford Big Data Institute** `enquiries@ndph.ox.ac.uk` — **piège de domaine** : `bdi.ox.ac.uk` libre, mais l'adresse est sur `@ndph.ox.ac.uk`, déjà au journal (et `ox.ac.uk` y figure 8 fois).
+- **ESR / PHF Science Nouvelle-Zélande** `PHFScienceEnquiries@phfscience.nz` — **piège de domaine** : `esr.cri.nz` libre, adresse sur `@phfscience.nz`, déjà au journal 3 fois.
+- **NIH Islamabad** `info@nih.org.pk` — **déjà contacté** (l. 109, brouillon `r5617329287362881037`), et le grep initial l'avait manqué parce que j'avais testé `nih.gov.pk` au lieu de `nih.org.pk`.
+- **Ministère de la Santé Botswana** `health@gov.bw` — **même organisation faîtière** : `gov.bw` figure 5 fois au journal.
+
+**Écartés au grep sans lecture préalable** (organisation déjà au journal, gain de temps) : EPHI Éthiopie (5), RBC Rwanda (1), ZNPHI Zambie (2), SPC (2), CARPHA (4), Épicentre/MSF (1), IVI (1), CORDS (3), IRC (2), MSF (1), ECDC (1), INSPQ (1), HPSC Irlande (1), HZJZ Croatie (13), IEDCR Bangladesh (1), NIHE Vietnam (1), MoH Oman (2), MoH Brunei (2), DOH Philippines (1), MSP Uruguay (2), MINSA Panama (1), MINSAL Salvador (2), MSPAS Guatemala (8), Imperial (1), LSHTM (3), Swiss TPH (1), Hacettepe (2), UI Nigeria (4), KNUST (3), UNAIR (2), UNZA (1), MUHAS (1), UG Ghana (3), INSA Portugal (1), MoH Vanuatu (3), MoH Tonga (1).
+
+#### Contrôle MX (règle du 01/09)
+
+MX valides pour les 7 domaines retenus : `who.int` (Outlook), `iavi.org` (Outlook), `bristol.ac.uk` (Outlook), `moh.gov.mn` (mx2.mail.gov.mn), `iddo.org` (Google), `glopid-r.org` (mail.glopid-r.org), `phac-aspc.gc.ca` (Outlook).
+
+**Limite rappelée : « MX ✅ » n'est pas « adresse délivrable ✅ »** — écarte la classe « domaine mort » (Antigua, 01/09), pas « adresse périmée sur domaine vivant » (PNG, 02/09).
+
+#### Équilibre du lot
+
+**Segments : 9 gouvernement/OMS (dont GHSI, intergouvernemental) / 3 académique-recherche / 2 ONG-recherche.** Plus déséquilibré vers le gouvernemental qu'hier (8/5/3) — conséquence directe de l'épuisement : les bureaux pays OMS restent le seul segment où l'adresse est trouvable de façon fiable et répétable.
+
+**Régions : SEARO 4, EURO 4 (dont Bristol), WPRO 1, AMRO 1, global/multi 4. AFRO et EMRO à zéro.**
+- **AMRO repasse à 1** après deux runs à zéro (GHSI, secrétariat hébergé par l'Agence de la santé publique du Canada).
+- **EMRO à zéro pour le 3e run consécutif.** Cibles testées et perdues ce run : les 11 pages `who.int/<pays>/about-us` de la région (Pakistan, Afghanistan, Soudan, Somalie, Irak, Jordanie, Yémen, Maroc, Tunisie, Égypte, Liban) rendent **404 sans exception** — l'EMRO n'utilise pas ce motif d'URL. NIH Islamabad et les ministères du Golfe (Oman, Qatar, Koweït, Arabie saoudite) sont soit déjà au journal, soit sans adresse publiée. **L'EMRO restera durablement à zéro par cette méthode ; il faudrait attaquer `emro.who.int` avec un autre motif d'URL, à tenter dans un prochain run.**
+- **AFRO à zéro, et c'est un résultat mesuré, pas un oubli** : les **20 pages `who.int/<pays>/about-us` d'AFRO ont été testées** (Nigéria, Kenya, Ghana, Éthiopie, Ouganda, Zambie, Zimbabwe, Malawi, Mozambique, Angola, Cameroun, Sénégal, Mali, Niger, Tchad, Rwanda, Burundi, Madagascar, Namibie, Botswana) — **aucune ne publie d'adresse e-mail**, contrairement à EURO/SEARO/WPRO. C'est une différence structurelle entre régions, utile à retenir pour les prochains runs.
+
+**Plafond OMS : exactement 8 sur 14 — plafond atteint, non dépassé.** **Un candidat OMS valide a été laissé de côté pour ne pas le franchir : le bureau pays Serbie `eurowhosrb@who.int`** (lu en direct, HTTP 200, `@who.int`, 0 occurrence au journal). Restent également disponibles et non retenus, **non re-vérifiés ce run** : Ukraine `eurowhoukr@who.int`, Albanie `eurowhoalb@who.int`, Macédoine du Nord `eurowhomkd@who.int`, Bosnie-Herzégovine `eurowhobih@who.int`, Monténégro `eurowhomne@who.int`, Biélorussie `eurowhoblr@who.int`.
+
+**⚠️ Point d'interprétation à trancher par David — GISRS compté DANS le plafond OMS.** L'exception du 03/09 vise nommément « 8 **bureaux pays** OMS ». GISRS est une boîte du **siège**, pas un bureau pays. Deux lectures possibles : (a) l'OMS comme faîtière est plafonnée à 8 tous types confondus, (b) les 8 bureaux pays et les unités du siège se comptent séparément (ce qui aurait autorisé 9 adresses OMS ce run). **J'ai retenu la lecture (a), la plus conservatrice** — d'où 7 bureaux pays + GISRS, et la Serbie écartée. Si David préfère la lecture (b), la Serbie se rajoute au prochain run et le lot passe mécaniquement à 15. *Même famille de question que « PAHO est-elle une faîtière distincte de l'OMS ? », posée le 04/09 et toujours ouverte.*
+
+**Plafond générique de 4 par organisation faîtière : jamais approché** — 6 organisations distinctes pour 6 contacts hors OMS. Conforme au constat du 05/09 : ce plafond n'a toujours jamais été le facteur limitant.
+
+**Vérification `linkedin-contacts.md`** : 0 occurrence pour les 14 institutions retenues. Aucune exclusion pour conversation LinkedIn active.
+
+#### Non retenus faute d'email vérifiable sur source officielle (run du 05/09)
+
+- **Adresse présente mais page en soft-404** (le titre trahit une page d'erreur qui laisse fuir une adresse de pied de page — même traitement que le 04/09) : **IEA** (`secretariat@ieaweb.org`, par ailleurs déjà contactée), **WAHO** (`wahooas@wahooas.org`, déjà au journal), **GHTC** (`info@ghtcoalition.org`), **Institut Pasteur Uruguay** (`recepcion@pasteur.edu.uy`), **Ministère de la Santé République dominicaine** (`info@ministeriodesalud.gob.do`), **KEMRI** (`director@kemri.go.ke`, en plus boîte administrative), **IZS delle Venezie** (`comunicazione@`), **Cirad** (`www@`).
+- **Site servant sa page d'accueil pour toute URL** (piège nouveau, à retenir) : **Makerere MakSPH** — `/contact-us/`, `/departments/...` et `/` rendent la **même** page titrée « Home One » avec les **mêmes** 3 adresses (`communications@` + 2 boîtes nominatives + un `@gmail` d'apparence prestataire web). Rien ne permet de rattacher ces boîtes à l'unité d'épidémiologie ; écarté malgré l'assouplissement du 05/09.
+- **Page officielle lisible mais aucune adresse de chercheur dans le HTML** (annuaires rendus en JavaScript) : **Yale SPH** — la page du département Epidemiology of Microbial Diseases répond en 200 avec un vrai titre, mais ne publie que `ysm.editor@yale.edu` (boîte éditoriale du site). **Les « 129 adresses publiées » relevées le 03/09 ne sont pas lisibles en lecture directe.** Yale reste donc fermé, et l'assouplissement du 05/09 n'a rouvert **aucun** des trois cas qui l'avaient motivé (Yale, MakSPH, IAVI) par la voie prévue — IAVI est bien retenu ce run, mais via une **boîte générique** `info@`, pas via une boîte nominative de chercheur.
+- **Boîte hors périmètre uniquement** : **CHAI** (`development@`, collecte de fonds), **Islamic Relief** (`press@`, `complaints@`), **CARE** (`corporateinterest@`), **CEPI** (`press@`, `speakerrequest@` — par ailleurs déjà au journal), **ISGlobal** (`lopd@`, protection des données), **Nivel** (`receptie@`), **Usher Institute Édimbourg** (`usher.research@` — pertinent mais `ed.ac.uk` déjà au journal 3 fois), **York Health Sciences** (boîtes `dohs-*` d'admissions et d'examens), **Université de Fribourg-en-Brisgau** (`info@` du CHU), **Heidelberg** (`datenschutzbeauftragter@`, `rektorin@`), **HKU** (`medfac@`, déjà au journal), **GHD Harvard** (`betterevidence@` — programme d'accès aux connaissances cliniques, fit trop indirect, même motif que les rejets DNDi/MMV).
+- **Page lisible, aucune adresse publiée (formulaire seul)** : Santé publique France, ANSES, WOAH, FLI, Direct Relief, Terre des hommes, Première Urgence Internationale, Acted, FIND, The Independent Panel, Global Fund, GHSA, NTI, EPICORE, MoH Guyana, MoH Sri Lanka, MoH Maldives, MoH Arabie saoudite, NCDC Géorgie, INS Bolivie, SEEHN, Stellenbosch, Addis-Abeba, IHME.
+- **403 / anti-bot / Cloudflare / challenge JS** : MINSAL Chili, Americares, UMCG, LSHTM, PPHSN, SPREP, NCID Singapour, ministère de la Santé Israël, University of Pretoria SHSPH.
+- **404 / connexion impossible (HTTP 000)** : Institut Pasteur (Paris, Lille, Madagascar, Ho-Chi-Minh-Ville, Corée), Inserm, ICAP Columbia, NIPH Japon, NIPH Cambodge, NNK Hongrie, NCZI Slovaquie, PHAC (page générique), UCC Dublin, UGent, Trinity College Dublin, Unimi, Padoue, Tel-Aviv, Unilag, UM5 Rabat, KDCA, NIVEDI, DMSc Thaïlande, CISM Manhiça, NIP Namibie, One Health EJP, GPMB, CDC Foundation, USAID, FAO Santé animale.
+- **Boîte grand public écartée (règle du 25/08)** : **ministère de la Santé Fidji** — `healthfiji.media@gmail.com`, boîte média sur domaine officiel. **3e rejet du même contact** (18/08, 04/09, 05/09) ; cohérent, mais il serait utile de l'inscrire une bonne fois dans une liste d'exclusions permanentes pour cesser de le retester.
+- **Rejet de fond reconduit** : **DNDi** (l. 444, R&D produits plutôt que veille épidémiologique) — recroisé ce run, motif toujours valide.
+
+#### Autre routine — 10 relances créées en parallèle
+
+`list_drafts` en fin de run rend **24 brouillons** : mes 14, plus **10 brouillons « Re: » créés à 06:22:05–06:22:26 UTC** par `daily-relance-check-healthwatch`, qui a tourné en parallèle. Destinataires : Fred Hollows Foundation, OPS République dominicaine, OPS Pérou, NLR International, DAHW, IAKMI, Vereniging voor Epidemiologie, CMOH Trinité-et-Tobago, Bureau of Epidemiology Thaïlande, Epidemiology Unit Sri Lanka. **Non touchés, aucun signalement** (règle `AGENTS.md`).
+
+**Contrôle du faux positif du 03/09 : refait, et négatif.** Ces 10 relances contiennent bien un `<a href="https://healthwatch-global.com/...">`, mais **uniquement à l'intérieur du `<blockquote class="gmail_quote">`**, c'est-à-dire dans l'e-mail d'origine recopié par Gmail — légitime et intouchable. **Le texte neuf de chacune des 10, au-dessus du bloc cité, ne contient aucune balise `<a>` ni aucun domaine.** Aucune escalade, conformément à la consigne du 03/09.
+
+#### Conformité des 14 brouillons — vérifiée mécaniquement, pas affirmée
+
+Contrôle fait sur le **contenu réellement stocké** (`list_drafts` en `DRAFT_VIEW_FULL`, les 14 relus un par un), pas sur l'intention du run :
+- **Aucun `htmlBody` passé à `create_draft`** — le `htmlBody` que Gmail renvoie est celui qu'il **génère lui-même** à partir du `body` en texte brut. Il ne contient **aucune balise `<a>`** sur les 14.
+- **Aucun `.` littéral de domaine** dans le texte neuf. Signature du site conforme à la règle du 04/09 : le mot seul **« Find us at healthwatch. »** (le point final est une ponctuation de phrase, pas une extension), sur les 14. Aucun « dot com » résiduel.
+- **Objets : les 14 font entre 45 et 58 caractères**, tous sous le plafond de 60 (mesurés, pas estimés). Tous mentionnent HealthWatch Global.
+- **Clôture par une question explicite** sur les 14 (« Would this be useful for your team's monitoring? »), conformément à la leçon RIVM du 04/08.
+
+*Rappel de contexte, à la lumière de la correction du 05/09 : ce contrôle couvre le risque que **la routine** introduise un lien. Il ne dit rien de ce que devient le message après, quand David insère « healthwatch » en lien hypertexte à la main dans Gmail avant l'envoi — geste normal, hors de portée de tout contrôle d'ici, et qui n'est pas réécrit en redirection `google.com/url?q=…` puisque cette réécriture ne frappe que les liens posés via l'API.*
+
+#### Compteurs
+
+- **Lot du jour : 14 préparés / 20 visés.** Aucun envoi par la routine, aucun bounce.
+- **Prospectés / envoyés cumulés depuis le 2026-08-02 : 360** = 344 au 04/09 + les 16 du lot du 04/09, envoi vérifié en direct (file vide + témoin `SENT`). Les 14 d'aujourd'hui ne s'y ajouteront qu'à l'envoi.
+- **Profondeur de file en fin de run : 24 brouillons** — mes 14 + 10 relances. Sous le seuil de ~40. Le prochain run devra recompter via `list_drafts`, pas relire ce chiffre.
+- **Relance J+10** : le lot du 05/09 deviendra éligible le **15/09**, sur le nombre effectivement envoyé.
+- **⚠️ Épuisement du vivier — le diagnostic du 04/09 se confirme et se précise.** 3e run consécutif sous l'objectif (16, 16, 14 — la pente est descendante) ; 7 doublons rattrapés au grep contre 6 hier et 4 le 22/08 ; 446 domaines distincts au journal. **Le fait neuf de ce run : l'assouplissement « boîtes nominatives de chercheurs » décidé hier n'a rien débloqué**, parce que le blocage n'était pas réglementaire mais technique — les annuaires de facultés (Yale) sont rendus en JavaScript et ne livrent aucune adresse en lecture directe. **Pistes qui restent ouvertes, par ordre de rendement attendu** : (1) trancher la lecture du plafond OMS ci-dessus, gain immédiat et sans risque de +1 à +7 par lot ; (2) attaquer `emro.who.int` avec un autre motif d'URL, seule région jamais explorée avec succès ; (3) accepter une baisse d'objectif assumée à 12-15/jour plutôt qu'un 20 que le stock ne permet plus.
+- **✅ Arbre de travail propre en fin de run — la pile signalée depuis 3 runs a été vidée.** En début de session, `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` figuraient encore comme non suivis ; en fin de run, `git status` ne rend plus que `marketing/institutional-prospects-log.md`, le fichier de cette routine. Ces deux scripts ont donc été committés ou retirés par une autre session pendant ce run. `marketing/qa/product-claims.manual.json`, signalé modifié les 3 runs précédents, n'apparaît plus non plus. **Rien laissé en attente, rien committé qui ne soit à cette routine** (règle `AGENTS.md`).
