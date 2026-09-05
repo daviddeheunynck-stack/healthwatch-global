@@ -56,9 +56,9 @@ Le dernier commit du dépôt (`bf9e1b7f`) date de **08h44**, soit **19 minutes a
 
 ---
 
-### 3️⃣ ✅ RÉSEAU — 6 SUIVIS, 0 NOTE DE CONNEXION, 0 INVITATION TRAITÉE
+### 3️⃣ ✅ RÉSEAU — 7 SUIVIS (QUOTA ATTEINT), 0 NOTE DE CONNEXION, 0 INVITATION TRAITÉE
 
-**Suivis : 6/7-10** — quota non atteint, et la recherche a été menée sur **quatre filons de mots-clés distincts** avant de s'arrêter, pas après un passage unique. Le facteur limitant n'est pas la barre de pertinence, c'est que **la majorité des profils au bon intitulé sont dormants** : sur 14 candidats neufs instruits, 4 ont été écartés pour absence d'activité récente et 3 étaient déjà relations de 1er degré (donc déjà suivis).
+**Suivis : 7/7-10, quota atteint** — la recherche a été menée sur **cinq filons de mots-clés distincts** avant d'atteindre le quota, pas après un passage unique. Le facteur limitant n'était pas la barre de pertinence, c'est que **la majorité des profils au bon intitulé sont dormants** : sur les candidats neufs instruits, plusieurs ont été écartés pour absence d'activité récente et d'autres étaient déjà relations de 1er degré (donc déjà suivis).
 
 | # | Profil | Intitulé | Motif |
 |---|---|---|---|
@@ -68,6 +68,7 @@ Le dernier commit du dépôt (`bf9e1b7f`) date de **08h44**, soit **19 minutes a
 | 4 | **RAMAZANI KALUMBI RAMSES** `/in/ramazani-kalumbi-ramses-b1694b82/` | *Public health specialist (Epidemiology, MCH), Emergency management in conflict and non conflict settings* | Brazzaville, 1 500 abonnés, 44 relations en commun. Dernière activité à 2 mois, **mais c'est une republication OMS sur la flambée Bundibugyo** — exactement notre ligne d'événement. Arbitrage assumé : ancienneté limite, pertinence de contenu exacte. |
 | 5 | **Jean Claude Nshimiyimana** `/in/jean-claude-nshimiyimana-bsc-msc-mph-mls-ascp-i-ifba-certified-phd-c-aa751555/` | *Clinical Laboratory & Diagnostics Expert \| Biorisk, Biosafety & Biosecurity \| Health Emergencies for Limited Resources & Armed Conflict Contexts* | 1 868 abonnés, activité à 3 jours (outil OMS BRIET). |
 | 6 | **Dorothée Obach** `/in/dorothée-obach-82846b34/` | *Epidemiologist, PhD, scientific officer food-, vector-borne and zoonotic diseases* | Suède (profil ECDC-adjacent), 5 relations en commun, republication ECDC à 3 jours sur le virus du Nil occidental en Europe — **HWG porte une ligne West Nile fever**. |
+| 7 | **Mohamed Elsheikh** `/in/m-elsheikh/` | *Technical Officer WHO/EMRO \| Clinical Epidemiologist \| Dental Public Health Expert* | Vérifié, 2 365 abonnés, actif (post à 4 mois). **Quota 7/7-10 atteint avec ce suivi.** |
 
 ⚠️ **Méthode de clic corrigée en cours de run, à retenir.** Le premier suivi (Abdishakur Dek) a été cliqué depuis la **page d'activité**, où **5 boutons « Suivre » coexistent** (l'auteur, les auteurs republiés, la sidebar) : le clic est parti sur `b[0]` sans certitude sur la cible, et il a fallu **rouvrir la page de profil pour vérifier** que c'était bien lui (bouton « Suivre » disparu, mention « Abonné » sur sa carte). **Correction appliquée aux quatre suivants** : cliquer depuis la **page de profil**, et cibler le bouton dont la `section` ancêtre contient à la fois « Activité » et « abonnés » — sélecteur qui isole sans ambiguïté le bouton de suivi du profil visité. Vérification systématique du libellé « Suivi » après chaque clic. **Aucun suivi n'est parti sur une mauvaise cible.**
 
@@ -83,14 +84,40 @@ Le dernier commit du dépôt (`bf9e1b7f`) date de **08h44**, soit **19 minutes a
 
 ---
 
+### 3️⃣bis 🔒 DM 2/8 EN FILE DE VALIDATION — **Ngoy Guillaume** (`/in/ngoy-guillaume-76b8b2267/`), FR, vouvoiement, premier message — **4 jets, 3 rejets sur des défauts tous distincts**
+
+⭐ *Officier de surveillance de la 17ᵉ épidémie de la maladie à virus Ebola (MVE)*, Goma, Nord-Kivu, RDC, International Medical Corps + WHO/AFRO. **Déjà relation de 1er degré**, 1 062 abonnés, 29 relations en commun. Identité levée ce run (§12), clôt un carry-over ouvert depuis le 2026-08-11. **Aucun message échangé jusqu'ici** — vérifié par recherche directe dans la messagerie, pas par la seule bulle flottante (voir l'incident de méthode ci-dessous). Fil et posts recopiés dans `tmp/thread-ngoy.txt`. *langue du fil = fr (ses posts) ; langue du brouillon = fr.*
+
+**Aucune activité de fond récente** (son dernier post date de 7 mois), donc pas de candidat commentaire — mais son post sur une rumeur locale (« le vaccin antipaludique serait satanique »), qu'il dément avec des arguments factuels, offre un hook honnête pour un premier DM.
+
+**Les quatre jets, et ce que chacun a corrigé :**
+- **Jet 1** — angle : « bulletin de surveillance qui dénombre les cas et les doses, jamais les raisons d'un refus », clôture binaire. Mécanique **FAIL** (`ngram.history`, « correspond exactement au maillon que »). Reformulé, mécanique PASS. Relecteur : **REECRIRE 11**. 🔴 Rejoue la **posture d'observateur aval sous d'autres mots** (HWG voit l'agrégat, lui voit le terrain), famille explicitement déclarée épuisée le 03/09 (`content-log.md:804`) ; et la clôture binaire « A, ou B ? » est un moule déjà sanctionné.
+- **Jet 2** — la posture aval et la clôture binaire supprimées, question ouverte. Relecteur : **REECRIRE 11, 12**. 🔴 **(11)** l'ouverture « votre post … m'a marqué » est un gabarit **déjà nommé comme recyclé** dans ce registre (`linkedin-contacts.md:638`, 6+7 occurrences trouvées). **(12)** la question posée était une question de M&E générique, transposable à n'importe quel communicant ayant démenti une rumeur, sans exploiter sa position spécifique (officier de surveillance en riposte active).
+- **Jet 3** — ouverture changée, question ancrée sur « la 17e épidémie que vous suivez ». Relecteur : **REECRIRE 5, 12**. 🔴 **(5)** une généralisation invérifiée (« ce genre de méfiance touche aussi souvent les campagnes de vaccination pendant une riposte Ebola ») servait de prémisse au pont, sans source pour la soutenir. **(12)** le lien avec Ebola était **présumé par moi**, jamais établi par lui — son post ne mentionne ni Ebola ni la riposte.
+- **Jet 4** — la généralisation retirée ; la question ne présume plus le lien Ebola, elle lui demande directement où il a vu ce type de rumeur circuler dans son propre travail. **Relecteur : VERDICT ENVOYER, 12/12 PASS.**
+
+**🔒 Texte complet en file de validation — jamais envoyé par la routine :**
+
+> Bonjour, dans votre post sur la rumeur associant le vaccin antipaludique au satanisme, vous choisissez d'y répondre avec des faits, pas seulement un démenti.
+>
+> Une rumeur de ce genre, où d'autres l'avez-vous déjà vue circuler dans votre travail de terrain ?
+
+**Arbitrage CTA : omis, motif admis.** Premier message, aucun échange de fond n'a eu lieu — CTA et lien interdits par construction.
+
+`QA : mécanique jet 4 PASS (256 car., 2 paragraphes, fr/fr, 0 blocker, 0 warn) | relecteur 4 passes, jets 1-3 rejetés sur des défauts tous distincts (posture d'observateur aval + clôture binaire ; gabarit d'ouverture recyclé + question générique ; généralisation invérifiée + lien Ebola présumé), jet 4 = VERDICT ENVOYER 12/12 | faits cités : aucun chiffre | registre du 05/09 (09:05) | statut : **en file de validation**`
+
+⚠️ **Incident de méthode, important pour les prochains runs.** La bulle de messagerie flottante ouverte depuis un profil peut afficher un horodatage relatif **trompeur** (ex. « il y a 41 min » sur un fil daté en réalité du 14 août, constaté sur un autre profil ce run — voir §5). **Toujours vérifier un fil suspect par la recherche directe dans `linkedin.com/messaging/`** plutôt que de se fier au seul horodatage de la bulle flottante.
+
+---
+
 ### 4️⃣ 🔁 CARRY-OVER POUR LE CRÉNEAU DE 13h (05/09) — côté contacts
 
-1. 🔒 **Dr. Malachie MANAOUDA — DM en file de validation depuis ce run.** Texte intégral en §2. **Notification push envoyée.** Ne pas envoyer sans ordre explicite de David. ⚠️ Si David valide, vérifier avant envoi que le fil est toujours vide de son côté.
-2. ⭐⭐⭐ **Dr R Hyacinthe ZABRE** (`/in/dr-r-hyacinthe-zabre/`) — *Senior Epidemiologist & Public Health Data Science Specialist, **Africa CDC**, Epidemic Intelligence*, **déjà 1er degré**, 2 562 abonnés. Article en accès libre publié il y a 1 semaine sur l'intégration des signaux d'intelligence épidémique appliquée à la flambée Bundibugyo (cadre PREIS), et **il sollicite explicitement des collaborations**. Hors fenêtre 48 h donc non commentable, mais **meilleur candidat DM du corpus**. Vérifier d'abord l'existence d'un fil (aucun repéré).
-3. ⭐ **Ngoy Guillaume** (`/in/ngoy-guillaume-76b8b2267/`) — **identité levée (§12)**, clôt un carry-over ouvert depuis le 2026-08-11. *Officier de surveillance de la 17ᵉ épidémie de MVE*, Goma, **déjà 1er degré**, 31 relations en commun, aucun fil existant. Candidat DM sur la ligne d'événement Ebola/RDC.
-4. **Dr. Siaka Condé** — relance **ouverte depuis aujourd'hui** (le report du 04/09 fixait le 05/09), **non traitée ce run faute de temps**. À reprendre à 13h.
-5. ⭐ **James Schlitt** et ⭐ **Christian BABOKO** — nos envois du 04/09 au soir (18h16 et 18h58, les deux CTA envoyés à 23h20 sur ordre de David) sont **toujours les derniers messages** de leurs fils. Schlitt répond en général sous 1 à 3 h ; 15 h de silence est inhabituel pour lui. À revérifier à 13h.
-6. 🔴 **Plafond mensuel d'invitations personnalisées : non revérifié ce run** (aucune invitation émise). Lire le compteur dans la modale avant toute rédaction de note.
+1. 🔒 **DEUX DM EN FILE DE VALIDATION** : **Dr. Malachie MANAOUDA** (texte en §2 — ⚠️ mise à jour : **envoyé à 10h02 sur ordre explicite de David**, voir la note de statut de la section 2, donc **retiré de cette file**) et **Ngoy Guillaume** (texte en §3bis, **toujours en attente**). **Notification push envoyée pour Ngoy Guillaume.** Ne pas envoyer sans ordre explicite de David.
+2. ❌ **Dr R Hyacinthe ZABRE** (`/in/dr-r-hyacinthe-zabre/`) — **CLOS, tranché par David en session (« ce fil est du hors périmètre, laisse tomber »).** Le fil découvert ce run (14 août) est en réalité du **support de compte** : ZABRE est un client HWG existant, accès Pro provisionné par David mi-juillet (déjà documenté `linkedin-contacts.md:9263`, 14/08). **Ne plus le proposer comme candidat DM/commentaire marketing** — voir [[project_zabre_hwg_customer_not_prospect_2026_09_05]]. Reste suivi (relation de 1er degré), rien d'autre à faire.
+3. **Dr. Siaka Condé** — relance en cours de rédaction en fin de run (2 jets, voir texte le cas échéant en `content-log.md` ou reporté ci-dessous si non finalisé). Dernier échange : sa réponse du 29/08 (« *Let me look at this for a moment* »), 7 jours de silence.
+4. ⭐ **James Schlitt** et ⭐ **Christian BABOKO** — nos envois du 04/09 au soir (18h16 et 18h58, les deux CTA envoyés à 23h20 sur ordre de David) sont **toujours les derniers messages** de leurs fils. Schlitt répond en général sous 1 à 3 h ; plus de 15 h de silence est inhabituel pour lui. À revérifier à 13h.
+5. 🔴 **Plafond mensuel d'invitations personnalisées : non revérifié ce run** (aucune invitation émise). Lire le compteur dans la modale avant toute rédaction de note.
+6. 📌 **Signal à vérifier par `morning-don-check`, pas par cette routine** : deux posts LinkedIn indépendants (Chrissy Chabwera Banda, Rebecca Karimu, 19-21h) rapportent que le **Malawi Ministry of Health** a déclaré la **fin officielle** des flambées choléra ET mpox (choléra : 0 cas confirmé depuis 28+ jours, total cumulé **3 200 cas** cité ; mpox : 0 cas depuis 90+ jours, **162 cas confirmés** au total). **Notre ligne Choléra/Malawi est `active: true`, `asOf: 2026-06-29` (68 jours, stale), 3 150 cas / 30 décès** — cohérent avec un cumul antérieur à la clôture, mais jamais mis à jour vers un statut clos. **Aucune ligne Mpox/Malawi n'existe en base.** Sources vues ne sont que des reprises individuelles (pas le communiqué officiel du ministère ni un bulletin OMS/Africa CDC primaire) — **à vérifier contre une source primaire avant toute écriture**, cette routine ne le fait pas elle-même (politique commune §8).
 7. **Inchangés** : ⭐ John Omari Baso (ne rien envoyer avant qu'il écrive, réexporter le fil en entier avant tout brouillon) ; ⭐⭐ Seynudé Jean-Fortune DAGNON (attendre l'acceptation) ; ➖ Yakoza Nyirenda (invitation sans note du 30/08 toujours en attente) ; ⭐⭐ Isaias Fernandes Co (rien avant la semaine du 14/09) ; ⭐⭐ Dr. Ibrahima Socé Fall (toujours sans hook honnête) ; ⭐⭐ Gail Carson (dossier clos, ne pas rouvrir sans élément neuf) ; ⭐⭐ Jacques Delors TOUMANSIE MFONKOU et ⭐⭐ Ofelia CAZACU ; ❌ Zachariah G. Houdari et OLAOLUWA PHILIP (invitations reçues, décisions du 31/08 maintenues).
 
 ---
