@@ -147,6 +147,11 @@ export function buildWatchlistAlertEmail(
   // L'URL seule, et rien pour un éditeur interdit : ce gabarit publiait jusqu'ici
   // la colonne `source` brute, annotation d'édition comprise, à la fois dans le
   // `href` et comme libellé visible (voir sourceUrl dans lib/source-trust.ts).
+  //
+  // Le `href` et le libellé passent par esc() plus bas, comme dans le gabarit
+  // jumeau lib/disease-alert-email.ts : sourceUrl() rend le candidat tel quel
+  // (pas `url.href`), et son motif `\S+` accepte un guillemet double — une
+  // colonne `source` qui en contient sortirait de l'attribut sans ça.
   const sourceHref = publishableSourceUrl(outbreak.source);
 
   const html = `<!DOCTYPE html>
@@ -214,7 +219,7 @@ export function buildWatchlistAlertEmail(
     </table>
 
     <!-- Source -->
-    ${sourceHref ? `<p style="color:#475569;font-size:12px;margin-bottom:20px;">${c.source} : <a href="${sourceHref}" style="color:#ef4444;">${sourceHref.replace("https://", "")}</a></p>` : ""}
+    ${sourceHref ? `<p style="color:#475569;font-size:12px;margin-bottom:20px;">${c.source} : <a href="${esc(sourceHref)}" style="color:#ef4444;">${esc(sourceHref.replace("https://", ""))}</a></p>` : ""}
 
     <!-- CTA -->
     <a href="${dashUrl}" style="display:inline-block;background:#dc2626;color:white;padding:12px 28px;border-radius:8px;font-weight:700;font-size:14px;text-decoration:none;">${c.cta}</a>

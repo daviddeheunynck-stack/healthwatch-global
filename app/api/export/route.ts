@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
 import { createClient as createService } from "@supabase/supabase-js";
-import { getOutbreaks } from "@/lib/outbreaks";
+import { getOutbreaks, publishableSourceUrl, sourceStatus } from "@/lib/outbreaks";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
 import { createHash } from "crypto";
 import { trackEvent } from "@/lib/track-event";
@@ -110,7 +110,25 @@ async function buildExportResponse(request: NextRequest, userId?: string) {
       incidence_per_100k: incidence !== null ? parseFloat(incidence.toFixed(2)) : null,
       risk_level:         o.risk_level,
       date:               o.date,
-      source:             o.source,
+      // `source` portait la colonne brute. Deux defauts, tous deux deja tranches
+      // ailleurs dans le depot et jamais appliques a CET export :
+      //   - la colonne n'est pas une URL. Elle porte couramment l'edition du
+      //     bulletin apres l'adresse ("https://... (GPEI, Country updates as of
+      //     26 August 2026)") — 16 des 126 lignes affichees le 2026-09-04. Les
+      //     huit surfaces qui publient un lien sont passees par
+      //     publishableSourceUrl() en b378a39a ; cet export, neuvieme surface,
+      //     avait ete oublie et servait la chaine annotee dans un champ nomme
+      //     `source`.
+      //   - un editeur interdit de citation (FORBIDDEN_SOURCE_DOMAINS) sortait
+      //     ici avec son URL, alors que l'export CSV cote client filtre
+      //     explicitement le meme champ depuis OutbreakTable.tsx : « un editeur
+      //     interdit ne se cite pas, pas meme dans un CSV que le client
+      //     reexporte ailleurs ». Cet export-ci EST le livrable commercial.
+      // `source_tier` accompagne l'URL comme dans l'export client, pour qu'une
+      // ligne dont l'URL se vide garde ce que vaut sa source. Colonne ajoutee,
+      // pas remplacee — meme raisonnement additif que `active` plus bas.
+      source:             publishableSourceUrl(o.source),
+      source_tier:        sourceStatus(o),
       description:        o.description ?? null,
       pheic:              o.is_pheic,
       // getOutbreaks() also returns recently-closed rows (60-day display grace
