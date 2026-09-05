@@ -177,7 +177,7 @@ Le dernier commit du dépôt (`bf9e1b7f`) date de **08h44**, soit **19 minutes a
 
 ---
 
-### 3️⃣ter 🔒 DM 3/8 EN FILE DE VALIDATION — **Dr. Siaka Condé** (`/in/drconde-who-afro/`), EN, relance après 7 jours de silence — **3 jets, 2 rejets sur des défauts distincts**
+### 3️⃣ter ✅ DM 3/8 ENVOYÉ, SUR ORDRE EXPLICITE DE DAVID (« envoie les 2 DM en file », 13h) — **Dr. Siaka Condé** (`/in/drconde-who-afro/`), EN, relance après 7 jours de silence — **3 jets, 2 rejets sur des défauts distincts**
 
 *Head of WHO Country Emergency Program*, Lomé, Togo, relation de 1er degré. Fil verbatim dans `tmp/thread-siaka.txt`. *langue du fil = en ; langue du brouillon = en.* **Dernier échange** : le 28/08, nous demandions si le reporting de l'unité de soutien d'urgence a un lectorat en dehors des structures de riposte, avec le CTA (produit + lien + essai) déjà servi ; sa réponse du 29/08, **le dernier message du fil**, tenait en une phrase : « *Let me look at this for a moment* ». **7 jours de silence.**
 
@@ -186,13 +186,15 @@ Le dernier commit du dépôt (`bf9e1b7f`) date de **08h44**, soit **19 minutes a
 - **Jet 2** — gabarit retiré, porte de sortie ajoutée (« if it turns out to be internal-only, that's a fine answer too »). Relecteur : **REECRIRE 12** seul. 🔴 Le message ne posait plus aucune question et refermait unilatéralement le fil à sa place — contraire à la politique commune §3 (« toujours essayer de relancer poliment la discussion sur le fond ») puisque rien n'indique qu'il soit « visiblement fermé ou désintéressé ».
 - **Jet 3** — la porte de sortie conservée, une vraie question de suivi à réponse courte rattachée (« is that roughly what you are finding so far? »). **Relecteur : VERDICT ENVOYER, 12/12 PASS.**
 
-**🔒 Texte complet en file de validation — jamais envoyé par la routine :**
+**✅ Texte envoyé :**
 
 > Siaka, if the emergency support unit's reporting turns out to be internal-only, that is a perfectly good answer too, is that roughly what you are finding so far?
 
 **Arbitrage CTA : omis, motif admis.** Déjà servi dans ce fil le 28/08 — règle anti-répétition §3, pas un oubli.
 
-`QA : mécanique jet 3 PASS (161 car., 1 paragraphe, en/en, 0 blocker, 0 warn) | relecteur 3 passes, jets 1-2 rejetés sur des défauts distincts (gabarit de relance déjà servi à Eva Kamau + relance creuse ; clôture unilatérale sans question), jet 3 = VERDICT ENVOYER 12/12 | faits cités : aucun chiffre | registre du 05/09 (09:05) | statut : **en file de validation**`
+**Publication confirmée** — identité du destinataire (« Dr. Siaka Cond… ») et texte du composeur comparés caractère pour caractère au brouillon validé, **dans le même appel JS que le clic sur Envoyer**. Après envoi : éditeur vidé, **une seule occurrence** du texte dans la page. Fil revérifié en entier avant frappe (deep-query hors recherche `/messaging/`, qui n'indexait pas ce fil pour une raison distincte — voir l'incident Ngoy Guillaume ci-dessous) : dernier message avant envoi bien « *Let me look at this for a moment* » (29/08), CTA déjà servi le 28/08, conforme à l'archive.
+
+`QA : mécanique jet 3 PASS (161 car., 1 paragraphe, en/en, 0 blocker, 0 warn) | relecteur 3 passes, jets 1-2 rejetés sur des défauts distincts (gabarit de relance déjà servi à Eva Kamau + relance creuse ; clôture unilatérale sans question), jet 3 = VERDICT ENVOYER 12/12 | faits cités : aucun chiffre | registre du 05/09 (09:05) | statut : **envoyé le 05/09 vers 13h55, sur ordre explicite de David**`
 
 ---
 
