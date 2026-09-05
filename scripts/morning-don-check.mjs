@@ -227,6 +227,18 @@ if (suspicious.length) {
 // routines LinkedIn, et retirer ce bloc de commentaire une fois les deux lignes créées/réactivées.
 
 const FROZEN_ROW_CHECKED = {
+  // Crimée-Congo/Sénégal : vérifié le 05/09. Un 2e cas 2026 existe très probablement — femme de
+  // 28 ans de Dioffor (région de Fatick), sans historique de voyage, confirmée par PCR et ELISA à
+  // l'Institut Pasteur de Dakar, signalée la semaine se terminant le 04/04/2026. MAIS la ligne
+  // reste à 1 cas : la piste est MONO-SOURCÉE (Outbreak News Today ; la reprise de
+  // travelhealth.gov.hk cite nommément ce même article, elle n'est donc pas indépendante). Même
+  // règle que le chiffre du Lac tchadien à 126 — on n'écrit pas sur une source unique.
+  // 🔎 Piste précise pour le prochain run : le Weekly Bulletin on Outbreaks and Other Emergencies
+  // de l'OMS AFRO, semaine 14 de 2026 (semaine se terminant le 05/04). Le listing
+  // afro.who.int/health-topics/disease-outbreaks/outbreaks-and-other-emergencies-updates annonce
+  // 451 bulletins mais n'affiche pas la semaine 14 sur sa première page — il faut paginer, les
+  // PDF vivent sur iris.who.int. Si le bulletin confirme le cas, passer la ligne à 2.
+  "93b9b85a-2f0e-4fd1-9cc3-5b94b5404a2b": "2026-09-05",
   // Choléra/Cameroun : vérifié le 29/08. Aucun SitRep CERPLE-EN postérieur au n°015
   // (13-17/08, 1 342 cas / 36 décès, déjà en base). Le listing officiel
   // ccousp.cm/documentations/rapports-de-situation-cholera/ n'expose qu'une série NATIONALE
@@ -251,7 +263,9 @@ const FROZEN_ROW_CHECKED = {
   // (page de listing, pas de cadence connue — verifier a chaque run sp=10 comme les autres lignes
   // de cette section). Ne jamais reprendre le chiffre xmart OMS sur cette ligne : demontre non
   // fiable pour ce pays (cf. note ci-dessus).
-  "f24550be-7ed6-4a30-b077-3d0faed5f60e": "2026-08-28",
+  // Revérifié le 05/09 : le listing MSPAS n'expose toujours qu'un seul bulletin 2026, celui de
+  // la SE-30 (arrêté 01/08) qui alimente déjà la ligne. Aucune SE-31+ publiée. Rien à écrire.
+  "f24550be-7ed6-4a30-b077-3d0faed5f60e": "2026-09-05",
   // Diphterie/Australie : verifiee le 28/08 au Browser pane (page de listing de la collection).
   // Le premier lien reste « Epidemiological update – 10 August 2026 », soit exactement l'edition
   // deja en base : rien de nouveau, rien a ecrire. La serie est bimensuelle depuis le 31/07 (27/07
@@ -260,13 +274,19 @@ const FROZEN_ROW_CHECKED = {
   // successifs ont declenche l'anti-bot Akamai (« Access denied »), et le 403 renvoye au passage
   // n'etait PAS le signe d'une page existante mais non publiee — les dates voisines repondaient
   // 404 dans le meme souffle. Relire la page de listing suffit.
-  "e856b352-747b-4db0-b0d1-c9e55f6c53aa": "2026-08-28",
+  "e856b352-747b-4db0-b0d1-c9e55f6c53aa": "2026-09-05",
   // Cholera/Tchad : verifie le 28/08. WebSearch « Tchad cholera SITREP MSPP bilan cas deces aout
   // 2026 » : aucun SITREP n°036/2026 ni aucun national posterieur au n°035 (484/21, arrete au
   // 16/08, deja en base). Tous les resultats se referment sur des documents deja traites — le
   // n°035 relaye par tchadinfos le 19/08, les bilans anterieurs 239/13 et 75/8, et le SITREP 035
   // de 2025 (collision de millesime documentee dans source-checks.md). Rien a ecrire.
-  "06541c4a-6b67-4c2c-a44e-818ba7621d76": "2026-08-28",
+  // Choléra/Tchad : revérifié le 05/09 (WebSearch « Tchad choléra SITREP MSPP septembre 2026 »
+  // puis « tchadinfos choléra rapport situation »). Toujours AUCUN SITREP postérieur au n°035
+  // (arrêté 16/08, 484 cas / 21 décès, déjà en base) — 9e recherche négative d'affilée. Les
+  // résultats se referment soit sur les documents déjà traités (n°035, point provincial du 11/08,
+  // dépêche Xinhua du 13/08), soit sur la série 2025 Ouaddaï/Sila (faux positif de millésime
+  // documenté dans le SKILL). Rien à écrire.
+  "06541c4a-6b67-4c2c-a44e-818ba7621d76": "2026-09-05",
   // Choléra/RCA : vérifié le 16/08 puis revérifié le 29/08 (session interactive, suite au
   // data-quality du 28/08). Le bilan le plus récent publiable reste toujours 720 cas / 46 décès
   // arrêté au 06/08 (Africa24, déjà cité en base) — chronologie confirmée : 197/24 à la
@@ -298,7 +318,13 @@ const FROZEN_ROW_CHECKED = {
   // « chiffres identiques » de la section 4e, où la source publie bien une édition nouvelle).
   // ⚠️ Cette coïncidence exacte Africa CDC ↔ WER sur la Tanzanie est ce qui a permis de trancher
   // l'écart Somalie ci-dessous : les deux sources ont le MÊME cadrage.
-  "5db4495e-0615-434d-b5ca-5af99de2e5e8": "2026-09-03",
+  // Choléra/Tanzanie : re-instruit le 05/09 sur signalement d'une routine sociale (recherche d'un
+  // bulletin IDSR tanzanien, ou d'un numéro du Jarida couvrant le choléra). Négatif : les seules
+  // données IDSR publiées couvrent juillet-décembre 2025 (554 cas suspects / 19 décès), et la
+  // veille choléra de l'ECDC note explicitement qu'« aucune mise à jour n'a été rapportée par la
+  // Tanzanie depuis le 27 juillet 2026 ». Le WER 101-31 (arrêté 28/06, en base) reste donc la
+  // donnée la plus fraîche existante — la ligne n'est pas en retard, la source l'est.
+  "5db4495e-0615-434d-b5ca-5af99de2e5e8": "2026-09-05",
   // Choléra/Somalie : ✅ ÉCART RÉSOLU LE 03/09 — ligne corrigée de 233/0 à 2 657 cas / 1 décès
   // (arrêté 09/08/2026), re-sourcée vers l'aperçu mensuel choléra de l'ECDC. NE PAS ROUVRIR.
   // Rappel de l'énigme : le WER 101-31 donnait 233 cas / 0 décès (cumul au 28/06) avec « aucun cas
@@ -1001,7 +1027,7 @@ const MANUAL_ROW_CHECKED = {
   // Revérifié le 28/08 au Browser pane : toujours « 10 August 2026 » en tête de listing, aucune
   // parution depuis. Voir la note jumelle dans FROZEN_ROW_CHECKED (cette ligne est suivie par les
   // deux maps — 4d parce qu'elle est à sp=10, section 5 parce qu'aucun cron ne la couvre).
-  "e856b352-747b-4db0-b0d1-c9e55f6c53aa": "2026-08-28",
+  "e856b352-747b-4db0-b0d1-c9e55f6c53aa": "2026-09-05",
   // Polio/Palestine : vérifié le 13/08. La page du comité (who.int/groups/poliovirus-ihr-emergency-
   // committee) liste 44 réunions, la plus récente étant toujours la 44e du 04/03/2026 — déjà la
   // source de la ligne. Aucune 45e déclaration publiée à ce jour (cadence ~trimestrielle, donc une
@@ -1085,7 +1111,16 @@ const MANUAL_ROW_CHECKED = {
   // local (Rano, Tudun Wada, Kibiya, Bunkure, Bebeji, Kiru) — un bilan local, sans nombre de cas
   // associé, sans période de référence et sans reprise par le NCDC. Il ne peut ni remplacer ni
   // corriger un cumul national depuis 2022, et l'écrire dans `deaths` mélangerait deux cadrages.
-  "1ca31b07-6f83-4967-9f59-b599f7574642": "2026-08-30",
+  // Diphtérie/Nigéria : re-instruit le 05/09. ⚠️ La prémisse des signalements précédents était
+  // FAUSSE : le NCDC ne s'est pas tu depuis janvier. La série dédiée « Update of Diphtheria
+  // Outbreak in Nigeria » (ncdc.gov.ng/diseases/sitreps/?cat=18) s'est bien arrêtée, mais le
+  // « Weekly Epidemiological Report » (ncdc.gov.ng/reports/weekly) paraît chaque semaine et porte
+  // la diphtérie, tableau année-à-date compris. Édition lue : Vol. 16 n°32, semaine 32
+  // (3-9/08/2026), Table 19 — 2026 : 12 977 cas suspects / 10 476 confirmés / 406 décès (CFR
+  // 3,1 %) ; 2025 : 13 436 / 9 080 / 978 (7,3 %). ⚠️ CADRAGE DIFFÉRENT de la ligne, qui porte un
+  // cumul depuis 2022 (65 759 suspects / 2 229 décès) : ne PAS écrire 12 977 par-dessus, ce
+  // serait le piège Rougeole/États-Unis. Arbitrage remonté à David le 05/09.
+  "1ca31b07-6f83-4967-9f59-b599f7574642": "2026-09-05",
   // Chikungunya/France, Dengue/France, West Nile/France : vérifiées une 2e fois le 22/08, cette
   // fois sur signalement d'un contact LinkedIn (Pierre PARNEIX, 21/08) plutôt que par le contrôle
   // qualité — même défaut structurel que le 17/08 (aucun cron ne visite les pages de bulletin
