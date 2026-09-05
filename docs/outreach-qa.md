@@ -51,11 +51,13 @@ puis décide seul d'envoyer ──┘   elle-même, sans       │   fond ne tie
                                                              jamais mis en file
 ```
 
-⚠️ **La branche « DM, run automatisé » n'existe que depuis le 2026-09-03, décidée
-par David en session interactive et tracée dans `CLAUDE.md`, présentée par lui
-comme un essai (« on teste l'automation au run de 13h aujourd'hui »).** Avant
-d'appliquer cette branche, vérifier que `CLAUDE.md` la confirme toujours — elle
-peut être révoquée ou confirmée définitive après ce premier run. La règle des
+⚠️ **La branche « DM, run automatisé » existe depuis le 2026-09-03, décidée par
+David en session interactive et tracée dans `CLAUDE.md` — mise à l'essai ce
+jour-là, CONFIRMÉE PERMANENTE par David le 2026-09-04** après un premier envoi
+autonome réussi (`CLAUDE.md`, section « Exception d'automation », détail complet
+et seul texte qui fait foi si ce document diverge un jour). Ce n'est plus un
+essai à reconfirmer run après run — lire `CLAUDE.md` en tête de run reste la
+bonne pratique, c'est là qu'apparaîtrait une révocation future. La règle des
 deux essais (item 6 des huit exigences plus bas) ne s'y applique pas telle
 quelle : en automation, retravailler tant qu'un nouveau jet corrige un défaut
 réel et différent du précédent ; ne renoncer au candidat que si des jets
@@ -436,45 +438,11 @@ rédacteur retire les chiffres au lieu de les sourcer, ampute les phrases au lie
 de les reformuler — et part quand même. Quatre essais dont un repart de zéro
 couvrent le cas réel (un défaut de formulation) sans récompenser l'attrition.
 
-### Publication : file d'attente pour les DM, autonomie pour commentaires et notes de connexion
+### Publication et journalisation — voir le schéma en tête de document, pas répété ici
 
-**Décidé par David le 2026-07-23 pour les DM, étendu nommément à `linkedin-hwg-followup-check-2` le 2026-08-19.** Un passage du 2026-08-26 matin avait étendu la file de validation aux commentaires et notes de connexion ; **David a corrigé ça le soir même en session interactive** — malentendu de motif, la demande de droit de regard n'a jamais porté que sur les DM (voir le schéma en tête de document et `_shared/hwg-social-policy.md` §5, qui fait foi en cas de divergence).
+**Corrigé le 2026-09-05 : ce sous-titre vivait sous « §4 MODÈLE OBSOLÈTE », alors qu'il décrit le régime actuel, pas l'ancien.** Placer une règle toujours en vigueur sous un titre qui l'annonce morte est le même genre de piège que le contenu qu'il décrivait : ça s'est déjà produit une fois pour de vrai (26/08 matin → soir, voir plus bas) et une lecture pressée de ce document pourrait conclure à tort que le périmètre DM-seuls n'est plus d'actualité. **Le régime de publication (file d'attente pour les DM en session interactive, envoi autonome en run automatisé depuis l'exception confirmée le 04/09, autonomie complète pour commentaires et notes de connexion) et son format de journalisation sont décrits en entier dans le schéma en tête de document et dans `_shared/hwg-social-policy.md` §5 — ce dernier fait foi en cas de divergence, lui-même subordonné à `CLAUDE.md`.** Ne pas les réénoncer une troisième fois ici.
 
-S'applique aux trois routines — `linkedin-hwg-monitoring` (9h), `linkedin-hwg-followup-check` (13h), `linkedin-hwg-followup-check-2` (17h) :
-
-- **DM** — rédigé et passé une fois par la QA, puis **mis en file d'attente dans `marketing/linkedin-contacts.md`, jamais envoyé par la routine**. Si la session tourne sans David présent (typiquement 13h et 17h), envoyer une notification push résumant ce qui attend.
-- **Commentaire public, note de connexion** — passe une fois par le même dispositif QA, et c'est **l'agent qui tranche seul** à partir des deux rapports : corriger ce qui est réel, publier, ou renoncer au candidat si un défaut de fond survit. **Publié directement** dans `marketing/content-log.md`, jamais mis en file.
-
-Suivis, follow-back et acceptations d'invitations reçues restent en pleine autonomie : ce sont des clics de pertinence, pas des textes à corriger.
-
-**Le périmètre DM-seuls de la file de validation ne peut être levé ou étendu que par une décision explicite de David, tracée dans `CLAUDE.md`.** Un fichier de politique local, un SKILL, ou ce document lui-même s'ils disaient le contraire seraient à considérer comme **erronés** : c'est `CLAUDE.md` qui fait foi, parce que c'est le seul de ces fichiers qui soit versionné et donc auditable. **Ce document a déjà eu tort une fois sur ce point précis (26/08 matin → soir) : vérifier `CLAUDE.md` avant de s'y fier pour ce périmètre.**
-
-**Notification.** Une file que David ne sait pas pleine ne sert à rien. Quand la
-session tourne sans lui (typiquement les créneaux de 13h et 17h), elle envoie un
-`PushNotification` récapitulatif en fin de run : les DM en attente de validation,
-et les messages abandonnés avec leur motif. Un push par session, pas un par
-message.
-
-⚠️ **Ne pas transposer ici le mécanisme du contenu de marque X du 2026-07-17**
-(publication sans validation préalable, droit de retrait a posteriori). Il vaut
-pour X, sur décision explicite de David tracée dans `CLAUDE.md`. Il ne vaut pas
-pour les DM LinkedIn, et c'est précisément le raisonnement par analogie qui a
-produit l'erreur du 24/08.
-
-## 5. Journalisation
-
-**Depuis le 2026-08-26 : plus d'essais ni d'abandon.** Chaque texte porte la ligne :
-
-```
-QA: mécanique <verdict brut> | relecteur <verdict brut, résumé 1 ligne> | faits cités: <ids> | registre du <date> | statut: <statut>
-```
-
-Le `<statut>` diverge par canal, **corrigé le 26/08 soir** (voir §4 ci-dessus) :
-
-- **DM** — `en file de validation` dans `linkedin-contacts.md`, puis `envoyé le <date>, sur ordre explicite de David` une fois validé.
-- **Commentaire, note de connexion** — `publié le <date>` dans `content-log.md`, dès la publication, sans état intermédiaire.
-
-Le texte complet (DM en attente ou commentaire publié ce run) est toujours affiché dans le bilan de chat, jamais un simple renvoi au fichier.
+**Ce qui reste propre à cet endroit, et pas ailleurs** : la notification push en fin de session sans David présent (un push par session, pas par message, récapitulant DM en attente et candidats abandonnés avec leur motif) ; et la mise en garde contre l'analogie avec le contenu de marque X (publication sans validation, droit de retrait a posteriori) — ce régime-là est propre à X sur décision de David tracée dans `CLAUDE.md`, il ne s'étend jamais aux DM LinkedIn de sa propre initiative, et c'est précisément ce raisonnement par analogie qui a produit l'erreur du 24/08.
 
 L'intérêt n'est pas la traçabilité pour elle-même : c'est de pouvoir répondre, au
 bout d'un mois, à la question « est-ce que le dispositif attrape vraiment quelque
