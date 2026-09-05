@@ -4483,3 +4483,47 @@ Contrôle fait sur le **contenu réellement stocké** (`list_drafts` / `get_draf
 - **Relance J+10** : le lot du 05/09 deviendra éligible le **15/09**, sur le nombre effectivement envoyé.
 - **⚠️ Épuisement du vivier — le diagnostic du 04/09 se confirme et se précise.** 3e run consécutif sous l'objectif (16, 16, 14 — la pente est descendante) ; 7 doublons rattrapés au grep contre 6 hier et 4 le 22/08 ; 446 domaines distincts au journal. **Le fait neuf de ce run : l'assouplissement « boîtes nominatives de chercheurs » décidé hier n'a rien débloqué**, parce que le blocage n'était pas réglementaire mais technique — les annuaires de facultés (Yale) sont rendus en JavaScript et ne livrent aucune adresse en lecture directe. **Pistes qui restent ouvertes, par ordre de rendement attendu** : (1) trancher la lecture du plafond OMS ci-dessus, gain immédiat et sans risque de +1 à +7 par lot ; (2) attaquer `emro.who.int` avec un autre motif d'URL, seule région jamais explorée avec succès ; (3) accepter une baisse d'objectif assumée à 12-15/jour plutôt qu'un 20 que le stock ne permet plus.
 - **✅ Arbre de travail propre en fin de run — la pile signalée depuis 3 runs a été vidée.** En début de session, `scripts/audit-alert-day.mjs` et `scripts/probe-alert-lock.mjs` figuraient encore comme non suivis ; en fin de run, `git status` ne rend plus que `marketing/institutional-prospects-log.md`, le fichier de cette routine. Ces deux scripts ont donc été committés ou retirés par une autre session pendant ce run. `marketing/qa/product-claims.manual.json`, signalé modifié les 3 runs précédents, n'apparaît plus non plus. **Rien laissé en attente, rien committé qui ne soit à cette routine** (règle `AGENTS.md`).
+
+---
+
+### Complément du 2026-09-05 (après-midi) — AMRO débloqué, motif d'URL PAHO retrouvé
+
+À la demande de David, exploration du même exercice que EMRO/AFRO plus tôt aujourd'hui : trouver le bon motif d'URL PAHO plutôt que celui testé le 04/09 (`paho.org/en/paho-country-office-*`, 404 sur les 8 pays testés).
+
+**Motif retrouvé : une page unique, pas un motif par pays** — `paho.org/en/paho-country-office-media-contacts`. C'est la même page qui avait déjà servi de source à 19 boîtes déjà journalisées (Pérou, République dominicaine, Salvador, etc., visibles dans les entrées du 21-22/08) — mais elle n'avait jamais été relue dans son intégralité depuis. Relue en direct aujourd'hui (HTTP 200), elle liste **31 boîtes pays/centre**, dont **13 non encore journalisées**.
+
+**Sur les 13 nouvelles, 9 sont des bureaux pays qui correspondent exactement aux 8 pays signalés « sans aucune adresse publiée » le 04/09**, plus Haïti et Barbade en bonus :
+- Bahamas & Turks-et-Caicos : `mcfalltan@paho.org`
+- Barbade / Bureau subrégional ECC : `lashleyb@paho.org`
+- Chili : `palmagon@paho.org`
+- Cuba : `delpintan@paho.org`
+- Équateur : `andradeest@paho.org`
+- Guyana : `hoyteang@paho.org`
+- Haïti : `Roussettri@paho.org`
+- Jamaïque : `email@jam.paho.org` (sous-domaine `jam.paho.org`, distinct de `paho.org` — MX vérifié séparément)
+- Uruguay : `oxandaba@paho.org`
+
+**4 autres correspondent à des centres spécialisés PAHO, pas des bureaux pays** — laissés de côté cette fois, statut à trancher par David s'ils reviennent : Bireme (`franzonana@paho.org`, centre d'information scientifique basé au Brésil), CLAP (`paismel@paho.org`, périnatalité), PANAFTOSA (`peraltaana@paho.org`, zoonoses/fièvre aphteuse — pertinence épidémiologique réelle mais périmètre « bureau pays » à confirmer), et un second contact Guatemala (`ghenning@paho.org`, redondant avec `gut-pwr@paho.org` déjà au journal) et un second Nicaragua (`ortize@paho.org`, redondant avec `nic-email@paho.org` déjà au journal).
+
+**Plafond PAHO appliqué : 4 sur 9 retenus, conformément à la décision de David de ce jour même (PAHO = faîtière à part, plafond générique de 4).** 4 brouillons créés : Cuba, Chili, Équateur, Jamaïque — choisis pour la couverture géographique (2 Amérique du Sud, 2 Caraïbes) et le profil épidémiologique (Cuba, diplomatie sanitaire ; les trois autres, pays de taille significative jamais couverts). **5 boîtes pays restent en réserve pour un prochain lot**, sans nouvelle recherche nécessaire : Bahamas & Turks-et-Caicos, Barbade/ECC, Guyana, Haïti, Uruguay.
+
+**Contrôle MX** : `paho.org` (Outlook, déjà validé de nombreuses fois) et `jam.paho.org` (même MX Outlook que `paho.org`, sous-domaine légitime).
+
+**Anti-doublon** : les 9 candidats comparés au journal par local-part exact (`comm -23` sur la liste extraite de la page vs la liste déjà journalisée) — aucun des 9 pays retenus/réservés n'était déjà présent.
+
+**Conformité mécanique des 4 brouillons** (`list_drafts` en vue complète) : aucun `htmlBody`, aucune balise `<a>`, aucun `.` littéral de domaine, signature « Find us at healthwatch. », objets sous 60 caractères, clôture par question explicite.
+
+**Brouillons créés** : Cuba `r7231295372137613010`, Chili `r-6402426550713309194`, Équateur `r6234423584945211341`, Jamaïque `r-6605329604428415650`.
+
+#### Contacts retenus (complément AMRO)
+
+| Institution | Pays/Région | Segment | Contact | Email | Source (lue en direct, HTTP 200) | Vérifié | Brouillon Gmail |
+|---|---|---|---|---|---|---|---|
+| OPS/PAHO — Bureau pays Cuba | Cuba / AMRO | Gouvernement/OMS | — (contact média/correspondance du bureau) | `delpintan@paho.org` | paho.org/en/paho-country-office-media-contacts | Oui | oui — `r7231295372137613010` |
+| OPS/PAHO — Bureau pays Chili | Chili / AMRO | Gouvernement/OMS | — (contact média/correspondance du bureau) | `palmagon@paho.org` | paho.org/en/paho-country-office-media-contacts | Oui | oui — `r-6402426550713309194` |
+| OPS/PAHO — Bureau pays Équateur | Équateur / AMRO | Gouvernement/OMS | — (contact média/correspondance du bureau) | `andradeest@paho.org` | paho.org/en/paho-country-office-media-contacts | Oui | oui — `r6234423584945211341` |
+| OPS/PAHO — Bureau pays Jamaïque | Jamaïque / AMRO | Gouvernement/OMS | — (contact média/correspondance du bureau) | `email@jam.paho.org` | paho.org/en/paho-country-office-media-contacts | Oui | oui — `r-6605329604428415650` |
+
+**Compteur mis à jour** : lot du 05/09 = **19 contacts au total** (15 du matin + 4 PAHO de ce complément). Cumulé depuis le 02/08 reste à **360** jusqu'à confirmation d'envoi (file : ces 4 brouillons s'ajoutent aux 25 déjà en attente, soit **29** en fin de complément — toujours sous le seuil de ~40).
+
+**Pour le prochain run** : la réserve de 5 boîtes PAHO ci-dessus (Bahamas/Turks-et-Caicos, Barbade/ECC, Guyana, Haïti, Uruguay) est utilisable sans nouvelle recherche, sous réserve du plafond de 4/lot — si le lot suivant ne contient aucun autre contact PAHO, les 4 premiers de cette réserve peuvent être ajoutés directement. Le statut des 3 centres spécialisés (Bireme, CLAP, PANAFTOSA) et de PANAFTOSA en particulier (mandat zoonoses/surveillance, plus proche de la mission que Bireme/CLAP) reste à trancher par David — sont-ils des « bureaux pays » au sens du plafond, une faîtière à part, ou hors périmètre ?
