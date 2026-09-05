@@ -4017,3 +4017,81 @@ par ce cron, qui n'a d'ailleurs jamais tourné. Le changement ne modifie le
 contenu d'aucun message, ne peut atteindre aucun client existant, et son
 seul effet est de **retenir** un envoi faux. Construit sur cette base, et
 signalé ici pour que l'arbitrage soit relisible.
+
+### Construction — idée 2 livrée, idée 1 délibérément non construite
+
+**Idée 1 (mur payant vs six surfaces publiques) : ⛔ NON construite**, garde-fou
+de pricing/packaging. Les deux sorties sont exclusives et s'excluent l'une
+l'autre ; trancher revient à défaire, soit le mur livré aujourd'hui, soit
+l'actif SEO. Aucune ligne de code touchée sur ce sujet. L'inventaire des six
+surfaces ci-dessus est complet et vérifié, il suffit de dire (a) ou (b).
+
+**Idée 2 (alerte prédictive) : ✅ construite** — commit `639316cb`, poussé sur
+master. Verrou de code partagé acquis avant la première édition et relâché
+après le push.
+
+`app/api/cron/trigger-predictive-alerts/route.ts` ne tire désormais que si le
+nombre de nouveaux cas de la semaine écoulée est au moins égal à celui de la
+semaine précédente. La borne J-7 est relue avec **exactement la même fenêtre
+et le même tri** que la requête `oldest` de `getOutbreakTrendsBulk`, pour que
+les deux semaines comparées soient contiguës et non chevauchantes — sans quoi
+le filtre aurait mesuré autre chose que ce que le seuil mesure. Une ligne sans
+terme de comparaison à J-14 reste silencieuse. Requête paginée par `.range()`
+(121 lignes actives × une fenêtre de 8 jours frôle le plafond de 1 000 lignes
+de Supabase, et une réponse tronquée revient en succès —
+`reference_supabase_caps_queries_at_1000_rows`). Le compteur
+`notAccelerating` est renvoyé dans la réponse JSON du cron, pour que la
+suppression soit visible et pas silencieuse.
+
+**Rejoué sur l'historique réel après le correctif**, mêmes fenêtres que le
+code livré :
+
+```
+déclenchements AVANT : 334
+déclenchements APRÈS : 247   (74 % conservés)
+  supprimés, incidence en BAISSE (affirmation fausse)   : 28   ← la cible
+  supprimés, pas de relevé à J-14 (claim non étayable)  : 59
+```
+
+Les 59 sont un artefact du rejeu, pas du correctif : ils se concentrent au
+début de l'historique des relevés, quand aucune ligne n'avait encore quatre
+semaines de recul. **Mesuré sur l'état réel d'aujourd'hui : 113 des 121 lignes
+actives (93 %) disposent des deux fenêtres**, donc le filtre peut trancher ;
+5 (4 %) seraient muettes faute de terme à J-14, toutes assez jeunes pour
+l'acquérir sous quinze jours ; 3 n'ont aucun relevé exploitable et étaient
+déjà muettes avant. La fonctionnalité reste largement opérante — 32 foyers
+distincts continuent de déclencher.
+
+`npx tsc --noEmit` et `npx eslint` propres sur le fichier touché. Hooks de
+pré-commit et de pré-push passés (`check-restricted-fetch` : aucune URL non
+déclarée ; `check-cron-schedule` : 25 commentaires conformes à `vercel.json` ;
+`check-migrations` : 89 migrations, toutes appliquées).
+
+**Vérification produit non faite, et pourquoi :** le cron n'est pas
+observable en navigateur et n'a aucun abonné (0 ligne dans
+`outbreak_predictive_alerts`), donc rien à rendre ni à cliquer. Le rejeu sur
+les 78 jours d'historique réel ci-dessus est la vérification — il exerce la
+même logique sur les mêmes données que celles que le cron lira demain à
+12h40 UTC, premier passage de sa vie.
+
+### Constat annexe, aucune action prise
+
+Le registre partagé `_shared/sources-interdites.md` intitule son tableau 🔴
+« ne jamais ingérer, **ni citer comme source publiée** », alors que deux de ses
+cinq lignes (`polioeradication.org`, `cdc.gov.au`) portent en réalité le régime
+« vérification manuelle oui, cron jamais » — et que `lib/source-trust.ts` le dit
+noir sur blanc : « Ces éditeurs **peuvent être cités** ». Les 15 lignes polio
+actives citant `polioeradication.org` sont donc conformes au code et au régime
+décidé, mais paraissent en infraction si on ne lit que l'intitulé du tableau.
+J'ai vérifié ce point avant de le signaler comme un défaut — c'en aurait été un
+gros. Fichier appartenant à `daily-routine-improvement-audit`, laissé intact ;
+à corriger d'un mot par cette routine-là, ou par David.
+
+### Fichiers modifiés par d'autres, laissés intacts (AGENTS.md)
+
+Au démarrage du run, quatre fichiers de code (`app/[locale]/(dashboard)/page.tsx`,
+`components/OutbreakDetailModal.tsx`, `components/OutbreakTable.tsx`,
+`lib/outbreaks.ts`) et deux fichiers marketing étaient modifiés par la session
+interactive en cours. Rien n'a été stagé ni committé de ce travail ; il a été
+publié par son auteur en `c04a158a` pendant ce run, et l'idée 2 a été construite
+dans un fichier qu'aucune autre session ne touchait.
