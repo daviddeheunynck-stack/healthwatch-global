@@ -1,6 +1,98 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
+## 📅 Session linkedin-hwg-monitoring — 05/09/2026 (9h) — 🔒 **1 DM EN FILE DE VALIDATION** (Dr. Malachie MANAOUDA, 2 jets) — ✅ **6 suivis**, ✅ **1 commentaire publié** (détail dans `content-log.md`) — ⚠️ **régime file de validation appliqué : présence de David positivement établie**
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` datée du 05/09 dans ce fichier ni dans `content-log.md` à l'ouverture ; le seul commit LinkedIn du jour est `e7209a04` (00h00, envoi des 2 CTA en attente du 04/09) → **premier déclenchement de cette routine aujourd'hui**. Horloge à l'heure (`Sat Sep 5 09:03 2026`). Branche vérifiée : **master**. Registre de faits régénéré à 09h05 (224 faits, 106 lignes affichées, 3 périmés) ; registre produit régénéré également (19 formats de prix, 7 claims manuelles, 110 foyers / 74 pays / 19 maladies).
+
+**Navigateur : nominal.** `_shared/browser-status.md` lu avant ouverture (dernière entrée 🟢 RÉTABLI du 03/09). `list_connected_browsers` renvoie `23c7ecdd-26d7-4d25-b39b-1889eb0fa3bd` seul, sélectionné par deviceId (§7). Aucun refus du classifieur, aucun timeout CDP, aucune corruption de zoom — la journée du 04/09 avait cumulé les trois. **Aucune entrée à ajouter à `browser-status.md`.**
+
+---
+
+### 1️⃣ ⚠️ RÉGIME D'ENVOI — FILE DE VALIDATION, ET LA CONDITION EST VÉRIFIÉE, PAS SUPPOSÉE
+
+`CLAUDE.md` relu en tête de run : l'exception d'automation du 03/09, **confirmée permanente le 04/09**, ne couvre que les **runs planifiés où David est absent**. Ici la présence de David est **positivement établie**, par quatre traces horodatées indépendantes :
+
+| Trace | Horodatage | Ce qu'elle établit |
+|---|---|---|
+| commit `fcc04966` | 07h35 | « tribuneonlineng.com admise, **sur ordre explicite de David** » |
+| commit `1ed4734e` | 07h36 | « Lassa/Nigeria re-sourcée, **sur ordre explicite** » |
+| commit `23e01bf6` | 08h01 | « Diphtérie/Nigéria basculée sur le cadrage NCDC (**ordre David 05/09**) » |
+| commit `7a73af76` | 08h39 | « ajout Serbie — **David tranche** le comptage OMS » |
+
+Le dernier commit du dépôt (`bf9e1b7f`) date de **08h44**, soit **19 minutes avant l'ouverture de ce run**, et `list_sessions` montre `daily-institutional-prospecting-healthwatch` en `isRunning: true`. **Ce n'est donc pas le cas de doute prévu par `CLAUDE.md`** (« en cas de doute réel […] c'est la ligne de base du 23/07 qui l'emporte ») : c'est le cas nominal de la ligne de base elle-même. Le DM ci-dessous est **mis en file, jamais envoyé par la routine**.
+
+---
+
+### 2️⃣ 🔒 DM 1/8 EN FILE DE VALIDATION — **Dr. Malachie MANAOUDA** (`/in/dr-malachie-manaouda-11893aa0/`), FR, vouvoiement, message de bienvenue après acceptation — **2 jets, relecteur 10/12 puis correction des 2 échecs**
+
+⭐⭐⭐ *Administrateur Civil Principal | **Ministre de la Santé Publique du Cameroun** 🇨🇲 | Commandeur de l'Ordre de la Valeur.* Relation de 1er degré depuis le **03/09 à 11h12**, date à laquelle il a accepté notre note de connexion du 02/09. **Il n'a jamais écrit dans ce fil** : la seule entrée est notre propre note. Fil et post source recopiés dans `tmp/thread-manaouda.txt`. *langue du fil = fr ; langue du brouillon = fr.*
+
+**Pourquoi aujourd'hui, et pas avant.** Le run du 03/09 avait rédigé ce message et **décidé de ne pas l'envoyer**, sur un `FAIL` de la question 7 : écrire une deuxième fois **le même jour** à un ministre en exercice, sur le post même qui avait servi de hook à la note qu'il venait d'accepter, c'était de la pression. La décision archivée fixait sa propre échéance : « *l'angle est conservé tel quel pour plus tard (à partir du 05/09 au titre du plancher de 3 jours, ou plus tôt s'il répond ou publie), avec la correction du point 4 déjà identifiée* ». **Les deux conditions sont vérifiées ce matin** : le plancher de 3 jours depuis la note du 02/09 est servi, et sa page d'activité a été rouverte — **son post d'Addis-Abeba, désormais vieux de 5 jours, reste sa seule publication**, donc aucun hook neuf n'est apparu qui aurait permis de changer d'angle. Le relecteur a rejugé la question 7 à neuf et l'a passée, en notant que le motif du refus était **daté et à échéance nommée, pas structurel**, et que le volet exploité (Bassin du Lac Tchad) diffère de celui de la note du 02/09 (les quinze mois sans poliovirus au Cameroun).
+
+**L'angle**, actualisé sur le registre du jour : son compte rendu mentionne la lutte contre la poliomyélite **dans le Bassin du Lac Tchad**, objet transfrontalier — or les lignes polio que nous tenons pour ce bassin ne s'arrêtent pas de compter à la même date, alors qu'elles sortent de la **même page hebdomadaire du GPEI**, dont les blocs ne se rafraîchissent pas ensemble. **L'écart s'est creusé depuis le 03/09** : le Nigeria est passé du 26 août au **2 septembre** pendant que le Tchad et le Niger restaient au **18 août**, soit **15 jours** d'écart contre 8 il y a deux jours.
+
+**Les deux jets :**
+- **Jet 1** — Mécanique **FAIL** sur `ngram.history` (« *votre compte rendu d addis* », « *compte rendu d addis abeba* »). **Faux positif documenté, vérifié sur pièce** : les deux séquences viennent de `linkedin-contacts.md:758` et `:760`, c'est-à-dire du **brouillon du 03/09 archivé et jamais envoyé** — il se percute lui-même, exactement le piège décrit dans `docs/outreach-qa.md`. Formulation changée quand même (« *sur ce que vous rapportez d'Addis-Abeba* »), la correction coûtait une seconde et lève le blocage ; s'y ajoute la leçon de [[feedback_unsent_jet_backreference_2026_09_03]] — un texte ne doit pas renvoyer à une phrase que le destinataire n'a jamais reçue. Relecteur : **REECRIRE 4, 11**, dix `PASS` sur douze.
+  - 🔴 **(4), le défaut réel** : « *Pour le Cameroun je n'ai aucune ligne* » est **littéralement faux**. Le registre porte **trois lignes Cameroun actives** — Choléra, **1 529 cas / 41 décès / létalité 2,7 %, arrêtées au 17/08**. L'affirmation n'était vraie que sous-entendu « aucune ligne **polio** », et le mot manquait. Adressée au ministre de la Santé du Cameroun, c'est-à-dire **au seul destinataire au monde qui vérifiera cette phrase sur son propre pays**, elle ne pouvait pas passer. Le relecteur du 03/09 avait déjà fait échouer le jet précédent sur ce point ; la correction avait été appliquée à la première moitié de la phrase (nommer les trois pays réellement tenus) et pas à la seconde.
+  - **(11)** la clôture « *dispose-t-elle de A […] ou faut-il B ?* » rejouait la question fermée binaire « option noble ou option dégradée », charpente **massivement épuisée** : le relecteur compte **93 clôtures de cette forme** dans les textes cités de ce fichier, plus 9 dans l'archive, sur des messages **réellement envoyés à des destinataires distincts** (`:15062`, `:14290`). Même défaut, même correction, que le jet 2 du DM Ngoy deux jours plus tôt.
+- **Jet 2** — les deux corrections nommées appliquées, **et rien d'autre touché** : le mot « polio » ajouté à la clause Cameroun, et la clôture passée en **question ouverte**. Mécanique **PASS** (0 blocker, 0 warn ; restent deux `info` sur « 2 » et « 18 », faux positifs connus — ce sont des **dates d'arrêté**, pas des valeurs de cas, et le relecteur les a tracées une par une dans le champ `asOf`). Contre-grep indépendant sur la nouvelle clôture : **0 occurrence** pour « *s'y prend-elle* » et « *arrêter un état* » ; les 2 occurrences de « *à une date unique* » sont, vérification faite, **le brouillon non envoyé du 03/09 lui-même**. **Non resoumis** : les deux échecs avaient une correction minimale explicitement nommée, les dix autres réponses portaient sur du texte conservé sans modification — même conduite que les jets finaux BABOKO et Schlitt du 04/09.
+
+**🔒 Texte complet en file de validation — jamais envoyé par la routine :**
+
+> Docteur, sur ce que vous rapportez d'Addis-Abeba, c'est le volet Bassin du Lac Tchad que je n'arrive pas à suivre proprement de mon côté.
+>
+> Je tiens des lignes polio pour le Nigeria, le Tchad et le Niger, et elles s'arrêtent de compter à des dates différentes : le Nigeria au 2 septembre, le Tchad et le Niger au 18 août. Même page hebdomadaire, mais les blocs ne se rafraîchissent pas ensemble. Pour le Cameroun je n'ai aucune ligne polio, et c'est justement le pays dont vous parlez.
+>
+> Comment la coordination régionale s'y prend-elle pour arrêter un état du bassin à une date unique ?
+
+**Arbitrage CTA : omis, et c'est l'un des trois motifs admis.** Politique commune §3, encadré « Aucune dérogation au CTA » : l'échange n'est **pas encore substantiel** — il n'a jamais écrit une ligne dans ce fil, l'acceptation d'une invitation n'étant pas un message. Le lien et l'essai restent interdits en premier message de bienvenue tant qu'il ne les demande pas. Le relecteur a validé l'omission en citant ce motif. **À rouvrir dès sa première réponse de fond.**
+
+⚠️ **Point de licence signalé à David, sans conséquence sur ce message.** L'angle s'appuie sur des lignes dont la source est `polioeradication.org`, dont le **cron a été retiré le 04/09** pour non-conformité aux CGU. Vérification faite par le relecteur : ce domaine relève de `RESTRICTED_FETCH_DOMAINS` (**« ne jamais récupérer automatiquement »**), **pas** de `FORBIDDEN_SOURCE_DOMAINS`, qui ne contient que `reliefweb.int` et les sitreps `ncdc.gov.ng`. **Citer ces lignes est licite** ; c'est leur récupération automatisée qui ne l'est pas. Rien à corriger, mais le fait est consigné.
+
+`QA : mécanique jet 1 FAIL sur ngram.history (2 séquences, toutes deux tracées au brouillon non envoyé du 03/09) ; jet 2 PASS (604 car., 3 paragraphes, fr/fr, 0 blocker, 0 warn, 2 info faux positifs sur des dates d'arrêté) | relecteur 1 passe, VERDICT: REECRIRE 4, 11 — 10 PASS sur 12, les 2 échecs corrigés à la lettre | faits cités : dates d'arrêté Polio Nigeria 2026-09-02, Tchad et Niger 2026-08-18, toutes trois vérifiées au champ asOf du registre ; aucune valeur de cas citée ; aucune affirmation produit | registre du 05/09 (09:05) | statut : **en file de validation**`
+
+---
+
+### 3️⃣ ✅ RÉSEAU — 6 SUIVIS, 0 NOTE DE CONNEXION, 0 INVITATION TRAITÉE
+
+**Suivis : 6/7-10** — quota non atteint, et la recherche a été menée sur **quatre filons de mots-clés distincts** avant de s'arrêter, pas après un passage unique. Le facteur limitant n'est pas la barre de pertinence, c'est que **la majorité des profils au bon intitulé sont dormants** : sur 14 candidats neufs instruits, 4 ont été écartés pour absence d'activité récente et 3 étaient déjà relations de 1er degré (donc déjà suivis).
+
+| # | Profil | Intitulé | Motif |
+|---|---|---|---|
+| 1 | **JEAN NACHEGA** `/in/jean-nachega-608b7211a/` | *Full Professor, Infectious Diseases \| Director BMRI, Stellenbosch ; Assoc. Prof. Epidemiology, Pittsburgh* | 1 558 abonnés, 8 relations en commun, Correspondence Lancet du jour sur la santé mentale des intervenants Ebola, mission Africa CDC à Bunia. Commentaire abandonné (voir `content-log.md`), **le suivi garde la porte ouverte**. |
+| 2 | **Abdishakur Dek** `/in/abdishakur-dek-74368424a/` | *Surveillance officer @ MSF-H, Somali Region emergency response unit* | Post de fond sur la recherche active de cas intégrée (IACS), PFA/polio, rougeole, tétanos néonatal. |
+| 3 | **Sayed Himatt** `/in/sayedhimatt/` | *Senior Health Security & Surveillance Advisor \| Epidemic Intelligence, IHR (2005) & Emergency Preparedness \| EMR, Africa & Gulf* | OMS, Aden, 8 563 abonnés, activité à 6 jours. |
+| 4 | **RAMAZANI KALUMBI RAMSES** `/in/ramazani-kalumbi-ramses-b1694b82/` | *Public health specialist (Epidemiology, MCH), Emergency management in conflict and non conflict settings* | Brazzaville, 1 500 abonnés, 44 relations en commun. Dernière activité à 2 mois, **mais c'est une republication OMS sur la flambée Bundibugyo** — exactement notre ligne d'événement. Arbitrage assumé : ancienneté limite, pertinence de contenu exacte. |
+| 5 | **Jean Claude Nshimiyimana** `/in/jean-claude-nshimiyimana-bsc-msc-mph-mls-ascp-i-ifba-certified-phd-c-aa751555/` | *Clinical Laboratory & Diagnostics Expert \| Biorisk, Biosafety & Biosecurity \| Health Emergencies for Limited Resources & Armed Conflict Contexts* | 1 868 abonnés, activité à 3 jours (outil OMS BRIET). |
+| 6 | **Dorothée Obach** `/in/dorothée-obach-82846b34/` | *Epidemiologist, PhD, scientific officer food-, vector-borne and zoonotic diseases* | Suède (profil ECDC-adjacent), 5 relations en commun, republication ECDC à 3 jours sur le virus du Nil occidental en Europe — **HWG porte une ligne West Nile fever**. |
+
+⚠️ **Méthode de clic corrigée en cours de run, à retenir.** Le premier suivi (Abdishakur Dek) a été cliqué depuis la **page d'activité**, où **5 boutons « Suivre » coexistent** (l'auteur, les auteurs republiés, la sidebar) : le clic est parti sur `b[0]` sans certitude sur la cible, et il a fallu **rouvrir la page de profil pour vérifier** que c'était bien lui (bouton « Suivre » disparu, mention « Abonné » sur sa carte). **Correction appliquée aux quatre suivants** : cliquer depuis la **page de profil**, et cibler le bouton dont la `section` ancêtre contient à la fois « Activité » et « abonnés » — sélecteur qui isole sans ambiguïté le bouton de suivi du profil visité. Vérification systématique du libellé « Suivi » après chaque clic. **Aucun suivi n'est parti sur une mauvaise cible.**
+
+**Notes de connexion : 0/7, aucune invitation émise.** Le plafond de plateforme constaté le 04/09 (**1 seule invitation personnalisée par mois**, consommée ce jour-là pour Christian BABOKO) n'a **pas été revérifié ce run** : aucun candidat de connexion n'a été retenu, donc aucune modale d'invitation n'a été ouverte, et le SKILL demande de lire ce compteur **dans la modale, avant d'engager la rédaction d'une note** — pas d'ouvrir une modale d'invitation pour la seule curiosité du compteur, puisque le bouton « Se connecter » d'une sidebar envoie sans confirmation. **À reconstater au premier candidat de connexion réel.**
+
+**Invitations reçues : 2, inchangées** — Zachariah G. Houdari (services financiers) et OLAOLUWA PHILIP (géospatial/climat sans santé publique), relues en direct sur `/mynetwork/invitation-manager/received/`. **Décisions du 31/08 maintenues, aucun élément neuf, non rejugées.**
+
+**Abonnés : 410, strictement inchangé depuis le run de 17h hier.** Les six premiers de la liste triée par récence (Caroline Museka MPH, Boris Pavlin, Yuda Sule Paschal, Dr. Malachie MANAOUDA, Kevin S. PhD, Rocham Mulumbwe) portent tous « Suivi ». **Aucun nouvel abonné, aucun follow-back dû.**
+
+**Relations : aucune acceptation neuve.** Liste « Ajouts récents » relue : Christian BABOKO et Boris Pavlin au **4 septembre**, Yuda Sule Paschal, Dr. Malachie MANAOUDA, Kevin S. et Rocham Mulumbwe au **3 septembre** — toutes déjà instruites par les runs précédents. **Vérification bidirectionnelle faite** : Boris Pavlin (OMS) reste sans DM, décision du 04/09 maintenue (aucun hook honnête, 38 jours d'attente avant acceptation).
+
+**Messagerie : aucun message entrant non traité.** Les 10 conversations les plus récentes relues. Les seules dont le dernier message n'est pas de nous sont **John Omari Baso** (« Bonjour David. » du 03/09, salutation seule — décision du 04/09 maintenue, ne rien envoyer avant qu'il écrive) et **Isaias Fernandes Co** (« 👍 » du 03/09 — rien avant la semaine du 14/09). **Ni James Schlitt ni Christian BABOKO n'ont répondu** à nos envois du 04/09 (18h16 et 18h58), leurs fils restent ouverts de leur côté.
+
+---
+
+### 4️⃣ 🔁 CARRY-OVER POUR LE CRÉNEAU DE 13h (05/09) — côté contacts
+
+1. 🔒 **Dr. Malachie MANAOUDA — DM en file de validation depuis ce run.** Texte intégral en §2. **Notification push envoyée.** Ne pas envoyer sans ordre explicite de David. ⚠️ Si David valide, vérifier avant envoi que le fil est toujours vide de son côté.
+2. ⭐⭐⭐ **Dr R Hyacinthe ZABRE** (`/in/dr-r-hyacinthe-zabre/`) — *Senior Epidemiologist & Public Health Data Science Specialist, **Africa CDC**, Epidemic Intelligence*, **déjà 1er degré**, 2 562 abonnés. Article en accès libre publié il y a 1 semaine sur l'intégration des signaux d'intelligence épidémique appliquée à la flambée Bundibugyo (cadre PREIS), et **il sollicite explicitement des collaborations**. Hors fenêtre 48 h donc non commentable, mais **meilleur candidat DM du corpus**. Vérifier d'abord l'existence d'un fil (aucun repéré).
+3. ⭐ **Ngoy Guillaume** (`/in/ngoy-guillaume-76b8b2267/`) — **identité levée (§12)**, clôt un carry-over ouvert depuis le 2026-08-11. *Officier de surveillance de la 17ᵉ épidémie de MVE*, Goma, **déjà 1er degré**, 31 relations en commun, aucun fil existant. Candidat DM sur la ligne d'événement Ebola/RDC.
+4. **Dr. Siaka Condé** — relance **ouverte depuis aujourd'hui** (le report du 04/09 fixait le 05/09), **non traitée ce run faute de temps**. À reprendre à 13h.
+5. ⭐ **James Schlitt** et ⭐ **Christian BABOKO** — nos envois du 04/09 au soir (18h16 et 18h58, les deux CTA envoyés à 23h20 sur ordre de David) sont **toujours les derniers messages** de leurs fils. Schlitt répond en général sous 1 à 3 h ; 15 h de silence est inhabituel pour lui. À revérifier à 13h.
+6. 🔴 **Plafond mensuel d'invitations personnalisées : non revérifié ce run** (aucune invitation émise). Lire le compteur dans la modale avant toute rédaction de note.
+7. **Inchangés** : ⭐ John Omari Baso (ne rien envoyer avant qu'il écrive, réexporter le fil en entier avant tout brouillon) ; ⭐⭐ Seynudé Jean-Fortune DAGNON (attendre l'acceptation) ; ➖ Yakoza Nyirenda (invitation sans note du 30/08 toujours en attente) ; ⭐⭐ Isaias Fernandes Co (rien avant la semaine du 14/09) ; ⭐⭐ Dr. Ibrahima Socé Fall (toujours sans hook honnête) ; ⭐⭐ Gail Carson (dossier clos, ne pas rouvrir sans élément neuf) ; ⭐⭐ Jacques Delors TOUMANSIE MFONKOU et ⭐⭐ Ofelia CAZACU ; ❌ Zachariah G. Houdari et OLAOLUWA PHILIP (invitations reçues, décisions du 31/08 maintenues).
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check-2 — 04/09/2026 (17h, 2e des 2 créneaux après-midi) — ✅ **2 DM envoyés en automation** (Christian BABOKO 17h39, 6 jets ; James Schlitt 18h16, 5 jets) — ⚠️ **navigateur très dégradé pendant tout le run** (classifieur, zoom de page corrompu, timeouts CDP)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` datée du 04/09 dans ce fichier ni dans `content-log.md` à l'ouverture (les entrées du jour appartiennent à `linkedin-hwg-content-proposal` 8h35, `linkedin-hwg-monitoring` 9h + reprise 10h15, et `linkedin-hwg-followup-check` 13h + reprise interactive 14h50-15h48) → **premier déclenchement productif de cette routine aujourd'hui**. ⚠️ **À noter quand même** : `list_sessions` montre une session nommée « Linkedin hwg followup check 2 » dont la dernière activité est **11h12 locale**, sans aucune trace dans les deux journaux ni dans `git log`. Session ouverte sans rien produire, ou déclenchement parasite du type déjà documenté (`report-conventions.md`, 14-15/08). Rien à rattraper, mais le fait est consigné. Horloge à l'heure (`Fri Sep 4 17:10 2026`). Branche vérifiée : **master**. Registre de faits régénéré à 17h11 (221 faits, 106 lignes affichées, 3 périmés) ; registre produit régénéré également (19 formats de prix, 7 claims manuelles, 110 foyers / 73 pays / 18 maladies).
