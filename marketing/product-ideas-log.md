@@ -3813,3 +3813,38 @@ par l'anglais interrogatif « who » plutôt que « OMS » (rendu « QUI »/« �
 — un mot faux, pas juste une casse fautive) reste un correctif manuel au cas
 par cas ; un remplacement générique serait dangereux sur les usages
 légitimes de « qui » en français.
+
+### Suite — revue manuelle de rendu étendue aux 170 lignes archivées
+
+David a demandé de continuer la revue systématique (jusque-là limitée aux
+127 lignes affichées) sur les 170 lignes archivées — c'est-à-dire les foyers
+que `getOutbreaksCached()` ne montre plus sur le site public mais dont la
+page individuelle `/outbreak/<id>` reste accessible par URL directe.
+Contrairement à la revue des lignes affichées (qui avait trouvé les 3 bugs
+structurels : fuite de fenêtre d'affichage Lassa, lien source cassé, badge
+« Vérifié » mal calculé — tous déjà corrigés et vérifiés sur les affichées),
+cette passe sur les archives ne visait plus à trouver un nouveau défaut de
+rendu (déjà exclu par construction, le code étant commun aux deux jeux de
+lignes) mais à vérifier qu'aucune n'était affectée différemment — silence
+radio possible sur une page jamais parcourue depuis des mois.
+
+**Méthode** : navigation manuelle une à une sur `healthwatch-global.com/fr/outbreak/<id>`
+pour les 170 ids, lecture du texte rendu (`get_page_text`), recherche de toute
+incohérence (cas/décès/létalité manquants ou aberrants, lien « Voir tous les
+foyers » absent sans raison, date de rapport incohérente, artefact de mise en
+forme).
+
+**Résultat : 170/170 vérifiées, aucune anomalie.** Seul point notable, pas un
+bug : les 11 lignes de l'« Événement de sécurité alimentaire international...
+toxine céréulide » n'affichent pas le lien « Voir tous les foyers — X → »
+présent sur toutes les autres pages — cohérent avec le fait que ce nom de
+maladie très long n'a probablement pas de page de regroupement dédiée
+ailleurs dans le code ; comportement pas creusé plus loin, à signaler
+seulement si David le remarque un jour côté produit.
+
+**Bilan complet, revue systématique de la table entière** : 127 lignes
+affichées + 170 lignes archivées = 297/297 vérifiées, 3 bugs structurels de
+rendu trouvés et corrigés (badge, lien source, fenêtre Lassa), 114 lignes de
+données corrigées pour artefacts de traduction (dont la source du bug
+corrigée à la racine dans `lib/translate.ts`), 1 doublon d'affichage corrigé,
+1 clarification de texte ajoutée, aucune anomalie résiduelle connue.
