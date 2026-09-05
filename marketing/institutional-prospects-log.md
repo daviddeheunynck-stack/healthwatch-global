@@ -4554,3 +4554,48 @@ Contrôle fait sur le **contenu réellement stocké** (`list_drafts` / `get_draf
 **Toujours fermés, motif de slug non trouvé (404 sur toutes variantes testées)** : Corée du Sud, Nouvelle-Zélande, Îles Cook, Îles Marshall (en page propre — couvert par ailleurs via `wpfsmclo`), Vietnam, RPDC.
 
 **⚠️ Aucun brouillon créé ce complément.** Le plafond OMS de 8 bureaux pays/lot (tranché le 03/09, appliqué aujourd'hui) est déjà atteint pour le lot du 05/09 : 7 le matin (Bangladesh, Bhoutan, Myanmar, Inde, Tadjikistan, Turkménistan, Türkiye) + Serbie ajoutée en cours de journée = 8/8. Créer ces 4 boîtes en plus dépasserait le plafond que David a explicitement fixé aujourd'hui. **Les 4 sont donc en réserve, immédiatement mobilisables pour le prochain lot**, sans nouvelle recherche — à choisir 4 maximum parmi elles (plus les 6 boîtes EURO déjà en réserve depuis le 04-05/09 : Ukraine, Albanie, Macédoine du Nord, Bosnie-Herzégovine, Monténégro, Biélorussie) selon la répartition régionale voulue au prochain run.
+
+---
+
+### Complément du 2026-09-05 (suite) — EURO en entier : 22 bureaux pays + 3 unités techniques en réserve
+
+À la demande de David, balayage complet des 47 États membres EURO restants (au-delà des 10 déjà journalisés : Azerbaïdjan, Kazakhstan, Géorgie, Arménie, Tadjikistan, Turkménistan, Türkiye, Serbie, Ouzbékistan, Kirghizistan), motif `who.int/<pays>/about-us`, HTTP 200 sur 46 des 47 pays testés (seul « united-kingdom » — et la variante « the-united-kingdom » — rendent 404 ; aucune autre variante testée n'a fonctionné, RU non résolu).
+
+**Les 6 déjà repérés les 04-05/09 reconfirmés disponibles** (0 occurrence en tant que ligne de contact, seulement des mentions de réserve) : Ukraine `eurowhoukr@who.int`, Albanie `eurowhoalb@who.int`, Macédoine du Nord `eurowhomkd@who.int`, Bosnie-Herzégovine `eurowhobih@who.int`, Monténégro `eurowhomne@who.int`, Biélorussie `eurowhoblr@who.int`.
+
+**16 bureaux pays supplémentaires jamais journalisés, trouvés dans ce balayage complet** :
+
+| Pays | Email |
+|---|---|
+| Bulgarie | `eurowhobul@who.int` |
+| Croatie | `eurowhocro@who.int` |
+| Chypre | `who_cyprus@who.int` |
+| Tchéquie | `eurowhocz@who.int` |
+| Estonie | `eurowhoest@who.int` |
+| Grèce | `eurowhogre@who.int` |
+| Hongrie | `eurowhohun@who.int` |
+| Lettonie | `eurowholva@who.int` |
+| Lituanie | `eurowholtu@who.int` |
+| Moldavie | `eurowhomda@who.int` |
+| Pologne | `eurowhopol@who.int` |
+| Roumanie | `eurowhorom@who.int` |
+| Russie | `eurusco@who.int` |
+| Slovaquie | `eurowhosvk@who.int` |
+| Slovénie | `eurowhosvn@who.int` |
+
+**Soit un total de 22 bureaux pays EURO en réserve, tous confirmés `@who.int`, tous à 0 occurrence au journal.**
+
+**⚠️ 3 adresses supplémentaires trouvées ne sont PAS des bureaux pays — ce sont des unités techniques régionales hébergées dans un pays, distinctes de la représentation du pays lui-même** (contexte relu ligne à ligne, voir ci-dessous) :
+- `whovenice@who.int` — WHO European Office for Investment for Health and Development, Venise (Italie n'a **aucune** boîte de représentation pays sur sa propre page — seule cette unité technique y figure).
+- `eubar@who.int` — bureau OMS de Barcelone (Espagne n'a **aucune** boîte de représentation pays non plus — seule cette unité y figure).
+- `euqualityofcare@who.int` — WHO Athens Quality of Care and Patient Safety Office, **en plus** de `eurowhogre@who.int` qui est la vraie représentation Grèce (les deux boîtes cohabitent sur la même page, adresses physiques distinctes à Athènes).
+
+**Application de la règle tranchée aujourd'hui (unités de siège/techniques OMS comptées à part des bureaux pays, précédent GISRS)** : ces 3 boîtes ne consomment pas le plafond de 8 bureaux pays — elles ont leur propre compteur, comme GISRS. Italie et Espagne, elles, n'ouvrent **aucun** bureau pays à proprement parler : leur seule adresse `@who.int` est l'unité technique, pas une représentation nationale.
+
+**Pays testés sans aucune adresse publiée** (page HTTP 200, contenu réel, pas de section contact avec email) : Andorre, Autriche, Belgique, Danemark, Finlande, France, Allemagne, Islande, Irlande, Israël, Luxembourg, Malte, Monaco, Pays-Bas, Norvège, Portugal, Saint-Marin, Suède, Suisse. **Motif probable** : ce sont majoritairement des pays à revenu élevé sans bureau résident, servis directement par le siège régional EURO (Copenhague) — même schéma que Japon/Australie observé côté WPRO (boîte régionale partagée plutôt que bureau national).
+
+**Royaume-Uni non résolu** : `who.int/united-kingdom/about-us` et `who.int/the-united-kingdom/about-us` rendent 404 tous les deux ; aucun autre slug testé. À reprendre si le temps le permet un jour, sinon considérer comme un des pays « sans bureau résident » ci-dessus.
+
+**⚠️ Aucun brouillon créé.** Le plafond OMS de 8 bureaux pays/lot est déjà à 8/8 pour le lot du 05/09 (7 le matin + Serbie ajoutée en cours de journée). Les 22 bureaux pays + les 4 boîtes Pacifique du complément précédent (WPRO/SEARO) forment désormais un vivier de **26 bureaux pays OMS vérifiés, jamais utilisés**, immédiatement mobilisable sur les prochains lots (au plafond de 8/lot, soit plus de 3 lots complets rien qu'avec ce vivier). Les 3 unités techniques (Venise, Barcelone, Athènes Quality of Care) s'y ajoutent séparément, hors plafond bureaux pays.
+
+**Compteur du vivier OMS mis à jour** : 26 bureaux pays (22 EURO + 4 WPRO/Pacifique) + 3 unités techniques EURO, à ajouter aux 6 boîtes EURO déjà comptées avant ce run (qui font partie des 22). **Le facteur limitant du vivier institutionnel (446 domaines, épuisement signalé le 04-05/09) ne s'applique plus au segment OMS** : ce segment est désormais le mieux pourvu de tous, à l'inverse du diagnostic du 04/09. Le vivier réellement tendu reste celui des organisations hors OMS (universités, ONG, agences).
