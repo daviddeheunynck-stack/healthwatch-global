@@ -219,8 +219,14 @@ export default async function RegionPage({
   // everything else banded — unconditional here since this page has no
   // isPaid concept at all (David, 2026-09-06). Unlike those pages, this
   // fetch is already scoped to one region, which is exactly the granularity
-  // pickFeaturedDiseases needs — no extra site-wide fetch required.
-  const featuredDiseaseByRegion = pickFeaturedDiseases(active);
+  // pickFeaturedDiseases needs — no extra site-wide fetch required. Must
+  // still be the strict active===true set, not the broader `active`
+  // (filterDisplayActive) used for what's shown on this page — every other
+  // page feeds pickFeaturedDiseases allOutbreaks.filter(o => o.active), and
+  // a recently-closed row surviving the 60-day recency fallback here but not
+  // there could tip the tie-break differently, picking a different showcase
+  // disease for the same region depending which page you're on.
+  const featuredDiseaseByRegion = pickFeaturedDiseases(allOutbreaks.filter((o) => o.active));
   const maskedActive  = active.map((o)  => maskOutbreakRow(o, isFreeFeaturedRow(o, featuredDiseaseByRegion)));
   const maskedHistory = history.map((o) => maskOutbreakRow(o, isFreeFeaturedRow(o, featuredDiseaseByRegion)));
 
