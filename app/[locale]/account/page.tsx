@@ -333,7 +333,7 @@ const LABELS: Record<string, Record<string, string>> = {
     manageBilling: "Gérer l'abonnement",
     manageDesc: "Modifier votre plan, mettre à jour votre moyen de paiement ou annuler via le portail Stripe sécurisé.",
     upgradeTo: "Passer à Pro",
-    upgradeDesc: "Débloquez les chiffres exacts, les exports PDF, les alertes instantanées et plus encore.",
+    upgradeDesc: "Débloquez le filtre par région, les exports PDF, les alertes instantanées et plus encore.",
     account: "Compte",
     email: "Adresse email",
     memberSince: "Membre depuis",
@@ -352,7 +352,7 @@ const LABELS: Record<string, Record<string, string>> = {
     manageBilling: "Manage subscription",
     manageDesc: "Change your plan, update your payment method or cancel via the secure Stripe portal.",
     upgradeTo: "Upgrade to Pro",
-    upgradeDesc: "Unlock exact figures, PDF exports, instant alerts and more.",
+    upgradeDesc: "Unlock region filtering, PDF exports, instant alerts and more.",
     account: "Account",
     email: "Email address",
     memberSince: "Member since",
@@ -371,7 +371,7 @@ const LABELS: Record<string, Record<string, string>> = {
     manageBilling: "Gestionar suscripción",
     manageDesc: "Cambie su plan, actualice su método de pago o cancele a través del portal seguro de Stripe.",
     upgradeTo: "Actualizar a Pro",
-    upgradeDesc: "Desbloquee cifras exactas, exportaciones PDF, alertas instantáneas y más.",
+    upgradeDesc: "Desbloquee el filtro por región, exportaciones PDF, alertas instantáneas y más.",
     account: "Cuenta",
     email: "Dirección de correo",
     memberSince: "Miembro desde",
@@ -390,7 +390,7 @@ const LABELS: Record<string, Record<string, string>> = {
     manageBilling: "إدارة الاشتراك",
     manageDesc: "غيّر خطتك أو حدّث طريقة الدفع أو ألغِ الاشتراك عبر بوابة Stripe الآمنة.",
     upgradeTo: "الترقية إلى Pro",
-    upgradeDesc: "افتح الأرقام الدقيقة وتصدير PDF والتنبيهات الفورية والمزيد.",
+    upgradeDesc: "افتح التصفية حسب المنطقة وتصدير PDF والتنبيهات الفورية والمزيد.",
     account: "الحساب",
     email: "البريد الإلكتروني",
     memberSince: "عضو منذ",
@@ -409,7 +409,7 @@ const LABELS: Record<string, Record<string, string>> = {
     manageBilling: "Kelola langganan",
     manageDesc: "Ubah paket, perbarui metode pembayaran, atau batalkan melalui portal Stripe yang aman.",
     upgradeTo: "Upgrade ke Pro",
-    upgradeDesc: "Buka angka tepat, ekspor PDF, peringatan instan, dan lainnya.",
+    upgradeDesc: "Buka filter wilayah, ekspor PDF, peringatan instan, dan lainnya.",
     account: "Akun",
     email: "Alamat email",
     memberSince: "Anggota sejak",
@@ -634,11 +634,11 @@ export default async function AccountPage({
           <div className="pt-2 border-t border-gray-800 space-y-3">
             <p className="text-sm text-gray-400">
               {trialExpired
-                ? (locale === "fr" ? "Votre essai est terminé. Abonnez-vous pour retrouver l'accès aux chiffres exacts, aux alertes et aux rapports PDF." :
-                   locale === "es" ? "Su prueba ha finalizado. Suscríbase para recuperar el acceso a cifras exactas, alertas e informes PDF." :
-                   locale === "ar" ? "انتهت تجربتك. اشترك لاستعادة الوصول إلى الأرقام الدقيقة والتنبيهات وتقارير PDF." :
-                   locale === "id" ? "Uji coba Anda telah berakhir. Berlangganan untuk mendapatkan kembali akses ke angka tepat, peringatan, dan laporan PDF." :
-                   "Your trial ended. Subscribe to get back access to exact figures, alerts and PDF reports.")
+                ? (locale === "fr" ? "Votre essai est terminé. Abonnez-vous pour retrouver l'accès au filtre par région, aux alertes et aux rapports PDF." :
+                   locale === "es" ? "Su prueba ha finalizado. Suscríbase para recuperar el acceso al filtro por región, alertas e informes PDF." :
+                   locale === "ar" ? "انتهت تجربتك. اشترك لاستعادة الوصول إلى التصفية حسب المنطقة والتنبيهات وتقارير PDF." :
+                   locale === "id" ? "Uji coba Anda telah berakhir. Berlangganan untuk mendapatkan kembali akses ke filter wilayah, peringatan, dan laporan PDF." :
+                   "Your trial ended. Subscribe to get back access to region filtering, alerts and PDF reports.")
                 : l.upgradeDesc}
             </p>
             <CheckoutButton

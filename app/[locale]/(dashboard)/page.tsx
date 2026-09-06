@@ -2,8 +2,7 @@ import { getTranslations, getLocale } from "next-intl/server";
 import { headers } from "next/headers";
 import Link from "next/link";
 import { Activity, Globe, AlertTriangle } from "lucide-react";
-import { getOutbreaks, getStats, getLastSync, getLocalizedDisease, getLocalizedCountry, magnitudeBucket, maskedCfrPercent, pickFeaturedDiseases } from "@/lib/outbreaks";
-import type { Outbreak } from "@/lib/outbreaks";
+import { getOutbreaks, getStats, getLastSync, getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { ISO_REGION } from "@/lib/geo-data";
 import { getOutbreakTrendsBulkCached } from "@/lib/outbreak-trend";
 import { createClient } from "@/lib/supabase-server";
@@ -288,35 +287,15 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
   const activeOutbreaks = outbreaks.filter((o) => o.active);
   const stats = getStats(activeOutbreaks);
 
-  // Free-plan cases/deaths are only ever meant to be blurred, not actually
-  // delivered — but WorldMap/OutbreakTable are client components, so any
-  // real number passed as a prop still lands in the page's RSC payload
-  // (readable via view-source) no matter what the UI renders on top of it.
-  // Round to an order of magnitude before it ever reaches a client
-  // component: keeps every `cases > 0` / sort / trend-badge check that
-  // already relies on this field working (unlike zeroing it out), while
-  // the exact figure never leaves the server for a free account — except
-  // for one showcase disease per continent (`featuredDiseaseByRegion`),
-  // which stays real end to end so the free plan gives a genuine, if
-  // narrow, taste of the data rather than a wall of bullets everywhere.
-  const featuredDiseaseByRegion = isPaid ? new Map<string, string>() : pickFeaturedDiseases(activeOutbreaks);
-  const isFreeFeatured = (o: Outbreak) => featuredDiseaseByRegion.get(o.region) === (o.disease_en || o.disease);
-  const mapTableOutbreaks = isPaid
-    ? outbreaks
-    : outbreaks.map((o) =>
-        isFreeFeatured(o)
-          ? { ...o, is_free_featured: true }
-          : {
-              ...o,
-              cases: magnitudeBucket(o.cases),
-              deaths: o.deaths === null ? null : magnitudeBucket(o.deaths),
-              // Precomputed from the REAL cases/deaths, not the two bucketed
-              // fields above — deriving CFR from two independently-rounded
-              // numbers can land both in the same bucket and print a
-              // nonsense "100%" for a severe outbreak. See maskedCfrPercent.
-              masked_cfr_pct: maskedCfrPercent(o.cases, o.deaths),
-            }
-      );
+  // Cases/deaths/CFR are no longer masked for free accounts here: the same
+  // figures are already public, logged out, on /disease, /country and
+  // /region (and in /api/rss and the outbreak-card OG image) — every active
+  // row has a page on at least one of those. Masking them only on this
+  // dashboard cost free accounts a worse view of PUBLIC data while
+  // protecting nothing; removed 2026-09-05. Paid plans still gate what's
+  // actually exclusive here (alerts, region filtering, PDF/CSV export,
+  // predictive alerts, history, benchmarks — see the isPaid checks below).
+  const mapTableOutbreaks = outbreaks;
 
   // 7-day directional signal (▲/▼/→) — infrastructure has been live since 2026-06-05;
   // getOutbreakTrend returns "unknown" until outbreak_snapshots holds enough history,
@@ -463,7 +442,6 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
         const d24h        = topTrend?.delta24h ?? null;
         const numLocale   = locale === "ar" ? "ar-SA" : locale;
         const isRtl = locale === "ar";
-        const topUnlocked = isPaid || isFreeFeatured(top);
         return (
           <div
             dir={isRtl ? "rtl" : undefined}
@@ -485,25 +463,13 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
             {top.cases > 0 && (
               <>
                 <span className="text-gray-600">·</span>
-                {topUnlocked ? (
-                  <span className="text-gray-300">{top.cases.toLocaleString(numLocale)} {snap.cases}</span>
-                ) : (
-                  <Link href={`/${locale}/pricing`} className="cursor-pointer">
-                    <span className="blur-sm select-none text-gray-500">{top.cases.toLocaleString(numLocale).replace(/\d/g, "•")} {snap.cases}</span>
-                  </Link>
-                )}
+                <span className="text-gray-300">{top.cases.toLocaleString(numLocale)} {snap.cases}</span>
               </>
             )}
             {cfr && (
               <>
                 <span className="text-gray-600">·</span>
-                {topUnlocked ? (
-                  <span className="text-red-400 font-medium">{cfr}% {snap.cfr}</span>
-                ) : (
-                  <Link href={`/${locale}/pricing`} className="cursor-pointer">
-                    <span className="blur-sm select-none text-gray-500">{cfr.replace(/\d/g, "•")}% {snap.cfr}</span>
-                  </Link>
-                )}
+                <span className="text-red-400 font-medium">{cfr}% {snap.cfr}</span>
               </>
             )}
             {/* 7-day trend — visible to all users (qualitative signal, same as TrendBadge) */}
@@ -693,7 +659,7 @@ export default async function DashboardPage({
           "@type": "Offer",
           "price": "0",
           "priceCurrency": "EUR",
-          "description": "Free plan — public outbreak dashboard, no card required. Sign up for a 7-day Pro trial to see exact case and death figures.",
+          "description": "Free plan — public outbreak dashboard, no card required. Sign up for a 7-day Pro trial for region filtering, instant alerts, PDF reports and CSV export.",
         },
         "featureList": [
           "WHO, ECDC, PAHO and Africa CDC outbreak data — WHO updated hourly, ECDC/PAHO/Africa CDC weekly",

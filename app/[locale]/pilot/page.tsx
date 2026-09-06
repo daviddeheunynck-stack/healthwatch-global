@@ -39,7 +39,7 @@ const COPY = {
     ],
     includesTitle: "What the pilot includes",
     includes: [
-      { icon: "users", title: "5 Pro seats, 14 days", desc: "Full access — exact figures, regional alerts, disease-specific alerts (Mpox, Ebola, Cholera...), PDF reports, CSV export, Slack/Teams integration." },
+      { icon: "users", title: "5 Pro seats, 14 days", desc: "Full access — regional alerts, disease-specific alerts (Mpox, Ebola, Cholera...), PDF reports, CSV export, Slack/Teams integration." },
       { icon: "calendar", title: "30-min onboarding call", desc: "We walk your team through the platform and configure alerts for your regions of interest." },
       { icon: "message", title: "Feedback session at close", desc: "A 45-min structured call to collect your team's experience. That's what we're here for." },
     ],
@@ -81,7 +81,7 @@ const COPY = {
     ],
     includesTitle: "Ce que le pilote inclut",
     includes: [
-      { icon: "users", title: "5 accès Pro, 14 jours", desc: "Accès complet — chiffres exacts, alertes régionales, alertes par maladie (Mpox, Ebola, Choléra...), rapports PDF, export CSV, intégration Slack/Teams." },
+      { icon: "users", title: "5 accès Pro, 14 jours", desc: "Accès complet — alertes régionales, alertes par maladie (Mpox, Ebola, Choléra...), rapports PDF, export CSV, intégration Slack/Teams." },
       { icon: "calendar", title: "Appel d'onboarding de 30 min", desc: "Nous accompagnons votre équipe sur la plateforme et configurons les alertes pour vos régions d'intérêt." },
       { icon: "message", title: "Session de retour à la clôture", desc: "Un appel structuré de 45 min pour recueillir l'expérience de votre équipe. C'est ce que nous recherchons." },
     ],
@@ -123,7 +123,7 @@ const COPY = {
     ],
     includesTitle: "Qué incluye el piloto",
     includes: [
-      { icon: "users", title: "5 accesos Pro, 14 días", desc: "Acceso completo — cifras exactas, alertas regionales, alertas por enfermedad (Mpox, Ébola, Cólera...), informes PDF, exportación CSV, integración Slack/Teams." },
+      { icon: "users", title: "5 accesos Pro, 14 días", desc: "Acceso completo — alertas regionales, alertas por enfermedad (Mpox, Ébola, Cólera...), informes PDF, exportación CSV, integración Slack/Teams." },
       { icon: "calendar", title: "Llamada de incorporación de 30 min", desc: "Guiamos a su equipo por la plataforma y configuramos alertas para sus regiones de interés." },
       { icon: "message", title: "Sesión de feedback al cierre", desc: "Una llamada estructurada de 45 min para recoger la experiencia de su equipo." },
     ],
@@ -165,7 +165,7 @@ const COPY = {
     ],
     includesTitle: "ما يتضمنه البرنامج التجريبي",
     includes: [
-      { icon: "users", title: "5 مقاعد Pro، 14 يوماً", desc: "وصول كامل — أرقام دقيقة، تنبيهات إقليمية، تنبيهات خاصة بالأمراض (Mpox، إيبولا، كوليرا...)، تقارير PDF، تصدير CSV، تكامل Slack/Teams." },
+      { icon: "users", title: "5 مقاعد Pro، 14 يوماً", desc: "وصول كامل — تنبيهات إقليمية، تنبيهات خاصة بالأمراض (Mpox، إيبولا، كوليرا...)، تقارير PDF، تصدير CSV، تكامل Slack/Teams." },
       { icon: "calendar", title: "مكالمة تأهيل 30 دقيقة", desc: "نرشد فريقك عبر المنصة ونضبط التنبيهات لمناطق اهتمامكم." },
       { icon: "message", title: "جلسة تغذية راجعة في الختام", desc: "مكالمة منظمة مدتها 45 دقيقة لجمع تجربة فريقك." },
     ],
@@ -207,7 +207,7 @@ const COPY = {
     ],
     includesTitle: "Apa yang termasuk dalam pilot",
     includes: [
-      { icon: "users", title: "5 akses Pro, 14 hari", desc: "Akses penuh — angka tepat, peringatan regional, peringatan per penyakit (Mpox, Ebola, Kolera...), laporan PDF, ekspor CSV, integrasi Slack/Teams." },
+      { icon: "users", title: "5 akses Pro, 14 hari", desc: "Akses penuh — peringatan regional, peringatan per penyakit (Mpox, Ebola, Kolera...), laporan PDF, ekspor CSV, integrasi Slack/Teams." },
       { icon: "calendar", title: "Panggilan onboarding 30 menit", desc: "Kami memandu tim Anda melalui platform dan mengonfigurasi peringatan untuk wilayah yang diminati." },
       { icon: "message", title: "Sesi umpan balik di akhir", desc: "Panggilan terstruktur 45 menit untuk mengumpulkan pengalaman tim Anda." },
     ],

@@ -16,7 +16,7 @@ const COPY: Record<string, {
 }> = {
   fr: {
     title: "Passez à Pro — essai 7 jours gratuit",
-    sub: "Chiffres exacts de cas & décès · Alertes instantanées · Rapports PDF · Export CSV",
+    sub: "Filtre par région · Alertes instantanées · Rapports PDF · Export CSV",
     missed: (n) => `🔔 ${n} alerte${n > 1 ? "s" : ""} ont été envoyées aux utilisateurs Pro cette semaine — vous les auriez reçues sous 8h.`,
     missedNames: (names) => `🔔 Alertes manquées cette semaine : ${names}`,
     cta: "Commencer l'essai gratuit →",
@@ -29,7 +29,7 @@ const COPY: Record<string, {
   },
   en: {
     title: "Upgrade to Pro — 7-day free trial",
-    sub: "Exact case & death figures · Instant alerts · PDF reports · CSV export",
+    sub: "Region filtering · Instant alerts · PDF reports · CSV export",
     missed: (n) => `🔔 ${n} alert${n > 1 ? "s" : ""} fired this week — Pro users were notified within 8h.`,
     missedNames: (names) => `🔔 Missed alerts this week: ${names}`,
     cta: "Start free trial →",
@@ -42,7 +42,7 @@ const COPY: Record<string, {
   },
   es: {
     title: "Pasa a Pro — 7 días de prueba gratis",
-    sub: "Cifras exactas de casos y fallecidos · Alertas instantáneas · Informes PDF · Exportación CSV",
+    sub: "Filtro por región · Alertas instantáneas · Informes PDF · Exportación CSV",
     missed: (n) => `🔔 ${n} alerta${n > 1 ? "s" : ""} esta semana — usuarios Pro notificados en menos de 8h.`,
     missedNames: (names) => `🔔 Alertas perdidas esta semana: ${names}`,
     cta: "Iniciar prueba gratuita →",
@@ -55,7 +55,7 @@ const COPY: Record<string, {
   },
   ar: {
     title: "انتقل إلى Pro — تجربة 7 أيام مجاناً",
-    sub: "أرقام دقيقة للحالات والوفيات · تنبيهات فورية · تقارير PDF · تصدير CSV",
+    sub: "التصفية حسب المنطقة · تنبيهات فورية · تقارير PDF · تصدير CSV",
     missed: (n) => `🔔 ${n} تنبيه${n > 1 ? "ات" : ""} هذا الأسبوع — أُرسلت لمستخدمي Pro خلال 8 ساعات.`,
     missedNames: (names) => `🔔 تنبيهات فائتة هذا الأسبوع: ${names}`,
     cta: "← ابدأ التجربة المجانية",
@@ -68,7 +68,7 @@ const COPY: Record<string, {
   },
   id: {
     title: "Upgrade ke Pro — uji coba 7 hari gratis",
-    sub: "Angka kasus & kematian tepat · Peringatan instan · Laporan PDF · Ekspor CSV",
+    sub: "Filter wilayah · Peringatan instan · Laporan PDF · Ekspor CSV",
     missed: (n) => `🔔 ${n} peringatan minggu ini — pengguna Pro menerima notifikasi dalam 8 jam.`,
     missedNames: (names) => `🔔 Peringatan yang terlewat minggu ini: ${names}`,
     cta: "Mulai uji coba gratis →",

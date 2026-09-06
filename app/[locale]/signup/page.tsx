@@ -98,7 +98,7 @@ const VALUE_PROPS: Record<string, { trial: string; items: string[]; noCard: stri
   en: {
     trial: "7 days of Pro access, free — no card",
     items: [
-      "Exact case & death figures",
+      "Region filtering",
       "Instant regional alerts",
       "PDF reports & CSV export",
     ],
@@ -109,7 +109,7 @@ const VALUE_PROPS: Record<string, { trial: string; items: string[]; noCard: stri
   fr: {
     trial: "7 jours d'accès Pro offerts — sans carte",
     items: [
-      "Chiffres exacts cas & décès",
+      "Filtre par région",
       "Alertes régionales instantanées",
       "Rapports PDF & export CSV",
     ],
@@ -120,7 +120,7 @@ const VALUE_PROPS: Record<string, { trial: string; items: string[]; noCard: stri
   es: {
     trial: "7 días de acceso Pro gratis — sin tarjeta",
     items: [
-      "Cifras exactas de casos y fallecidos",
+      "Filtro por región",
       "Alertas regionales instantáneas",
       "Informes PDF y exportación CSV",
     ],
@@ -131,7 +131,7 @@ const VALUE_PROPS: Record<string, { trial: string; items: string[]; noCard: stri
   ar: {
     trial: "7 أيام من الوصول إلى Pro مجاناً — بدون بطاقة",
     items: [
-      "أرقام دقيقة للحالات والوفيات",
+      "التصفية حسب المنطقة",
       "تنبيهات إقليمية فورية",
       "تقارير PDF وتصدير CSV",
     ],
@@ -142,7 +142,7 @@ const VALUE_PROPS: Record<string, { trial: string; items: string[]; noCard: stri
   id: {
     trial: "7 hari akses Pro gratis — tanpa kartu",
     items: [
-      "Angka kasus & kematian tepat",
+      "Filter wilayah",
       "Peringatan regional instan",
       "Laporan PDF & ekspor CSV",
     ],

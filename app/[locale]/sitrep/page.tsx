@@ -282,11 +282,11 @@ export default async function SitrepPage({
       .slice(0, 5);
 
     const EX: Record<string, { headline: string; sub: string; cta: string }> = {
-      en: { headline: "Trial ended — subscribe to resume access", sub: "Get back the full situation report, exact case counts, CFR data and PDF exports.", cta: "Subscribe to Pro →" },
-      fr: { headline: "Essai terminé — abonnez-vous pour retrouver l'accès", sub: "Retrouvez le sitrep complet, les chiffres exacts, la létalité et les exports PDF.", cta: "S'abonner à Pro →" },
-      es: { headline: "Prueba finalizada — suscríbase para recuperar el acceso", sub: "Recupere el sitrep completo, cifras exactas, datos de letalidad y exportaciones PDF.", cta: "Suscribirse a Pro →" },
-      ar: { headline: "انتهت التجربة — اشترك لاستعادة الوصول", sub: "استعد التقرير الكامل والأرقام الدقيقة ومعدلات الوفيات وتصدير PDF.", cta: "← الاشتراك في Pro" },
-      id: { headline: "Masa percobaan berakhir — berlangganan untuk melanjutkan", sub: "Dapatkan kembali laporan lengkap, angka tepat, data CFR, dan ekspor PDF.", cta: "Berlangganan Pro →" },
+      en: { headline: "Trial ended — subscribe to resume access", sub: "Get back the full situation report — 95% confidence intervals and PDF exports.", cta: "Subscribe to Pro →" },
+      fr: { headline: "Essai terminé — abonnez-vous pour retrouver l'accès", sub: "Retrouvez le sitrep complet — intervalles de confiance à 95 % et exports PDF.", cta: "S'abonner à Pro →" },
+      es: { headline: "Prueba finalizada — suscríbase para recuperar el acceso", sub: "Recupere el sitrep completo — intervalos de confianza del 95 % y exportaciones PDF.", cta: "Suscribirse a Pro →" },
+      ar: { headline: "انتهت التجربة — اشترك لاستعادة الوصول", sub: "استعد التقرير الكامل — فواصل ثقة 95٪ وتصدير PDF.", cta: "← الاشتراك في Pro" },
+      id: { headline: "Masa percobaan berakhir — berlangganan untuk melanjutkan", sub: "Dapatkan kembali laporan lengkap — interval kepercayaan 95% dan ekspor PDF.", cta: "Berlangganan Pro →" },
     };
     const ex = EX[locale] ?? EX.en;
 

@@ -19,11 +19,11 @@ const LABELS: Record<string, {
   winner: string; lower: string; selectBoth: string; share: string; copied: string;
   lockedCta: string; lockedBanner: string;
 }> = {
-  fr: { title: "Comparer des foyers", subtitle: "Analysez deux épidémies côte à côte", selectA: "Foyer A", selectB: "Foyer B", all: "Choisir un foyer…", cases: "Cas", deaths: "Décès", cfr: "Létalité", incidence: "Incidence / 100 000", date: "Date", region: "Région", pheic: "PHEIC", winner: "↓ Moins", lower: "↑ Plus", selectBoth: "Sélectionnez deux foyers pour comparer.", share: "Partager", copied: "Copié !", lockedCta: "Débloquer Pro →", lockedBanner: "Cas confirmés · Décès · Létalité · Incidence pour 100 000 habitants" },
-  en: { title: "Compare outbreaks", subtitle: "Analyse two epidemics side by side", selectA: "Outbreak A", selectB: "Outbreak B", all: "Choose an outbreak…", cases: "Cases", deaths: "Deaths", cfr: "CFR", incidence: "Incidence / 100,000", date: "Date", region: "Region", pheic: "PHEIC", winner: "↓ Lower", lower: "↑ Higher", selectBoth: "Select two outbreaks to compare.", share: "Share", copied: "Copied!", lockedCta: "Unlock Pro →", lockedBanner: "Confirmed cases · Deaths · Fatality rate · Incidence per 100,000" },
-  es: { title: "Comparar brotes", subtitle: "Analice dos epidemias lado a lado", selectA: "Brote A", selectB: "Brote B", all: "Elige un brote…", cases: "Casos", deaths: "Muertes", cfr: "Letalidad", incidence: "Incidencia / 100.000", date: "Fecha", region: "Región", pheic: "PHEIC", winner: "↓ Menor", lower: "↑ Mayor", selectBoth: "Seleccione dos brotes para comparar.", share: "Compartir", copied: "¡Copiado!", lockedCta: "Desbloquear Pro →", lockedBanner: "Casos confirmados · Muertes · Letalidad · Incidencia por 100.000" },
-  ar: { title: "مقارنة التفشيات", subtitle: "تحليل وباءين جنباً إلى جنب", selectA: "التفشي A", selectB: "التفشي B", all: "اختر تفشياً…", cases: "الحالات", deaths: "الوفيات", cfr: "معدل الوفيات", incidence: "الإصابة / 100,000", date: "التاريخ", region: "المنطقة", pheic: "PHEIC", winner: "↓ أقل", lower: "↑ أكثر", selectBoth: "اختر تفشيين للمقارنة.", share: "مشاركة", copied: "تم النسخ!", lockedCta: "← فتح Pro", lockedBanner: "الحالات المؤكدة · الوفيات · معدل الفتك · معدل الإصابة لكل 100,000" },
-  id: { title: "Bandingkan Wabah", subtitle: "Analisis dua epidemi secara berdampingan", selectA: "Wabah A", selectB: "Wabah B", all: "Pilih wabah…", cases: "Kasus", deaths: "Kematian", cfr: "CFR", incidence: "Insidensi / 100.000", date: "Tanggal", region: "Wilayah", pheic: "PHEIC", winner: "↓ Lebih rendah", lower: "↑ Lebih tinggi", selectBoth: "Pilih dua wabah untuk dibandingkan.", share: "Bagikan", copied: "Disalin!", lockedCta: "Buka Pro →", lockedBanner: "Kasus terkonfirmasi · Kematian · Tingkat fatalitas · Insidensi per 100.000" },
+  fr: { title: "Comparer des foyers", subtitle: "Analysez deux épidémies côte à côte", selectA: "Foyer A", selectB: "Foyer B", all: "Choisir un foyer…", cases: "Cas", deaths: "Décès", cfr: "Létalité", incidence: "Incidence / 100 000", date: "Date", region: "Région", pheic: "PHEIC", winner: "↓ Moins", lower: "↑ Plus", selectBoth: "Sélectionnez deux foyers pour comparer.", share: "Partager", copied: "Copié !", lockedCta: "Débloquer Pro →", lockedBanner: "Incidence pour 100 000 habitants — comparée entre les deux foyers" },
+  en: { title: "Compare outbreaks", subtitle: "Analyse two epidemics side by side", selectA: "Outbreak A", selectB: "Outbreak B", all: "Choose an outbreak…", cases: "Cases", deaths: "Deaths", cfr: "CFR", incidence: "Incidence / 100,000", date: "Date", region: "Region", pheic: "PHEIC", winner: "↓ Lower", lower: "↑ Higher", selectBoth: "Select two outbreaks to compare.", share: "Share", copied: "Copied!", lockedCta: "Unlock Pro →", lockedBanner: "Incidence per 100,000 — compared between the two outbreaks" },
+  es: { title: "Comparar brotes", subtitle: "Analice dos epidemias lado a lado", selectA: "Brote A", selectB: "Brote B", all: "Elige un brote…", cases: "Casos", deaths: "Muertes", cfr: "Letalidad", incidence: "Incidencia / 100.000", date: "Fecha", region: "Región", pheic: "PHEIC", winner: "↓ Menor", lower: "↑ Mayor", selectBoth: "Seleccione dos brotes para comparar.", share: "Compartir", copied: "¡Copiado!", lockedCta: "Desbloquear Pro →", lockedBanner: "Incidencia por 100.000 — comparada entre ambos brotes" },
+  ar: { title: "مقارنة التفشيات", subtitle: "تحليل وباءين جنباً إلى جنب", selectA: "التفشي A", selectB: "التفشي B", all: "اختر تفشياً…", cases: "الحالات", deaths: "الوفيات", cfr: "معدل الوفيات", incidence: "الإصابة / 100,000", date: "التاريخ", region: "المنطقة", pheic: "PHEIC", winner: "↓ أقل", lower: "↑ أكثر", selectBoth: "اختر تفشيين للمقارنة.", share: "مشاركة", copied: "تم النسخ!", lockedCta: "← فتح Pro", lockedBanner: "معدل الإصابة لكل 100,000 نسمة — مقارنة بين التفشيين" },
+  id: { title: "Bandingkan Wabah", subtitle: "Analisis dua epidemi secara berdampingan", selectA: "Wabah A", selectB: "Wabah B", all: "Pilih wabah…", cases: "Kasus", deaths: "Kematian", cfr: "CFR", incidence: "Insidensi / 100.000", date: "Tanggal", region: "Wilayah", pheic: "PHEIC", winner: "↓ Lebih rendah", lower: "↑ Lebih tinggi", selectBoth: "Pilih dua wabah untuk dibandingkan.", share: "Bagikan", copied: "Disalin!", lockedCta: "Buka Pro →", lockedBanner: "Insidensi per 100.000 — dibandingkan antara kedua wabah" },
 };
 
 function StatRow({ label, valA, valB, icon, fmt = (v: number) => v.toLocaleString("en"), higherIsBad = true, locked = false, onLockClick }: {
@@ -71,9 +71,9 @@ export default function ComparePage() {
   const [plan, setPlan] = useState<string | null>(null);
   const isPaid = plan === "starter" || plan === "pro" || plan === "team" || plan === "enterprise";
 
-  // Fetch user plan — the exact figures (cases/deaths/CFR/incidence) are paid-only
-  // (Pro/Team/Enterprise), exactly like the dashboard table. Without this check,
-  // Compare would be a back door around that paywall.
+  // Fetch user plan — only the incidence rate (per 100,000 population) stays
+  // paid-only (Pro/Team/Enterprise) here; cases/deaths/CFR are public, same
+  // as the dashboard table and the disease/country/region pages.
   useEffect(() => {
     const supabase = createClient();
     supabase.auth.getUser().then(({ data: { user } }) => {
@@ -206,9 +206,9 @@ export default function ComparePage() {
                 <th className="px-4 py-3 text-center text-amber-400 font-bold text-sm">B</th>
               </tr></thead>
               <tbody>
-                <StatRow label={l.cases} valA={oA.cases} valB={oB.cases} icon={<Users className="w-3.5 h-3.5" />} fmt={v => v.toLocaleString(locale === "ar" ? "ar-SA" : locale)} locked={!isPaid} onLockClick={() => openModal("compare")} />
-                <StatRow label={l.deaths} valA={oA.deaths} valB={oB.deaths} icon={<Skull className="w-3.5 h-3.5" />} fmt={v => v.toLocaleString(locale === "ar" ? "ar-SA" : locale)} locked={!isPaid} onLockClick={() => openModal("compare")} />
-                <StatRow label={l.cfr} valA={cfrA} valB={cfrB} icon={<TrendingUp className="w-3.5 h-3.5" />} fmt={v => v.toFixed(1) + "%"} locked={!isPaid} onLockClick={() => openModal("compare")} />
+                <StatRow label={l.cases} valA={oA.cases} valB={oB.cases} icon={<Users className="w-3.5 h-3.5" />} fmt={v => v.toLocaleString(locale === "ar" ? "ar-SA" : locale)} />
+                <StatRow label={l.deaths} valA={oA.deaths} valB={oB.deaths} icon={<Skull className="w-3.5 h-3.5" />} fmt={v => v.toLocaleString(locale === "ar" ? "ar-SA" : locale)} />
+                <StatRow label={l.cfr} valA={cfrA} valB={cfrB} icon={<TrendingUp className="w-3.5 h-3.5" />} fmt={v => v.toFixed(1) + "%"} />
                 <StatRow label={l.incidence} valA={incA} valB={incB} icon={<Activity className="w-3.5 h-3.5" />} fmt={v => v.toFixed(2)} locked={!isPaid} onLockClick={() => openModal("compare")} />
                 <tr className="border-b border-gray-800">
                   <td className="px-4 py-3 text-gray-500 text-sm"><div className="flex items-center gap-2"><Calendar className="w-3.5 h-3.5" />{l.date}</div></td>
@@ -239,8 +239,7 @@ export default function ComparePage() {
               </tbody>
             </table>
           </div>
-          {/* Legend only makes sense once the win/lose colours are actually visible (paid plan) */}
-          {isPaid && <p className="text-xs text-gray-600 text-center">🟢 = {l.winner} · 🔴 = {l.lower}</p>}
+          <p className="text-xs text-gray-600 text-center">🟢 = {l.winner} · 🔴 = {l.lower}</p>
 
           {/* ── Upgrade banner — shown right when engagement peaks: user just picked 2 outbreaks ── */}
           {!isPaid && (

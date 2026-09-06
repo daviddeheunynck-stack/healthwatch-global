@@ -36,10 +36,10 @@ const COPY: Record<string, {
   fr: {
     pdf:      { title: "Rapports PDF régionaux",      desc: "Téléchargez des rapports épidémiologiques prêts à partager avec vos équipes ou bailleurs.",   plan: "Disponible — Pro" },
     realtime: { title: "Alertes instantanées",        desc: "Notification instantanée dès que notre synchronisation OMS, ECDC, PAHO & Africa CDC (toutes les 6h) détecte un nouveau foyer.", plan: "Disponible — Pro & Team" },
-    list:     { title: "Liste complète des foyers",   desc: "Accédez à tous les foyers actifs par région avec chiffres exacts.",                            plan: "Disponible — Pro" },
-    cases:    { title: "Chiffres confirmés",          desc: "Cas confirmés, décès et détails épidémiologiques complets pour chaque foyer.",                 plan: "Disponible — Pro" },
+    list:     { title: "Filtre par région",           desc: "Filtrez par n'importe quelle région spécifique, pas seulement « Toutes ».",                     plan: "Disponible — Pro" },
+    cases:    { title: "Courbe épidémique & incidence", desc: "Graphique d'évolution des cas et taux d'incidence pour 100 000 habitants, pour chaque foyer.", plan: "Disponible — Pro" },
     csv:      { title: "Export CSV des données",      desc: "Téléchargez l'ensemble des foyers actifs en CSV pour Excel, R, Python ou vos outils internes.", plan: "Disponible — Pro" },
-    compare:  { title: "Comparateur de foyers chiffré", desc: "Comparez cas, décès, létalité et incidence entre deux épidémies, foyer par foyer.",            plan: "Disponible — Pro" },
+    compare:  { title: "Incidence comparée",          desc: "Comparez le taux d'incidence pour 100 000 habitants entre deux épidémies, foyer par foyer.", plan: "Disponible — Pro" },
     watchlist: { title: "Liste de surveillance personnelle", desc: "Mettez en veille n'importe quel foyer pour le suivre au fil du temps — filtré automatiquement en haut de votre tableau de bord.", plan: "Disponible — Pro" },
     proFeatures: [
       "Alertes instantanées — OMS, ECDC, PAHO & Africa CDC, toutes les 6h",
@@ -60,10 +60,10 @@ const COPY: Record<string, {
   en: {
     pdf:      { title: "Regional PDF reports",     desc: "Download shareable epidemiological reports ready for your teams or donors.",             plan: "Available — Pro" },
     realtime: { title: "Instant alerts",           desc: "Get notified within hours the moment our WHO, ECDC, PAHO & Africa CDC sync (every 6h) detects a new outbreak.", plan: "Available — Pro & Team" },
-    list:     { title: "Full outbreak list",       desc: "Access all active outbreaks per region with exact case and death figures.",              plan: "Available — Pro" },
-    cases:    { title: "Confirmed figures",        desc: "Confirmed cases, deaths and full epidemiological details for every outbreak.",           plan: "Available — Pro" },
+    list:     { title: "Region filter",            desc: "Filter by any specific region, not just \"All\".",                                       plan: "Available — Pro" },
+    cases:    { title: "Epidemic curve & incidence rate", desc: "Case-history chart and incidence rate per 100,000 population for every outbreak.", plan: "Available — Pro" },
     csv:      { title: "CSV data export",          desc: "Download all active outbreaks as CSV for Excel, R, Python or your internal tools.",      plan: "Available — Pro" },
-    compare:  { title: "Outbreak data comparison", desc: "Compare cases, deaths, fatality rate and incidence between two epidemics, side by side.", plan: "Available — Pro" },
+    compare:  { title: "Incidence comparison",     desc: "Compare incidence rate per 100,000 population between two epidemics, side by side.",     plan: "Available — Pro" },
     watchlist: { title: "Personal outbreak watchlist", desc: "Star any outbreak to add it to your personal watchlist — tracked over time and surfaced at the top of your dashboard automatically.", plan: "Available — Pro" },
     proFeatures: [
       "Instant alerts — WHO, ECDC, PAHO & Africa CDC",
@@ -84,10 +84,10 @@ const COPY: Record<string, {
   es: {
     pdf:      { title: "Informes PDF regionales",     desc: "Descargue informes epidemiológicos listos para compartir con su equipo o financiadores.",    plan: "Disponible — Pro" },
     realtime: { title: "Alertas instantáneas",        desc: "Reciba una notificación en horas, en cuanto nuestra sincronización OMS, ECDC, PAHO & Africa CDC (cada 6h) detecte un nuevo brote.", plan: "Disponible — Pro y Team" },
-    list:     { title: "Lista completa de brotes",    desc: "Acceda a todos los brotes activos por región con cifras exactas.",                           plan: "Disponible — Pro" },
-    cases:    { title: "Cifras confirmadas",          desc: "Casos confirmados, fallecidos y detalles epidemiológicos completos.",                         plan: "Disponible — Pro" },
+    list:     { title: "Filtro por región",           desc: "Filtre por cualquier región específica, no solo «Todas».",                                    plan: "Disponible — Pro" },
+    cases:    { title: "Curva epidémica e incidencia", desc: "Gráfico de evolución de casos y tasa de incidencia por 100.000 habitantes para cada brote.", plan: "Disponible — Pro" },
     csv:      { title: "Exportación de datos CSV",    desc: "Descargue todos los brotes activos en CSV para Excel, R, Python o sus herramientas internas.", plan: "Disponible — Pro" },
-    compare:  { title: "Comparador de brotes con cifras", desc: "Compare casos, muertes, letalidad e incidencia entre dos epidemias, lado a lado.",            plan: "Disponible — Pro" },
+    compare:  { title: "Incidencia comparada",        desc: "Compare la tasa de incidencia por 100.000 habitantes entre dos epidemias, lado a lado.", plan: "Disponible — Pro" },
     watchlist: { title: "Lista de seguimiento personal", desc: "Marque cualquier brote para añadirlo a su lista de seguimiento personal — rastreado en el tiempo y mostrado automáticamente en la parte superior de su panel.", plan: "Disponible — Pro" },
     proFeatures: [
       "Alertas instantáneas — OMS, ECDC, PAHO & Africa CDC, cada 6h",
@@ -108,10 +108,10 @@ const COPY: Record<string, {
   ar: {
     pdf:      { title: "تقارير PDF إقليمية",           desc: "حمّل تقارير وبائية جاهزة للمشاركة مع فرقك أو المموّلين بنقرة واحدة.",            plan: "متاح — Pro" },
     realtime: { title: "تنبيهات فورية",                desc: "احصل على إشعار في غضون ساعات بمجرد أن تكتشف مزامنتنا (كل 6 ساعات) تفشّياً جديداً من WHO أو ECDC أو PAHO أو Africa CDC.", plan: "متاح — Pro و Team" },
-    list:     { title: "قائمة كاملة بالتفشيات",        desc: "اطلع على جميع التفشيات النشطة بالمنطقة مع الأرقام الدقيقة.",                   plan: "متاح — Pro" },
-    cases:    { title: "الأرقام المؤكدة",              desc: "الحالات المؤكدة والوفيات والتفاصيل الوبائية الكاملة لكل تفشٍّ.",                plan: "متاح — Pro" },
+    list:     { title: "تصفية حسب المنطقة",            desc: "صفِّ حسب أي منطقة محددة، وليس فقط «الكل».",                                    plan: "متاح — Pro" },
+    cases:    { title: "منحنى الوباء ومعدل الإصابة",    desc: "مخطط تطور الحالات ومعدل الإصابة لكل 100,000 نسمة لكل تفشٍّ.",                  plan: "متاح — Pro" },
     csv:      { title: "تصدير بيانات CSV",             desc: "حمّل جميع التفشيات النشطة بصيغة CSV لـ Excel أو R أو Python أو أدواتك الداخلية.", plan: "متاح — Pro" },
-    compare:  { title: "مقارنة بيانات التفشيات",         desc: "قارن الحالات والوفيات ومعدل الفتك ومعدل الإصابة بين وباءين جنباً إلى جنب.",        plan: "متاح — Pro" },
+    compare:  { title: "مقارنة معدل الإصابة",           desc: "قارن معدل الإصابة لكل 100,000 نسمة بين وباءين جنباً إلى جنب.",                   plan: "متاح — Pro" },
     watchlist: { title: "قائمة المراقبة الشخصية",        desc: "ضع نجمة على أي تفشٍّ لإضافته إلى قائمة مراقبتك الشخصية — يُتابَع عبر الزمن ويظهر تلقائياً في أعلى لوحة التحكم.", plan: "متاح — Pro" },
     proFeatures: [
       "تنبيهات فورية — WHO وECDC وPAHO وAfrica CDC",
@@ -132,10 +132,10 @@ const COPY: Record<string, {
   id: {
     pdf:      { title: "Laporan PDF regional",        desc: "Unduh laporan epidemiologi siap dibagikan ke tim atau donor Anda.",                      plan: "Tersedia — Pro" },
     realtime: { title: "Peringatan instan",           desc: "Dapatkan notifikasi dalam hitungan jam begitu sinkronisasi 6 jam kami mendeteksi wabah baru dari WHO, ECDC, PAHO atau Africa CDC.", plan: "Tersedia — Pro & Team" },
-    list:     { title: "Daftar wabah lengkap",        desc: "Akses semua wabah aktif per wilayah dengan angka kasus dan kematian yang tepat.",        plan: "Tersedia — Pro" },
-    cases:    { title: "Angka terkonfirmasi",         desc: "Kasus terkonfirmasi, kematian, dan detail epidemiologi lengkap setiap wabah.",           plan: "Tersedia — Pro" },
+    list:     { title: "Filter wilayah",              desc: "Filter berdasarkan wilayah tertentu, bukan hanya \"Semua\".",                            plan: "Tersedia — Pro" },
+    cases:    { title: "Kurva epidemi & tingkat insidensi", desc: "Grafik riwayat kasus dan tingkat insidensi per 100.000 penduduk untuk setiap wabah.", plan: "Tersedia — Pro" },
     csv:      { title: "Ekspor data CSV",             desc: "Unduh semua wabah aktif sebagai CSV untuk Excel, R, Python, atau alat internal Anda.",   plan: "Tersedia — Pro" },
-    compare:  { title: "Perbandingan data wabah",     desc: "Bandingkan kasus, kematian, tingkat fatalitas, dan insidensi antara dua epidemi secara berdampingan.", plan: "Tersedia — Pro" },
+    compare:  { title: "Perbandingan insidensi",      desc: "Bandingkan tingkat insidensi per 100.000 penduduk antara dua epidemi secara berdampingan.", plan: "Tersedia — Pro" },
     watchlist: { title: "Daftar pantau pribadi",       desc: "Beri bintang pada wabah apa pun untuk menambahkannya ke daftar pantau pribadi Anda — dilacak dari waktu ke waktu dan ditampilkan otomatis di bagian atas dasbor.", plan: "Tersedia — Pro" },
     proFeatures: [
       "Peringatan instan — WHO, ECDC, PAHO & Africa CDC",
