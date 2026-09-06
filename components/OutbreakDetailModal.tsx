@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { X, ExternalLink, AlertTriangle, TrendingUp, Users, Skull, Calendar, Globe, Clock, Activity, ImageDown, FileText, Link as LinkIcon, Check, Copy, Info, Download } from "lucide-react";
+import { X, ExternalLink, AlertTriangle, TrendingUp, Users, Skull, Calendar, Globe, Clock, Activity, ImageDown, FileText, Link as LinkIcon, Check, Copy, Info, Download, Lock } from "lucide-react";
 import WatchlistButton from "@/components/WatchlistButton";
 import { getIncidenceRate } from "@/lib/population-data";
 import type { Outbreak } from "@/lib/outbreaks";
@@ -832,7 +832,18 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
                   <p className="text-[10px] text-gray-600 mt-0.5">{c.incidencePer100k}</p>
                 </div>
               ) : (
-                <p className="text-lg font-bold blur-sm select-none text-gray-300 cursor-pointer" onClick={() => openModal("cases")}>0.36</p>
+                // Was a hardcoded "0.36" behind a CSS blur — a fabricated
+                // number, the same value for every outbreak, not even this
+                // one's real (masked) incidence. Fabricated-but-plausible is
+                // exactly the credibility problem David flagged for the
+                // cases/deaths mask (see magnitudeBand's doc comment in
+                // lib/outbreaks.ts): extracted or unblurred, it reads as a
+                // bug or a lie, not a gate. A lock icon promises nothing.
+                <Lock
+                  className="w-4 h-4 text-gray-600 mx-auto cursor-pointer"
+                  onClick={() => openModal("cases")}
+                  aria-label={c.incidence}
+                />
               )}
             </div>
           )}

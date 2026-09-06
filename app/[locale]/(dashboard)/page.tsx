@@ -2,7 +2,8 @@ import { getTranslations, getLocale } from "next-intl/server";
 import { headers } from "next/headers";
 import Link from "next/link";
 import { Activity, Globe, AlertTriangle } from "lucide-react";
-import { getOutbreaks, getStats, getLastSync, getLocalizedDisease, getLocalizedCountry, pickFeaturedDiseases, maskOutbreakRow, isFreeFeaturedRow } from "@/lib/outbreaks";
+import { getOutbreaks, getStats, getLastSync, getLocalizedDisease, getLocalizedCountry, pickFeaturedDiseases, maskOutbreakRow, isFreeFeaturedRow, magnitudeBand, cfrSeverityBand } from "@/lib/outbreaks";
+import { MagnitudeDots, SeverityWord } from "@/components/MagnitudeIndicator";
 import { ISO_REGION } from "@/lib/geo-data";
 import { getOutbreakTrendsBulkCached } from "@/lib/outbreak-trend";
 import { createClient } from "@/lib/supabase-server";
@@ -475,8 +476,13 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
                 {topUnlocked ? (
                   <span className="text-gray-300">{top.cases.toLocaleString(numLocale)} {snap.cases}</span>
                 ) : (
+                  // Same dot scale as everywhere else a non-featured row is masked
+                  // (see maskOutbreakRow's doc comment in lib/outbreaks.ts) — a
+                  // digit-count blur ("•••••") reveals the same order of magnitude
+                  // as a band anyway, just via a one-off mechanism this banner used
+                  // to be the last place on the site still running.
                   <Link href={`/${locale}/pricing`} className="cursor-pointer">
-                    <span className="blur-sm select-none text-gray-500">{top.cases.toLocaleString(numLocale).replace(/\d/g, "•")} {snap.cases}</span>
+                    <MagnitudeDots band={magnitudeBand(top.cases)} />
                   </Link>
                 )}
               </>
@@ -488,7 +494,7 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
                   <span className="text-red-400 font-medium">{cfr}% {snap.cfr}</span>
                 ) : (
                   <Link href={`/${locale}/pricing`} className="cursor-pointer">
-                    <span className="blur-sm select-none text-gray-500">{cfr.replace(/\d/g, "•")}% {snap.cfr}</span>
+                    <SeverityWord band={cfrSeverityBand(top.cases, top.deaths)} locale={locale} />
                   </Link>
                 )}
               </>

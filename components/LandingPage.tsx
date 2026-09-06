@@ -5,7 +5,8 @@ import {
   Zap, Clock, CheckCircle, AlertTriangle, Building2,
   HeartHandshake, Microscope, Stethoscope, Landmark, Radio,
 } from "lucide-react";
-import { getOutbreaks, getStats, getLocalizedDisease, getLocalizedCountry, pickFeaturedDiseases, isFreeFeaturedRow } from "@/lib/outbreaks";
+import { getOutbreaks, getStats, getLocalizedDisease, getLocalizedCountry, pickFeaturedDiseases, isFreeFeaturedRow, magnitudeBand } from "@/lib/outbreaks";
+import { MagnitudeDots } from "@/components/MagnitudeIndicator";
 import RiskBadge from "@/components/RiskBadge";
 import NewsletterSubscribeForm from "@/components/NewsletterSubscribeForm";
 import LandingMapSection from "@/components/LandingMapSection";
@@ -689,18 +690,36 @@ export default async function LandingPage({ locale }: { locale: string }) {
               </tr>
             </thead>
             <tbody>
-              {topOutbreaks.map((outbreak, i) => (
-                <tr key={outbreak.id} className={`border-t border-gray-800 ${i % 2 === 0 ? "bg-gray-900/20" : ""}`}>
-                  <td className="px-5 py-3 font-medium text-white">{getLocalizedDisease(outbreak, locale)}</td>
-                  <td className="px-5 py-3 text-gray-300">{getLocalizedCountry(outbreak, locale)}</td>
-                  <td className="px-5 py-3"><RiskBadge level={outbreak.risk_level as "high" | "medium" | "low"} /></td>
-                  <td className="px-5 py-3 text-right">
-                    <span className="blur-sm select-none text-gray-500 text-xs">
-                      {outbreak.cases.toLocaleString(locale === "ar" ? "ar-SA" : locale).replace(/\d/g, "•")} {locale === "fr" ? "cas" : locale === "es" ? "casos" : locale === "ar" ? "حالة" : locale === "id" ? "kasus" : "cases"}
-                    </span>
-                  </td>
-                </tr>
-              ))}
+              {topOutbreaks.map((outbreak, i) => {
+                // Same one-showcase-disease-per-continent policy as the map
+                // below and every other masked surface (see maskOutbreakRow's
+                // doc comment in lib/outbreaks.ts) — a digit-count blur
+                // ("•••••") revealed the same order of magnitude as a band
+                // anyway, just via a one-off mechanism nobody else on the
+                // site used, and it ran on every row here regardless of
+                // whether that row was this region's free showcase. Real
+                // number for a featured row (already shown unmasked
+                // everywhere else it appears), the shared dot scale for
+                // anything else — never a fake number, per magnitudeBand's
+                // own doc comment.
+                const featured = isFreeFeaturedRow(outbreak, featuredDiseaseByRegion);
+                return (
+                  <tr key={outbreak.id} className={`border-t border-gray-800 ${i % 2 === 0 ? "bg-gray-900/20" : ""}`}>
+                    <td className="px-5 py-3 font-medium text-white">{getLocalizedDisease(outbreak, locale)}</td>
+                    <td className="px-5 py-3 text-gray-300">{getLocalizedCountry(outbreak, locale)}</td>
+                    <td className="px-5 py-3"><RiskBadge level={outbreak.risk_level as "high" | "medium" | "low"} /></td>
+                    <td className="px-5 py-3 text-right">
+                      {featured ? (
+                        <span className="text-gray-300 text-xs">
+                          {outbreak.cases.toLocaleString(locale === "ar" ? "ar-SA" : locale)} {locale === "fr" ? "cas" : locale === "es" ? "casos" : locale === "ar" ? "حالة" : locale === "id" ? "kasus" : "cases"}
+                        </span>
+                      ) : (
+                        <MagnitudeDots band={magnitudeBand(outbreak.cases)} className="justify-end" />
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
           <div className="bg-gray-900/60 border-t border-gray-800 px-5 py-3 flex items-center justify-between">

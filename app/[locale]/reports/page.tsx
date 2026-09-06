@@ -1,6 +1,7 @@
 import { getTranslations, getLocale } from "next-intl/server";
 import { FileText, Lock } from "lucide-react";
-import { getOutbreaks, getLocalizedDisease, getLocalizedCountry, dedupeAggregateOutbreakRows } from "@/lib/outbreaks";
+import { getOutbreaks, getLocalizedDisease, getLocalizedCountry, dedupeAggregateOutbreakRows, magnitudeBand } from "@/lib/outbreaks";
+import { MagnitudeDots } from "@/components/MagnitudeIndicator";
 import { createClient } from "@/lib/supabase-server";
 import { resolvedPlan } from "@/lib/resolved-plan";
 import { Suspense } from "react";
@@ -233,9 +234,14 @@ async function ReportsContent() {
                   {isPaid ? (
                     <span className="text-white font-medium">{totalCases.toLocaleString(locale === "ar" ? "ar-SA" : locale)}</span>
                   ) : (
-                    <span className="blur-sm select-none text-gray-500 font-medium">
-                      {totalCases.toLocaleString(locale === "ar" ? "ar-SA" : locale)}
-                    </span>
+                    // A CSS blur over the real digits still ships them in the
+                    // page's own HTML — extractable via curl/view-source
+                    // exactly like the number it's meant to hide (found
+                    // 2026-09-06, same leak class as maskOutbreakRow's own
+                    // doc comment in lib/outbreaks.ts describes). The dot
+                    // scale used everywhere else never carries a real number
+                    // to begin with.
+                    <MagnitudeDots band={magnitudeBand(totalCases)} />
                   )}
                 </div>
                 <div className="flex justify-between text-gray-400">
@@ -243,7 +249,7 @@ async function ReportsContent() {
                   {isPaid ? (
                     <span className="text-red-400 font-medium">{highRisk}</span>
                   ) : (
-                    <span className="blur-sm select-none text-gray-500 font-medium">{highRisk}</span>
+                    <Lock className="w-3.5 h-3.5 text-gray-600" aria-label={pc.lockedList} />
                   )}
                 </div>
               </div>
