@@ -4112,3 +4112,185 @@ Au démarrage du run, quatre fichiers de code (`app/[locale]/(dashboard)/page.ts
 interactive en cours. Rien n'a été stagé ni committé de ce travail ; il a été
 publié par son auteur en `c04a158a` pendant ce run, et l'idée 2 a été construite
 dans un fichier qu'aucune autre session ne touchait.
+
+---
+
+## 2026-09-06 — Proposition du jour
+
+Sources relues : `product-ideas-log.md` en entier (dernière entrée 05/09,
+idée 1 « mur payant » tranchée le 06/09 par David en option (b) — masquage
+assumé, **ne pas re-proposer**), `product-feedback.md` (dernière entrée
+31/08, lepapapericles5, accessibilité — piste « digest allégé » mesurée et
+close le 02/09), `ROADMAP.md`, `git log -25`.
+
+Le contexte du jour est presque entièrement une journée de durcissement du
+mur payant : 8 commits `fix(paywall)` entre `2753172d` et `20e70be9`, plus
+4 commits `fix(emails)` alignant les gabarits sur les fonctionnalités Pro
+livrées la veille. Les deux idées ci-dessous partent de là — la première
+mesure ce que ce balayage n'a pas couvert, la seconde regarde ce que le
+masquage retenu donne à voir à un visiteur.
+
+**Audit de données préalable, sans suite.** Contrôle systématique sur les
+296 lignes de la base **prod** (`tqznwmpkokdzrszysbcm`) : 121 actives,
+0 `deaths > cases`, 0 date future, 0 CFR > 50 %, 0 `source` non-URL,
+0 ligne à `cases <= 0`, 1 seul groupe de doublons actifs (le triplet
+Avian Influenza/États-Unis, connu et volontaire). Rien à signaler de ce
+côté. ⚠️ Le premier passage de cet audit a été fait par erreur sur
+`.env.local`, qui pointe la base **dev** (`ycnuedalfwpnkytdctqz`) : il
+rendait 83 actives, toutes périmées de plus de 45 jours et 10 groupes de
+doublons — un tableau alarmant et entièrement faux. C'est exactement le
+piège documenté dans `AGENTS.md` (« la base dev peut prendre du retard de
+schéma sur prod, en silence ») ; refait sur `.env.local.live`.
+
+### 1. 🔴 Le balayage du mur payant a couvert les pages, pas les routes d'API — 96 des 96 lignes masquées se récupèrent en clair, sans compte, en 81 requêtes
+
+**Signal.** Huit commits aujourd'hui pour porter le masquage par bandes
+qualitatives aux surfaces publiques, jusqu'à `fd646a97` ce matin, écrit
+précisément parce que `/compare` interrogeait la base depuis le navigateur
+et exposait « Ebola/RDC 6 342 / 3 072 / 48,4 % » à un visiteur anonyme.
+
+**Les mêmes chiffres, sur la même épidémie, sortent toujours d'une autre
+route — vérifié en direct sur la prod, sans cookie ni clé :**
+
+```
+$ curl -s 'https://healthwatch-global.com/api/travel-risk?country_en=Democratic%20Republic%20of%20the%20Congo'
+  {"disease_en":"Ebola virus disease","cases":6342,"deaths":3072,...}
+  {"disease_en":"Cholera",            "cases":41300,"deaths":1214,...}   ← masquée partout ailleurs
+  {"disease_en":"Polio",              "cases":45,   "deaths":0,...}      ← masquée partout ailleurs
+```
+
+La même route publie aussi `?list=1`, qui rend les **80 pays** ayant une
+ligne active. Le balayage complet coûte donc 81 requêtes anonymes :
+
+| Route | Auth | Masquage | Lignes rendues en clair | dont masquées ailleurs |
+|---|---|---|---|---|
+| `/api/travel-risk` | **aucune** | **aucun** | 121 | **96 / 96 (100 %)** |
+| `/api/outbreak-neighbors` | **aucune** | **aucun** | 105 | 87 / 96 |
+| `/api/country-scorecard` | connexion seule | aucun | total de cas par pays | agrégat exact |
+| `/api/outbreak-cluster` | connexion seule | aucun | cas par ligne liée | latent (voir plus bas) |
+
+Les 14 autres routes qui lisent `cases`/`deaths` sont, elles, correctement
+tenues : 12 exigent un plan payant (401/403 vérifiés en direct), et
+`/api/feed` comme `/api/outbreak-card/[id]` appliquent bien la bande
+(« HIGH RISK · Magnitude: 4/5 (exact figures for Pro subscribers) »).
+Le défaut n'est pas dans le dispositif de masquage, qui est bon — il est
+dans l'inventaire des surfaces auxquelles on l'a appliqué.
+
+**Pourquoi ces quatre-là sont passées à travers.** Le balayage du jour a été
+conduit page par page (tableau de bord, `/compare`, permalien, pages
+maladie/pays/région, carte de la page d'accueil). Ces quatre routes n'ont pas
+de page à elles : trois alimentent un panneau à l'intérieur d'une page déjà
+traitée, et `/api/travel-risk` sert `/[locale]/travel-risk`, une page qui est
+dans le `sitemap.ts` à la priorité 0,8 et qu'aucun des huit commits n'a
+ouverte.
+
+**Nuance importante sur chacune, elles ne se corrigent pas pareil.**
+- `/api/travel-risk` doit **rester publique** : c'est un actif SEO référencé
+  au sitemap, et son verdict de risque (`none`/`low`/…/`critical`) n'est pas
+  un chiffre. Ce sont les `cases`/`deaths` par ligne qui doivent passer par
+  la même bande que partout ailleurs.
+- `/api/outbreak-neighbors` n'a **qu'un seul appelant, déjà réservé aux
+  payants** (`OutbreakDetailModal.tsx:439`, sous `if (!outbreak || !isPaid)
+  return`). Elle se ferme au plan payant comme ses six sœurs, sans changer
+  une ligne d'interface.
+- `/api/country-scorecard` est dans le même cas : son composant ne s'affiche
+  que sous `{isPaid && <CountryScorecardTab …>}` (page tableau de bord,
+  l. 632), mais la route se contente d'exiger une session. Un compte
+  **gratuit** connecté récupère le total de cas exact par pays — soit
+  précisément l'agrégat que `aggregateNeedsMasking` existe pour empêcher de
+  reconstituer par soustraction.
+- `/api/outbreak-cluster` est le seul cas **latent, pas actif** : son
+  composant s'affiche bien aux comptes gratuits, mais il ne se déclenche que
+  si `outbreak.event_id` est renseigné — et **0 des 296 lignes de la base en
+  ont un**. Vérifié avant de l'écrire : rien ne fuit aujourd'hui par cette
+  route. Elle est citée pour ne pas laisser la classe ouverte le jour où un
+  cron commencera à écrire `event_id`.
+
+**Effort :** petit. Un helper de masquage déjà écrit et déjà utilisé par
+`/api/compare-outbreaks` (`pickFeaturedDiseases` + `magnitudeBand` +
+`cfrSeverityBand`), deux gates copiées sur `/api/outbreak-history`.
+
+**Risque/inconnue :** la page `/[locale]/travel-risk` affiche aujourd'hui les
+cas et les décès par foyer (`TravelRiskFullPage.tsx:447,451`) ; après
+correctif, une ligne non vitrine y montre la même échelle de points que sur
+les pages maladie/pays/région. C'est le comportement voulu par l'option (b),
+mais c'est un changement visible sur une page publique, et il est signalé
+comme tel. Le verdict de risque, la recommandation de voyage et les liens
+gouvernementaux ne bougent pas — la valeur d'usage de la page est intacte.
+
+**Point de vigilance sur `travel-risk` spécifiquement :** cette route a déjà
+été corrigée deux fois pour la même raison de fond (un échec de requête qui
+se lisait « aucun foyer actif — précautions habituelles », mis en cache une
+heure sur une surface de décision sanitaire). Le masquage ne doit pas
+réintroduire ce défaut : la requête pays qui décide du verdict garde sa
+requête et son 503 propres, et seul le calcul de la vitrine gratuite passe
+par le cache partagé — lequel, s'il échoue, rend une liste vide, donc aucune
+vitrine, donc **tout masqué**. La dégradation se fait dans le sens fermé.
+
+### 2. 🟠 Le masque que David vient de choisir de garder ne dit nulle part ce qu'il est — sur les pages publiques, c'est cinq points gris sans légende, sans infobulle et sans nom accessible
+
+**Signal.** L'arbitrage du 06/09 (« Les chiffres sont masqués, c'est
+normal ») fait du masque un choix produit assumé, donc un instrument de
+conversion : il est là pour qu'un visiteur comprenne qu'il manque quelque
+chose et sache où le trouver. Or ce qu'il rend aujourd'hui, sur la prod, est
+muet.
+
+**Mesuré sur la page publique la plus fréquentée du dispositif SEO** —
+`curl https://healthwatch-global.com/fr/disease/cholera` :
+
+```
+occurrences du mot « Magnitude » dans la page  : 0
+occurrences de « Pro » à proximité des points  : 0
+pastilles rendues (w-1.5 h-1.5 rounded-full)   : 225
+```
+
+La tuile « Cas confirmés » rend exactement ceci, cinq fois de suite, et rien
+d'autre :
+
+```html
+<span class="inline-flex items-center gap-0.5">
+  <span class="w-1.5 h-1.5 rounded-full bg-gray-400"></span> …
+</span>
+```
+
+Pas de `title`, pas d'`aria-label`, pas de texte. **Pour un lecteur d'écran,
+la colonne « cas » de 96 des 119 lignes n'annonce rien du tout** — des
+`<span>` vides n'ont pas de nom accessible. Pour un visiteur voyant, cinq
+points gris sans échelle ni légende se lisent comme un rendu cassé, pas
+comme une porte.
+
+**Le produit sait pourtant formuler la phrase — il la réserve aux machines.**
+La même ligne, vue par un moteur de recherche ou un lecteur RSS, est
+explicite :
+
+```
+<meta name="description" content="Choléra outbreak in RD Congo. Magnitude 4/5
+      (exact figures for Pro subscribers). …">
+/api/feed → "HIGH RISK · Magnitude: 4/5 (exact figures for Pro subscribers)"
+```
+
+L'explication existe donc déjà, rédigée, dans les métadonnées et dans le
+flux. Elle n'atteint jamais la surface où quelqu'un pourrait cliquer.
+
+**Une seule surface fait exception**, et elle montre la forme visée : le
+tableau de bord enveloppe ses pastilles d'un `cursor-pointer` qui ouvre le
+pop-up d'abonnement (`OutbreakDetailModal.tsx:764,787,804`). Les **18 autres
+appels** de `MagnitudeDots`/`SeverityWord` — pages maladie/pays/région,
+`/compare`, `/reports`, page d'accueil, tableau des foyers, tuiles du
+permalien — n'ont ni infobulle, ni libellé, ni lien.
+
+**Effort :** petit à moyen. Le correctif tient dans `MagnitudeIndicator.tsx`
+(un `title` + un `aria-label` construits depuis la bande et la locale), et
+sa seule vraie contrainte est mécanique : `MagnitudeDots` ne reçoit pas de
+`locale` aujourd'hui, il faut la passer aux appels concernés. Les libellés
+doivent exister dans les 5 langues, comme `SEVERITY_LABEL` juste à côté.
+
+**Risque/inconnue :** aucun sur les données — c'est du texte d'habillage,
+rien ne change de ce qui est envoyé au navigateur. Le seul arbitrage est de
+ton : la phrase doit expliquer sans harceler, et elle apparaît sur des pages
+indexées. Je reste sur la formulation que le produit emploie déjà dans ses
+métadonnées plutôt que d'en inventer une nouvelle.
+
+**Ce que cette idée n'est pas :** une remise en cause de l'option (b). Elle
+la prend pour acquise et ne touche à aucun chiffre masqué ; elle rend
+seulement lisible le masque déjà en place.
