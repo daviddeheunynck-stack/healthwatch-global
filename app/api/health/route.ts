@@ -214,15 +214,28 @@ export async function GET(req: Request) {
       // date, not our sync time — see max_as_of in lib/data-status.ts) and
       // flags a source whose maximum has not advanced in STALE_ASOF_DAYS.
       //
-      // RECENT_ASOF_DAYS is what keeps a seasonal source quiet out of
-      // season: ECDC's WNV page stops publishing every autumn, so its
-      // max_as_of drifts steadily away from today and no longer qualifies —
-      // whereas an in-season freeze leaves max_as_of stuck a few days behind
-      // today, which is exactly the 2026-08-27 -> 09-05 case above. Chosen
-      // over an exemption list, which would have had to exempt WNV — the one
-      // source whose freeze motivated this check in the first place.
-      const STALE_ASOF_DAYS  = 10;
-      const RECENT_ASOF_DAYS = 30;
+      // Seasonality is suppressed by an upper bound on the FREEZE DURATION,
+      // not on the age of the data. An earlier cut of this check required
+      // max_as_of to sit within 30 days of today, on the assumption that an
+      // in-season freeze leaves it a few days behind. Measured against prod
+      // 2026-09-06, that assumption is false and would have made the whole
+      // check inert: `outbreaks.date` is the event's own reference date and
+      // runs structurally months behind today on every tracked source (WHO
+      // DON 65 days, PAHO 71, ECDC 90 — the freshest of the six). No source
+      // would ever have qualified.
+      //
+      // What actually separates a freeze from a dormant season is how long
+      // the maximum has been stuck, which `seen_at` already measures: a live
+      // source advances it regularly, a broken one stops for weeks, and a
+      // seasonal one stops for months. So the window flags between 10 and 45
+      // days of no advance and then goes quiet — an off-season source (ECDC's
+      // WNV page pauses each autumn) stops alerting after ~6 weeks, while
+      // both founding cases land inside it: WNV frozen 9 days, PAHO measles
+      // sitrep 16. A permanently broken source therefore alerts for 35 days
+      // before going quiet, which is the deliberate trade for not crying wolf
+      // all winter every winter.
+      const STALE_ASOF_DAYS   = 10;
+      const DORMANT_AFTER_DAYS = 45;
       for (const s of sources) {
         if (!s.max_as_of) continue;
         const key = `source_coverage:max_asof:${s.name}`;
@@ -243,8 +256,7 @@ export async function GET(req: Request) {
         }
 
         const frozenDays = Math.floor((Date.now() - new Date(stored.seen_at).getTime()) / 86_400_000);
-        const asOfAgeDays = Math.floor((Date.now() - new Date(s.max_as_of).getTime()) / 86_400_000);
-        if (frozenDays >= STALE_ASOF_DAYS && asOfAgeDays <= RECENT_ASOF_DAYS) {
+        if (frozenDays >= STALE_ASOF_DAYS && frozenDays <= DORMANT_AFTER_DAYS) {
           sourceCoverage.frozen.push(`${s.name} (donnees figees au ${s.max_as_of}, inchangees depuis ${frozenDays}j)`);
         }
       }
