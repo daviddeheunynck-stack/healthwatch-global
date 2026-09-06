@@ -98,6 +98,15 @@ export function sourceUrl(source: string | null | undefined): string | null {
 // legal_reliefweb_noncommercial and project_reliefweb_reintroduction_2026_08_26.
 const FORBIDDEN_SOURCE_DOMAINS: ReadonlySet<string> = new Set([
   "reliefweb.int",
+  // news.un.org — found 2026-09-06 via data-quality's provenance section (Cholera/DR Congo,
+  // 41,300 cases). Same shape as reliefweb.int above: the UN's own general Conditions
+  // d'utilisation (news.un.org is a UN Secretariat site, not a distinct legal entity) grant
+  // "des fins personnelles et non commerciales... sans octroyer le droit de revendre ou de
+  // distribuer le Contenu" (David confirmed by fetching the page directly, WebFetch being
+  // blocked on un.org from this session) — personal/non-commercial only, no redistribution
+  // or derivative works, the exact restriction that got reliefweb.int banned. Never re-add;
+  // re-source affected rows to a primary WHO/AFRO bulletin instead.
+  "news.un.org",
 ]);
 
 // ── Éditeurs interdits UNIQUEMENT sur un chemin précis ───────────────────────
@@ -369,6 +378,15 @@ const GENERAL_PRESS_DOMAINS: ReadonlySet<string> = new Set([
   // project_ncdc_lassa_row_confidential_content_2026_09_04. Article directly attributes
   // NCDC's week-33 2026 figures (1,035 cases / 252 deaths).
   "tribuneonlineng.com",
+  // Euronews — major pan-European multilingual broadcaster, same tier as the national
+  // newsrooms above. Found 2026-09-06 via data-quality's provenance section, West Nile
+  // fever/Greece coverage.
+  "euronews.com",
+  // TRN (North Macedonia) and Gazeta de Sud / GdS (Romania) — established national/regional
+  // newsrooms, same tier as the others above. Found 2026-09-06 via data-quality's provenance
+  // section, West Nile fever/North Macedonia and /Romania coverage respectively.
+  "trn.mk",
+  "gds.ro",
 ]);
 
 /**
