@@ -1,6 +1,115 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
+## 📅 Session linkedin-hwg-followup-check — 06/09/2026 (13h, 1er des 2 créneaux après-midi) — ✅ **1 DM envoyé en autonomie complète** (Préféré Matutu Molongo, bienvenue après acceptation, 2 jets) — ✅ **1 invitation envoyée sans note** (Ofelia CAZACU, OMS/ICG, nouvelle abonnée évaluée en candidate de connexion) — ❌ **0 commentaire, 6 jets rejetés sur 6** (détail et constat de fond dans `content-log.md`) — aucune réponse nouvelle en messagerie — vérification des connexions acceptées faite en propre, pas supposée
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` du 06/09 dans `content-log.md` ni dans ce fichier à l'ouverture → **premier déclenchement de cette routine aujourd'hui**. Deux passages ont précédé ce run : une **session interactive** (08h49, ordre « reprends ») et `linkedin-hwg-monitoring` (9h, plus un addendum 10h13-10h49 de 4 DM). Branche **master**, arbre propre, `git log origin/master..master` vide à l'ouverture. Registre de faits régénéré à 13h05 : **232 faits sur 106 lignes affichées, 81 `is_seed` exclues, 3 périmés**.
+
+**Navigateur** : `_shared/browser-status.md` lu avant ouverture, dernière entrée **🟢 RÉTABLI (06/09 ~09h05)**. `list_connected_browsers` renvoie `23c7ecdd-26d7-4d25-b39b-1889eb0fa3bd` seul, sélectionné par deviceId (§7). ⚠️ **Le rendu est resté désynchronisé de son propre DOM pendant tout l'envoi du DM** (voir §2), et `Page.captureScreenshot` a expiré à 30 s deux fois, contourné en baissant le `scale` — même symptôme qu'au run de 9h, **aucune entrée à ajouter à `browser-status.md`** : le pont n'est jamais tombé.
+
+---
+
+### 1️⃣ ✅ CONNEXIONS ACCEPTÉES — vérifiées en propre, 1 acceptation neuve
+
+**Règle du 06/09 appliquée à la lettre** (garde-fou anti-suppose-déjà-fait, ajouté ce matin après que le run de 9h a supposé ce point couvert par la session de 08h49) : `mynetwork/invite-connect/connections/` **ouverte par ce run**, tri « Ajouts récents », pas de reprise du bilan d'un passage précédent.
+
+| Relation | Connexion le | Statut |
+|---|---|---|
+| **Préféré Matutu Molongo** | **6 septembre** | 🆕 **acceptation neuve**, aucun échange préalable → DM de bienvenue, §2 ci-dessous |
+| Dr Fabrice KHADDY | 6 septembre | déjà traité (2 DM ce matin, 10h13 et 10h49) |
+| Miriam Mbueshi | 5 septembre | déjà traitée (DM 10h20) |
+| Christian BABOKO | 4 septembre | fil actif, déjà traité (DM 10h38) |
+| Boris Pavlin | 4 septembre | dossier clos le 04/09, aucun hook honnête — décision maintenue |
+| Yuda Sule Paschal, Dr. Malachie MANAOUDA, Kevin S. PhD, Rocham Mulumbwe | 3 septembre | déjà instruits par les runs précédents |
+| James Schlitt | 2 septembre | fil en pause (silence > 40 h), ne pas relancer |
+
+**Une seule acceptation non traitée sur la liste**, celle du carry-over ⭐⭐⭐ de 9h.
+
+---
+
+### 2️⃣ ✅ DM 5/8 — **Préféré Matutu Molongo**, message de bienvenue — 2 jets
+
+`/in/préféré-matutu-molongo-741a97197/`, **profil vérifié** (badge), *Medical Doctor (MD), MPH | Field Epidemiologist | Outbreak Response | Disease Surveillance | Vaccination & Polio Eradication | Public Health Emergency Management*, RDC, 579 abonnés, 492 relations, 10 relations en commun. Invitation envoyée sans note le 06/09 vers 10h20 par `linkedin-hwg-monitoring`, **acceptée le jour même**. Aucune conversation préexistante (fil de messagerie vide, vérifié avant rédaction).
+
+**Hook** : son post d'il y a 1 semaine sur la séance de formation des hygiénistes de la **zone de santé de Nyakunde** aux techniques de chloration de l'eau (INTERSOS, riposte Ebola). Il y écrit lui-même : « *L'hygiéniste doit notamment savoir préparer correctement les solutions chlorées, respecter les concentrations, le temps de contact, mesurer le chlore résiduel et contrôler régulièrement la qualité de l'eau.* » Son post de la veille annonce sa prise de poste d'Épidémiologiste Senior à l'OMS.
+
+- **Jet 1** — mécanique **PASS** (300 car., 2 §, fr/fr, 0 bloquant). Relecteur : **11 PASS, FAIL 11**. Le corps du message était jugé non transposable et l'apport validé, mais **l'ouverture « merci pour la connexion » est une formule saturée du corpus** : 8 DM envoyés ouvrent littéralement dessus, et le dispositif l'avait déjà écartée formellement deux fois (double-check du 20/08 : « *« merci pour la connexion » ressortait à 10 occurrences* »). Le contrôle mécanique ne l'a pas vue — trou déjà décrit dans `burned-templates.md`.
+- **Jet 2 = envoyé** — correction ciblée sur le seul point cité, l'ouverture, le reste inchangé (le relecteur écrit « *le reste du message est intact* »). Formule de remerciement supprimée entièrement plutôt que remplacée par une variante. Vérification de saturation du remplacement avant frappe : « bonne prise de poste » = **0 occurrence** dans `linkedin-contacts.md`. Mécanique **PASS** (272 car., 2 §, fr/fr, 0 bloquant).
+
+**Texte envoyé (13h13) :**
+
+> Préféré, bonne prise de poste à l'OMS.
+>
+> Dans votre séance de chloration à Nyakunde, vous insistez autant sur la mesure du chlore résiduel que sur la préparation de la solution. Qui reprend cette mesure dans ces structures une fois la formation terminée, et à quel rythme ?
+
+**Publication confirmée** : fil ouvert après le clic, en-tête « Préféré Matutu Molongo · En activité », message horodaté **13h13** sous « David Deheunynck », texte relu intégralement à l'écran (accents inclus, deux paragraphes séparés), coche de remise présente, composeur vidé, **aucun doublon**.
+
+**CTA absent, motif admis** : premier contact, le lien reste interdit sauf demande explicite de l'interlocuteur (politique commune §3).
+
+⚠️ **Rendu désynchronisé du DOM, cas du 2026-09-05 reconstaté de bout en bout.** Le composeur, le texte tapé et le bouton « Envoyer » étaient **parfaitement visibles à la capture** alors que le DOM les niait : `document.querySelectorAll('[contenteditable="true"]')` renvoyait **0 élément** après la frappe, et l'unique bouton « Envoyer » se déclarait `rect=0,0 0x0 disabled=true`. Conduite appliquée telle que la politique la prévoit : **clic aux coordonnées lues sur la capture**, identité (pastille destinataire + carte « Préféré Matutu Molongo · 1er ») et texte confirmés **sur cette même capture** juste avant le clic. A fonctionné du premier coup.
+
+`QA : mécanique jet 2 PASS (272 car., fr/fr, 0 bloquant, seul finding = info context.history) | relecteur 1 passe sur le jet 1, 11 PASS + FAIL 11 (ouverture saturée), corrigé sur ce seul point | faits cités : aucun chiffre dans le message | registre du 06/09 (13:05) | statut : envoyé le 06/09 à 13h13`
+
+---
+
+### 3️⃣ ✅ MESSAGERIE — aucune réponse nouvelle
+
+Les 10 fils relus, **notre message reste le dernier partout**, aucun fil non lu : Dr Fabrice KHADDY (10h49), Christian BABOKO (10h38), Miriam Mbueshi (10h20), Ngoy Guillaume (5 sept.), Dr. Siaka Condé (5 sept.), Dr. Malachie MANAOUDA (5 sept.), James Schlitt (4 sept.), trésor Ndaye (4 sept.), SOUAD BELKACEMI (3 sept.), Julien Tuba (3 sept.).
+
+**Aucune réponse depuis l'addendum de 10h49** — y compris de Dr Fabrice KHADDY, qui avait pourtant répondu en moins de 15 minutes ce matin.
+
+
+---
+
+### 4️⃣ ✅ NOUVEAUX ABONNÉS — 1 abonné neuf, évalué en candidat de connexion (règle du 06/09) et non en simple archivage
+
+`mynetwork/network-manager/people-follow/followers/` relue triée par récence, **416 abonnés**. Les dix premiers portent tous « Suivi » (`aria-label` « *Cliquez pour cesser de suivre …* » vérifié un par un) : Préféré Matutu Molongo, Dr Fabrice KHADDY, Ofelia CAZACU, Miriam Mbueshi, Fayssal ZEMMOUCHI, Mahamba Nzanzu, Caroline Museka, Boris Pavlin, Yuda Sule Paschal, Dr. Malachie MANAOUDA. **Aucun follow-back dû** — quota de suivis inchangé à 8 sur la journée.
+
+**Un seul abonné neuf depuis le run de 9h : Ofelia CAZACU** (notification « *vous suit* » à 3 h). **C'est précisément le cas que la règle du 2026-09-06 vise** : elle était déjà suivie depuis le 03/09 et portée en carry-over ⭐⭐ depuis, sans qu'aucune action n'ait jamais été prise ; sans cette règle, elle serait ressortie « déjà suivie, rien à faire » pour la 4e session d'affilée. Traitée ici en candidate de note de connexion à part entière → §5.
+
+---
+
+### 5️⃣ ✅ INVITATION ENVOYÉE — **Ofelia CAZACU** (OMS / ICG vaccine provision), sans note
+
+`/in/ofeliacazacu/` — *Technical Officer at WHO | Connecting people, expertise, and partnerships to advance global health - The International Coordinating Group (ICG) on vaccine provision - Vaccine coordination - Medical countermeasures (MCMs)*, **profil vérifié**, Vernier (Genève), Suisse, **3 454 abonnés**, 2e degré, **42 relations en commun**, University of Liverpool.
+
+**Pourquoi maintenant plutôt qu'un nouveau report** : trois éléments neufs par rapport aux carry-over précédents — elle **s'est abonnée au compte** de sa propre initiative ce matin, son activité récente est **substantielle et fraîche** (post du 03/09 sur le lancement, le 27 août 2026, du **Global ICG Mpox Vaccine Stockpile**, financé par Gavi, prolongeant le mécanisme d'accès et d'allocation créé pendant l'USPPI mpox de 2024, et intégrant la mpox au stock d'urgence ICG qui couvrait déjà choléra, méningite, fièvre jaune et Ebola depuis 1997), et son domaine — les **mécanismes d'allocation de contre-mesures médicales en pénurie** — recoupe directement ce que HWG suit.
+
+⚠️ **Pas de commentaire possible sur ce post** : publié il y a **3 jours**, hors de la fenêtre 48 h. C'est la connexion, pas le commentaire, qui était la seule action ouverte.
+
+**Envoyée sans note — et cette fois la prémisse a été testée, pas supposée.** Le run de 9h avait déduit l'épuisement du quota d'invitations personnalisées de l'**absence de compteur** dans la modale (raisonnement correct mais non vérifié). Ici, le clic sur « Ajouter une note » a renvoyé l'écran d'upsell Premium portant la réponse en toutes lettres : « **Vos messages d'invitation personnalisés gratuits sont épuisés.** » ➡️ **Fait établi, à ne plus retester avant octobre** : aucune note de connexion n'est émettable sur ce compte, quel que soit le profil. Conforme à l'autorisation de David du 23/07 (envoi sans note quand la note n'est pas disponible, même barre de pertinence, compté dans le quota).
+
+**Vérification** : identité confirmée dans la modale (« *Personnalisez l'invitation que vous envoyez à Ofelia CAZACU* ») **sur la capture même qui a servi à situer le bouton**, puis contrôle indépendant dans `mynetwork/invitation-manager/sent/` — **Ofelia CAZACU en tête de file, « Envoyé aujourd'hui »**, aucune note attachée, aucun doublon.
+
+**Quota invitations : 3 sur la journée** (Mahamba Nzanzu 08h49, Préféré Matutu Molongo ~10h20, Ofelia CAZACU ~13h25).
+
+📌 **Si elle accepte, candidate DM de bienvenue prioritaire** : aucun échange préalable, hook réel et vérifiable disponible dans son propre post. À vérifier au créneau de 17h.
+
+---
+
+### 6️⃣ ✅ NOTIFICATIONS ET VEILLE
+
+- **Réactions sur le post de marque du 04/09** (diphtérie/Niger, antitoxine) : **Christian BABOKO et 1 autre personne**, 2 réactions au total, il y a 3 h. BABOKO est déjà un contact en fil actif — rien à traiter, mais c'est la première réaction externe sur ce post.
+- **Emeline Perthame a consulté le profil** (2 h) — simple vue, pas d'interaction, rien à en tirer.
+- Rien d'autre d'exploitable : posts de Jalal NOURLIL (republication Pasteur Network), Dr. Getachew Tollera (sujet ferroviaire, hors périmètre), Jaiju Thomas, BERNADETTE ILENGETE (agronomie), nicola luigi bragazzi.
+- **Aucun signal de traction institutionnelle justifiant une notification push** (§13) : l'abonnement d'Ofelia CAZACU est un signal réel mais reste un follow, pas une interaction publique avec le contenu ; il est traité ici par l'action qu'il appelle (invitation) plutôt que par une alerte.
+- **Aucune donnée épidémiologique nouvelle** repérée en session (§8) : rien de chiffré et sourçable dans les posts parcourus qui ne soit déjà en base.
+
+---
+
+### 7️⃣ 🔁 CARRY-OVER
+
+1. ⭐⭐⭐ **Christianah Oki** et ⭐⭐⭐ **Sahar Khalid** — deux candidates de commentaire instruites jusqu'au bout et reportées à 17h, avec leurs contraintes d'angle établies. **Détail complet dans `content-log.md`, à lire avant toute reprise** — ne pas retester les formes déjà rejetées.
+2. ⭐⭐⭐ **Ofelia CAZACU** — invitation partie ce run, **DM de bienvenue prioritaire si elle accepte**. Vérifier à 17h.
+3. ⭐⭐ **Marieta Braks** — post ouvert jusqu'au **07/09 seulement**, dernier créneau utile. Prémisse à retester (page ECDC injoignable à 08h49), 3e report.
+4. ⭐ **Préféré Matutu Molongo** — DM de bienvenue envoyé à 13h13, **attendre sa réponse**, ne pas relancer.
+5. ⭐ **James Schlitt** — silence de plus de 40 h, fil en pause. Inchangé, ne pas relancer.
+6. 🏷️HORS-ROUTINE **Saturation rhétorique du corpus** — 6 jets rejetés sur 6 ce run, détail et pistes dans `content-log.md` §5. À trancher par David, aucune action de routine possible.
+7. ➖ **Aucune note de connexion émettable avant octobre** — quota LinkedIn gratuit épuisé, établi par test direct ce run (§5). Ne pas rédiger de note : c'est du travail perdu, envoyer sans note.
+8. **Inchangés** : Ngoy Guillaume (ne pas relancer, attendre son initiative), Christian BABOKO / Dr. Siaka Condé / Dr. Malachie MANAOUDA / trésor Ndaye / SOUAD BELKACEMI / Julien Tuba (rien de dû, nos messages restent les derniers), John Omari Baso et Isaias Fernandes Co, Boris Pavlin (dossier clos, aucun hook honnête), et les autres dossiers en sommeil des entrées précédentes.
+9. **Quotas de la journée après ce run** : **DM 5/8**, **commentaires 2/7**, **suivis 8 (fourchette 7-10, atteinte)**, **invitations 3**. Le créneau de 17h garde **3 DM et 5 commentaires**.
+
+
 ## 📅 Session linkedin-hwg-monitoring — 06/09/2026 (9h) — ✅ **6 suivis** (Mendo, Matutu Molongo, Aliddeki, Devaux, Pairault, Govender — quota du jour porté à 8) — ✅ **1 invitation envoyée sans note** (Préféré Matutu Molongo, Épidémiologiste Senior OMS/RDC) — ✅ **2 commentaires publiés** (détail dans `content-log.md`) — aucune réponse nouvelle en messagerie
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` du 06/09 à l'ouverture → premier déclenchement de cette routine aujourd'hui. Une **session interactive** avait tourné à 08h49 (ordre « reprends » de David) et couvert messagerie, notifications, follow-back et fils de commentaire actifs : ce run ne les refait pas, il reprend sur les commentaires et la découverte active. Branche **master**, arbre propre. Registre de faits régénéré à 09h04 (232 faits).

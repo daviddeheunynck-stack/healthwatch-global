@@ -2,6 +2,91 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session linkedin-hwg-followup-check — 06/09/2026 (13h, 1er des 2 créneaux après-midi) — ❌ **0 commentaire publié, quota laissé à 2/7** — 3 candidats instruits jusqu'au bout, **6 jets rejetés sur 6**, aucun sur une erreur factuelle ; ✅ **1 DM envoyé** (Préféré Matutu Molongo) et ✅ **1 invitation envoyée** (Ofelia CAZACU, OMS/ICG) — 🔴 **le constat de saturation rhétorique posé ce matin s'aggrave et devient un vrai blocage de production, à remonter à David**
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` du 06/09 à l'ouverture → premier déclenchement de cette routine aujourd'hui. Ont précédé ce run : session interactive (08h49) et `linkedin-hwg-monitoring` (9h + addendum 10h13-10h49). Branche **master**, arbre propre. Registre de faits régénéré à 13h05 (232 faits sur 106 lignes affichées, 81 `is_seed` exclues, 3 périmés).
+
+Détail des actions sortantes (DM, invitation, connexions acceptées, messagerie) dans `linkedin-contacts.md`. Cette entrée couvre les commentaires.
+
+---
+
+### 1️⃣ ✅ FILS DE COMMENTAIRE ACTIFS — aucune réponse nouvelle
+
+Les deux commentaires publiés ce matin ont été rouverts directement (§14), pas seulement contrôlés via les notifications :
+
+- **Joseph Cephas Kyari** (`urn:li:activity:7502087512098627584`) — notre commentaire à **11 impressions**, aucune réponse de l'auteur. Le post est passé de 3 à 4 commentaires depuis 9h : le nouveau est de **BLESSING JULIUS** (3 h, « *Such an inspiring journey!* »), adressé à l'auteur, purement élogieux — rien à traiter en sous-fil.
+- **Robert Herriman** (`urn:li:activity:7502029930910662656`) — notre commentaire à **12 impressions**, aucune réponse.
+- **Tambe Elvis Akem, Keneth Mugume, Yilkal Kebede, Anulika Omeaku** — rouverts à 08h49 par la session interactive, aucune réponse ; seul signal depuis, le **like de Yilkal Kebede** sur notre commentaire du 05/09, déjà relevé au run de 9h. Réaction, pas réponse.
+
+---
+
+### 2️⃣ ❌ CANDIDAT ABANDONNÉ — **IOM Asia Pacific**, 2 jets, 4e et 5e rejets consécutifs sur le même défaut
+
+`urn:li:activity:7502214019550932992`, post de **7 h** au moment du run (fenêtre ouverte), toujours **0 commentaire**. Carry-over ⭐⭐ de la session de 08h49, où l'angle « points d'entrée formels vs trafic informel » avait été écarté sur 2 jets pour défaut **structurel**. Les deux pistes suivies ce run venaient du relecteur du matin.
+
+- **Jet 3 (1er de ce run)** — angle **durée** : « *Six years is unusual for surveillance money in an outbreak setting, where funding tends to arrive with a response and leave with it. / What does a horizon that long let you put in place at the points of entry that a response-period grant never can?* ». Mécanique **PASS** (247 car.). Relecteur : **10 PASS, FAIL 9 et 11**. 🔴 Q9 : la subordonnée et l'incise finale jugeaient le **modèle de financement de la surveillance** sous le post d'une agence onusienne et d'un bailleur d'État tagué. Q11 : l'ouverture retombait dans le moule « [sujet nu] + copule + jugement de rareté + `where` + vérité générale du domaine », jumeau du socle publié « *Points of entry are the one place in surveillance where the denominator is knowable in advance* ».
+- **Jet 4 (2e de ce run)** — angle **transfrontalier**, l'une des pistes explicitement ouvertes par le relecteur du matin : « *An entry point on Lake Tanganyika sits at the edge of the neighbouring countries' surveillance systems as much as DRC's. / When the early warning setup raises a signal there, which of those systems logs it first?* ». Mécanique **PASS** (211 car.). Relecteur : **9 PASS, FAIL 6, 9 et 11**. Q6 : deux affirmations non lisibles dans le post (les postes sont « across Tanganyika Province », pas « on Lake Tanganyika » ; rien ne documente la couverture des systèmes voisins). 🔴 Q9 : « *as much as DRC's* » + « *which one logs it first* » reforme le **constat de périmètre incomplet**, la frontière ayant seulement glissé de formel/informel à national/voisins. Q11 : ensemble d'alternatives nommé (famille du binaire fermé), moule « constat déclaratif + passe de main interrogative », et thèse « lake corridor = gap » **déjà publiée** sur X le 01/07.
+
+❌ **Post abandonné comme cible de commentaire** (le candidat IOM reste légitime). Motif assumé : **4 jets sur 3 sessions, tous rejetés sur la question 9**, quel que soit l'axe choisi. ➡️ **Diagnostic à retenir : un post d'annonce de financement dont toute la substance est le périmètre du programme n'offre aucune prise analytique qui ne se lise pas comme une mise en cause de ce périmètre.** Les deux pistes restantes du relecteur (formation des agents, retour d'information communautaire) ne sont pas traitables non plus : le post n'en dit **rien**, un commentaire dessus inventerait un contenu absent. **Ne pas relancer un 5e jet sur ce post.**
+
+---
+
+### 3️⃣ ❌ CANDIDAT INSTRUIT ET REPORTÉ — **Sahar Khalid**, 2 jets, quota d'essais atteint
+
+`/in/sahar-khalid/`, post de **25 min** au moment du repérage (recherche active de contenu, `outbreak surveillance`, tri par date, 24 h), 1 réaction, 0 commentaire. **Légitimité hors de doute** : *National coordinator of the community health system* au **Ministère fédéral de la Santé du Soudan**, a dirigé la première Stratégie nationale de système de santé communautaire du pays (2025-2030) et l'établissement du premier **iCHIS** soudanais ; IPPHL/Evans School (University of Washington), RSTMH, 2 939 abonnés, 2e degré, 2 relations en commun. Khartoum. Neuve au corpus (0 occurrence dans les 3 fichiers), aucun blocage hebdomadaire.
+
+Post ciblé : visite du **National Health Intelligence Center (NHIC)** rwandais, architecture numérique à six couches, cEMR/e-Buzima, agents de santé communautaires saisissant en temps réel au niveau village, triangulation avec DHIS2 et les stocks eLMIS.
+
+⚠️ **Garde-fou appliqué d'emblée** : son autre post récent (3 j) contient un contenu **politique lourd** (guerre au Soudan, « forgotten genocide », milice soutenue par les Émirats). Seul le post technique a été ciblé, et le relecteur a reçu consigne explicite de vérifier l'absence de toute allusion, même oblique, à ce terrain.
+
+- **Jet 1** — mécanique **PASS** (332 car.). Relecteur : **7 PASS, FAIL 1, 5, 6, 9, 11**. Trois défauts que je n'avais pas vus : Q5, « *Your second layer* » lui **attribuait la paternité du dispositif rwandais** qu'elle a seulement visité ; Q1, l'ordinal inventait un rang « 2 sur 6 » dans une architecture à six couches qu'elle n'énumère jamais (elle liste trois rubriques) ; Q9, « *under very different constraints* », adressé publiquement à une professionnelle basée à Khartoum, ne pouvait se lire que comme une **allusion oblique au contexte soudanais** — et la question de prérequis l'invitait à énoncer publiquement ce qui manquait à son propre dispositif.
+- **Jet 2** — les trois corrections tiennent (**Q1, Q5, Q6 passent, Q9 contrôle (a) PASS**), mais **FAIL 9(b), 11 et 12**. La clause « *takes more than putting both on the same screen* » restait un **constat de manque déguisé** sur un dispositif qu'elle valorise ; Q11, armature de suffisance déjà brûlée (famille « *A only counts if…* ») plus trois formules déjà publiées (« *on the same screen* » 24/08, « *line up* » 03/08, « *different questions* » 08/08) ; Q12, l'observation déclarative lui rendait sa propre analyse des silos.
+
+⏸️ **Reporté au créneau de 17h, pas abandonné** — candidate de haute valeur, angle à reconstruire. Contraintes établies, à ne pas retester : ne rien lui attribuer du dispositif rwandais, aucune mention du Soudan ni de son parcours, aucune clause de suffisance ni de manque, ne pas lui rendre son analyse des silos.
+
+---
+
+### 4️⃣ ❌ CANDIDATE LA PLUS PROCHE DU BUT — **Christianah Oki**, 4 jets, 11/12 puis 10/12, jamais 12/12
+
+`/in/christianahoki/`, `urn:li:activity:7502080577295253504`, post de **16 h** (fenêtre ouverte), **41 réactions, 1 republication, 0 commentaire** — nous aurions été les premiers. Repérée par recherche active (`epidemiological week cases`, tri par date, 24 h). *Parasitologist | African Stars Fellow | RSTMH Fellow | One Health*, 2e degré, compte Premium. Neuve au corpus. ⚠️ **À ne pas confondre avec Prof. Emelda Aluoch Okiro** (`/in/emeldaokiro/`), déjà suivie — noms proches, profils distincts, vérifié par le lien (§12).
+
+Post : semaine de la bourse African Stars (Institut Pasteur de Dakar / Mastercard Foundation) — épidémiologie de terrain appliquée, session sur la **surveillance syndromique sentinelle sénégalaise (approche 4S)**, et étude de cas d'équipe sur une flambée de **fièvre de la vallée du Rift**.
+
+**Angle** : la FVR chez l'humain débute par une fièvre non spécifique — fait clinique absent de son post, validé deux fois par les relecteurs contre la fiche OMS (« *sudden onset of flu-like fever, muscle and joint pain and headache* »).
+
+- **Jet 1** — mécanique PASS (332 car.). Relecteur : **10 PASS, FAIL 7 et 11**. Q7, la question présupposait que l'équipe avait *identifié* la FVR alors que le post en fait le **cadre donné** de l'étude de cas, et « *in the exercise* » désignait dans son post une activité **distincte** (la simulation) de l'étude de cas. Q11, charpente « *[deux objets nommés] + the same problem + from two ends* » — **déjà envoyée en DM à Gwen Eamer le 26/07** sous la forme « *the same problem seen from two angles* », l'insert « seen » suffisant à passer sous la fenêtre de 4-5 mots du contrôle mécanique.
+- **Jet 2** — Q7 corrigé. **11 PASS, FAIL 11** seul : la clause « *which is also the daily traffic of…* » fusionnait le signal recherché et le flux de routine du 4S en une seule entrée, variante de la famille brûlée « *indistinguishable* / *look identical in the counts* ».
+- **Jet 3** — clause d'identité et mention du 4S supprimées. **Q11 enfin PASS**, mais **FAIL 7 et 12** : « *that column* » présuppose un artefact en colonnes que le post ne décrit jamais (il liste quatre questions posées en équipe, pas une grille), et la phrase clinique introduite pour réparer Q11 est devenue une **récitation quasi mot pour mot de la fiche OMS**, adressée à une parasitologue qui la connaît avant nous.
+
+❌ **Texte abandonné, candidate reportée au créneau de 17h.** Motif assumé : **les défauts tournent au lieu de se réduire** — corriger le gabarit fait tomber l'apport, corriger l'apport fait revenir le gabarit. C'est exactement le cas prévu par `CLAUDE.md` (« *si des jets successifs tournent en rond sur le même défaut sans converger, c'est le texte qui est abandonné et retravaillé sous un autre angle, pas le candidat tant qu'il reste légitime* »). **Aucun blocage hebdomadaire créé chez elle** : rien n'a été publié.
+
+➕ **`burned-templates.md` mis à jour dans ce même run** (convention `report-conventions.md` : une règle destinée au futur va dans un `_shared/`, jamais dans un journal de sortie) : ajout de la charpente « *[deux objets nommés] + the same problem + from two ends/angles* », avec le verbatim Gwen Eamer du 26/07, le décompte de **7 occurrences** de la charnière « the same problem » et la mention du couple « two ends »/« two sides » déjà publié en contenu de marque.
+
+---
+
+### 5️⃣ 🏷️HORS-ROUTINE — la saturation rhétorique est passée d'un constat à un blocage de production
+
+**Le run de 9h l'avait signalé** (« *les charpentes interrogatives du corpus commencent à être saturées*, 3 jets sur 5 rejetés »). **Ce run le confirme en pire : 6 jets rédigés, 6 rejetés, sur 3 candidats distincts, et pas un seul sur une erreur factuelle.** Répartition des motifs, tous canaux confondus : **question 9 (terrain politique / constat de manque implicite) 4 fois, question 11 (gabarit) 4 fois, question 12 (apport) 2 fois**.
+
+**Le mécanisme, tel qu'il ressort des six rapports.** Un commentaire doit simultanément (a) apporter quelque chose que l'auteur n'a pas dit, sous peine de `FAIL 12`, (b) ne porter aucun jugement, même implicite, sur ce qu'un dispositif ne fait pas, sous peine de `FAIL 9`, et (c) n'emprunter aucune des charpentes déjà servies par le compte, sous peine de `FAIL 11`. Les trois pris ensemble laissent un espace qui se referme : **la manière la plus naturelle d'apporter quelque chose à un post élogieux ou institutionnel est précisément de nommer ce qu'il ne dit pas** — ce que la question 9 lit comme un constat de manque. Le cas Christianah Oki le montre à l'état pur : la seule sortie trouvée pour le gabarit (un fait clinique neutre) a immédiatement été jugée sans apport, et la seule sortie pour l'apport rouvrait le gabarit.
+
+**Ce n'est pas un défaut du dispositif QA** — les six rejets sont fondés, plusieurs interceptent de vraies fautes que je n'avais pas vues (attribution du NHIC rwandais à Sahar Khalid, allusion oblique au Soudan, ordinal inventé, thèse « lake corridor » déjà publiée sur X). **C'est un épuisement du corpus** : après plusieurs centaines de textes publiés, les formes disponibles sont largement consommées, et `burned-templates.md`, créé ce matin, s'allonge plus vite qu'il ne débloque.
+
+➡️ **Constat à trancher hors routine par David.** Aucune action de routine ne le résout : ni chercher plus de candidats (les trois instruits aujourd'hui étaient bons), ni relancer des jets (ils tournent en rond). Pistes possibles, aucune décidable ici : élargir la forme autorisée des commentaires au-delà de « constat + question » ; assouplir la question 9 pour les posts d'annonce institutionnelle, où toute observation devient mécaniquement une critique de périmètre ; ou accepter explicitement un quota de commentaires plus bas comme un résultat normal plutôt que comme un échec de run.
+
+---
+
+### 6️⃣ 🔁 CARRY-OVER
+
+1. ⭐⭐⭐ **Christianah Oki** (`/in/christianahoki/`, `urn:li:activity:7502080577295253504`) — **post encore dans la fenêtre 48 h jusqu'au 07/09 en soirée, 0 commentaire**, la meilleure cible libre du corpus. Angle validé sur 11 des 12 questions, à reconstruire hors des trois formes déjà rejetées. **Contraintes établies, ne pas les retester** : pas de charnière « the same problem / two ends », pas de clause d'identité entre deux objets, pas de « that column », pas de récitation de la fiche OMS.
+2. ⭐⭐⭐ **Sahar Khalid** (`/in/sahar-khalid/`) — post NHIC Rwanda, contraintes en §3. ⚠️ **Rester à l'écart de son post politique du 03/09.**
+3. ⭐⭐ **Marieta Braks** (`/in/marieta-braks-2bba401/`, RIVM) — **non retentée ce run**, priorité donnée aux candidats frais. Post ouvert jusqu'au **07/09** : c'est le **dernier créneau utile, à 17h ou jamais**. Prémisse à retester plutôt qu'à recopier (3e report) : la page `wnv-weekly.ecdc.europa.eu` était injoignable à 08h49. ⚠️ §16 : le commentaire Herriman du 06/09 porte sur le **même événement** (West Nile européen), l'argument devra réellement différer.
+4. ❌ **IOM Asia Pacific** — **post clos comme cible**, 4 jets sur la question 9. Ne pas relancer. Le candidat reste légitime pour un post futur.
+5. 🏷️HORS-ROUTINE **Saturation rhétorique du corpus** (§5) — remontée à David, aucune action de routine possible.
+6. **Quotas de la journée après ce run** : **commentaires 2/7**, **DM 5/8**, **suivis 8 (fourchette 7-10, atteinte)**, **invitations 3**. Le créneau de 17h garde **5 commentaires, 3 DM** et de la marge en invitations.
+7. **Blocages hebdomadaires au 06/09, inchangés par ce run** (aucun commentaire publié) : Joseph Cephas Kyari, Robert Herriman (13/09) ; Yilkal Kebede, Tambe Elvis Akem, Keneth Mugume (12/09) ; Ifedayo Adetifa, Pete Macharia (11/09) ; Adesoye Emmanuel Tunde, Kyaw Thowai Prue Prince, Rocham Mulumbwe, Dr. Rashi Bhardwaj, Dr Fabrice KHADDY, Miriam Mbueshi (09/09) ; Dr. Jean Kaseya, page ECDC, Jacob Banda (08/09) ; Melvin Sanicas, Dossa Paul YAOÏTCHA, Mohammad Ilias Hossain (07/09). **Libres et neufs au corpus après ce run** : Christianah Oki, Sahar Khalid, Ofelia CAZACU, Préféré Matutu Molongo. Libres par ailleurs, inchangés : Marieta Braks, IOM Asia Pacific, et l'ensemble des profils listés au carry-over du run de 9h.
+
+
 ## 📅 Session linkedin-hwg-monitoring — 06/09/2026 (9h) — ✅ **2 commentaires publiés** (Joseph Cephas Kyari, CATI choléra Plateau/Nigeria, 2 jets ; Robert Herriman, West Nile/France, 3 jets) — ✅ **6 suivis** (quota du jour porté à 8) et ✅ **1 invitation envoyée** (Préféré Matutu Molongo, OMS/RDC) — ⚠️ **constat de fond : les charpentes interrogatives du corpus commencent à être saturées**, 3 jets sur 5 rejetés ce run pour moule déjà servi
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` du 06/09 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture → **premier déclenchement de cette routine aujourd'hui**. ⚠️ En revanche une **session interactive** a tourné juste avant (entrées du 06/09 matin dans les deux fichiers, écrites à 08h49, sur ordre « reprends » de David) et s'est elle-même déclarée « équivalente à un check du matin ». Son travail n'est donc pas refait ici : messagerie, notifications, follow-back et fils de commentaire actifs ont été traités par elle. Ce run reprend là où elle s'est arrêtée, sur les deux postes qu'elle a laissés ouverts : **commentaires (0/7 à l'ouverture)** et **découverte active de profils (2 suivis sur 7-10)**. Horloge `Sun Sep 6 09:02 2026`. Branche **master**, arbre propre. Registre de faits régénéré à 09h04 : **232 faits sur 106 lignes affichées, 81 `is_seed` exclues, 3 périmés**.
