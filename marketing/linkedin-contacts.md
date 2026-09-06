@@ -1,6 +1,121 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
+## 📅 Session linkedin-hwg-followup-check-2 — 06/09/2026 (17h, 2e des 2 créneaux après-midi) — ✅ **1 DM envoyé en autonomie complète** (Préféré Matutu Molongo, réponse en fil actif avec CTA, **4 jets**) — ❌ **DM de bienvenue Ofelia CAZACU abandonné** (4 jets aujourd'hui, questions 9 et 12 devenues mutuellement exclusives) — ❌ **0 commentaire, 3 textes abandonnés sur 3 candidats** — 🟡 **piste de donnée épidémiologique réelle : West Nile aux Pays-Bas, aucune ligne HWG** — 🔴 **la saturation du corpus se confirme une 3e fois dans la journée**
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` du 06/09 dans `content-log.md` ni dans ce fichier à l'ouverture → **premier déclenchement de cette routine aujourd'hui**. Trois passages ont précédé ce run : session interactive (08h49), `linkedin-hwg-monitoring` (9h + addendum 10h13-10h49), `linkedin-hwg-followup-check` (13h). Horloge `Sun Sep 6 17:08 2026`. Branche **master**, arbre propre, `git log origin/master..master` vide à l'ouverture. Registre de faits régénéré à 17h09 (**232 faits sur 106 lignes affichées**, 81 `is_seed` exclues, 3 périmés) ; registre produit régénéré à 17h12 (**110 foyers, 74 pays, 19 maladies, 34 hôtes source, 90 nombres citables**).
+
+**Navigateur : aucun incident.** `_shared/browser-status.md` lu avant ouverture, dernière entrée **🟢 RÉTABLI (06/09 ~09h05)**. `list_connected_browsers` renvoie `23c7ecdd-26d7-4d25-b39b-1889eb0fa3bd` seul, sélectionné par deviceId (§7). Contrairement aux runs de 9h et 13h, **aucun timeout de capture et aucune désynchronisation rendu/DOM** : les captures sont passées à 0,6 et 0,7 d'échelle sans incident, et le DOM a répondu correctement tout du long. **Aucune entrée à ajouter à `browser-status.md`.**
+
+---
+
+### 1️⃣ ✅ CONNEXIONS ACCEPTÉES — vérifiées en propre, 1 acceptation neuve traitée
+
+**Règle du 06/09 appliquée** (garde-fou anti-suppose-déjà-fait) : `mynetwork/invite-connect/connections/` **ouverte par ce run**, tri « Ajouts récents », aucune reprise du bilan de 13h. **300 relations.**
+
+| Relation | Connexion le | Statut |
+|---|---|---|
+| **Ofelia CAZACU** | **6 septembre** | 🆕 **acceptation neuve** (invitation partie à ~13h25 au run précédent), aucun échange préalable → DM de bienvenue instruit, §3 ci-dessous |
+| Préféré Matutu Molongo | 6 septembre | DM de bienvenue envoyé à 13h13, **a répondu à 13h44** → réponse envoyée ce run, §2 |
+| Dr Fabrice KHADDY | 6 septembre | déjà traité (2 DM ce matin) |
+| Miriam Mbueshi | 5 septembre | déjà traitée (DM 10h20) |
+| Christian BABOKO | 4 septembre | fil actif, déjà traité (DM 10h38) |
+| Boris Pavlin | 4 septembre | dossier clos le 04/09, aucun hook honnête — décision maintenue |
+| Yuda Sule Paschal, Dr. Malachie MANAOUDA, Kevin S. PhD, Rocham Mulumbwe | 3 septembre | déjà instruits |
+
+---
+
+### 2️⃣ ✅ DM 6/8 ENVOYÉ — **Préféré Matutu Molongo**, réponse en fil actif, CTA présent — **4 jets**
+
+`/in/préféré-matutu-molongo-741a97197/`, profil vérifié, *Field Epidemiologist | Outbreak Response | Disease Surveillance*, RDC, Épidémiologiste Senior OMS depuis 2 jours.
+
+**Sa réponse, reçue à 13h44** (31 min après notre DM de bienvenue), verbatim :
+
+> Bonjour David.
+> Une très belle observation.
+> Mais il s agissait principalement d'une formation PCI WASH organisée à Nyakunde. Lors des séances pratiques on a fait notamment allusion à la technique de chloration d'eau notamment la préparation correecte des solutions chlorées
+
+**C'est un recadrage, pas une politesse** : il corrige la nature de la formation (PCI WASH, pas une formation de chloration) et relativise le volet sur lequel portait notre question. Échange substantiel au sens de la politique commune §3 → **CTA obligatoire**, jamais servi dans ce fil.
+
+**Les quatre jets, et ce que chacun a corrigé** — aucun n'a échoué sur une erreur factuelle :
+
+- **Jet 1** — mécanique FAIL (2 faux positifs connus : `context.too-soon` sur une réponse en fil actif, `ngram.history` sur l'URL) + un **vrai** hit, « je fais tourner HealthWatch Global », **7 occurrences** dans le corpus, reformulé avant relecture. Relecteur : **10 PASS, FAIL 10 et 11**. Q10 : le pont du CTA (« Pour situer d'où je pose la question ») était une charnière générique qui pouvait précéder n'importe quel produit. Q11 : « la chloration est une des rares parties qui produit une valeur relevable ensuite » coulait dans l'armature de singularisation **« X is the one that… »** (plus de 20 occurrences publiées).
+- **Jet 2** — Q11 corrigé. Relecteur : **10 PASS, FAIL 7 et 10**. 🔴 **Q7, défaut que je n'avais pas vu** : le message actait le recadrage puis le contournait (« Ce qui m'intéresse **quand même** ») et reposait, reformulée, la question du 1er message sur le chlore résiduel — soit exactement le point qu'il venait de déplacer. Q10 : le nouveau pont s'appuyait sur des « bulletins » et des « chiffres arrêtés » **absents du fil**, et positionnait le produit comme la vue tardive de ce que lui, épidémiologiste de terrain, voit en direct — l'argument pointait dans le mauvais sens.
+- **Jet 3** — Q7 corrigé (la question repart des séances pratiques et de la préparation des solutions chlorées, ses propres termes). Relecteur : **9 PASS, FAIL 6, 10, 11**. Q6 : « vous êtes à Nyakunde, dans la riposte » le relocalisait au présent alors qu'il parle de la formation au passé et vient de prendre son poste OMS. Q10 : 3e pont générique (« pour être clair sur ce que je fais »). Q11 : l'amorce « est ici, healthwatch-global.com… » déjà servie telle quelle ailleurs.
+- **Jet 4 = envoyé** — Q6, Q7, Q10, Q11 tous PASS. Le pont du CTA part cette fois du cadre qu'il a lui-même substitué au nôtre (une formation PCI WASH se monte parce qu'une flambée est en cours), ce que le relecteur valide explicitement. Dernier **FAIL 4** : « tous pays confondus » surdéclarait la couverture, et « rassemble les bulletins d'agences » sans réserve effaçait les ~6 % de sources de presse étiquetées. **Corrigé exactement comme prescrit** : bornage au registre produit (110 foyers, 74 pays) et réserve de source rétablie (« pour l'essentiel »). Aucun autre point touché, sur consigne explicite du relecteur (« ne pas toucher au CTA ni au pont, validés au point 10 »).
+
+**Texte envoyé (17h32) :**
+
+> Merci pour le recadrage.
+>
+> Sur les séances pratiques, alors : au moment de préparer les solutions chlorées, qu'est-ce qui accroche le plus chez les hygiénistes ?
+>
+> Une formation PCI WASH comme celle-là se monte parce qu'une flambée est en cours quelque part. C'est de ce bout-là que je m'occupe : HealthWatch Global rassemble les flambées actives à partir des bulletins d'agences pour l'essentiel, 110 foyers dans 74 pays à ce jour. La fiche Ebola : healthwatch-global.com/fr/disease/ebola, avec sept jours en Pro à la création d'un compte et sans carte.
+
+**CTA : présent.** Lien vers la fiche maladie précise (`/fr/disease/ebola`) conformément à la règle du 06/09, URL vérifiée en direct avant envoi (308 vers `/fr/disease/ebola-virus-disease`, qui répond 200). Essai à **sept jours** confirmé contre le registre produit.
+
+**Publication confirmée** : en-tête « Préféré Matutu Molongo » relu avant le clic, texte relu dans le composeur mot pour mot contre le brouillon validé, message horodaté **17h32** sous « David Deheunynck », composeur vidé, **aucun doublon**.
+
+⚠️ **Incident de saisie rattrapé avant envoi, à connaître.** La première frappe est passée **entièrement sans accents** (« seances », « chlorees », « hygienistes », « flambee ») alors que le texte source les portait. Repéré à la relecture d'écran (politique commune §5 point 3 : relire la mise en forme réellement rendue, jamais se fier au texte tapé). Composeur vidé (`ctrl+a` puis `Delete`) et **retapé intégralement en échappant les accents en `\uXXXX` dans l'appel de frappe** — cette fois les accents sont passés correctement. ➡️ **À retenir : ne pas taper d'accents français en clair dans l'action `type`, les échapper.** Un message français envoyé sans accents à un médecin francophone aurait été visible immédiatement.
+
+⚠️ **Second point technique** : le bouton « Envoyer » est sorti du champ visible quand le composeur s'est agrandi à 3 paragraphes, et un premier clic aux coordonnées supposées **n'a rien envoyé** (vérifié : composeur encore plein, dernier message toujours le sien). Un défilement seul n'a pas suffi. Ce qui a marché : `scrollIntoView({block:'center'})` sur le bouton, puis lecture de son `getBoundingClientRect()`, puis clic à ces coordonnées, confirmé sur capture avant le clic.
+
+`QA : mécanique jet 4 FAIL (522 car., 3 §, fr/fr — 2 blockers, tous deux faux positifs documentés : context.too-soon sur une réponse en fil actif, ngram.history sur l'URL seule ; 110 et 74 confirmés sourcés côté produit) | relecteur 4 passes à contexte neuf, jet 1 rejeté Q10+Q11, jet 2 Q7+Q10, jet 3 Q6+Q10+Q11, jet 4 = FAIL Q4 seul, corrigé exactement comme prescrit | faits cités : aucun chiffre de flambée ; 110 foyers / 74 pays depuis le registre produit du 06/09 (17:12) | registre de faits du 06/09 (17:09) | statut : envoyé le 06/09 à 17h32`
+
+---
+
+### 3️⃣ ❌ DM DE BIENVENUE ABANDONNÉ — **Ofelia CAZACU**, 4 jets aujourd'hui, questions 9 et 12 devenues incompatibles
+
+`/in/ofeliacazacu/`, profil vérifié, *Technical Officer at WHO — International Coordinating Group (ICG) on vaccine provision*, Genève, 3 454 abonnés, 42 mutuels. **Connexion acceptée le jour même**, aucun échange préalable, aucune conversation existante. C'était le carry-over ⭐⭐⭐ du run de 13h.
+
+**Historique complet : 6 jets sur 2 jours, 5 angles distincts, tous abandonnés.** Deux jets le 03/09 (déjà documentés), quatre ce run :
+
+- **Jet 1** — angle « déclencheur d'une demande pays hors PHEIC ». Mécanique PASS (398 car.). Relecteur : **8 PASS, FAIL 5, 8, 9, 11**. Le relecteur a retrouvé dans les archives que **cet angle exact avait déjà coûté deux jets le 03/09** (« à reprendre avec un angle qui ne repose pas sur la position d'observateur extérieur ») — je l'avais redécouvert sans le savoir. Q9 : sous une annonce de lancement, la question se lisait comme le signalement d'un trou d'activation dans le dispositif qu'elle vient d'annoncer.
+- **Jet 2** — angle « genèse du lancement » (qu'est-ce qui a été le plus long à régler). Mécanique PASS (263 car.). Relecteur : **8 PASS, FAIL 5, 9, 11, 12**. Q9 : demander le maillon lent d'un dispositif multi-partenaires invite à situer une lenteur chez un partenaire. 🔴 **Q12** : « retiré de ses deux ornements, le message est un remerciement, une félicitation et une invitation à raconter la genèse » — aucun apport propre.
+- **Jet 3** — apport réel introduit, tiré du registre : cinq lignes mpox actives arrêtées à cinq dates différentes (Ouganda 5 avril, Rwanda 19 avril, Burundi 19 juillet, Madagascar 26 juillet, Kenya 2 août). Mécanique PASS (383 car.). Relecteur : **9 PASS, ✅ Q12 enfin PASS**, mais FAIL 8, 9, 11. Q8 : « is arrested on » calque du français, « country lines » jargon de registre.
+- **Jet 4** — Q8 corrigé, clause ajoutée pour fermer la lecture politique (« which may say more about my sourcing than about the countries »), ancrage sur son intitulé. Mécanique **PASS** (473 car.). Relecteur : **9 PASS, FAIL 8, 9, 11**.
+
+🔴 **Motif d'abandon, et il est structurel, pas rédactionnel.** Au jet 4, la correction demandée en **Q9** est de « retirer l'énumération pays-par-pays des dates d'arrêt, **qui est le seul élément portant cette lecture** ». Or cette énumération **est** exactement l'apport qui avait fait passer **Q12** au jet 3. Les deux questions demandent désormais des choses incompatibles : retirer la liste rouvre Q12 (accusé de réception habillé), la garder laisse Q9 disponible pour une officière de l'OMS sur l'approvisionnement en vaccins. C'est le cas prévu par `CLAUDE.md` (« si des jets successifs tournent en rond sur le même défaut sans converger, c'est le **texte** qui est abandonné et retravaillé sous un autre angle, pas le candidat tant qu'il reste légitime »).
+
+✅ **La candidate reste entière et la connexion est faite** — c'est l'essentiel : elle est désormais relation de 1er degré et abonnée. **Aucun blocage créé**, rien de publié. Le DM de bienvenue est reporté à un hook moins chargé politiquement que l'annonce d'un stock de vaccins en pénurie. ⚠️ **Contraintes à ne pas retester sur elle** : position d'observateur extérieur (4 jets perdus), mécanique de déclenchement de l'ICG posée comme acquise, axe lenteur/friction entre partenaires, alternatives nommées en clôture, ouverture érigeant une ligne de son post en sens caché.
+
+---
+
+### 4️⃣ ✅ MESSAGERIE — 1 réponse nouvelle, traitée
+
+Les 10 fils relus. **Une seule nouveauté depuis 13h : Préféré Matutu Molongo à 13h44**, traitée en §2. Partout ailleurs notre message reste le dernier, aucun fil non lu : Dr Fabrice KHADDY (10h49), Christian BABOKO (10h38), Miriam Mbueshi (10h20), Ngoy Guillaume (5 sept.), Dr. Siaka Condé (5 sept.), Dr. Malachie MANAOUDA (5 sept.), James Schlitt (4 sept.), trésor Ndaye (4 sept.), SOUAD BELKACEMI (3 sept.), Julien Tuba (3 sept.).
+
+**Aucune demande de contact hors plateforme** (politique commune §3), aucun message ambigu ou sensible, aucune sollicitation personnelle adressée à David.
+
+---
+
+### 5️⃣ ✅ NOUVEAUX ABONNÉS — aucun depuis 13h, aucun follow-back dû
+
+`mynetwork/network-manager/people-follow/followers/` relue triée par récence : **416 abonnés, chiffre identique à celui du run de 13h**, et les dix premiers dans le même ordre (Préféré Matutu Molongo, Dr Fabrice KHADDY, Ofelia CAZACU, Miriam Mbueshi, Fayssal ZEMMOUCHI, Mahamba Nzanzu, Caroline Museka, Boris Pavlin, Yuda Sule Paschal, Dr. Malachie MANAOUDA), tous portant « Suivi » (`aria-label` « *Cliquez pour cesser de suivre …* » vérifié). **Aucun abonné neuf, donc aucun candidat note de connexion issu de cette source** (règle du 06/09 : chaque nouvel abonné est évalué en candidat de connexion, pas seulement archivé — appliquée, sans matière ce run).
+
+**Quota de suivis inchangé à 8** sur la journée (fourchette 7-10, atteinte).
+
+---
+
+### 6️⃣ ✅ NOTIFICATIONS ET VEILLE
+
+- **Yilkal Kebede a publié un post neuf** (3 h) sur le marché au bétail de Chifra (Afar, Éthiopie), suite de sa série sur l'épidémiologie participative. ⚠️ **Bloqué hebdomadairement jusqu'au 12/09** (commentaire publié le 05/09), donc pas de commentaire possible — mais bon support à rouvrir après cette date.
+- **Aucune réponse nouvelle sur les fils de commentaire actifs** : Joseph Cephas Kyari et Robert Herriman (publiés ce matin) restent sans réponse de l'auteur ; rien de neuf non plus sur Tambe Elvis Akem, Keneth Mugume, Yilkal Kebede, Anulika Omeaku.
+- **Pauline Chaumet et 1 autre personne ont consulté le profil** (2 h) — simples vues.
+- Rien d'autre d'exploitable : Jalal NOURLIL (republication Pasteur Network), Dr. Getachew Tollera (sujet ferroviaire, hors périmètre), Jaiju Thomas, BERNADETTE ILENGETE (agronomie).
+- **Aucun signal de traction institutionnelle justifiant une notification push** (§13).
+
+---
+
+### 7️⃣ 🔁 CARRY-OVER — côté contacts
+
+1. ⭐ **Préféré Matutu Molongo** — DM envoyé à 17h32 avec CTA et lien fiche Ebola. **Attendre sa réponse** ; c'est le contact le plus réactif du portefeuille aujourd'hui (31 min de délai de réponse). Ne pas relancer.
+2. ⭐⭐⭐ **Ofelia CAZACU** — **connexion faite, DM de bienvenue abandonné après 6 jets sur 2 jours.** Reprendre sur un hook différent de l'annonce du stock ICG, avec les 5 contraintes listées en §3. Ne pas rejouer les angles perdus.
+3. ⭐ **James Schlitt** — silence de plus de 60 h. Fil en pause, ne pas relancer.
+4. **Inchangés** : Ngoy Guillaume (attendre son initiative), Christian BABOKO / Dr. Siaka Condé / Dr. Malachie MANAOUDA / trésor Ndaye / SOUAD BELKACEMI / Julien Tuba (nos messages restent les derniers), John Omari Baso et Isaias Fernandes Co, Boris Pavlin (dossier clos).
+5. ➖ **Aucune note de connexion émettable avant octobre** — quota LinkedIn gratuit épuisé, établi par test direct au run de 13h. Ne pas rédiger de note.
+6. **Quotas de fin de journée** : **DM 6/8**, **commentaires 2/7**, **suivis 8** (fourchette 7-10, atteinte), **invitations 3**.
+
 ## 📅 Session linkedin-hwg-followup-check — 06/09/2026 (13h, 1er des 2 créneaux après-midi) — ✅ **1 DM envoyé en autonomie complète** (Préféré Matutu Molongo, bienvenue après acceptation, 2 jets) — ✅ **1 invitation envoyée sans note** (Ofelia CAZACU, OMS/ICG, nouvelle abonnée évaluée en candidate de connexion) — ❌ **0 commentaire, 6 jets rejetés sur 6** (détail et constat de fond dans `content-log.md`) — aucune réponse nouvelle en messagerie — vérification des connexions acceptées faite en propre, pas supposée
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` du 06/09 dans `content-log.md` ni dans ce fichier à l'ouverture → **premier déclenchement de cette routine aujourd'hui**. Deux passages ont précédé ce run : une **session interactive** (08h49, ordre « reprends ») et `linkedin-hwg-monitoring` (9h, plus un addendum 10h13-10h49 de 4 DM). Branche **master**, arbre propre, `git log origin/master..master` vide à l'ouverture. Registre de faits régénéré à 13h05 : **232 faits sur 106 lignes affichées, 81 `is_seed` exclues, 3 périmés**.

@@ -2,6 +2,104 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session linkedin-hwg-followup-check-2 — 06/09/2026 (17h, 2e des 2 créneaux après-midi) — ❌ **0 commentaire publié, quota clos à 2/7** — 4 candidats instruits, **3 textes abandonnés**, aucun sur une erreur factuelle — ✅ **1 DM envoyé** (Préféré Matutu Molongo, 4 jets) — 🟡 **piste épidémiologique réelle : West Nile / Pays-Bas, 1 décès et aucune ligne HWG** — 🔴 **3e confirmation de la saturation du corpus dans la même journée, et cette fois le fond est en cause, pas seulement la forme**
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` du 06/09 à l'ouverture → premier déclenchement de cette routine aujourd'hui. Ont précédé ce run : session interactive (08h49), `linkedin-hwg-monitoring` (9h + addendum 10h13-10h49), `linkedin-hwg-followup-check` (13h). Branche **master**, arbre propre. Registre de faits régénéré à 17h09 (232 faits), registre produit à 17h12 (110 foyers, 74 pays, 19 maladies).
+
+Détail des actions sortantes (DM, connexions acceptées, messagerie, abonnés) dans `linkedin-contacts.md`. Cette entrée couvre les commentaires, la veille et le constat de fond.
+
+---
+
+### 1️⃣ ✅ FILS DE COMMENTAIRE ACTIFS — aucune réponse nouvelle (§14)
+
+Les fils du jour et des jours précédents rouverts, pas seulement contrôlés par les notifications : **Joseph Cephas Kyari** et **Robert Herriman** (nos deux commentaires de ce matin) restent sans réponse de l'auteur ; **Tambe Elvis Akem, Keneth Mugume, Yilkal Kebede, Anulika Omeaku** inchangés depuis le passage de 13h. Aucun sous-fil à traiter, donc aucune opportunité de commentaire issue de cette source.
+
+---
+
+### 2️⃣ ❌ **Christianah Oki** — 1 jet ce run, **5e jet rejeté sur elle aujourd'hui**, post abandonné comme cible
+
+`/in/christianahoki/`, `urn:li:activity:7502080577295253504`. Post rouvert et revérifié en direct : **44 réactions, 1 republication, toujours 0 commentaire**, fenêtre encore ouverte. C'était le carry-over ⭐⭐⭐ du run de 13h, la meilleure cible libre du corpus.
+
+**Angle neuf, hors des trois formes déjà rejetées à 13h** : dans une simulation, l'incertitude est un objet **conçu** — quelqu'un a décidé quel fait serait retenu et combien de temps — là où dans une vraie flambée personne ne l'a choisi. Mécanique **PASS** (334 car.). Relecteur : **8 PASS, FAIL 6, 7, 9, 11**.
+
+- **Q6/Q7** : le post ne décrit rien du dispositif de la simulation au-delà de « *combining an in-person experience (team lead) with an online application* ». Ni fait retenu, ni minutage, ni calendrier d'injection. Le référent « that timing » n'existait nulle part — **exactement le défaut de « that column » au jet 3 de 13h, sous un autre objet**.
+- **Q9** : « *were you shown afterwards what had been held?* » l'invitait à dire publiquement si les organisateurs avaient débriefé la conception, sous un post **intégralement fait de gratitude** (« *A special appreciation to Joe Fitchett…* », « *Thanks to all the facilitators this week.* »).
+- **Q11** : trois hits, dont l'ouverture [sa citation + validation + clause de requalification], l'antithèse conçu/accidentel (famille « réel vs artefact », déjà brûlée) et « on a schedule » (**4 occurrences** publiées, invisible au contrôle mécanique).
+
+❌ **Post abandonné comme cible de commentaire**, la candidate reste légitime. ➡️ **Diagnostic, jumeau de celui posé sur IOM Asia Pacific à 13h** : un post de gratitude sur une semaine de formation n'offre aucune prise analytique qui ne se lise pas comme un déclassement des remerciements. Cinq jets, cinq angles, un seul motif de fond.
+
+---
+
+### 3️⃣ ❌ **Sahar Khalid** — 2 jets ce run (4 sur la journée), texte abandonné, candidate intacte
+
+`/in/sahar-khalid/`. Post NHIC Rwanda relu en direct, **~4 h**, fenêtre ouverte. Angle neuf, hors des contraintes de 13h : son point 2 décrit une boucle signal → stock (un pic villageois déclenche une vérification de disponibilité des TDR) ; le **résultat négatif** d'un TDR porte une information sur les fièvres non palustres, et le post n'en dit rien.
+
+- **Jet 1** — mécanique PASS (351 car.). Relecteur : **9 PASS, FAIL 6, 9, 11**. Q6 : « *a commodity the health post already holds* » transformait en possession acquise ce que le post pose comme **vérification contingente** (« *flags whether local health posts have…* »). Q9+Q11 : « *What follows the test is where it gets interesting* » — clause de saillance qui déclasse ce qu'elle valorise, et charpente de la famille « X is the one that… ».
+- **Jet 2** — clause supprimée, contingence rétablie en tête de phrase. Mécanique PASS (277 car.). Relecteur : **8 PASS, FAIL 6, 7, 9, 11**. 🔴 **Le défaut a changé de forme sans changer de nature** : « *Those tests then return results* » referme la contingence une phrase plus loin (si le poste n'a pas les tests, aucun test ne rend de résultat), et la répartition amont/aval entre les deux paragraphes reproduit la charpente signature « l'indicateur compte l'amont, il rate l'aval ». Deux formules retrouvées publiées au passage : « *A negative result is the one outcome that leaves nothing behind it* » (`content-log.md:5438`) et la charnière « *travels through* » (`:9538`).
+
+❌ **Texte abandonné, candidate intacte, aucun blocage créé.** Motif assumé : deux jets, même axe de fond, la correction déplace le défaut au lieu de le réduire.
+
+---
+
+### 4️⃣ ❌ **Paul Sonnier / Digital Health** — candidat neuf, 1 jet, abandonné sur une **thèse déjà publiée en entier**
+
+Trouvé par recherche active de contenu (`outbreak surveillance data`, tri par date, dernières 24 h). Post de **16 min**, sur la revue npj Digital Medicine du 4 septembre 2026 comparant **20 plateformes de surveillance des maladies infectieuses assistées par IA** (axes : données d'entrée, fonction de surveillance, méthodes IA, confidentialité, portée géographique, pathogènes ciblés ; trois archétypes dégagés). Sujet au cœur exact du métier de HWG.
+
+**Angle** : parmi les axes de comparaison, la **définition de cas** derrière le chiffre n'a presque jamais de champ propre — observation vérifiée contre notre propre registre produit (`manualClaims.4` : la ligne d'un foyer ne distingue pas un total de confirmés seuls d'un total confirmés + probables, ce critère ne vit que dans le document au bout du lien).
+
+🔴 **Bloqué par le contrôle mécanique, et le blocage était juste** : `ngram.history` sur « confirmed only or confirmed plus ». Remonté à la source, ce n'est pas une collision de formule mais **la même thèse, déjà publiée en commentaire chez Melvin Sanicas** (`content-log.md:2346`) : « *From the consuming end, the case definition is not a field at all. What I store for an outbreak has room for the count and for where it came from, and no room for the rule that decided which cases went into it.* » Deuxième fois de la journée qu'un n-gramme remonté à sa source révèle une redite de **fond** et non de forme.
+
+❌ **Abandonné.** Les deux angles de repli examinés étaient eux aussi déjà servis : « un pays arrive d'un seul bloc » (DM, `linkedin-contacts.md:8071`) et l'hétérogénéité des dates d'arrêt, qui venait d'être utilisée dans le jet Ofelia CAZACU du même run (§16 : deux fois le même argument dans la journée). **Candidat légitime, à garder pour un post futur.**
+
+⏹️ **Écarté sans jet — Keith King** (ancien ingénieur communications Maison-Blanche), post d'1 h sur le **différend CDC / Pennsylvanie** à propos de deux décès associés à la rougeole. Terrain politique explicite (« *broader political conflict between federal health leadership and Pennsylvania officials* ») : garde-fou §10, aucun commentaire n'est possible sans se positionner.
+
+---
+
+### 5️⃣ ⏸️ **Marieta Braks** — prémisse retestée (3e report), candidate reportée sur motif nouveau
+
+**Prémisse retestée, pas recopiée** (`report-conventions.md`) : `wnv-weekly.ecdc.europa.eu` reste **injoignable** (code 000, timeout), mais la page principale ECDC West Nile (`ecdc.europa.eu/en/west-nile-fever/surveillance-and-disease-data/disease-data-ecdc`) **répond 200** avec un User-Agent navigateur. La panne était donc partielle, pas totale.
+
+**Mais le motif de report a changé** : son post en fenêtre est **daté d'1 jour et rédigé en néerlandais** (« *Negen mensen hebben deze zomer in Nederland een besmetting met het westnijlvirus opgelopen* »), 12 réactions, 3 republications. Deux obstacles cumulés : commenter en néerlandais sort du champ de qualité vérifiable du dispositif, et **§16** impose que l'argument diffère réellement du commentaire Herriman publié ce matin sur le même événement (West Nile européen). Non retenté ce run pour ces deux raisons, qui sont documentées et nouvelles.
+
+---
+
+### 6️⃣ 🟡 DONNÉE ÉPIDÉMIOLOGIQUE NOUVELLE (§8) — **West Nile aux Pays-Bas, aucune ligne HWG**
+
+Repéré en instruisant le candidat Braks, **vérifié contre la source primaire** plutôt que sur la foi du post LinkedIn :
+
+- **RIVM, 26/08/2026** (`rivm.nl/nieuws/persoon-overleden-aan-in-nederland-opgelopen-westnijlvirusinfectie`, `datePublished` 2026-08-26T11:34:47+0200) : **une personne est décédée** de la fièvre du Nil occidental en province d'Utrecht, infection **contractée aux Pays-Bas**. Le même communiqué indique « *Er zijn in 2026 tot nu toe drie meldingen van westnijlvirusinfecties gedaan die waarschijnlijk in Nederland zijn opgelopen* » — **3 signalements** d'infections probablement contractées sur place en 2026.
+- Un second article RIVM existe sur le même sujet : « *Westnijlvirus vastgesteld bij een bloeddonor* ».
+- **Côté HWG** : le registre porte **7 lignes West Nile européennes actives** — Italie (521 cas / 26 décès, 02/09), Grèce (290 / 24, 02/09), Espagne (88 / 4, 03/09), Roumanie (58 / 3, 02/09), Macédoine du Nord (56 / 7, 01/09), France (39, 02/09), Allemagne (2, 03/09) — et **aucune pour les Pays-Bas**.
+
+⚠️ **Divergence non résolue, à ne pas trancher ici** : le post de Marieta Braks (~05/09) parle de **neuf** infections cet été, le communiqué RIVM du 26/08 de **trois** contractées sur place. Les deux ne sont pas forcément contradictoires (dates d'arrêt différentes, et « cet été » peut inclure des cas importés), mais **aucune ligne ne doit être créée sur ce seul écart** : il faut la source RIVM la plus récente avant de fixer un chiffre. 🏷️HORS-ROUTINE : décision de création de ligne hors périmètre de cette routine, remontée à David tel quel.
+
+---
+
+### 7️⃣ 🏷️HORS-ROUTINE — la saturation se confirme une 3e fois, et elle a changé de nature
+
+**Le compte de la journée, trois sessions confondues : 2 commentaires publiés, 12 jets rejetés.** 9h : 3 rejets sur 5 jets, constat posé. 13h : 6 rejets sur 6 jets, sur 3 candidats. 17h : 3 rejets sur 4 jets, sur 3 candidats, plus un 4e candidat écarté d'emblée sur terrain politique. **Aucun des douze rejets ne porte sur une erreur factuelle.**
+
+🔴 **Ce que ce run ajoute au constat de 13h, et qui est nouveau : le problème n'est plus seulement la forme.** Le run de 13h décrivait une saturation des **charpentes rhétoriques**. Ce run montre que les **thèses elles-mêmes** sont consommées : le candidat Paul Sonnier, sur le sujet le plus central qui soit pour HWG, est mort parce que son angle avait **déjà été publié mot pour mot chez Melvin Sanicas**, et les deux angles de repli examinés étaient eux aussi déjà servis (l'un en DM, l'autre le jour même dans un autre jet de ce run). Un `burned-templates.md` qui listait des formes s'est vu ajouter ce run une section « **Arguments déjà publiés en entier** » : c'est un changement de nature du problème, pas un aggravement de degré.
+
+**Le dispositif QA n'est pas en cause, et ce run le montre nettement.** Les rejets ont intercepté de vraies fautes que je n'avais pas vues : une paternité prêtée à tort (« already holds » contre le « whether » du post), une relocalisation géographique fausse (« vous êtes à Nyakunde » alors qu'il a pris un poste OMS deux jours plus tôt), une surdéclaration de couverture (« tous pays confondus »), une question qui invitait une professionnelle à énoncer publiquement ce que ses organisateurs n'avaient pas fait, et un angle déjà instruit deux fois sur la même destinataire trois jours plus tôt que j'avais purement redécouvert. **Le DM parti ce run est meilleur au 4e jet qu'au 1er, sur chacun des points corrigés.** C'est le rendement en commentaires qui s'effondre, pas la qualité du contrôle.
+
+➡️ **À trancher par David, aucune action de routine ne le résout.** Les pistes de 13h restent ouvertes (élargir la forme autorisée au-delà de « constat + question » ; assouplir la question 9 sur les posts d'annonce et de gratitude, où toute observation devient mécaniquement un déclassement ; accepter un quota de commentaires plus bas comme résultat normal). Ce run en ajoute une quatrième, qui découle du constat ci-dessus : **le corpus a besoin de matière neuve, pas de formes neuves** — c'est-à-dire d'angles tirés d'observations que HWG n'a pas encore publiées, typiquement du code et des données du produit, plutôt que de la posture d'analyse des bulletins, qui est celle de presque tous les textes du corpus.
+
+---
+
+### 8️⃣ 🔁 CARRY-OVER
+
+1. ⭐⭐⭐ **Christianah Oki** — **post abandonné comme cible** (5 jets, 5 angles). Candidate intacte, aucun blocage créé, à reprendre sur un post futur qui ne soit pas un post de gratitude.
+2. ⭐⭐⭐ **Sahar Khalid** — **texte abandonné** (4 jets sur la journée), candidate intacte, aucun blocage. Post NHIC encore en fenêtre jusqu'au 08/09. Contraintes cumulées : rien du dispositif rwandais à lui attribuer, aucune mention du Soudan, aucune clause de suffisance ou de manque, ne pas rejouer l'axe « ce qui vient après le test », ni la charnière « travels through », ni l'angle du résultat négatif.
+3. ⭐⭐ **Paul Sonnier / Digital Health** — candidat **neuf et légitime**, post du 06/09 sur la revue npj des 20 plateformes. Abandonné faute d'angle non déjà publié, **pas faute de qualité**. À reprendre.
+4. ⏸️ **Marieta Braks** — post en néerlandais + contrainte §16 avec le commentaire Herriman du jour. Prémisse ECDC retestée : `wnv-weekly` toujours injoignable, page principale ECDC accessible.
+5. ⏹️ **Keith King** — écarté, terrain politique (différend CDC / Pennsylvanie). Ne pas reproposer sur ce post.
+6. 🟡 **West Nile / Pays-Bas** (§6) — 1 décès et 3 infections locales confirmés par le RIVM au 26/08, aucune ligne HWG, divergence 3 vs 9 non résolue. **Décision de création de ligne à prendre par David.**
+7. 🏷️HORS-ROUTINE **Saturation du corpus, 3e confirmation du jour** (§7) — remontée à David, avec une piste nouvelle : le manque porte désormais sur la matière, pas sur la forme.
+8. ⭐ **Yilkal Kebede** — post neuf du jour sur le marché au bétail de Chifra (Afar), suite de sa série sur l'épidémiologie participative. **Bloqué jusqu'au 12/09**, bon support à rouvrir ensuite.
+9. **Quotas de fin de journée** : **commentaires 2/7**, **DM 6/8**, **suivis 8** (fourchette 7-10, atteinte), **invitations 3**.
+10. **Blocages hebdomadaires au 06/09, inchangés par ce run** (aucun commentaire publié) : Joseph Cephas Kyari, Robert Herriman (13/09) ; Yilkal Kebede, Tambe Elvis Akem, Keneth Mugume (12/09) ; Ifedayo Adetifa, Pete Macharia (11/09) ; Adesoye Emmanuel Tunde, Kyaw Thowai Prue Prince, Rocham Mulumbwe, Dr. Rashi Bhardwaj, Dr Fabrice KHADDY, Miriam Mbueshi (09/09) ; Dr. Jean Kaseya, page ECDC, Jacob Banda (08/09) ; Melvin Sanicas, Dossa Paul YAOÏTCHA, Mohammad Ilias Hossain (07/09). **Libres et neufs au corpus après ce run** : Christianah Oki, Sahar Khalid, Paul Sonnier, Ofelia CAZACU, Préféré Matutu Molongo. Libres par ailleurs, inchangés : Marieta Braks, IOM Asia Pacific, et l'ensemble des profils listés aux carry-over des runs de 9h et 13h.
+
 ## 📅 Session linkedin-hwg-followup-check — 06/09/2026 (13h, 1er des 2 créneaux après-midi) — ❌ **0 commentaire publié, quota laissé à 2/7** — 3 candidats instruits jusqu'au bout, **6 jets rejetés sur 6**, aucun sur une erreur factuelle ; ✅ **1 DM envoyé** (Préféré Matutu Molongo) et ✅ **1 invitation envoyée** (Ofelia CAZACU, OMS/ICG) — 🔴 **le constat de saturation rhétorique posé ce matin s'aggrave et devient un vrai blocage de production, à remonter à David**
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check` du 06/09 à l'ouverture → premier déclenchement de cette routine aujourd'hui. Ont précédé ce run : session interactive (08h49) et `linkedin-hwg-monitoring` (9h + addendum 10h13-10h49). Branche **master**, arbre propre. Registre de faits régénéré à 13h05 (232 faits sur 106 lignes affichées, 81 `is_seed` exclues, 3 périmés).
