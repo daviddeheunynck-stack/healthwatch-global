@@ -4294,3 +4294,104 @@ métadonnées plutôt que d'en inventer une nouvelle.
 **Ce que cette idée n'est pas :** une remise en cause de l'option (b). Elle
 la prend pour acquise et ne touche à aucun chiffre masqué ; elle rend
 seulement lisible le masque déjà en place.
+
+### Construction — les deux idées sont livrées
+
+Verrou de code partagé acquis avant la première édition, relâché après le
+push. Les deux idées passent les quatre garde-fous : effort petit/moyen,
+aucune migration ni DDL, aucun e-mail / paiement / envoi externe touché,
+aucune source de données externe nouvelle (rien de ce run ne lit quoi que ce
+soit hors du dépôt et de la base).
+
+**Idée 2 d'abord** (`0ba35515`), parce que l'idée 1 en dépend : les
+composants du masque devaient savoir dire ce qu'ils masquent avant qu'on
+étende le masque à de nouvelles surfaces.
+
+`MagnitudeDots` porte désormais un `title` **et** un `aria-label` construits
+depuis la bande et la locale, les cinq pastilles passant en `aria-hidden`
+pour que le groupe s'annonce une fois et non cinq. `SeverityWord` reçoit la
+même explication. La formulation est **celle que le produit écrivait déjà
+pour les machines** — « Magnitude 4/5 (exact figures for Pro subscribers) »
+dans la balise meta du permalien et dans `/api/feed` — traduite dans les 5
+locales à côté de `SEVERITY_LABEL`, plutôt qu'une nouvelle phrase inventée.
+Les 18 appels reçoivent leur `locale` ; c'est la seule partie mécanique du
+changement. **Aucun chiffre supplémentaire ne traverse le réseau** : c'est du
+texte d'habillage sur une bande déjà calculée.
+
+**Idée 1 ensuite** (`9684d407`). Les quatre routes ne se ferment pas de la
+même façon, comme annoncé :
+
+| Route | Correctif |
+|---|---|
+| `/api/travel-risk` | reste publique, prend le dispositif des pages maladie/pays/région : une charge masquée identique pour tous, et les chiffres réels remplis côté client pour un abonné payant (`RealStatsProvider` → `/api/outbreak-stats`). `TravelRiskFullPage` et `TravelRiskWidget` rendent la bande sinon. |
+| `/api/outbreak-neighbors` | plan payant exigé, comme son unique appelant ; cache passé de `public` à **`private`** (un cache partagé gardant une réponse payante rouvrirait le trou que la porte vient de fermer) |
+| `/api/country-scorecard` | plan payant exigé au lieu de la simple session |
+| `/api/outbreak-cluster` | **masqué, pas fermé** — c'est le seul panneau qui s'affiche aux comptes gratuits volontairement |
+
+Le point de vigilance annoncé sur `travel-risk` est tenu : la recherche de la
+maladie vitrine passe par la liste partagée en cache, **délibérément hors du
+chemin sanitaire**. Cette liste dégrade en `[]` au lieu de lever, ce qui donne
+une carte de vitrines vide, donc **tout masqué** — le masque échoue fermé —
+tandis que la requête pays qui décide du verdict garde sa requête et son 503
+propres.
+
+**Vérification en production, après déploiement** (`npx tsc --noEmit` et
+`npx eslint` propres au préalable sur les 19 fichiers touchés ; hooks de
+pré-commit et de pré-push passés : `check-restricted-fetch` aucune URL non
+déclarée, `check-migrations` 89 migrations toutes appliquées).
+
+Le même balayage anonyme que celui qui a servi à écrire l'idée 1, rejoué sur
+la prod déployée :
+
+```
+pays sondés                                   : 80   (81 requêtes anonymes)
+verdicts de risque encore rendus              : 80/80   ← la page reste utile
+lignes encore en clair via /api/travel-risk   : 23
+  dont MASQUÉES ailleurs                      :  0     ← était 96/96
+/api/outbreak-neighbors  (anonyme)            : HTTP 401
+/api/country-scorecard   (anonyme)            : HTTP 401
+/api/outbreak-cluster    (anonyme)            : HTTP 401
+```
+
+Les 23 lignes encore en clair sont exactement les maladies vitrines gratuites,
+publiques par décision. Contrôle de non-régression dans l'autre sens :
+`/fr/disease/ebola` affiche toujours « 6 342 » et « 3 072 » pour la ligne
+vitrine Ebola/RDC, à côté de 17 pastilles masquées sur la même page.
+
+Et pour l'idée 2, sur les pages publiques déjà régénérées :
+
+```
+/fr/disease/cholera  → title/aria-label « Ampleur 3/5 — chiffres exacts réservés aux abonnés Pro »
+/en/region/africa    → title/aria-label « Magnitude 3/5 — exact figures for Pro subscribers »
+```
+
+**Ce qui n'a pas pu être vérifié en navigateur, et pourquoi.** Le démarrage
+d'un serveur de prévisualisation est refusé dans un run planifié (personne
+n'est présent pour approuver la commande). La vérification a donc été faite
+directement contre la production déployée, ci-dessus — ce qui est plus fort
+qu'un rendu local, mais laisse un angle mort : la page `/[locale]/travel-risk`
+construit sa liste **côté client**, après le choix d'un pays, donc son rendu
+masqué n'apparaît pas dans le HTML servi et n'a pas pu être constaté
+visuellement. La charge d'API qui l'alimente, elle, est vérifiée masquée
+ci-dessus, et les composants suivent le même patron que les pages
+maladie/pays/région déjà en ligne.
+
+### Constat annexe, aucune action prise
+
+Le seuil de plan payant n'est pas le même partout : `/api/rss` exige
+`["pro","team","enterprise"]` alors que toutes les autres surfaces masquées
+acceptent aussi `"starter"` (le plan hérité, encore lu vivant par
+`Navbar.tsx` d'après `ROADMAP.md`). Un abonné historique « starter » voit donc
+les chiffres exacts sur le tableau de bord et `/compare`, mais reçoit un 403
+sur le flux RSS. Écart réel mais sans victime connue à ce jour ; les nouvelles
+portes posées ce soir suivent la liste majoritaire (avec `starter`) pour ne
+pas aggraver l'incohérence. À trancher par David si un abonné hérité existe
+encore.
+
+### Fichiers modifiés par d'autres, laissés intacts (AGENTS.md)
+
+Au démarrage du run l'arbre était propre. Une autre session a poussé
+`cf3d7a3d` (`lib/source-trust.ts`) pendant l'étape de proposition ; récupéré
+par un `git pull --ff-only`, rien de ce travail n'a été stagé ni committé par
+ce run. Les 19 fichiers des deux commits ci-dessus ont été stagés un par un,
+jamais par `git add -A`.
