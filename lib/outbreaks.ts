@@ -195,15 +195,48 @@ export function isFreeFeaturedRow(
 // zeroed, banded fields attached — never a rounded number (see
 // magnitudeBand's doc comment). Returns the row unchanged (plus the
 // featured flag) when it's the region's free showcase disease.
-export function maskOutbreakRow<T extends { cases: number; deaths: number | null }>(
+//
+// Also blanks every description field. Found 2026-09-06: the free-text
+// bulletin summary ("WHO reported 15,310 cumulative cases and 54 deaths...")
+// states the same real figures in prose, completely bypassing the numeric
+// mask above — a masked row's dots/bands meant nothing the moment its
+// description paragraph was rendered or shipped in an RSC/JSON payload
+// anywhere. cases/deaths tolerate 0/null because their type already allows
+// it; `description` doesn't (non-nullable string), so it gets "" instead —
+// every consumer already treats it as optional content (`{description &&
+// ...}`), and an empty string is exactly as falsy.
+export function maskOutbreakRow<T extends {
+  cases: number;
+  deaths: number | null;
+  description?: string;
+  description_fr?: string | null;
+  description_es?: string | null;
+  description_ar?: string | null;
+  description_id?: string | null;
+}>(
   o: T,
   isFeatured: boolean,
-): T & { is_free_featured?: boolean; cases_band?: number | null; deaths_band?: number | null; cfr_band?: CfrSeverityBand | null } {
+): T & {
+  is_free_featured?: boolean;
+  cases_band?: number | null;
+  deaths_band?: number | null;
+  cfr_band?: CfrSeverityBand | null;
+  description?: string;
+  description_fr?: string | null;
+  description_es?: string | null;
+  description_ar?: string | null;
+  description_id?: string | null;
+} {
   if (isFeatured) return { ...o, is_free_featured: true };
   return {
     ...o,
     cases: 0,
     deaths: null,
+    description: "",
+    description_fr: null,
+    description_es: null,
+    description_ar: null,
+    description_id: null,
     cases_band: magnitudeBand(o.cases),
     deaths_band: o.deaths === null ? null : magnitudeBand(o.deaths),
     cfr_band: cfrSeverityBand(o.cases, o.deaths),

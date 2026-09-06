@@ -12,6 +12,7 @@ import CitationBlock from "@/components/CitationBlock";
 import OutbreakStatsGrid from "@/components/OutbreakStatsGrid";
 import ShareOutbreakButtonGate from "@/components/ShareOutbreakButtonGate";
 import OutbreakCasesChartGate from "@/components/OutbreakCasesChartGate";
+import OutbreakDescriptionGate from "@/components/OutbreakDescriptionGate";
 import { getOutbreaks, getLocalizedDisease, getLocalizedCountry, getLocalizedDescription, sourceStatus, sourceName, publishableSourceName, publishableSourceUrl, staleOutbreakDays, isSourceConfirmed, lastVerifiedIso, magnitudeBand, cfrSeverityBand, pickFeaturedDiseases } from "@/lib/outbreaks";
 import { diseaseToSlug, matchDisease } from "@/lib/disease-data";
 import { jsonLdHtml } from "@/lib/json-ld";
@@ -584,12 +585,19 @@ export default async function OutbreakPage({
         </div>
       )}
 
-      {/* Description — localized via getLocalizedDescription(), falls back to EN */}
-      {o.description && (
-        <div className="bg-gray-800/30 rounded-lg p-4 border border-gray-700/50 mb-6">
-          <p className="text-gray-300 text-sm leading-relaxed">{getLocalizedDescription(o, locale)}</p>
-        </div>
-      )}
+      {/* Description — real for a featured outbreak already; for anyone
+          else, OutbreakDescriptionGate fetches the real bulletin text
+          client-side once it confirms the viewer is actually paid, same
+          pattern as ShareOutbreakButtonGate above. The bulletin prose states
+          the same cases/deaths the numeric mask hides, so it can't be a
+          prop here for a masked row any more than a real cases/deaths
+          number can — see maskOutbreakRow's doc comment in lib/outbreaks.ts. */}
+      <OutbreakDescriptionGate
+        outbreakId={id}
+        isFeatured={isFeatured}
+        featuredDescription={isFeatured ? getLocalizedDescription(o, locale) : ""}
+        locale={locale}
+      />
 
       {/* Case trend chart — the daily series is real, unbucketed history
           (same data as the Pro-gated /api/outbreak-history), so it can't be

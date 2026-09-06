@@ -8,13 +8,17 @@ export const dynamic = "force-dynamic";
 const BOM   = String.fromCharCode(65279);
 const clean = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM), "").trim();
 
-// Exact cases/deaths for one outbreak, Pro-gated — the client-side
-// counterpart to app/[locale]/outbreak/[id]/page.tsx, which is ISR-cached
-// (revalidate=3600) and therefore serves the SAME rendered HTML to every
-// visitor regardless of plan. That page can only ever embed a bucketed
-// figure (see magnitudeBucket in lib/outbreaks.ts); OutbreakStatsGrid calls
-// this route client-side to fill in the real numbers for a paid viewer
-// without the cached HTML itself ever carrying them.
+// Exact cases/deaths (and, since 2026-09-06, the bulletin description text)
+// for one outbreak, Pro-gated — the client-side counterpart to
+// app/[locale]/outbreak/[id]/page.tsx, which is ISR-cached (revalidate=3600)
+// and therefore serves the SAME rendered HTML to every visitor regardless
+// of plan. That page can only ever embed a banded figure (see
+// magnitudeBand's doc comment in lib/outbreaks.ts) and an empty description
+// for a non-featured row; OutbreakStatsGrid and OutbreakDescriptionGate
+// call this route client-side to fill in the real numbers/text for a paid
+// viewer without the cached HTML itself ever carrying them. Description
+// included here rather than a separate route: same gate, same row, no
+// reason to duplicate the auth+plan dance for one more column.
 export async function GET(
   _req: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -43,11 +47,19 @@ export async function GET(
 
   const { data, error } = await service
     .from("outbreaks")
-    .select("cases, deaths")
+    .select("cases, deaths, description, description_fr, description_es, description_ar, description_id")
     .eq("id", id)
     .single();
 
   if (error || !data) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-  return NextResponse.json({ cases: data.cases, deaths: data.deaths });
+  return NextResponse.json({
+    cases: data.cases,
+    deaths: data.deaths,
+    description: data.description,
+    description_fr: data.description_fr,
+    description_es: data.description_es,
+    description_ar: data.description_ar,
+    description_id: data.description_id,
+  });
 }

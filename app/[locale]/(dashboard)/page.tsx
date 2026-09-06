@@ -2,8 +2,7 @@ import { getTranslations, getLocale } from "next-intl/server";
 import { headers } from "next/headers";
 import Link from "next/link";
 import { Activity, Globe, AlertTriangle } from "lucide-react";
-import { getOutbreaks, getStats, getLastSync, getLocalizedDisease, getLocalizedCountry, magnitudeBand, cfrSeverityBand, pickFeaturedDiseases } from "@/lib/outbreaks";
-import type { Outbreak } from "@/lib/outbreaks";
+import { getOutbreaks, getStats, getLastSync, getLocalizedDisease, getLocalizedCountry, pickFeaturedDiseases, maskOutbreakRow, isFreeFeaturedRow } from "@/lib/outbreaks";
 import { ISO_REGION } from "@/lib/geo-data";
 import { getOutbreakTrendsBulkCached } from "@/lib/outbreak-trend";
 import { createClient } from "@/lib/supabase-server";
@@ -302,21 +301,9 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
   // (`featuredDiseaseByRegion`), which stays real end to end so the free
   // plan gives a genuine, if narrow, taste of the data.
   const featuredDiseaseByRegion = isPaid ? new Map<string, string>() : pickFeaturedDiseases(activeOutbreaks);
-  const isFreeFeatured = (o: Outbreak) => featuredDiseaseByRegion.get(o.region) === (o.disease_en || o.disease);
   const mapTableOutbreaks = isPaid
     ? outbreaks
-    : outbreaks.map((o) =>
-        isFreeFeatured(o)
-          ? { ...o, is_free_featured: true }
-          : {
-              ...o,
-              cases: 0,
-              deaths: null,
-              cases_band: magnitudeBand(o.cases),
-              deaths_band: o.deaths === null ? null : magnitudeBand(o.deaths),
-              cfr_band: cfrSeverityBand(o.cases, o.deaths),
-            }
-      );
+    : outbreaks.map((o) => maskOutbreakRow(o, isFreeFeaturedRow(o, featuredDiseaseByRegion)));
 
   // 7-day directional signal (▲/▼/→) — infrastructure has been live since 2026-06-05;
   // getOutbreakTrend returns "unknown" until outbreak_snapshots holds enough history,
@@ -463,7 +450,7 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
         const d24h        = topTrend?.delta24h ?? null;
         const numLocale   = locale === "ar" ? "ar-SA" : locale;
         const isRtl = locale === "ar";
-        const topUnlocked = isPaid || isFreeFeatured(top);
+        const topUnlocked = isPaid || isFreeFeaturedRow(top, featuredDiseaseByRegion);
         return (
           <div
             dir={isRtl ? "rtl" : undefined}
