@@ -1,6 +1,63 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
+## 📅 Session linkedin-hwg-monitoring — 06/09/2026 (9h) — ✅ **6 suivis** (Mendo, Matutu Molongo, Aliddeki, Devaux, Pairault, Govender — quota du jour porté à 8) — ✅ **1 invitation envoyée sans note** (Préféré Matutu Molongo, Épidémiologiste Senior OMS/RDC) — ✅ **2 commentaires publiés** (détail dans `content-log.md`) — aucune réponse nouvelle en messagerie
+
+**Vérification double déclenchement** : aucune entrée `linkedin-hwg-monitoring` du 06/09 à l'ouverture → premier déclenchement de cette routine aujourd'hui. Une **session interactive** avait tourné à 08h49 (ordre « reprends » de David) et couvert messagerie, notifications, follow-back et fils de commentaire actifs : ce run ne les refait pas, il reprend sur les commentaires et la découverte active. Branche **master**, arbre propre. Registre de faits régénéré à 09h04 (232 faits).
+
+---
+
+### 1️⃣ ✅ MESSAGERIE — aucune réponse nouvelle (contrôle de delta depuis 08h45)
+
+Les 10 fils sont inchangés, notre message reste le dernier partout : Ngoy Guillaume, Dr. Siaka Condé, Dr. Malachie MANAOUDA, James Schlitt, Christian BABOKO, trésor Ndaye, SOUAD BELKACEMI, Julien Tuba, John Omari Baso, Isaias Fernandes Co. **Aucun DM rédigé ni envoyé ce run — quota DM 0/8 sur la journée.**
+
+Un seul signal neuf côté notifications : **Yilkal Kebede a aimé notre commentaire du 05/09**. Réaction, pas réponse : rien à traiter en sous-fil.
+
+---
+
+### 2️⃣ ✅ INVITATION ENVOYÉE — **Préféré Matutu Molongo**, sans note
+
+`/in/préféré-matutu-molongo-741a97197/` — *Medical Doctor (MD), MPH | Field Epidemiologist | Outbreak Response | Disease Surveillance | Vaccination & Polio Eradication | Public Health Emergency Management*, République démocratique du Congo, 578 abonnés, 2e degré, **10 relations en commun** (dont Dr René et Sidibé).
+
+**Pourquoi ce candidat plutôt qu'un suivi simple** : il a pris son poste d'**Épidémiologiste Senior à l'Organisation mondiale de la Santé il y a 1 jour** (post à 55 réactions et 24 commentaires), et son activité récente porte **directement sur le foyer que HWG suit de plus près** — formation des hygiénistes à la chloration de l'eau en zone de santé de **Nyakunde** dans le cadre de la riposte Ebola (INTERSOS, il y a 1 semaine), formation PCI/WASH des prestataires cliniques de la zone de santé de **Rwampara** (il y a 3 semaines). Ses Infos : « *Médecin (MD) et titulaire d'un Master en Santé Publique (MPH), spécialisé en Épidémiologie et Surveillance Épidémiologique, avec plus de 8 ans d'expérience […] en République Démocratique du Congo.* »
+
+**Envoyée sans note.** La modale d'invitation n'affichait **aucun compteur d'invitations personnalisées restantes** ; le quota mensuel constaté le 04/09 (« il vous reste 1 invitation personnalisée ce mois-ci ») ayant été consommé ce jour-là et n'étant pas réinitialisé avant octobre, aucune note n'a été rédigée — c'eût été du travail perdu. Conforme à l'autorisation de David du 23/07 (envoi sans note quand la modale de note n'est pas disponible, même barre de pertinence, compté dans le quota).
+
+**Vérification** : identité confirmée dans la modale (« Personnalisez l'invitation que vous envoyez à **Préféré Matutu Molongo** »), puis toast « **Invitation envoyée à Préféré.** » relu après le clic. Statut : **envoyée le 06/09 vers 10h20, en attente d'acceptation**.
+
+📌 **Si elle est acceptée, c'est un candidat DM de bienvenue prioritaire** (§ veille passive, vérification bidirectionnelle) : aucun échange préalable en messagerie, profil hautement pertinent, hook réel et vérifiable disponible dans ses propres posts. À vérifier aux créneaux de 13h et 17h.
+
+**Quota invitations : 2 sur la journée** (1 par la session interactive de 08h49 pour Mahamba Nzanzu, 1 ici).
+
+---
+
+### 3️⃣ ✅ SUIVIS — 6 exécutés ce run, quota du jour porté à 8
+
+| Profil | Vérification |
+|---|---|
+| **Christian Wilfried Mendo, PhD** (`/in/christian-wilfried-mendo-phd-443b59139/`) — *Epidemiologist \| Outbreak Response \| Humanitarian Epidemiology*, Canada, dirige la surveillance épidémiologique de **MSF Canada** | `aria-label` passé à « Suivi, cliquez pour ne plus suivre » |
+| **Préféré Matutu Molongo** (`/in/préféré-matutu-molongo-741a97197/`) — OMS/RDC, voir §2 | idem |
+| **Dativa Maria Aliddeki** (`/in/dativa-maria-aliddeki-b2657550/`) — *Epidemic Intelligence, Early Warning Systems, Health Data Analytics*, **Africa CDC**, Nairobi, 13 mutuels | idem |
+| **Isabelle Devaux** (`/in/isabelle-devaux-b125796b/`) — *Epidemiologist and Public Health Specialist @ ph-projects.org \| Public Health Surveillance, Information Management*, Genève, 14 mutuels, dernier post sur une mission **JEE** | idem |
+| **Gaspard Pairault** (`/in/gaspard-pairault/`) — *Data Scientist \| One Health & Infectious Disease Epidemiology*, **Bluesquare**, Bruxelles. Travaille sur l'**interopérabilité entre systèmes de surveillance** (OpenHEXA), mission à Kinshasa un mois avant le début de la flambée d'Ebola | idem |
+| **Nevashan Govender** (`/in/nevashan-govender-29427927b/`) — *Public Health Emergency Management and Public Health Intelligence Specialist*, Johannesburg, 17 ans d'expérience et postes de direction au **NICD**, publie de vrais articles | idem |
+
+⏹️ **Arsene Kouakan Niangoran** (`/in/arsene-kouakan-niangoran-b4823574/`, *Chief Field Office at UNICEF*, Kananga/RDC, 16 mutuels) — **déjà relation de 1er degré**, donc déjà suivi : aucune action. Noté pour éviter une réévaluation aux prochains runs.
+
+**Quota suivis : 8 sur la journée** (2 par la session interactive, 6 ici), fourchette 7-10 atteinte.
+
+---
+
+### 4️⃣ 🔁 CARRY-OVER
+
+1. ⭐⭐⭐ **Préféré Matutu Molongo** — invitation en attente, DM de bienvenue prioritaire s'il accepte. Vérifier à 13h puis 17h.
+2. ⭐⭐ **Marieta Braks** (RIVM) et **IOM Asia Pacific** — carry-over de la session interactive, non traités ce run, détail dans `content-log.md`. Le post Braks ferme le **07/09**.
+3. ⭐ **James Schlitt** — fil en pause (silence de plus de 40 h), ne pas relancer.
+4. **Inchangés** : tous les dossiers en sommeil des entrées précédentes.
+
+---
+
+
 ## 📅 Session interactive — 06/09/2026 (matin, reprise sur demande de David « reprends ») — ✅ **2 follow-back** (Fayssal ZEMMOUCHI, Mahamba Nzanzu) — ✅ **1 invitation envoyée** (Mahamba Nzanzu) — aucune réponse nouvelle en messagerie ni sur les fils de commentaire actifs
 
 **Vérification double déclenchement** : aucune entrée du 06/09 à l'ouverture → premier passage du jour. Session interactive, pas de créneau horaire fixe.
