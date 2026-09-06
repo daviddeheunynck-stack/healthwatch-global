@@ -3941,6 +3941,23 @@ réimprime en clair dans sa propre balise meta description et dans son image
 OpenGraph. Si (b) est choisi, ces deux-là sont des oublis à corriger ; si
 (a) est choisi, ils deviennent sans objet.
 
+**Résolu le 06/09, tranché par David : option (b).** Construit (a) en
+session interactive le 05/09 au soir sur ordre explicite (« applique tes
+idées ») — commit `f6f4adc0`, retrait du masquage sur les 4 surfaces
+authentifiées plus correction des promesses marketing associées (5 langues,
+onboarding/emails/pricing). **Revert le lendemain matin** (`52ab1563`), puis
+durci au-delà de l'état d'avant mon changement : `fd646a97` corrige une
+5ᵉ fuite jamais couverte ni par les quatre commits du 05/09 ni par mon
+retrait — `/compare` interrogeait `outbreaks` en direct depuis le
+navigateur (clé anon) et ne floutait qu'en CSS, exposant les chiffres exacts
+de tous les foyers actifs à un visiteur anonyme (Ebola/RDC confirmé en
+clair : 6 342/3 072/48,4 %). Le message de David sur ce revirement :
+**« Les chiffres sont masqués, c'est normal »** — le masquage est un choix
+produit assumé, pas un oubli à corriger. Le sous-constat ci-dessus (points 4
+et 5 incohérents) est donc résolu dans le sens (b) : à durcir, pas à
+abandonner. **Ne pas re-proposer cette idée** dans une prochaine session —
+la question est tranchée dans l'autre sens que celui recommandé ici.
+
 ### 2. 🔴 L'alerte prédictive livrée il y a une heure annonce « en accélération » sur des foyers qui décélèrent — mesuré : 1 déclenchement sur 11
 
 **Signal.** `aef0129b` (17h36) ajoute les alertes de tendance prédictive,
