@@ -5,7 +5,7 @@ import {
   Zap, Clock, CheckCircle, AlertTriangle, Building2,
   HeartHandshake, Microscope, Stethoscope, Landmark, Radio,
 } from "lucide-react";
-import { getOutbreaks, getStats, getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
+import { getOutbreaks, getStats, getLocalizedDisease, getLocalizedCountry, pickFeaturedDiseases, isFreeFeaturedRow } from "@/lib/outbreaks";
 import RiskBadge from "@/components/RiskBadge";
 import NewsletterSubscribeForm from "@/components/NewsletterSubscribeForm";
 import LandingMapSection from "@/components/LandingMapSection";
@@ -537,6 +537,27 @@ export default async function LandingPage({ locale }: { locale: string }) {
     .sort((a, b) => ({ high: 0, medium: 1, low: 2 }[a.risk_level] - { high: 0, medium: 1, low: 2 }[b.risk_level]))
     .slice(0, 5);
 
+  // This page has no isPaid concept at all — same policy as the disease/
+  // country/region hub pages (one real showcase disease per continent,
+  // everything else masked). Found 2026-09-06: the map below used to
+  // receive full raw Outbreak rows (real cases/deaths, every locale's
+  // bulletin description, verification_status, admin1...) straight from
+  // getOutbreaks(), completely unmasked, for the site's own public
+  // homepage — see maskOutbreakRow's doc comment in lib/outbreaks.ts.
+  // Only the fields LandingMapSection/LandingMapLeaflet actually draw with
+  // cross into MapOutbreak; `cases` (the one field among them ever worth
+  // masking, used only for the marker's log-scale radius) is zeroed for
+  // every row except the region's free showcase disease.
+  const featuredDiseaseByRegion = pickFeaturedDiseases(activeOutbreaks);
+  const mapOutbreaks = activeOutbreaks.map((o) => ({
+    id: o.id,
+    disease: o.disease, disease_en: o.disease_en, disease_ar: o.disease_ar,
+    country: o.country, country_en: o.country_en, country_ar: o.country_ar,
+    lat: o.lat, lng: o.lng,
+    risk_level: o.risk_level,
+    cases: isFreeFeaturedRow(o, featuredDiseaseByRegion) ? o.cases : 0,
+  }));
+
   return (
     <div className="space-y-24" dir={isRtl ? "rtl" : undefined}>
 
@@ -700,8 +721,9 @@ export default async function LandingPage({ locale }: { locale: string }) {
           receiving the unfiltered list. Measured 2026-09-01 — it was still plotting
           the very rows that fix was written for (Ebola/Germany, Ebola/Uganda, plus
           Ebola/France and Nipah/India) as live dots, and its badge read "131 active"
-          two screens under a hero saying 129. */}
-      <LandingMapSection outbreaks={activeOutbreaks} locale={locale} />
+          two screens under a hero saying 129. mapOutbreaks, not activeOutbreaks,
+          since 2026-09-06 — see its own masking comment above. */}
+      <LandingMapSection outbreaks={mapOutbreaks} locale={locale} />
 
       {/* ── New this week ────────────────────────────────────────────────── */}
       {(() => {

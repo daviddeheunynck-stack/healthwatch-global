@@ -50,8 +50,23 @@ const MAP_COPY: Record<string, { title: string; sub: string; badge: (n: number) 
   },
 };
 
+// Narrow, explicit field list rather than the full Outbreak type — this
+// component (and LandingMapLeaflet below it) is "use client", so whatever
+// shape crosses this prop boundary is serialized verbatim into the
+// homepage's own RSC payload for every anonymous visitor. Found 2026-09-06:
+// this used to receive full Outbreak rows straight from LandingPage's raw
+// getOutbreaks() call — real cases/deaths, every locale's full bulletin
+// description, verification_status, admin1, etc. — completely bypassing
+// every masking rule the rest of the site enforces (see maskOutbreakRow's
+// doc comment in lib/outbreaks.ts). Only cases/deaths/description ever
+// carried real figures worth hiding, but the fix is to only ever pass what
+// the map actually draws with, not to individually launder each risky
+// field — LandingPage is responsible for masking `cases` before it reaches
+// this type.
+export type MapOutbreak = Pick<Outbreak, "id" | "disease" | "disease_en" | "disease_ar" | "country" | "country_en" | "country_ar" | "lat" | "lng" | "risk_level" | "cases">;
+
 interface Props {
-  outbreaks: Outbreak[];
+  outbreaks: MapOutbreak[];
   locale: string;
 }
 

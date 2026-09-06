@@ -2,11 +2,11 @@
 
 import { useEffect, useRef } from "react";
 import type { Map as LeafletMap } from "leaflet";
-import type { Outbreak } from "@/lib/outbreaks";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
+import type { MapOutbreak } from "@/components/LandingMapSection";
 
 interface Props {
-  outbreaks: Outbreak[];
+  outbreaks: MapOutbreak[];
   locale: string;
 }
 
