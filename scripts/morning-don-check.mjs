@@ -957,7 +957,7 @@ const MANUAL_ROW_CHECKED = {
   // case: 17 July 2026). The total number of cases in 2026 is 19. » Ligne corrigée le 21/08 de 15
   // à 19 cas (scripts/fix-polio-afg-samoa-dengue-2026-08-21.mjs) ; aucun échantillon environnemental
   // positif cette semaine, dernier positif 24/06/2026.
-  "b0f473be-a367-464e-ab32-3cdc43aa7815": "2026-08-21",
+  "b0f473be-a367-464e-ab32-3cdc43aa7815": "2026-09-06",
   // Polio/Pakistan : vérifié le 21/08 sur endpolio.com.pk (source primaire de la ligne) — toujours
   // 3 cas WPV1 en 2026, à Sujawal (Sindh), Bannu et Waziristan du Nord (Khyber Pakhtunkhwa).
   // Corroboré par WebSearch. ⚠️ La section pays Pakistan n'apparaissait pas dans le rendu WebFetch
@@ -1037,7 +1037,7 @@ const MANUAL_ROW_CHECKED = {
   // la plus récente (cadence observée : 40e 03/12/2024, 41e 10/04/2025, 42e 28/07/2025, 43e
   // 11/11/2025, 44e 04/03/2026 — la 45e est donc en retard sur un rythme trimestriel, ce qui ne
   // change rien au statut : les recommandations temporaires courent jusqu'à révision). Rien à écrire.
-  "8a4072ab-c0be-4567-8ba4-cdcedeccced8": "2026-08-21",
+  "8a4072ab-c0be-4567-8ba4-cdcedeccced8": "2026-09-06",
   // Dengue/Wallis-et-Futuna : vérifié le 14/08, déclenché par le contrôle qualité quotidien
   // (28j de péremption). WHO WPRO Dengue Situation Update #751 (06/08/2026, dernière édition —
   // #752 pas attendue avant ~20/08) ne mentionne le territoire que dans sa section syndromique
@@ -1188,7 +1188,7 @@ const MANUAL_ROW_CHECKED = {
   // ce sont des NOUVEAUX diagnostics de la semaine, pas un cumul annuel restaté — ne jamais les
   // additionner au 2 050 sans un cumul explicite (méthodologie non confirmée équivalente).
   // Description enrichie de ce signal de tendance en base, chiffre `cases` non modifié.
-  "30961b24-f228-4f16-8861-8131cab5aa85": "2026-08-29",
+  "30961b24-f228-4f16-8861-8131cab5aa85": "2026-09-06",
   // Fièvre hémorragique de Crimée-Congo/Ouganda : re-sourcée le 27/08 (session distincte, hors de
   // cette trace) de 9 cas/4 décès (note de lecteur Substack non attribuée) vers 3 cas/1 décès, deux
   // clusters nommés et datés (Kyankwanzi 11/02, Yumbe 06-08/08). Re-vérifiée le 29/08 (session
@@ -1198,7 +1198,7 @@ const MANUAL_ROW_CHECKED = {
   // sanitaire du district et le nombre de contacts tracés pour Yumbe) — ajouté à
   // GENERAL_PRESS_DOMAINS dans lib/source-trust.ts, la ligne passe de "non vérifié" à "presse"
   // sur le site public. Rien à écrire côté chiffres.
-  "120d6d5a-4e9b-4fda-8a1a-67e504246c55": "2026-08-29",
+  "120d6d5a-4e9b-4fda-8a1a-67e504246c55": "2026-09-06",
 };
 console.log("\n=== Lignes manuelles (section 5) — dues pour vérif hebdo (>7j) ===");
 const now = Date.now();
