@@ -369,8 +369,17 @@ export default async function CountryPage({
       name: `${countryEn} — Disease Outbreaks`,
       description: `${active.length} active outbreak${active.length !== 1 ? "s" : ""} in ${countryEn}. Confirmed cases, deaths, CFR and disease breakdown. Official WHO, ECDC, PAHO and Africa CDC data.`,
       url: `${BASE_URL}/${l}/country/${slug}`,
-      spatialCoverage: { "@type": "Country", name: countryEn },
+      // "Country" is a valid schema.org Place subtype, but Google Search Console's Dataset
+      // checker flags it as an invalid spatialCoverage object type regardless (found
+      // 2026-09-06) — it only recognizes the bare "Place" type here, same as the region
+      // page's spatialCoverage below.
+      spatialCoverage: { "@type": "Place", name: countryEn },
       creator: { "@type": "Organization", name: "HealthWatch Global", url: BASE_URL },
+      // All four Dataset blocks were missing this (Search Console, 2026-09-06) — points to
+      // /legal §3 (Propriété intellectuelle), which is the site's actual reuse terms
+      // ("reproduction... interdite sans autorisation écrite"), not an open-data license:
+      // this product sells access to this data, so nothing here may claim a permissive one.
+      license: `${BASE_URL}/${l}/legal`,
       ...(totalCases > 0 && !maskTotals && { measurementTechnique: `${totalCases.toLocaleString("en")} confirmed cases tracked` }),
     },
     {

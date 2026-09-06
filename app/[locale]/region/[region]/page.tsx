@@ -279,6 +279,10 @@ export default async function RegionPage({
       url: `${BASE_URL}/${l}/region/${region}`,
       spatialCoverage: { "@type": "Place", name: regionName },
       creator: { "@type": "Organization", name: "HealthWatch Global", url: BASE_URL },
+      // Missing on all four Dataset blocks (Search Console, 2026-09-06) — see
+      // country/[slug]/page.tsx's spatialCoverage comment for the same fix and why this
+      // points to /legal §3 rather than an open-data license.
+      license: `${BASE_URL}/${l}/legal`,
       ...(totalCases > 0 && !maskTotals && { measurementTechnique: `${totalCases.toLocaleString("en")} confirmed cases tracked` }),
     },
     {

@@ -247,6 +247,10 @@ export default async function RegionsPage({
       description: lb.metaDesc,
       url: `${BASE_URL}/${l}/regions`,
       creator: { "@type": "Organization", name: "HealthWatch Global", url: BASE_URL },
+      // Missing on all four Dataset blocks (Search Console, 2026-09-06) — see
+      // country/[slug]/page.tsx's spatialCoverage comment for why this points to /legal §3
+      // rather than an open-data license.
+      license: `${BASE_URL}/${l}/legal`,
       ...(totalActive > 0 && { measurementTechnique: `${totalActive} active outbreak${totalActive === 1 ? "" : "s"} across WHO regions` }),
       ...(totalCases > 0 && { size: `${totalCases.toLocaleString("en")} confirmed cases tracked` }),
     },
