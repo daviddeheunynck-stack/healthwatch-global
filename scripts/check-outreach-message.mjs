@@ -527,7 +527,15 @@ if (unanswered >= lex.followup.maxUnansweredOutbound) {
     "Consigner un abandon explicite plutôt que relancer."
   );
 }
-if (ctx.lastOutboundDate) {
+// Délai minimum entre deux envois : c'est une règle de RELANCE (ne pas
+// harceler quelqu'un qui n'a pas répondu), pas une règle de conversation.
+// Corrigé le 2026-09-06 : elle se déclenchait aussi quand l'interlocuteur
+// venait de répondre, produisant un faux positif sur CHAQUE réponse en fil
+// actif de la journée. Si le dernier message du fil vient de lui, on répond,
+// on ne relance pas — le délai ne s'applique pas.
+const lastSpeakerIsInbound =
+  speakerHeaders.length > 0 && !IS_DAVID.test(speakerHeaders[speakerHeaders.length - 1]);
+if (ctx.lastOutboundDate && !lastSpeakerIsInbound) {
   const days = Math.floor((Date.now() - new Date(ctx.lastOutboundDate)) / 86_400_000);
   if (days < lex.followup.minDaysBetweenOutbound) {
     add("blocker", "context.too-soon", `Dernier message il y a ${days} j.`, `Minimum ${lex.followup.minDaysBetweenOutbound} j entre deux envois.`);

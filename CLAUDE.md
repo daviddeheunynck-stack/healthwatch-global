@@ -48,7 +48,9 @@ Les routines planifiées `linkedin-hwg-monitoring` (9h), `linkedin-hwg-followup-
 
 ## Spécification des DM LinkedIn (depuis le 2026-09-06, session interactive — « c'est tout ce dont j'ai besoin »)
 
-David a énoncé d'un bloc ce qu'il attend d'un DM, explicitement pour **remplacer** l'empilement de clauses accumulé dans `_shared/hwg-social-policy.md` §3. **Cette liste fait foi ; en cas de contradiction avec un paragraphe plus ancien de la politique commune, c'est elle qui gagne.**
+David a énoncé d'un bloc ce qu'il attend d'un DM, puis confirmé : « *voilà les seules règles à adopter pour l'automation des DM, on ne change rien pour les commentaires* ».
+
+🔴 **Ce sont donc les SEULES règles de rédaction d'un DM** — pas une liste prioritaire posée au-dessus de l'empilement de `_shared/hwg-social-policy.md` §3, mais son **remplacement**. Les clauses DM accumulées entre juillet et septembre y sont marquées « retiré pour le DM », gardées uniquement pour l'historique et parce qu'elles restent la règle sur les **commentaires publics**, que David a explicitement exclus de ce changement.
 
 1. **Ton bienveillant.**
 2. **Lire le contexte complet du fil** avant de répondre.
@@ -58,6 +60,8 @@ David a énoncé d'un bloc ce qu'il attend d'un DM, explicitement pour **remplac
 6. **Double-check avant envoi**, sans exception.
 
 **Gardé explicitement par David en même temps** : évaluer les nouveaux abonnés comme candidats à une demande de connexion, et envoyer des messages de bienvenue qui ouvrent une discussion.
+
+**⚠️ Ce que « seules règles » ne veut pas dire.** Le retrait porte sur les **règles de rédaction du DM**, pas sur les contraintes qui valent partout : les règles impératives ci-dessus (jamais de faux témoignage, RGPD, jamais de clé committée), les interdits stricts et la politique données patient (`hwg-social-policy.md` §1 et §2), les garde-fous d'escalade (§10 — légitimité incertaine, hook non vérifiable, décision légale, changement de canal proposé) et l'obligation que tout chiffre publié vienne du registre de faits ou du fil. Ce sont des contraintes de l'opération entière, pas un style de message.
 
 **Deux conséquences à connaître, parce que cette spécification change des règles posées le jour même :**
 - **Elle révoque, pour le DM seulement, la section « Élargir la forme » de `_shared/burned-templates.md`** (posée à 18h50, qui demandait des clôtures sans question et l'étendait au DM). Les quatre formes restent la règle pour les **commentaires publics**.
