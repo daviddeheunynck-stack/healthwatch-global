@@ -1,6 +1,107 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
+## 📅 Session interactive — 06/09/2026 (soir, 21h40-22h46, « remplis les quotas » puis refonte des règles DM) — ✅ **2 commentaires publiés** (Ifedayo Adetifa, Joseph Cephas Kyari — quota 2/7 → **4/7**) — ✅ **1 DM envoyé** (Ofelia CAZACU, message de bienvenue, quota 6/8 → **7/8**) — 🔴 **le relecteur indépendant a été retiré du dispositif QA, sur ordre de David** — 🔴 **spécification DM entièrement remplacée par 6 règles de David** — ⏹️ **session close par un blocage du classifieur sur les actions d'écriture navigateur**
+
+**Contexte** : session ouverte à 21h40 sur « remplis les quotas », après le run automatique de 17h. Aucune autre session LinkedIn n'a tourné entre les deux. Navigateur : **Browser 1 (`a466bc2e`) sélectionné sur choix explicite de David, puis constaté non fonctionnel** (`tabs_context_mcp` → « No group with id » sur 3 tentatives, cohérent avec l'étiquette « zombie » déjà portée par ce deviceId) ; bascule sur `23c7ecdd` (le deviceId habituel) sur arbitrage de David. **Aucune entrée `browser-status.md`** : le navigateur habituel n'a jamais été en panne, seul l'alternatif l'était, et c'est déjà documenté.
+
+---
+
+### 1️⃣ ✅ COMMENTAIRE 3/7 — **Ifedayo Adetifa**, réponse en fil actif — ⚠️ **rattrapage d'une erreur de lecture de fil**
+
+`urn:li:activity:7502444502809427968`. Fil engagé depuis 2 jours, **4 tours** au moment de la publication.
+
+🔴 **Incident à retenir, rattrapé de justesse.** Le brouillon préparé plus tôt dans la session répondait à sa réponse **n°2**, alors que le fil en comptait **4** : il avait re-répondu il y a 1 h. Le brouillon lui aurait resservi un point qu'il venait lui-même de dépasser. **Détecté par hasard, sur une capture d'écran prise pour cliquer**, pas par une relecture du fil — c'est exactement ce que la règle « lire le contexte complet du fil » de David (posée une heure plus tard le même soir) existe pour empêcher. Le texte a été jeté et refait depuis sa vraie dernière réponse.
+
+**Son dernier message (1 h avant publication) :** « *David Deheunynck Yes, it would. Assuming there was an affordable and accessible PoC, it would be tracked in a way similar to malaria RDTs.* »
+
+**Texte publié :**
+
+> The malaria RDT comparison holds for the tracking machinery, and it also marks where the two diverge. Malaria RDTs are countable because they move constantly through routine procurement, so stock data exists as a by-product of ordinary use. A filovirus PoC would sit in facilities that can go years without a case. Same machinery, nothing to count between outbreaks.
+
+Forme 4 (« oui, et ») : prolonge sa propre analogie au lieu de la contester. **Publication confirmée** (1 occurrence dans la page, éditeur vidé, texte relu dans le composeur avant clic).
+
+`QA : mécanique PASS (366 car., en/en, 0 blocker) | pas de relecteur (retiré ce soir) | relecture éditoriale : faite | statut : publié le 06/09`
+
+---
+
+### 2️⃣ ✅ COMMENTAIRE 4/7 — **Joseph Cephas Kyari**, réponse en fil actif — 5 jets
+
+`urn:li:activity:7502087512098627584`. Il avait répondu en détaillant son exercice CATI : 4 équipes (chloration / hygiène-désinfection / surveillance), rayon de travail **50-200 m** autour des ménages à cas confirmé, exercice d'une journée.
+
+**5 jets** : les jets 1 à 3 ont tous échoué sur le **même défaut** — présupposer une décision « au cas par cas » dans la fourchette 50-200 m, que lui n'a jamais énoncée (il donne une plage unique). Le jet 4 est tombé sur une armature brûlée (« X only [verbe] if Y »). Le jet 5, qui abandonne la question au profit d'une observation, est passé.
+
+**Texte publié :**
+
+> Four teams inside the same 50-200 metre band, three of them doing something visible right away (chlorination, hygiene, disinfection) and one just watching for new cases. Three of them see their result the same day. The surveillance team has to wait for a case to appear before it knows whether its part worked at all.
+
+⚠️ **Piège technique évité** : l'éditeur trouvé par `querySelectorAll('[contenteditable]')` au niveau document était la **boîte de commentaire principale**, pas la boîte de réponse — publier là aurait créé un commentaire top-level chez quelqu'un de **bloqué jusqu'au 13/09**. Repéré sur capture avant saisie. ➡️ **Toujours chercher l'éditeur dans le sous-arbre DOM du commentaire visé** (`monCommentaire.querySelectorAll(...)`), jamais au niveau document.
+
+`QA : mécanique PASS (317 car., en/en) | pas de relecteur | statut : publié le 06/09`
+
+---
+
+### 3️⃣ ✅ DM 7/8 — **Ofelia CAZACU**, message de bienvenue — **premier DM écrit sous les nouvelles règles**
+
+`/in/ofeliacazacu/`, connexion acceptée le jour même, **0 message reçu d'elle** → `inboundCount = 0` → **aucun CTA ni lien autorisé** par la nouvelle règle. Ce qui a rendu ce message *plus facile* à écrire que les 6 jets précédents, tous morts sur la tension entre l'apport et le terrain politique de son sujet (allocation de vaccins en pénurie).
+
+**Texte envoyé (22h43) :**
+
+> Ofelia, thank you for the follow, and glad we're connected.
+>
+> Your profile leads with connecting people and partnerships, ahead of the technical side, which struck me: in vaccine work it is usually listed the other way round.
+>
+> What does a normal week of that look like for you?
+
+Conforme aux 6 règles : ton chaleureux, aucun sujet politique (rien sur l'allocation, l'équité ou la pénurie), pas de CTA (0 entrant), **clôture sur une question ouverte**, double-check fait. **Envoi vérifié** : fil créé, 1 seul message, texte relu **ligne par ligne dans le composeur avant envoi** (le DOM ne rendait plus l'éditeur, vérification faite par zoom successifs au clavier).
+
+`QA : mécanique PASS (276 car., en/en, 0 blocker) | inboundCount 0 → CTA correctement interdit | statut : envoyé le 06/09 à 22h43`
+
+---
+
+### 4️⃣ ⏹️ COMMENTAIRE 5/7 PRÊT MAIS NON PUBLIÉ — **Abduljalal Nadabo**, blocage du classifieur
+
+Candidat neuf trouvé par recherche active (`disease outbreak response`, tri par date, 24 h). *African STAR | Pharmacist in Vaccinology*, 2e degré. Post de ~22h : semaine 5 de la bourse African STARS, son équipe a conçu **une plateforme diagnostique de terrain pour la détection ET la différenciation des filovirus**, sur le cas de la flambée Bundibugyo en cours.
+
+**Angle, tiré du registre produit** (règle « chercher l'angle dans le produit », posée ce soir) : la différenciation d'espèce n'est pas académique, elle décide si le vaccin stocké s'applique. Vérifié en lecture de code (`product-claims.manual.json`, claim 5) : **Ervebo est listé « Zaire strain only »**, et la fiche maladie rétrograde son badge en « Not available for active strain » précisément parce que le foyer actif en RDC est de souche **Bundibugyo**.
+
+**Texte prêt, mécanique PASS (313 car.), non publié :**
+
+> Differentiation is the word doing the work in that sentence. Ervebo is licensed for the Zaire strain, and the current outbreak is Bundibugyo, so a positive filovirus result and a usable vaccine decision are not the same milestone. A platform that stops at "filovirus" leaves the response exactly where it started.
+
+⏹️ **Bloqué à la publication** : le classifieur de permissions a refusé `browser_batch` puis `javascript_tool` dès qu'il portait un clic ou une saisie (« *a safety check separate from auto mode blocked this request because of earlier conversation content — it isn't about the action itself* »). Les appels **en lecture seule continuent de fonctionner**. Conformément au message d'erreur, **aucune tentative de contournement** n'a été faite. ➡️ **À publier au prochain run**, en vérifiant d'abord que le post est encore dans la fenêtre 48 h et qu'aucune autre session ne l'a commenté (§15).
+
+⚠️ **§16 — densité sur le même sujet** : ce commentaire et celui d'Adetifa (§1) portent tous deux sur le **diagnostic filovirus** le même soir. Les arguments diffèrent réellement (Adetifa : pourquoi un PoC filovirus n'est pas traçable comme un TDR palu ; Nadabo : pourquoi la différenciation d'espèce conditionne l'usage du vaccin), mais la densité est à connaître avant d'en ajouter un 3e sur ce thème.
+
+---
+
+### 5️⃣ 🔴 CHANGEMENTS DE RÈGLES DÉCIDÉS PAR DAVID CE SOIR
+
+Deux décisions structurelles, appliquées et poussées dans le même run.
+
+**(a) Retrait permanent du relecteur indépendant** (`d336a3f8`). David : « supprime le relecteur », confirmé « de façon permanente » après demande de clarification. Le dispositif QA passe de 3 étages à 2 (registre de faits + contrôle mécanique). 11 fichiers mis en cohérence, dont la ponctuelle `hwg-linkedin-full-autonomy-check-2026-09-07`, pour qu'elle ne compte pas demain matin l'absence de relecteur comme un manquement. **Conséquence consignée** : `burned-templates.md` devient le seul filet anti-gabarit rhétorique, et la règle des deux essais perd son déclencheur principal (c'était le relecteur qui nommait les défauts).
+
+**(b) Spécification DM réduite à 6 règles** (`d5762126`, `d3beec2f`). David : ton bienveillant, lire le fil complet, pas de sujets politiques, **CTA à partir de la 2e interaction de l'interlocuteur**, **clôture par une question ouverte**, double-check avant envoi — puis « voilà les **seules** règles à adopter pour l'automation des DM, on ne change rien pour les commentaires ». Deux points sont désormais **vérifiés mécaniquement** au lieu d'être laissés au jugement du rédacteur sur son propre texte :
+- le script **compte les messages entrants** du fil (en-têtes `[Nom]`) et bloque le CTA tant qu'il y en a moins de 2 ;
+- il bloque un DM qui ne finit pas sur une question, et avertit si la question appelle un oui/non ou nomme une alternative.
+
+**Deux effets de bord signalés à David** : cette spécification **révoque pour le DM** la section « Élargir la forme » posée à 18h50 le même jour (clôtures sans question) — elle reste la règle pour les commentaires ; et le seuil de CTA se durcit au point que **le DM envoyé à Préféré Matutu Molongo à 17h32 ne passerait plus** le contrôle aujourd'hui.
+
+**(c) Bug corrigé** : `context.too-soon` (délai minimum entre deux envois) est une règle de **relance**, mais se déclenchait aussi quand l'interlocuteur venait de répondre. **Elle a produit un faux positif sur chaque DM de la journée**, écarté à la main à chaque fois. Elle ne se déclenche plus quand le dernier message du fil vient de l'interlocuteur.
+
+---
+
+### 6️⃣ 🔁 CARRY-OVER
+
+1. ⏹️ **Abduljalal Nadabo** — commentaire **prêt et validé**, texte en §4, non publié (classifieur). **À publier en priorité au prochain run**, sous réserve de la fenêtre 48 h et d'un contrôle §15.
+2. ⭐⭐⭐ **Ofelia CAZACU** — DM de bienvenue enfin envoyé après 7 jets sur 2 jours. **Attendre sa réponse** ; à sa 2e interaction, un CTA deviendra autorisé.
+3. ⭐ **Ifedayo Adetifa** — fil très actif (4 tours, il répond en quelques heures). Contact le plus engagé du portefeuille. Surveiller une nouvelle réponse.
+4. ⭐ **Joseph Cephas Kyari** — a répondu une fois avec du détail réel ; voir s'il enchaîne.
+5. ⭐ **Préféré Matutu Molongo** — a répondu « D accord » à 17h36, sans matière à relancer. **Il est désormais à 2 interactions** : un CTA lui serait permis, mais rien à dire ce soir. Ne pas relancer pour relancer.
+6. ⭐⭐ **Christianah Oki** — post toujours à **0 commentaire**, fenêtre ouverte jusqu'au 07/09 au soir. **5 jets brûlés**, aucun publié, aucun blocage créé. Dernière chance demain.
+7. **Quotas en fin de session** : **commentaires 4/7** (+2 ce soir), **DM 7/8** (+1), **suivis 8** (7-10, atteinte), **invitations 3**. Aucun nouvel abonné depuis 13h (416, inchangé) — donc aucun follow-back ni candidat connexion issu de cette source.
+8. **Blocages hebdomadaires inchangés** : aucun commentaire top-level publié ce soir (les deux étaient des réponses en sous-fil, qui ne créent pas de blocage).
+
 ## 📅 Session linkedin-hwg-followup-check-2 — 06/09/2026 (17h, 2e des 2 créneaux après-midi) — ✅ **1 DM envoyé en autonomie complète** (Préféré Matutu Molongo, réponse en fil actif avec CTA, **4 jets**) — ❌ **DM de bienvenue Ofelia CAZACU abandonné** (4 jets aujourd'hui, questions 9 et 12 devenues mutuellement exclusives) — ❌ **0 commentaire, 3 textes abandonnés sur 3 candidats** — 🟡 **piste de donnée épidémiologique réelle : West Nile aux Pays-Bas, aucune ligne HWG** — 🔴 **la saturation du corpus se confirme une 3e fois dans la journée**
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` du 06/09 dans `content-log.md` ni dans ce fichier à l'ouverture → **premier déclenchement de cette routine aujourd'hui**. Trois passages ont précédé ce run : session interactive (08h49), `linkedin-hwg-monitoring` (9h + addendum 10h13-10h49), `linkedin-hwg-followup-check` (13h). Horloge `Sun Sep 6 17:08 2026`. Branche **master**, arbre propre, `git log origin/master..master` vide à l'ouverture. Registre de faits régénéré à 17h09 (**232 faits sur 106 lignes affichées**, 81 `is_seed` exclues, 3 périmés) ; registre produit régénéré à 17h12 (**110 foyers, 74 pays, 19 maladies, 34 hôtes source, 90 nombres citables**).
