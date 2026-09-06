@@ -57,6 +57,100 @@ Un seul signal neuf côté notifications : **Yilkal Kebede a aimé notre comment
 
 ---
 
+### ➕ Addendum du 06/09, 10h13-10h49 — 4 DM envoyés en autonomie complète (question de David « Pourquoi pas de DM ? »), suite au constat que la vérification bidirectionnelle des connexions acceptées n'avait pas été faite pendant le run initial
+
+**Cause du manque initial** : le run de 9h s'était appuyé sur l'hypothèse non vérifiée que la session interactive de 08h49 avait couvert la vérification `mynetwork/invite-connect/connections/` (invitations acceptées). Vérification faite a posteriori : **2 invitations envoyées les jours précédents avaient été acceptées sans DM de bienvenue** — Dr Fabrice KHADDY (invitation du 23/08, acceptée le 06/09 à la date du jour) et Miriam Mbueshi (invitation du 22/08, acceptée le 05/09). Aucune conversation préexistante avec l'un ou l'autre (recherche messagerie confirmée à 0 résultat pour les deux avant rédaction).
+
+---
+
+### ✅ DM 1/8 — **Dr Fabrice KHADDY** (OMS/Ministère de la Santé RDC), message de bienvenue — 3 jets
+
+`/in/dr-fabrice-khaddy-8b805527a/`, **profil vérifié** (badge LinkedIn, « Vérification effectuée avec une adresse e-mail professionnelle World Health Organization en November 2025 »), *Field Coordinator Ebola Outbreak MVE17 at Ministry of health DRC*, 160 relations, 8 mutuels. Ancré sur son post publié **il y a 1 minute** au moment de la lecture : 13 patients guéris et sortis de la zone de santé de Wamba (17e épidémie MVE, Haut-Uele), 2e zone la plus touchée après Isiro (82 cas confirmés, 50 décès, 10 des 17 aires de santé touchées).
+
+- **Jet 1** — rejeté Q5 (« *and back with their families* » inventé, jamais écrit par lui) et Q9 (« *rather than just to confirmed cases* » insinuait une chaîne de soins antérieure déficiente).
+- **Jet 2** — même défaut Q9 reformulé (« *What's made the difference in getting more patients through to discharge?* » réintroduisait la même insinuation sous une autre forme) + nouveau Q11 (hook générique transposable).
+- **Jet 3 = publié** — angle changé : question neutre sur l'engagement communautaire dans les zones non encore touchées, ancrée sur le chiffre 10/17 propre au post. **12/12 PASS.**
+
+**Texte envoyé (10h13) :**
+
+> Fabrice, thanks for connecting. Ten of Wamba's seventeen health areas affected, second most affected zone in the response after Isiro, that is a wide footprint to be coordinating at once.
+>
+> How does community engagement work across the health areas that haven't reported a case yet?
+
+**Publication confirmée** : identité « Dr Fabrice KHADDY » relue dans l'en-tête du composeur, texte comparé caractère pour caractère au brouillon dans le même appel JS que le clic sur Envoyer (`exact: true`), éditeur vidé après clic. **CTA absent, motif admis** : premier contact, lien interdit sauf demande explicite.
+
+`QA : mécanique jet 3 PASS (281 car.) | relecteur 3 passes, jet 1 rejeté Q5+Q9, jet 2 rejeté Q9+Q11 (même défaut Q9 formulé différemment, angle abandonné et retravaillé), jet 3 = 12 PASS ENVOYER | registre du 06/09 (09:04) | statut : envoyé le 06/09 à 10h13`
+
+⚠️ **Réponse reçue à 10h27, moins de 15 minutes plus tard** — voir DM ci-dessous.
+
+---
+
+### ✅ DM 2/8 — **Dr Fabrice KHADDY**, réponse en fil actif avec CTA — 2 jets
+
+Il a répondu en substance : engagement communautaire globalement positif à Wamba y compris dans les zones sans cas rapporté, mais poches de méfiance et d'hostilité envers certaines interventions Ebola ; travail avec les leaders locaux pour contrer la désinformation ; priorité = « *engage communities before transmission reaches them, not after* ».
+
+**Échange substantiel réel** (pas une politesse) → CTA obligatoire (politique commune §3), jamais servi dans ce fil. Amené depuis sa propre phrase, lien vers la fiche maladie Ebola (`/en/disease/ebola`) conformément à la règle du 06/09 (audience déjà qualifiée sur le sujet précis discuté).
+
+- **Jet 1** — rejeté Q11 : la transition « *it's the part that never survives being turned into a sitrep* » reprenait le moule brûlé « *the part that/I [verbe]…* » catalogué dans `_shared/burned-templates.md`.
+- **Jet 2 = publié** — transition reformulée en deux phrases séparées, sans l'armature « the part that ». **12/12 PASS.**
+
+**Texte envoyé (10h49) :**
+
+> Fabrice, "engage communities before transmission reaches them, not after" is the whole logic of proactive engagement in one line. Sitreps almost never say it that plainly.
+>
+> HealthWatch Global is what I actually spend my days on, aggregating outbreak bulletins as agencies publish them, this one included. The Ebola page has what's public on Wamba and the rest of Haut-Uele, and a new account comes with seven days of Pro, no card needed: healthwatch-global.com/en/disease/ebola
+
+**Publication confirmée** : identité relue, texte comparé caractère pour caractère (`exact: true`, 477 car.), éditeur vidé après clic.
+
+`QA : mécanique jet 2 PASS (477 car., seul finding restant = URL structurelle, non un gabarit rhétorique) | relecteur 2 passes, jet 1 rejeté Q11 (moule brûlé « the part that »), jet 2 = 12 PASS ENVOYER | registre produit régénéré le 06/09 (7-day trial, no card — confirmé contre `lib/activate-trial.ts`) | statut : envoyé le 06/09 à 10h49`
+
+⚠️ **Nouveau moule à ajouter au catalogue** : la transition « *X is Y, and it's the part that [verbe]…* » est une variante de l'armature déjà brûlée, pas un cas isolé — voir mise à jour de `_shared/burned-templates.md` ci-dessous.
+
+---
+
+### ✅ DM 3/8 — **Miriam Mbueshi** (RDC, éco-épidémiologiste), message de bienvenue — 3 jets
+
+`/in/miriam-mbueshi-83b3a2199/`, **1er degré, ⚠️ deux comptes homonymes existent** (l'autre : 3e degré, intitulé vide) — identité confirmée avant frappe par titre exact (« Communicologue et eco-epidemiologiste. ») et sélection au clavier vérifiée ligne par ligne (`ArrowDown` a d'abord surligné le mauvais homonyme, corrigé par `ArrowUp` avant tout envoi). Ancré sur son post d'il y a 1 mois : application mobile de signalement communautaire pour la surveillance à base communautaire, contre les notifications tardives/difficultés de communication/absence d'outils adaptés qu'elle nomme elle-même.
+
+- **Jet 1** — rejeté Q11 (charpente en trois temps identique au brouillon KHADDY du même run : salutation + élément marquant + question fermée A-ou-B).
+- **Jet 2** — nouveau défaut Q5 (« *entre un événement repéré sur le terrain et sa remontée dans un bulletin officiel* » — elle n'a jamais écrit « bulletin officiel », formule inventée) + Q11 persistant (écho structurel encore présent) + Q12 (conséquence de Q5).
+- **Jet 3 = publié** — angle entièrement changé : reprise verbatim de sa propre liste à trois éléments, question comparative « lequel recule / lequel reste ». **12/12 PASS.**
+
+**Texte envoyé (10h20) :**
+
+> Miriam, votre application s'attaque à trois obstacles que vous nommez vous-même : notifications tardives, difficultés de communication, absence d'outils adaptés.
+>
+> Une fois l'application déployée sur le terrain, lequel des trois recule le plus, et lequel reste entier ?
+
+**Publication confirmée** : identité « Miriam Mbueshi · 1er · Communicologue et eco-epidemiologiste. » relue dans l'en-tête, texte comparé caractère pour caractère (`exact: true`, 268 car.), éditeur vidé après clic. **CTA absent, motif admis** : premier contact, lien interdit sauf demande explicite.
+
+`QA : mécanique jet 3 PASS (268 car., fr/fr) | relecteur 3 passes, jet 1 rejeté Q11, jet 2 rejeté Q5+Q11+Q12, jet 3 = 12 PASS ENVOYER | statut : envoyé le 06/09 à 10h20`
+
+⚠️ **Piège de sélecteur reconstaté et documenté** : sur le composeur `messaging/thread/new/`, sélectionner via `ArrowDown`+`Return` après un typeahead à plusieurs résultats homonymes peut surligner un résultat autre que le premier affiché — **toujours vérifier explicitement quelle ligne porte la classe `--highlighted` avant `Return`**, ne jamais supposer que `ArrowDown` va au premier élément visuellement listé.
+
+---
+
+### ✅ DM 4/8 — **Christian BABOKO** (OMS Kinshasa), réponse en fil actif — 2 jets
+
+`/in/christian-baboko-b1b57b374/`, contact établi depuis le 04/09 (connexion + échange substantiel sur la recherche de Christian en systèmes de référencement obstétrical, Lubumbashi). CTA déjà envoyé une fois dans ce fil le 04/09 à 23h55 (nom HWG + lien). Sa réponse de ce matin (10h06) : retour positif sur le tableau de bord HWG, données RDC jugées utiles pour la « situational awareness », promet un retour plus détaillé après avoir regardé les lignes RDC de plus près.
+
+- **Jet 1** — rejeté Q7 : le 2e paragraphe rouvrait la question de recherche restée sans réponse (« *who will you have to sit down with…* ») sans lien apparent avec ce que Christian venait de dire (feedback dashboard uniquement).
+- **Jet 2 = publié** — 2e paragraphe retiré entièrement, un seul paragraphe centré sur son feedback dashboard. **12/12 PASS.**
+
+**Texte envoyé (10h38) :**
+
+> Christian, glad it's useful. Whenever you're through the DRC lines, I'd rather hear what's missing for what you actually need day to day than general praise.
+
+**Publication confirmée** : identité « Christian BABOKO » relue, texte comparé caractère pour caractère (`exact: true`, 157 car.), éditeur vidé après clic. **CTA absent, motif admis** : argumentaire déjà servi plus tôt dans ce même fil (04/09 23h55).
+
+⚠️ **Faux positif mécanique documenté** : `[context.too-soon]` s'est déclenché (« dernier message il y a 2 j »), mais le script compare notre dernier envoi (`lastOutboundDate`) à aujourd'hui, sans savoir que Christian a répondu entretemps (10h06) — vérifié directement dans `scripts/check-outreach-message.mjs` par le relecteur du jet 1. Aucun rapport avec une exception de politique invoquée sans preuve : classement en faux positif fondé sur la lecture du code, pas sur un précédent (une citation erronée d'un précédent inexistant a été signalée et corrigée par le relecteur lui-même dans ce même run).
+
+`QA : mécanique jet 2 FAIL (context.too-soon, faux positif confirmé sur le code, seul finding) | relecteur 2 passes, jet 1 rejeté Q7 (mélange de sujets sans lien), jet 2 = 12 PASS ENVOYER | statut : envoyé le 06/09 à 10h38`
+
+**Quota DM : 4 sur la journée (fourchette partagée 8/jour, reste 4).**
+
+---
+
 
 ## 📅 Session interactive — 06/09/2026 (matin, reprise sur demande de David « reprends ») — ✅ **2 follow-back** (Fayssal ZEMMOUCHI, Mahamba Nzanzu) — ✅ **1 invitation envoyée** (Mahamba Nzanzu) — aucune réponse nouvelle en messagerie ni sur les fils de commentaire actifs
 

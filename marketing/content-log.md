@@ -117,6 +117,21 @@ Deux recherches de personnes : `field epidemiologist outbreak surveillance` puis
 
 ---
 
+### ➕ Addendum du 06/09, 10h13-10h49 — 4 DM envoyés (détail complet dans `linkedin-contacts.md`)
+
+Suite à la question de David en session (« Pourquoi pas de DM ? Pas de DM de bienvenue à envoyer ? »), vérification de `mynetwork/invite-connect/connections/` non faite pendant le run initial : **2 invitations acceptées sans DM de bienvenue** — Dr Fabrice KHADDY (accepté le 06/09) et Miriam Mbueshi (acceptée le 05/09). Traité immédiatement :
+
+1. **Dr Fabrice KHADDY**, message de bienvenue ancré sur son post du jour (13 guérisons à Wamba, 3 jets) — envoyé 10h13.
+2. **Dr Fabrice KHADDY**, réponse en fil actif avec CTA (échange substantiel réel, lien vers `/en/disease/ebola`, 2 jets) — envoyé 10h49.
+3. **Miriam Mbueshi**, message de bienvenue ancré sur son application de surveillance communautaire (3 jets, ⚠️ deux comptes homonymes, identité vérifiée avant envoi) — envoyé 10h20.
+4. **Christian BABOKO**, réponse en fil actif à son feedback positif sur le dashboard (2 jets, aucun CTA répété) — envoyé 10h38.
+
+**Quota DM : 4 sur la journée** (fourchette partagée 8/jour, reste 4 pour 13h/17h).
+
+⚠️ **Moule rhétorique neuf identifié et déjà catalogué** (`_shared/burned-templates.md` mis à jour dans ce même run) : la transition « *X is Y, and it's the part that [verbe]…* » est une variante de l'armature « the part I keep returning to/the part that stays with me » déjà brûlée — trouvée sur le 1er jet du DM CTA KHADDY.
+
+---
+
 
 ## 📅 Session interactive — 06/09/2026 (matin, reprise sur demande de David « reprends ») — ✅ **2 follow-back exécutés** (Fayssal ZEMMOUCHI, Mahamba Nzanzu) — aucune réponse nouvelle nulle part (Ngoy Guillaume, James Schlitt, 4 fils de commentaire) — ⚠️ **panne d'appairage navigateur d'~1 min en cours de check, résolue seule**
 
