@@ -2,15 +2,28 @@
 
 import { useState, useEffect } from "react";
 import { useLocale } from "next-intl";
-import { createClient } from "@/lib/supabase-browser";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { getIncidenceRate } from "@/lib/population-data";
-import { resolvedPlan } from "@/lib/resolved-plan";
 import RiskBadge from "@/components/RiskBadge";
 import LockedUpgradeButton from "@/components/LockedUpgradeButton";
 import { useUpgradeModal } from "@/lib/upgrade-modal-context";
-import type { Outbreak } from "@/lib/outbreaks";
 import { ArrowLeftRight, TrendingUp, Users, Skull, Activity, Globe, Calendar, AlertTriangle, Link as LinkIcon, Check, Lock } from "lucide-react";
+
+// Shape returned by /api/compare-outbreaks — cases/deaths/masked_cfr_pct are
+// already masked (or not) server-side per viewer plan, see that route.
+interface CompareOutbreak {
+  id: string;
+  disease: string; disease_en: string | null; disease_ar: string | null;
+  country: string; country_en: string | null; country_ar: string | null;
+  region: string;
+  risk_level: "high" | "medium" | "low";
+  is_pheic: boolean;
+  date: string;
+  cases: number;
+  deaths: number | null;
+  masked_cfr_pct: number | null;
+  is_free_featured: boolean;
+}
 
 const LABELS: Record<string, {
   title: string; subtitle: string; selectA: string; selectB: string;
@@ -26,32 +39,35 @@ const LABELS: Record<string, {
   id: { title: "Bandingkan Wabah", subtitle: "Analisis dua epidemi secara berdampingan", selectA: "Wabah A", selectB: "Wabah B", all: "Pilih wabah…", cases: "Kasus", deaths: "Kematian", cfr: "CFR", incidence: "Insidensi / 100.000", date: "Tanggal", region: "Wilayah", pheic: "PHEIC", winner: "↓ Lebih rendah", lower: "↑ Lebih tinggi", selectBoth: "Pilih dua wabah untuk dibandingkan.", share: "Bagikan", copied: "Disalin!", lockedCta: "Buka Pro →", lockedBanner: "Kasus terkonfirmasi · Kematian · Tingkat fatalitas · Insidensi per 100.000" },
 };
 
-function StatRow({ label, valA, valB, icon, fmt = (v: number) => v.toLocaleString("en"), higherIsBad = true, locked = false, onLockClick }: {
+function StatRow({ label, valA, valB, icon, fmt = (v: number) => v.toLocaleString("en"), higherIsBad = true, lockedA = false, lockedB = false, onLockClick }: {
   label: string; valA: number | null; valB: number | null; icon: React.ReactNode;
   fmt?: (v: number) => string; higherIsBad?: boolean;
-  locked?: boolean;
+  lockedA?: boolean; lockedB?: boolean;
   onLockClick?: () => void;
 }) {
-  const both = !locked && valA !== null && valB !== null && valA > 0 && valB > 0;
+  // Only color a winner/loser when both sides are actually visible — a
+  // masked row next to a real (featured) one isn't a fair comparison to
+  // highlight either way.
+  const both = !lockedA && !lockedB && valA !== null && valB !== null && valA > 0 && valB > 0;
   const aWorse = both && (higherIsBad ? valA! > valB! : valA! < valB!);
   const bWorse = both && (higherIsBad ? valB! > valA! : valB! < valA!);
 
-  const cell = (v: number | null) => {
+  const cell = (v: number | null, locked: boolean) => {
     if (!v || v <= 0) return "—";
     return locked
-      ? <span className="blur-sm select-none cursor-pointer" onClick={onLockClick}>{fmt(v)}</span>
+      ? <span className="blur-sm select-none cursor-pointer" onClick={onLockClick}>{fmt(v).replace(/\d/g, "•")}</span>
       : fmt(v);
   };
 
   return (
     <tr className="border-b border-gray-800">
       <td className="px-4 py-3 text-gray-500 text-sm"><div className="flex items-center gap-2">{icon}{label}</div></td>
-      <td className={`px-4 py-3 text-center font-bold text-lg ${locked ? "text-gray-600" : aWorse ? "text-red-400" : bWorse ? "text-green-400" : "text-white"}`}>
-        {cell(valA)}
+      <td className={`px-4 py-3 text-center font-bold text-lg ${lockedA ? "text-gray-600" : aWorse ? "text-red-400" : bWorse ? "text-green-400" : "text-white"}`}>
+        {cell(valA, lockedA)}
       </td>
       <td className="px-4 py-3 text-center text-gray-600 text-xs">vs</td>
-      <td className={`px-4 py-3 text-center font-bold text-lg ${locked ? "text-gray-600" : bWorse ? "text-red-400" : aWorse ? "text-green-400" : "text-white"}`}>
-        {cell(valB)}
+      <td className={`px-4 py-3 text-center font-bold text-lg ${lockedB ? "text-gray-600" : bWorse ? "text-red-400" : aWorse ? "text-green-400" : "text-white"}`}>
+        {cell(valB, lockedB)}
       </td>
     </tr>
   );
@@ -63,32 +79,26 @@ export default function ComparePage() {
   const isRtl = locale === "ar";
   const { openModal } = useUpgradeModal();
 
-  const [outbreaks, setOutbreaks] = useState<Outbreak[]>([]);
+  const [outbreaks, setOutbreaks] = useState<CompareOutbreak[]>([]);
   const [idA, setIdA] = useState("");
   const [idB, setIdB] = useState("");
   const [copied, setCopied] = useState(false);
   const [ready, setReady] = useState(false);
-  const [plan, setPlan] = useState<string | null>(null);
-  const isPaid = plan === "starter" || plan === "pro" || plan === "team" || plan === "enterprise";
+  const [isPaid, setIsPaid] = useState(false);
 
-  // Fetch user plan — the exact figures (cases/deaths/CFR/incidence) are paid-only
-  // (Pro/Team/Enterprise), exactly like the dashboard table. Without this check,
-  // Compare would be a back door around that paywall.
-  useEffect(() => {
-    const supabase = createClient();
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      if (!user) { setPlan("guest"); return; }
-      supabase.from("profiles").select("plan, trial_ends_at, stripe_subscription_id").eq("id", user.id).single()
-        .then(({ data }) => setPlan(resolvedPlan(data)));
-    });
-  }, []);
-
+  // Cases/deaths/CFR (and, by extension, incidence — derived from cases) are
+  // paid-only, exactly like the dashboard table — /api/compare-outbreaks
+  // does that masking server-side (magnitude-bucketed, one featured disease
+  // per continent unlocked) so this component never receives the real
+  // figure for a row it isn't allowed to show, unlike the old direct
+  // client-side Supabase query this replaced (see that route's comment).
   useEffect(() => {
     const sp = new URLSearchParams(window.location.search);
-    createClient().from("outbreaks").select("id, disease, disease_en, disease_ar, country, country_en, country_ar, region, cases, deaths, risk_level, date, is_pheic").eq("active", true).order("is_pheic", { ascending: false }).order("date", { ascending: false }).limit(100)
-      .then(({ data }) => {
-        const list = (data as unknown as Outbreak[]) ?? [];
-        setOutbreaks(list);
+    fetch("/api/compare-outbreaks")
+      .then((r) => r.json())
+      .then(({ outbreaks: list, isPaid: paid }: { outbreaks: CompareOutbreak[]; isPaid: boolean }) => {
+        setOutbreaks(list ?? []);
+        setIsPaid(!!paid);
         // Pre-select from URL or default to top 2 PHEIC/high-risk outbreaks
         const urlA = sp.get("a");
         const urlB = sp.get("b");
@@ -128,8 +138,13 @@ export default function ComparePage() {
 
   const oA = outbreaks.find(o => o.id === idA) ?? null;
   const oB = outbreaks.find(o => o.id === idB) ?? null;
-  const cfrA = oA && oA.cases > 0 && oA.deaths !== null ? oA.deaths / oA.cases * 100 : null;
-  const cfrB = oB && oB.cases > 0 && oB.deaths !== null ? oB.deaths / oB.cases * 100 : null;
+  // A featured row's cases/deaths are already real (server-side, see
+  // /api/compare-outbreaks) — compute CFR from them directly rather than
+  // using masked_cfr_pct, which that route only fills in for locked rows.
+  const unlockedA = isPaid || (oA?.is_free_featured ?? false);
+  const unlockedB = isPaid || (oB?.is_free_featured ?? false);
+  const cfrA = oA ? (unlockedA ? (oA.cases > 0 && oA.deaths !== null ? oA.deaths / oA.cases * 100 : null) : oA.masked_cfr_pct) : null;
+  const cfrB = oB ? (unlockedB ? (oB.cases > 0 && oB.deaths !== null ? oB.deaths / oB.cases * 100 : null) : oB.masked_cfr_pct) : null;
   const incA = oA ? getIncidenceRate(oA.cases, oA.country_en) : null;
   const incB = oB ? getIncidenceRate(oB.cases, oB.country_en) : null;
   const options = outbreaks
@@ -206,10 +221,10 @@ export default function ComparePage() {
                 <th className="px-4 py-3 text-center text-amber-400 font-bold text-sm">B</th>
               </tr></thead>
               <tbody>
-                <StatRow label={l.cases} valA={oA.cases} valB={oB.cases} icon={<Users className="w-3.5 h-3.5" />} fmt={v => v.toLocaleString(locale === "ar" ? "ar-SA" : locale)} locked={!isPaid} onLockClick={() => openModal("compare")} />
-                <StatRow label={l.deaths} valA={oA.deaths} valB={oB.deaths} icon={<Skull className="w-3.5 h-3.5" />} fmt={v => v.toLocaleString(locale === "ar" ? "ar-SA" : locale)} locked={!isPaid} onLockClick={() => openModal("compare")} />
-                <StatRow label={l.cfr} valA={cfrA} valB={cfrB} icon={<TrendingUp className="w-3.5 h-3.5" />} fmt={v => v.toFixed(1) + "%"} locked={!isPaid} onLockClick={() => openModal("compare")} />
-                <StatRow label={l.incidence} valA={incA} valB={incB} icon={<Activity className="w-3.5 h-3.5" />} fmt={v => v.toFixed(2)} locked={!isPaid} onLockClick={() => openModal("compare")} />
+                <StatRow label={l.cases} valA={oA.cases} valB={oB.cases} icon={<Users className="w-3.5 h-3.5" />} fmt={v => v.toLocaleString(locale === "ar" ? "ar-SA" : locale)} lockedA={!unlockedA} lockedB={!unlockedB} onLockClick={() => openModal("compare")} />
+                <StatRow label={l.deaths} valA={oA.deaths} valB={oB.deaths} icon={<Skull className="w-3.5 h-3.5" />} fmt={v => v.toLocaleString(locale === "ar" ? "ar-SA" : locale)} lockedA={!unlockedA} lockedB={!unlockedB} onLockClick={() => openModal("compare")} />
+                <StatRow label={l.cfr} valA={cfrA} valB={cfrB} icon={<TrendingUp className="w-3.5 h-3.5" />} fmt={v => v.toFixed(1) + "%"} lockedA={!unlockedA} lockedB={!unlockedB} onLockClick={() => openModal("compare")} />
+                <StatRow label={l.incidence} valA={incA} valB={incB} icon={<Activity className="w-3.5 h-3.5" />} fmt={v => v.toFixed(2)} lockedA={!unlockedA} lockedB={!unlockedB} onLockClick={() => openModal("compare")} />
                 <tr className="border-b border-gray-800">
                   <td className="px-4 py-3 text-gray-500 text-sm"><div className="flex items-center gap-2"><Calendar className="w-3.5 h-3.5" />{l.date}</div></td>
                   <td className="px-4 py-3 text-center text-white text-sm">{oA.date}</td>
