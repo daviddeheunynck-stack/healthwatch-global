@@ -318,6 +318,12 @@ const AUTHORITATIVE_SOURCE_DOMAINS: ReadonlySet<string> = new Set([
 
 const AUTHORITATIVE_SOURCE_HOSTS: ReadonlySet<string> = new Set([
   "worldhealthorg.shinyapps.io", // WHO's Shiny dashboards (global dengue surveillance, etc.)
+  // WHO Health Emergencies Programme's Global Cholera and Acute Watery Diarrhoea (AWD)
+  // Dashboard — same "shared third-party host, exact hostname only" shape as the Shiny
+  // dashboard above, this time on Esri's ArcGIS Hub rather than shinyapps.io. Found
+  // 2026-09-06 re-sourcing Cholera/DR Congo off news.un.org (banned the same day, see
+  // FORBIDDEN_SOURCE_DOMAINS) — David confirmed the URL directly from the live dashboard.
+  "who-global-cholera-and-awd-dashboard-1-who.hub.arcgis.com",
 ]);
 
 // Specialist health/epidemiology outlets whose reporting we cite as an authoritative
@@ -509,6 +515,7 @@ export function sourceName(source: string | null | undefined): string {
   // WHO's Shiny-hosted dashboards (global dengue surveillance, etc.) — the hostname carries
   // no "who.int", so without this they fell through to the generic label below.
   if (src.includes("worldhealthorg.shinyapps.io")) return "WHO";
+  if (src.includes("who-global-cholera-and-awd-dashboard")) return "WHO";
   if (src.includes("who.int"))           return "WHO";
   // Unrecognised host: show the bare hostname rather than claiming "Official". This label
   // reaches the academic citation string on the outbreak page for EVERY row, including
