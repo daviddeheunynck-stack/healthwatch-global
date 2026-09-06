@@ -4,30 +4,108 @@
     "Consommé par scripts/check-outreach-message.mjs et par la grille de relecture (docs/outreach-qa.md).",
     "Une entrée ajoutée ici est appliquée à toutes les routines d'un coup : ne pas dupliquer ces listes dans un SKILL.md."
   ],
-
   "banned": [
-    { "pattern": "—", "why": "Tiret cadratin interdit dans tout message sortant (règle de session LinkedIn).", "severity": "blocker" },
-    { "pattern": "–", "why": "Tiret demi-cadratin, même règle.", "severity": "blocker" },
-    { "pattern": "\\bn'hésitez pas\\b", "why": "Formule de démarchage vide, sans contenu propre au destinataire.", "severity": "blocker" },
-    { "pattern": "\\bje me permets de\\b", "why": "Ouverture de publipostage.", "severity": "blocker" },
-    { "pattern": "\\bsolution innovante\\b", "why": "Vocabulaire commercial, l'angle doit rester surveillance épidémiologique.", "severity": "blocker" },
-    { "pattern": "\\bgame.?changer\\b", "why": "Idem.", "severity": "blocker" },
-    { "pattern": "\\brévolutionn(e|aire|er)\\b", "why": "Idem.", "severity": "blocker" },
-    { "pattern": "\\bleader (du|de la|des) march[ée]s?\\b", "why": "Affirmation invérifiable sur HWG.", "severity": "blocker" },
-    { "pattern": "\\ben temps r[ée]el\\b", "why": "HWG agrège des bulletins publiés : la latence est celle de la source, pas du temps réel. Employer 'dès publication' ou 'au rythme des bulletins'.", "severity": "blocker" },
-    { "pattern": "\\breal.?time\\b", "why": "Même problème en anglais.", "severity": "blocker" },
-    { "pattern": "\\bnos (clients|utilisateurs) (disent|témoignent)\\b", "why": "Frôle le faux témoignage (règle impérative AGENTS.md).", "severity": "blocker" },
-    { "pattern": "\\bcomme vous le savez\\b", "why": "Présuppose ce que sait le destinataire.", "severity": "warn" },
-    { "pattern": "\\bnous sommes ravis\\b", "why": "Ton corporate.", "severity": "warn" },
-    { "pattern": "\\bsynergie\\b", "why": "Jargon vide.", "severity": "warn" },
-    { "pattern": "\\bimpact(er|ée?s?)\\b", "why": "Anglicisme, préférer 'toucher', 'peser sur', 'conséquence'.", "severity": "warn" },
-    { "pattern": "\\bopportunité de collaboration\\b", "why": "Formule creuse, dire l'objet précis.", "severity": "warn" },
-    { "pattern": "\\bimplémenter\\b", "why": "Anglicisme, préférer 'mettre en place'.", "severity": "warn" },
-    { "pattern": "\\bsupporter\\b(?! ?la comparaison)", "why": "Faux ami : 'support' se traduit par 'prendre en charge' / 'gérer'.", "severity": "warn" },
-    { "pattern": "\\bdigital\\b", "why": "Anglicisme, préférer 'numérique'.", "severity": "warn" },
-    { "pattern": "\\bau niveau de\\b", "why": "Cheville, à remplacer par une préposition précise.", "severity": "warn" }
+    {
+      "pattern": "—",
+      "why": "Tiret cadratin interdit dans tout message sortant (règle de session LinkedIn).",
+      "severity": "blocker"
+    },
+    {
+      "pattern": "–",
+      "why": "Tiret demi-cadratin, même règle.",
+      "severity": "blocker"
+    },
+    {
+      "pattern": "\\bn'hésitez pas\\b",
+      "why": "Formule de démarchage vide, sans contenu propre au destinataire.",
+      "severity": "blocker"
+    },
+    {
+      "pattern": "\\bje me permets de\\b",
+      "why": "Ouverture de publipostage.",
+      "severity": "blocker"
+    },
+    {
+      "pattern": "\\bsolution innovante\\b",
+      "why": "Vocabulaire commercial, l'angle doit rester surveillance épidémiologique.",
+      "severity": "blocker"
+    },
+    {
+      "pattern": "\\bgame.?changer\\b",
+      "why": "Idem.",
+      "severity": "blocker"
+    },
+    {
+      "pattern": "\\brévolutionn(e|aire|er)\\b",
+      "why": "Idem.",
+      "severity": "blocker"
+    },
+    {
+      "pattern": "\\bleader (du|de la|des) march[ée]s?\\b",
+      "why": "Affirmation invérifiable sur HWG.",
+      "severity": "blocker"
+    },
+    {
+      "pattern": "\\ben temps r[ée]el\\b",
+      "why": "HWG agrège des bulletins publiés : la latence est celle de la source, pas du temps réel. Employer 'dès publication' ou 'au rythme des bulletins'.",
+      "severity": "blocker"
+    },
+    {
+      "pattern": "\\breal.?time\\b",
+      "why": "Même problème en anglais.",
+      "severity": "blocker"
+    },
+    {
+      "pattern": "\\bnos (clients|utilisateurs) (disent|témoignent)\\b",
+      "why": "Frôle le faux témoignage (règle impérative AGENTS.md).",
+      "severity": "blocker"
+    },
+    {
+      "pattern": "\\bcomme vous le savez\\b",
+      "why": "Présuppose ce que sait le destinataire.",
+      "severity": "warn"
+    },
+    {
+      "pattern": "\\bnous sommes ravis\\b",
+      "why": "Ton corporate.",
+      "severity": "warn"
+    },
+    {
+      "pattern": "\\bsynergie\\b",
+      "why": "Jargon vide.",
+      "severity": "warn"
+    },
+    {
+      "pattern": "\\bimpact(er|ée?s?)\\b",
+      "why": "Anglicisme, préférer 'toucher', 'peser sur', 'conséquence'.",
+      "severity": "warn"
+    },
+    {
+      "pattern": "\\bopportunité de collaboration\\b",
+      "why": "Formule creuse, dire l'objet précis.",
+      "severity": "warn"
+    },
+    {
+      "pattern": "\\bimplémenter\\b",
+      "why": "Anglicisme, préférer 'mettre en place'.",
+      "severity": "warn"
+    },
+    {
+      "pattern": "\\bsupporter\\b(?! ?la comparaison)",
+      "why": "Faux ami : 'support' se traduit par 'prendre en charge' / 'gérer'.",
+      "severity": "warn"
+    },
+    {
+      "pattern": "\\bdigital\\b",
+      "why": "Anglicisme, préférer 'numérique'.",
+      "severity": "warn"
+    },
+    {
+      "pattern": "\\bau niveau de\\b",
+      "why": "Cheville, à remplacer par une préposition précise.",
+      "severity": "warn"
+    }
   ],
-
   "confusables": [
     {
       "pattern": "\\btaux de mortalit[ée]s?\\b",
@@ -96,7 +174,6 @@
       "prefer": "we aggregate"
     }
   ],
-
   "hwg_claims": {
     "_comment": "Affirmations autorisées sur HealthWatch Global. Toute phrase contenant HWG / HealthWatch Global qui ne correspond à aucune de ces claims est remontée au relecteur pour arbitrage.",
     "allowed": [
@@ -116,7 +193,6 @@
       "Tout partenariat, affiliation ou soutien institutionnel non signé."
     ]
   },
-
   "cta_markers": [
     "https?://",
     "\\blien\\b",
@@ -128,15 +204,44 @@
     "\\bd[ée]mo\\b",
     "\\bhealthwatch[- ]?global\\.(com|org|app)\\b"
   ],
-
   "channel_limits": {
-    "linkedin-connect-note": { "maxChars": 200, "maxParagraphs": 1, "ctaAllowed": false, "linkAllowed": false, "closer": { "fr": "Au plaisir d'échanger.", "en": "Would love to connect" } },
-    "linkedin-comment":      { "maxChars": 700, "maxParagraphs": 3, "ctaAllowed": false, "linkAllowed": false },
-    "linkedin-dm":           { "maxChars": 1300, "maxParagraphs": 5, "ctaAllowed": "after-substantive-exchange", "linkAllowed": "after-substantive-exchange" },
-    "linkedin-post":         { "maxChars": 3000, "maxParagraphs": 12, "ctaAllowed": true, "linkAllowed": true },
-    "email":                 { "maxChars": 2200, "maxParagraphs": 7, "ctaAllowed": true, "linkAllowed": true }
+    "linkedin-connect-note": {
+      "maxChars": 200,
+      "maxParagraphs": 1,
+      "ctaAllowed": false,
+      "linkAllowed": false,
+      "closer": {
+        "fr": "Au plaisir d'échanger.",
+        "en": "Would love to connect"
+      }
+    },
+    "linkedin-comment": {
+      "maxChars": 700,
+      "maxParagraphs": 3,
+      "ctaAllowed": false,
+      "linkAllowed": false
+    },
+    "linkedin-dm": {
+      "maxChars": 1300,
+      "maxParagraphs": 5,
+      "ctaAllowed": "after-second-inbound",
+      "linkAllowed": "after-second-inbound",
+      "closingQuestion": true,
+      "_note_2026_09_06": "Regle de David du 2026-09-06 en session interactive : ton bienveillant, lecture du fil complet, pas de sujets politiques, CTA a partir de la DEUXIEME interaction de l'interlocuteur (compte mecanique des messages entrants, remplace le jugement 'after-substantive-exchange'), cloture par une question ouverte."
+    },
+    "linkedin-post": {
+      "maxChars": 3000,
+      "maxParagraphs": 12,
+      "ctaAllowed": true,
+      "linkAllowed": true
+    },
+    "email": {
+      "maxChars": 2200,
+      "maxParagraphs": 7,
+      "ctaAllowed": true,
+      "linkAllowed": true
+    }
   },
-
   "ngram": {
     "_comment": "Anti-gabarit. Un n-gramme du brouillon qui existe déjà dans l'historique = formule recyclée.",
     "sizeHistory": 5,
@@ -150,7 +255,6 @@
     "maxHistoryHits": 0,
     "maxPeerHits": 0
   },
-
   "followup": {
     "_comment": "Plafond de relance validé le 2026-08-23 : max 2 relances sur un même sujet, puis abandon explicite consigné.",
     "maxUnansweredOutbound": 2,

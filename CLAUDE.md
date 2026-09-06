@@ -46,6 +46,25 @@ Les routines planifiées `linkedin-hwg-monitoring` (9h), `linkedin-hwg-followup-
 
 **Extension du 2026-08-26 matin aux commentaires et notes de connexion — RÉVOQUÉE LE SOIR MÊME, paragraphe gardé pour l'historique.** ~~Pour les mêmes trois routines, David a demandé que les commentaires et les notes de connexion rejoignent les DM dans le modèle « brouillon, puis on corrige ensemble, puis publication » — plus aucune publication autonome de texte sur ces trois routines. Motif : sur la session du matin, 3 commentaires sur 4 avaient été abandonnés par le contrôle mécanique anti-gabarit sur de simples formules d'anglais courant, alors que le fond de deux d'entre eux avait déjà été validé par le relecteur.~~ **Corrigé le 2026-08-26 en session interactive, dans l'heure qui a suivi la mise en pratique de cette extension** : « on s'est mal compris, j'ai demandé un droit de regard simplement sur les DM, pour le reste, tu es en autonomie ». Le malentendu venait du motif invoqué le matin (des commentaires perdus sur des faux positifs QA), mais la demande initiale du 07-23 ne portait que sur les DM — David ne voulait pas que ça s'étende aux commentaires et notes de connexion. **Ce sont donc bien le paragraphe du 2026-07-23 ci-dessus et le dispositif QA outillé (registre de faits, contrôle mécanique, relecteur) qui font foi pour les commentaires et notes de connexion : ils continuent de passer par ce dispositif pour la qualité, mais se publient en autonomie une fois le contrôle passé, sans repasser par David.** Les 3 textes concernés (2 commentaires + 1 DM) mis en file ce jour-là ont été validés et publiés/envoyés en session le soir même sur ordre explicite de David, dans les deux cas conformément à la présente clarification (DM : oui, droit de regard ; commentaires : reconnus comme n'en ayant jamais eu besoin). Détail technique dans `_shared/hwg-social-policy.md` (section 5, corrigée en cohérence le même soir) et les SKILL.md des trois routines (idem).
 
+## Spécification des DM LinkedIn (depuis le 2026-09-06, session interactive — « c'est tout ce dont j'ai besoin »)
+
+David a énoncé d'un bloc ce qu'il attend d'un DM, explicitement pour **remplacer** l'empilement de clauses accumulé dans `_shared/hwg-social-policy.md` §3. **Cette liste fait foi ; en cas de contradiction avec un paragraphe plus ancien de la politique commune, c'est elle qui gagne.**
+
+1. **Ton bienveillant.**
+2. **Lire le contexte complet du fil** avant de répondre.
+3. **Pas de sujets politiques.**
+4. **CTA à partir de la deuxième interaction de l'interlocuteur** — 2 messages écrits par lui dans ce fil, un accusé de réception compte. Countable, plus un jugement de « substance ».
+5. **Fermer par une question ouverte** (pas de oui/non, pas d'alternative nommée).
+6. **Double-check avant envoi**, sans exception.
+
+**Gardé explicitement par David en même temps** : évaluer les nouveaux abonnés comme candidats à une demande de connexion, et envoyer des messages de bienvenue qui ouvrent une discussion.
+
+**Deux conséquences à connaître, parce que cette spécification change des règles posées le jour même :**
+- **Elle révoque, pour le DM seulement, la section « Élargir la forme » de `_shared/burned-templates.md`** (posée à 18h50, qui demandait des clôtures sans question et l'étendait au DM). Les quatre formes restent la règle pour les **commentaires publics**.
+- **Le seuil du CTA se durcit** : « après un échange substantiel » devient « après 2 messages de l'interlocuteur ». Le DM envoyé à Préféré Matutu Molongo le 06/09 à 17h32 (CTA après une seule réponse) ne passerait plus le contrôle.
+
+**Appliqué mécaniquement, pas seulement documenté** : `marketing/qa/lexicon.json` (canal `linkedin-dm` : `ctaAllowed`/`linkAllowed` = `after-second-inbound`, `closingQuestion` = `true`) et `scripts/check-outreach-message.mjs`, qui **compte les messages entrants dans le fil** (en-têtes `[Nom]`) au lieu de croire une case cochée par le rédacteur — c'était précisément le point aveugle que le relecteur couvrait avant son retrait le même jour.
+
 ## Exception autonome : contenu de marque X (depuis le 2026-07-17)
 `x-hwg-content-proposal` (lundi 9h, hebdomadaire — réduit de lundi/mercredi/vendredi le 2026-08-03 après revue de performance : les threads étaient le format le moins performant du dispositif X) rédige, double-check et **publie elle-même** le thread X de marque, sans validation préalable de David — voir mémoire [[project_x_content_autonomy_2026_07_17]]. David garde le droit de demander le retrait d'un post après coup ; la routine le notifie après publication (lien + résumé) et archive tout dans `content-log.md`. **Spécifique à X** : le contenu de marque LinkedIn reste manuel (règle ci-dessus), ne pas généraliser à `linkedin-hwg-content-proposal` sans nouvelle décision explicite de David.
 

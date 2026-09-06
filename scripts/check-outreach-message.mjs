@@ -17,7 +17,14 @@
 //     "recipient": { "name": "Christophe VALINGOT DELAURENTI", "slug": "christophe-..." },
 //     "threadFile": "tmp/thread-christophe.txt",   // fil relu, optionnel mais fortement conseillé
 //     "peers": ["tmp/draft-adetifa.md"],           // autres brouillons du MEME run
-//     "substantiveExchange": true,                  // au moins un aller-retour de fond
+//     "substantiveExchange": true,                  // PÉRIMÉ depuis le 2026-09-06 — voir inboundCount
+//     "inboundCount": 2,                            // messages ÉCRITS PAR L'INTERLOCUTEUR dans ce fil.
+//                                                   // Compté automatiquement depuis threadFile quand
+//                                                   // celui-ci utilise l'en-tête « [Nom] date » ; ne le
+//                                                   // renseigner à la main que si le fil n'est pas dans
+//                                                   // ce format. Règle CTA de David (2026-09-06) :
+//                                                   // un CTA n'est permis qu'à partir de la DEUXIÈME
+//                                                   // interaction de l'interlocuteur (inboundCount >= 2).
 //     "outboundUnanswered": 1,                      // messages partis sans réponse sur ce sujet
 //     "lastOutboundDate": "2026-08-21",
 //     "attempt": 1
@@ -77,6 +84,30 @@ const thread = ctx.threadFile && existsSync(ctx.threadFile) ? readFileSync(ctx.t
 
 const findings = [];
 const add = (severity, id, message, detail) => findings.push({ severity, id, message, detail });
+
+// ── Compte des messages entrants (règle CTA de David, 2026-09-06) ────────────
+// « CTA après la deuxième interaction de l'interlocuteur. » Countable, donc
+// vérifié ici plutôt que laissé à une case cochée par le rédacteur sur son
+// propre brouillon — c'était exactement le point aveugle que le relecteur
+// couvrait avant son retrait le même jour.
+// Convention de fil attendue : chaque message commence par « [Nom] ... » en
+// début de ligne. Tout locuteur qui n'est pas David compte comme entrant.
+const IS_DAVID = /^\s*(david\b|deheunynck\b|david deheunynck\b|vous\b|moi\b)/i;
+const speakerHeaders = thread
+  ? [...thread.matchAll(/^\[([^\]\n]{1,80})\]/gm)].map((m) => m[1].trim())
+  : [];
+const parsedInbound = speakerHeaders.filter((n) => !IS_DAVID.test(n)).length;
+const threadIsParseable = speakerHeaders.length > 0;
+const inboundCount = threadIsParseable ? parsedInbound : ctx.inboundCount ?? null;
+
+if (threadIsParseable && typeof ctx.inboundCount === "number" && ctx.inboundCount !== parsedInbound) {
+  add(
+    "warn",
+    "context.inbound-mismatch",
+    `inboundCount déclaré (${ctx.inboundCount}) ≠ compté dans le fil (${parsedInbound}).`,
+    "Le compte lu dans le fil fait foi. Vérifier que le threadFile est complet.",
+  );
+}
 
 // ── Outils ───────────────────────────────────────────────────────────────────
 const words = (s) =>
@@ -385,10 +416,65 @@ if (ctaHits.length > 0) {
   const detail = `« ${[...new Set(ctaHits)].join(" », « ")} »`;
   if (limits.ctaAllowed === false) {
     add("blocker", "context.cta-forbidden", `CTA ou lien détecté, interdit sur ${channel}.`, detail);
+  } else if (limits.ctaAllowed === "after-second-inbound") {
+    // Règle de David (2026-09-06) : pas de CTA avant la DEUXIÈME interaction
+    // de l'interlocuteur. Remplace « after-substantive-exchange », qui reposait
+    // sur un jugement du rédacteur au lieu d'un compte.
+    if (inboundCount === null) {
+      add(
+        "blocker",
+        "context.cta-uncountable",
+        "CTA présent mais impossible de compter les messages de l'interlocuteur.",
+        "Fournir un threadFile au format « [Nom] … » en tête de chaque message, ou renseigner inboundCount dans le contexte.",
+      );
+    } else if (inboundCount < 2) {
+      add(
+        "blocker",
+        "context.cta-too-early",
+        `CTA avant la 2e interaction de l'interlocuteur (${inboundCount} message${inboundCount > 1 ? "s" : ""} reçu${inboundCount > 1 ? "s" : ""} dans ce fil).`,
+        detail,
+      );
+    }
   } else if (limits.ctaAllowed === "after-substantive-exchange" && ctx.substantiveExchange !== true) {
     add("blocker", "context.cta-too-early", "CTA avant le moindre aller-retour de fond dans ce fil.", detail);
   }
 }
+// ── Clôture par une question ouverte (règle de David, 2026-09-06, DM seulement) ──
+// « Fermer les messages par une question ouverte. » Vérifiable mécaniquement sur
+// deux points : la présence d'un « ? » dans la dernière phrase, et l'absence des
+// ouvertures de question fermée les plus courantes (oui/non).
+if (limits.closingQuestion === true) {
+  const tail = draft.trim().split(/\n+/).pop().trim();
+  if (!tail.endsWith("?")) {
+    add(
+      "blocker",
+      "context.no-closing-question",
+      "Le message ne se termine pas par une question.",
+      `Dernière ligne : « ${tail.slice(-120)} »`,
+    );
+  } else {
+    const lastSentence = tail.split(/(?<=[.!?])\s+/).pop().trim();
+    const closedOpeners =
+      /^(est-ce que|as-tu|avez-vous|es-tu|êtes-vous|auriez-vous|aurais-tu|serait-il|seriez-vous|pensez-vous|penses-tu|do you|did you|are you|is it|was it|would you|could you|can you|have you|has it|will you|should i|shall i)\b/i;
+    if (closedOpeners.test(lastSentence)) {
+      add(
+        "warn",
+        "context.closing-question-closed",
+        "La question de clôture appelle un oui/non — David demande une question ouverte.",
+        `« ${lastSentence.slice(0, 160)} »`,
+      );
+    }
+    if (/\bor\b.*\?$|\bou bien\b.*\?$/i.test(lastSentence)) {
+      add(
+        "warn",
+        "context.closing-question-binary",
+        "Question de clôture à alternatives nommées (binaire fermé) — famille déjà saturée.",
+        `« ${lastSentence.slice(0, 160)} »`,
+      );
+    }
+  }
+}
+
 // Anti-répétition du CTA (cas de référence Simon Ruegg, 07/08) : le nom, le lien
 // ou l'essai déjà envoyés plus tôt dans CE fil interdisent de reservir
 // l'argumentaire une seconde fois, même des heures plus tard le même jour.
