@@ -2,6 +2,75 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session interactive — 06/09/2026 (matin, reprise sur demande de David « reprends ») — ✅ **2 follow-back exécutés** (Fayssal ZEMMOUCHI, Mahamba Nzanzu) — aucune réponse nouvelle nulle part (Ngoy Guillaume, James Schlitt, 4 fils de commentaire) — ⚠️ **panne d'appairage navigateur d'~1 min en cours de check, résolue seule**
+
+**Vérification double déclenchement** : aucune entrée du 06/09 dans `content-log.md` ni `linkedin-contacts.md` à l'ouverture → premier passage du jour. Pas de créneau horaire fixe (session interactive), traité comme un check du matin équivalent à `linkedin-hwg-monitoring`.
+
+**Navigateur** : `list_connected_browsers` a renvoyé une liste vide sur 2 appels consécutifs en cours de check (~09h05), après qu'une lecture de messagerie ait déjà fonctionné juste avant — panne survenue en session, pas à l'ouverture. Aucune réparation tentée côté agent (politique commune §7). Rétablie seule ~1 min plus tard. David présent en session interactive, informé directement. Entrée ajoutée puis close dans `_shared/browser-status.md`.
+
+---
+
+### 1️⃣ ✅ SUIVI DES ACTIONS DE LA VEILLE — aucune réponse nouvelle
+
+- **Ngoy Guillaume** (notre réponse du 05/09 18h18) — reste le dernier message du fil, pas de réponse. Conforme à son propre tempo (« on peut se parler après »), pas de relance.
+- **James Schlitt** (dernier envoi 04/09 18h16) — **toujours aucune réponse, plus de 40 h de silence**. Le seuil fixé par le carry-over d'hier (« si rien n'est venu demain matin, considérer le fil comme en pause ») est atteint. Fil traité comme en pause, pas de relance improvisée.
+- **Christian BABOKO, Dr. Siaka Condé, Dr. Malachie MANAOUDA, trésor Ndaye, SOUAD BELKACEMI, Julien Tuba, John Omari Baso, Isaias Fernandes Co** — tous inchangés, nos messages restent les derniers.
+- **4 fils de commentaire actifs rouverts directement** (Tambe Elvis Akem, Keneth Mugume, Yilkal Kebede, Anulika Omeaku) : **aucune réponse à notre sous-fil sur aucun des quatre**. Un commentaire tiers neuf est apparu chez Yilkal Kebede (Selamawit Fentahun, « Great », 12h) — adressé à l'auteur, pas à nous, rien à traiter.
+- **Notifications parcourues intégralement** : rien de neuf hors les 2 abonnés déjà connus (Fayssal ZEMMOUCHI, Mahamba Nzanzu) et un post Ebola/RDC de Dr. Jean Kaseya toujours bloqué jusqu'au 08/09.
+
+---
+
+### 2️⃣ ✅ FOLLOW-BACK — 2/2 exécutés, quota de suivis remis à zéro pour la journée
+
+Les deux candidats en attente depuis hier soir (quota alors au plafond) :
+
+| Profil | Action | Vérification |
+|---|---|---|
+| **Fayssal ZEMMOUCHI** (`/in/fayssal-zemmouchi-838299253/`, Institut Pasteur d'Algérie) | ✅ Suivi | `aria-label` passé de « Suivre Fayssal ZEMMOUCHI » à « Suivi, cliquez pour ne plus suivre Fayssal ZEMMOUCHI » |
+| **Mahamba Nzanzu** (`/in/mahamba-nzanzu-b64131298/`, Spécialiste Santé Publique) | ✅ Suivi | `aria-label` passé de « Suivre Mahamba Nzanzu » à « Suivi, cliquez pour ne plus suivre Mahamba Nzanzu » |
+
+**Quota suivis : 2 sur la journée**, plafond habituel 7-10.
+
+---
+
+### 3️⃣ ✅ INVITATION — Mahamba Nzanzu, envoyée sans note
+
+Profil légitime déjà suivi (§2), offre bien « Se connecter » en bouton principal (contrairement à Fayssal ZEMMOUCHI, qui n'a que « Suivre »). Bouton identifié par `aria-label` exact (« Inviter Mahamba Nzanzu à rejoindre votre réseau ») filtré sur sa position d'écran (le même `aria-label` existe 3 fois sur la page : widget de recherche en haut, bouton principal, et une carte de suggestion vide). Clic sur le bouton principal → modale ouverte, identité confirmée par capture (« Mahamba (Muyisa) Nzanzu »), envoi **par coordonnées d'écran** (méthode validée hier soir sur Yilkal Kebede) → toast « Invitation envoyée à Mahamba. », bouton passé à « En attente ». **Vérifié** : file d'invitations 99→**100**, Mahamba Nzanzu en tête « Envoyé aujourd'hui ». Sans note.
+
+**Quota invitations : 1 sur la journée.**
+
+---
+
+### 4️⃣ ⚠️ CANDIDAT MARIETA BRAKS — angle impossible à instruire, page ECDC injoignable
+
+Conformément au carry-over (« un angle neuf est possible, mais il exige de lire la page ECDC elle-même d'abord »), tentative de lecture directe de `wnv-weekly.ecdc.europa.eu` : **timeout réseau sur 3 tentatives** (dont 2 avec backoff), le domaine n'est pas non plus ouvrable depuis l'onglet Chrome (navigation refusée, hors liste blanche). **Aucun nouvel angle instruit sans lecture de la source primaire** — pas de commentaire forcé sur la seule base du souvenir d'hier. Candidat toujours ouvert (post jusqu'au 07/09), à retenter dès que la page redevient joignable.
+
+---
+
+### 5️⃣ ❌ CANDIDAT INSTRUIT ET ABANDONNÉ — **IOM Asia Pacific**, accord IOM/KOICA RDC — 2 jets, même défaut structurel aux deux passages
+
+`urn:li:activity:7502214019550932992`, page institutionnelle (Organisation internationale pour les migrations, agence des Nations Unies), post publié **il y a 5 minutes** au moment de la recherche, **0 commentaire**. Repéré par recherche active de contenu (« disease surveillance system », tri par date). Accord IOM-KOICA de 8,3 M$ sur 6 ans pour renforcer la surveillance épidémiologique aux points d'entrée de la province du Tanganyika (RDC), corridor vers le lac Tanganyika, dans le contexte de la 17e flambée d'Ebola. **Légitimité hors de doute** (agence onusienne réelle).
+
+- **Jet 1** — contraste entre les points de passage formels visés par le programme et le trafic informel de pirogues entre villages riverains, non couvert par le post. Mécanique **PASS** (264 car., 2 §). Relecteur : **11 PASS, FAIL 9**. 🔴 **Terrain politique** : la phrase « "points of entry" usually means the formal border posts » corrige implicitement la terminologie de l'agence en charge de la gouvernance migratoire sur un programme tout juste annoncé — lu comme une mise en cause de la conception du dispositif, motif d'arrêt (politique commune §9/10). Défaut additionnel signalé : l'affirmation « most movement... happens by pirogue » énonçait une majorité statistique non sourcée par le fil.
+- **Jet 2** — même angle, formulation adoucie (« a lot of » au lieu de « most », suppression de la correction terminologique explicite, cadrage en « genuine question »). Mécanique **PASS** (275 car.). Relecteur : **7 PASS, FAIL 9, même point**. 🔴 **Le sous-texte critique survit à la reformulation** : juxtaposer « rather than through a fixed post » à « points of entry » reproduit la même comparaison implicite entre le périmètre choisi par IOM/KOICA et ce qu'il laisserait de côté, quelle que soit l'habillage. Le relecteur qualifie explicitement ceci de défaut **structurel à l'angle**, pas à sa formulation.
+
+❌ **Angle abandonné après 2 jets sur le même défaut non convergent** (CLAUDE.md, section engagement : « si des jets successifs tournent en rond sur le même défaut sans converger, c'est le texte qui est abandonné et retravaillé sous un autre angle — pas le candidat tant qu'il reste légitime »). **Candidat non écarté** : légitime et pertinent, aucun blocage créé (aucun commentaire publié). Le relecteur propose lui-même des pistes non comparatives pour une prochaine tentative : formation des agents de terrain, partage de données avec les pays voisins du corridor, mécanisme de retour d'information communautaire — aucune ne doit réintroduire le contraste « points d'entrée formels vs trafic informel ».
+
+**Quota commentaires : 0 sur la journée**, un candidat instruit et écarté sur motif de fond réel, pas un arrêt prématuré.
+
+---
+
+### 6️⃣ 🔁 CARRY-OVER
+
+1. ⭐⭐⭐ **IOM Asia Pacific** (`urn:li:activity:7502214019550932992`) — candidat légitime et frais, **angle « points formels vs trafic informel » définitivement écarté** (2 jets, même défaut structurel). Prochaine tentative : formation des agents, partage de données transfrontalier, retour d'information communautaire — jamais le contraste formel/informel.
+2. ⭐⭐ **Marieta Braks** (`/in/marieta-braks-2bba401/`, RIVM) — page ECDC toujours injoignable au moment du check, à retenter. Post ouvert jusqu'au 07/09.
+3. ⭐ **James Schlitt** — silence de plus de 40 h, seuil « fil en pause » atteint. Ne pas relancer ; revérifier demain avant de considérer le contact comme perdu.
+4. **Inchangés** : Ngoy Guillaume (ne pas relancer, attendre sa propre initiative), Christian BABOKO / Dr. Siaka Condé / Dr. Malachie MANAOUDA (rien de dû), John Omari Baso / Isaias Fernandes Co / autres dossiers en sommeil listés dans les entrées précédentes.
+5. **Quotas de la journée à ce stade** : commentaires 0, DM 0, suivis 2, invitations 1 — matinée partielle, pas une clôture de journée.
+
+---
+
+
 ## 📅 Session linkedin-hwg-followup-check-2 — 05/09/2026 (17h, 2e des 2 créneaux après-midi) — ✅ **2 commentaires publiés** (Yilkal Kebede 4 jets, Anulika Omeaku 2 jets), quota porté à **4/7** — ✅ **Ngoy Guillaume a répondu à 14h49 (cas positif de MVE en cours d'investigation à Bunia, proposition de WhatsApp) — mis en file, envoyé à 18h18 sur ordre explicite de David** ; ⚠️ **régime file de validation confirmé par un commit tombé PENDANT le run** ; 🔧 **bug produit corrigé, poussé ET DÉCLENCHÉ EN PROD sur demande de David** (`sync-who-regional` gelait 7 lignes West Nile/ECDC depuis 8 jours, commit `bf73ee51`, cron déclenché manuellement à 18h25, 6 lignes rafraîchies au 03/09, Italie protégée comme prévu)
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` datée du 05/09 dans ce fichier ni dans `linkedin-contacts.md` à l'ouverture ; les seules entrées du jour sont celles de `linkedin-hwg-monitoring` (9h) et `linkedin-hwg-followup-check` (13h) → **premier déclenchement de cette routine aujourd'hui**. Horloge à l'heure (`Sat Sep 5 17:09 2026`). Branche vérifiée : **master**, arbre propre à l'ouverture. Registre de faits régénéré à 17h11 : **224 faits sur 106 lignes affichées, 3 périmés, 81 lignes `is_seed` exclues** — identique en volume aux relevés de 9h05 et 13h05.

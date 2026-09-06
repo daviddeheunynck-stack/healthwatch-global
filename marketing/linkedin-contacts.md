@@ -1,6 +1,50 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
+## 📅 Session interactive — 06/09/2026 (matin, reprise sur demande de David « reprends ») — ✅ **2 follow-back** (Fayssal ZEMMOUCHI, Mahamba Nzanzu) — ✅ **1 invitation envoyée** (Mahamba Nzanzu) — aucune réponse nouvelle en messagerie ni sur les fils de commentaire actifs
+
+**Vérification double déclenchement** : aucune entrée du 06/09 à l'ouverture → premier passage du jour. Session interactive, pas de créneau horaire fixe.
+
+**Navigateur** : panne d'appairage d'~1 min en cours de check (`list_connected_browsers` vide sur 2 appels), rétablie seule sans action de réparation. Entrée ajoutée puis close dans `_shared/browser-status.md`.
+
+---
+
+### 1️⃣ ✅ MESSAGERIE — aucune réponse nouvelle
+
+- **Ngoy Guillaume** (notre réponse du 05/09 18h18) reste le dernier message. Pas de relance (« on peut se parler après » fixe le tempo).
+- **James Schlitt** (dernier envoi 04/09 18h16) — **plus de 40 h de silence**, seuil « fil en pause » du carry-over atteint. Pas de relance.
+- Christian BABOKO, Dr. Siaka Condé, Dr. Malachie MANAOUDA, trésor Ndaye, SOUAD BELKACEMI, Julien Tuba, John Omari Baso, Isaias Fernandes Co — inchangés.
+- Seul non-lu : promo LinkedIn Premium, ignorée.
+
+### 2️⃣ ✅ FOLLOW-BACK — 2/2, quota de suivis remis à zéro
+
+| Profil | Action |
+|---|---|
+| **Fayssal ZEMMOUCHI** (`/in/fayssal-zemmouchi-838299253/`) | ✅ Suivi — `aria-label` confirmé « Suivi, cliquez pour ne plus suivre » |
+| **Mahamba Nzanzu** (`/in/mahamba-nzanzu-b64131298/`) | ✅ Suivi — idem |
+
+**Quota suivis : 2 sur la journée.**
+
+### 3️⃣ ✅ INVITATION — Mahamba Nzanzu, sans note
+
+Bouton « Se connecter » identifié par `aria-label` exact filtré sur position d'écran (3 occurrences du même label sur la page, une seule au bon endroit). Modale ouverte, identité confirmée par capture, envoi par coordonnées d'écran (méthode validée hier sur Yilkal Kebede — un sélecteur DOM direct sur « Envoyer sans note » avait à nouveau échoué). **Vérifié** : file d'invitations 99→100, Mahamba Nzanzu en tête « Envoyé aujourd'hui ».
+
+**Quota invitations : 1 sur la journée.**
+
+### 4️⃣ ✅ FILS DE COMMENTAIRE ACTIFS — rouverts directement, aucune réponse
+
+Tambe Elvis Akem, Keneth Mugume, Yilkal Kebede, Anulika Omeaku : aucune réponse à notre sous-fil sur aucun des quatre. Un commentaire tiers neuf chez Yilkal Kebede (Selamawit Fentahun, « Great », adressé à l'auteur, pas à nous) — rien à traiter.
+
+---
+
+### 5️⃣ 🔁 CARRY-OVER
+
+1. ⭐ **James Schlitt** — fil en pause (40h+ de silence), revérifier demain.
+2. **Candidats commentaires** : voir `content-log.md` (IOM Asia Pacific — angle définitivement écarté ; Marieta Braks — page ECDC injoignable, à retenter).
+3. **Inchangés** : tous les dossiers en sommeil des entrées précédentes.
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check-2 — 05/09/2026 (17h, 2e des 2 créneaux après-midi) — 🔴 **Ngoy Guillaume a répondu à 14h49 — cas positif de MVE en cours d'investigation à Bunia + demande de passer sur WhatsApp — mis en file, puis ✅ envoyé à 18h18 sur ordre explicite de David tapé en session (« Publie »)** — ✅ **1 commentaire publié** (Yilkal Kebede, détail dans `content-log.md`) — ⚠️ **capacité d'invitation toujours inerte 3 h après le run de 13h** — ✅ **2 nouveaux abonnés, quota de suivis au plafond (10/10) donc aucun follow-back possible** — 🔧 **bug produit corrigé et poussé en dehors du périmètre routine, sur demande de David : `sync-who-regional` gelait 7 lignes West Nile/ECDC depuis 8 jours (ECDC a changé le libellé de sa page), `bf73ee51`**
 
 **Vérification double déclenchement** : aucune entrée `linkedin-hwg-followup-check-2` du 05/09 dans ce fichier ni dans `content-log.md` à l'ouverture ; seules y figuraient les entrées de `linkedin-hwg-monitoring` (9h) et `linkedin-hwg-followup-check` (13h) → **premier déclenchement de cette routine aujourd'hui**. Horloge `Sat Sep 5 17:09 2026`. Branche : **master**, arbre propre. Registre de faits régénéré à 17h11 (224 faits, 106 lignes affichées, 3 périmés).
