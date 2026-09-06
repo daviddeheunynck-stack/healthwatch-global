@@ -384,7 +384,7 @@ export default async function RegionPage({
                           id={o.id} isFeatured={!!o.is_free_featured}
                           cases={o.cases} deaths={o.deaths}
                           casesBand={o.cases_band ?? null} deathsBand={o.deaths_band ?? null}
-                          numLocale={numLocale} unitCases={lb.cases_unit} unitDeaths={lb.deaths_unit}
+                          numLocale={numLocale} locale={l} unitCases={lb.cases_unit} unitDeaths={lb.deaths_unit}
                         />
                       </p>
                     </div>
@@ -436,7 +436,7 @@ export default async function RegionPage({
                     id={o.id} isFeatured={!!o.is_free_featured}
                     cases={o.cases} deaths={o.deaths}
                     casesBand={o.cases_band ?? null} deathsBand={o.deaths_band ?? null}
-                    numLocale={numLocale} unitLabel={lb.cases_unit} noDataLabel={lb.noData}
+                    numLocale={numLocale} locale={l} unitLabel={lb.cases_unit} noDataLabel={lb.noData}
                     className="text-sm text-gray-500 shrink-0"
                   />
                 </Link>

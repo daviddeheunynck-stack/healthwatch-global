@@ -482,7 +482,7 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
                   // as a band anyway, just via a one-off mechanism this banner used
                   // to be the last place on the site still running.
                   <Link href={`/${locale}/pricing`} className="cursor-pointer">
-                    <MagnitudeDots band={magnitudeBand(top.cases)} />
+                    <MagnitudeDots band={magnitudeBand(top.cases)} locale={locale} />
                   </Link>
                 )}
               </>

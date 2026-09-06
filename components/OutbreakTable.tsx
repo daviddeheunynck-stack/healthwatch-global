@@ -1370,7 +1370,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                         outbreak.cases > 0 ? outbreak.cases.toLocaleString(numLocale) : <span className="text-gray-600 italic text-xs">{l.noData}</span>
                       ) : (
                         <span className="inline-flex items-center gap-1.5 cursor-pointer" onClick={() => openModal("cases")} title="Pro — click to unlock exact figure">
-                          <MagnitudeDots band={outbreak.cases_band} />
+                          <MagnitudeDots band={outbreak.cases_band} locale={locale} />
                           <Lock className="w-2.5 h-2.5 text-amber-500/60 pointer-events-none shrink-0" />
                         </span>
                       )}
@@ -1399,7 +1399,7 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                         : <span className="text-gray-500 text-sm" title="Non rapporté dans cette source">—</span>
                     ) : (
                       <span className="inline-flex items-center gap-1.5 cursor-pointer" onClick={() => openModal("cases")} title="Pro — click to unlock exact figure">
-                        <MagnitudeDots band={outbreak.deaths_band} />
+                        <MagnitudeDots band={outbreak.deaths_band} locale={locale} />
                         <Lock className="w-2.5 h-2.5 text-amber-500/60 pointer-events-none shrink-0" />
                       </span>
                     )}

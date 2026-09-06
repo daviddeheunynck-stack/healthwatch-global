@@ -545,7 +545,7 @@ export default async function CountryPage({
                         id={o.id} isFeatured={!!o.is_free_featured}
                         cases={o.cases} deaths={o.deaths}
                         casesBand={o.cases_band ?? null} deathsBand={o.deaths_band ?? null}
-                        numLocale={numLocale} noDataLabel={lb.noData}
+                        numLocale={numLocale} locale={l} noDataLabel={lb.noData}
                       />
                       <WatchButton outbreakId={o.id} locale={l} />
                     </div>
@@ -675,7 +675,7 @@ export default async function CountryPage({
                       id={o.id} isFeatured={!!o.is_free_featured}
                       cases={o.cases} deaths={o.deaths}
                       casesBand={o.cases_band ?? null} deathsBand={o.deaths_band ?? null}
-                      numLocale={numLocale} unitLabel={lb.cases.toLowerCase()} noDataLabel={lb.noData}
+                      numLocale={numLocale} locale={l} unitLabel={lb.cases.toLowerCase()} noDataLabel={lb.noData}
                       className="text-sm text-gray-400"
                     />
                     {o.date && (

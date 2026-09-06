@@ -116,23 +116,23 @@ export default function OutbreakStatsGrid({
       content: isFeatured
         ? (realCases ?? noData)
         : status === "paid"
-          ? (fetchedStats ? fetchedStats.cases.toLocaleString(numLocale) : <MagnitudeDots band={casesBand} />)
-          : (hasData ? <MagnitudeDots band={casesBand} /> : noData),
+          ? (fetchedStats ? fetchedStats.cases.toLocaleString(numLocale) : <MagnitudeDots band={casesBand} locale={locale} />)
+          : (hasData ? <MagnitudeDots band={casesBand} locale={locale} /> : noData),
     },
     {
       label: labels.deaths,
       content: isFeatured
         ? (realDeaths ?? noData)
         : status === "paid"
-          ? (fetchedStats ? (fetchedStats.deaths !== null ? fetchedStats.deaths.toLocaleString(numLocale) : noData) : <MagnitudeDots band={deathsBand} />)
-          : (deathsBand !== null ? <MagnitudeDots band={deathsBand} /> : noData),
+          ? (fetchedStats ? (fetchedStats.deaths !== null ? fetchedStats.deaths.toLocaleString(numLocale) : noData) : <MagnitudeDots band={deathsBand} locale={locale} />)
+          : (deathsBand !== null ? <MagnitudeDots band={deathsBand} locale={locale} /> : noData),
     },
     {
       label: labels.cfr,
       content: isFeatured
         ? (realCfr ?? noData)
         : status === "paid"
-          ? (fetchedStats ? (fetchedCfr ?? noData) : <MagnitudeDots band={null} />)
+          ? (fetchedStats ? (fetchedCfr ?? noData) : <MagnitudeDots band={null} locale={locale} />)
           : (cfrBand ? <SeverityWord band={cfrBand} locale={locale} /> : noData),
     },
   ];

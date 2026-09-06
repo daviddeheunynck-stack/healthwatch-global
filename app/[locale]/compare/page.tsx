@@ -233,16 +233,16 @@ export default function ComparePage() {
                   );
                   const casesA = unlockedA
                     ? (oA.cases > 0 ? oA.cases.toLocaleString(numLocale) : "—")
-                    : lockCell(<MagnitudeDots band={oA.cases_band} />);
+                    : lockCell(<MagnitudeDots band={oA.cases_band} locale={locale} />);
                   const casesB = unlockedB
                     ? (oB.cases > 0 ? oB.cases.toLocaleString(numLocale) : "—")
-                    : lockCell(<MagnitudeDots band={oB.cases_band} />);
+                    : lockCell(<MagnitudeDots band={oB.cases_band} locale={locale} />);
                   const deathsA = unlockedA
                     ? (oA.deaths !== null ? oA.deaths.toLocaleString(numLocale) : "—")
-                    : lockCell(<MagnitudeDots band={oA.deaths_band} />);
+                    : lockCell(<MagnitudeDots band={oA.deaths_band} locale={locale} />);
                   const deathsB = unlockedB
                     ? (oB.deaths !== null ? oB.deaths.toLocaleString(numLocale) : "—")
-                    : lockCell(<MagnitudeDots band={oB.deaths_band} />);
+                    : lockCell(<MagnitudeDots band={oB.deaths_band} locale={locale} />);
                   const cfrContentA = unlockedA
                     ? (cfrA !== null ? cfrA.toFixed(1) + "%" : "—")
                     : (oA.cfr_band ? lockCell(<SeverityWord band={oA.cfr_band} locale={locale} />) : "—");

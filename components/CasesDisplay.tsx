@@ -22,6 +22,9 @@ interface BaseProps {
   casesBand: number | null;
   deathsBand: number | null;
   numLocale: string;
+  // UI locale (fr/en/es/ar/id), distinct from numLocale ("ar-SA" for AR):
+  // the band cue carries a localized explanation of what it stands for.
+  locale: string;
 }
 
 function useEffectiveCasesDeaths(p: BaseProps): { cases: number; deaths: number | null; unlocked: boolean } {
@@ -35,10 +38,10 @@ function useEffectiveCasesDeaths(p: BaseProps): { cases: number; deaths: number 
 // "{cases} cases · {deaths} deaths" inline, or a dot scale — disease/region
 // active-outbreak rows.
 export function CasesDeathsInline({
-  id, isFeatured, cases, deaths, casesBand, numLocale, unitCases, unitDeaths, className = "",
+  id, isFeatured, cases, deaths, casesBand, numLocale, locale, unitCases, unitDeaths, className = "",
 }: BaseProps & { unitCases: string; unitDeaths: string; className?: string }) {
-  const eff = useEffectiveCasesDeaths({ id, isFeatured, cases, deaths, casesBand, deathsBand: null, numLocale });
-  if (!eff.unlocked) return <MagnitudeDots band={casesBand} className={className} />;
+  const eff = useEffectiveCasesDeaths({ id, isFeatured, cases, deaths, casesBand, deathsBand: null, numLocale, locale });
+  if (!eff.unlocked) return <MagnitudeDots band={casesBand} locale={locale} className={className} />;
   return (
     <span className={className}>
       {eff.cases > 0 && <span>{eff.cases.toLocaleString(numLocale)} {unitCases}</span>}
@@ -49,19 +52,19 @@ export function CasesDeathsInline({
 
 // "{cases} cases" only, or a dot scale — disease/region/country history rows.
 export function CasesOnlyInline({
-  id, isFeatured, cases, deaths, casesBand, numLocale, unitLabel, noDataLabel, className = "",
+  id, isFeatured, cases, deaths, casesBand, numLocale, locale, unitLabel, noDataLabel, className = "",
 }: BaseProps & { unitLabel: string; noDataLabel: string; className?: string }) {
-  const eff = useEffectiveCasesDeaths({ id, isFeatured, cases, deaths, casesBand, deathsBand: null, numLocale });
-  if (!eff.unlocked) return <MagnitudeDots band={casesBand} className={className} />;
+  const eff = useEffectiveCasesDeaths({ id, isFeatured, cases, deaths, casesBand, deathsBand: null, numLocale, locale });
+  if (!eff.unlocked) return <MagnitudeDots band={casesBand} locale={locale} className={className} />;
   return <span className={className}>{eff.cases > 0 ? `${eff.cases.toLocaleString(numLocale)} ${unitLabel}` : noDataLabel}</span>;
 }
 
 // Cases number + CFR sub-line — country page active-outbreak rows.
 export function CasesCfrBlock({
-  id, isFeatured, cases, deaths, casesBand, numLocale, noDataLabel,
+  id, isFeatured, cases, deaths, casesBand, numLocale, locale, noDataLabel,
 }: BaseProps & { noDataLabel: string }) {
-  const eff = useEffectiveCasesDeaths({ id, isFeatured, cases, deaths, casesBand, deathsBand: null, numLocale });
-  if (!eff.unlocked) return <MagnitudeDots band={casesBand} />;
+  const eff = useEffectiveCasesDeaths({ id, isFeatured, cases, deaths, casesBand, deathsBand: null, numLocale, locale });
+  if (!eff.unlocked) return <MagnitudeDots band={casesBand} locale={locale} />;
   if (eff.cases <= 0) return null;
   const cfr1 = eff.cases > 0 && eff.deaths !== null ? (eff.deaths / eff.cases * 100).toFixed(1) + "%" : noDataLabel;
   return (
@@ -98,7 +101,7 @@ export function AggregateStat({
 
   if (!complete) {
     if (kind === "cfr") return <SeverityWord band={cfrBand} locale={locale} className={className} />;
-    return <MagnitudeDots band={kind === "cases" ? casesBand : deathsBand} className={className} />;
+    return <MagnitudeDots band={kind === "cases" ? casesBand : deathsBand} locale={locale} className={className} />;
   }
 
   const totalCases  = rows!.reduce((s, r) => s + (r.cases ?? 0), 0);

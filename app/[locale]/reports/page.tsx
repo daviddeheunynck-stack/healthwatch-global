@@ -241,7 +241,7 @@ async function ReportsContent() {
                     // doc comment in lib/outbreaks.ts describes). The dot
                     // scale used everywhere else never carries a real number
                     // to begin with.
-                    <MagnitudeDots band={magnitudeBand(totalCases)} />
+                    <MagnitudeDots band={magnitudeBand(totalCases)} locale={locale} />
                   )}
                 </div>
                 <div className="flex justify-between text-gray-400">

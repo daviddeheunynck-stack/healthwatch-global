@@ -761,7 +761,7 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
             <p className="text-lg font-bold text-white">
               {(isPaid || outbreak.is_free_featured)
                 ? (hasData ? outbreak.cases.toLocaleString(numLocale) : <span className="text-gray-600 text-sm italic">{c.noData}</span>)
-                : <span className="inline-flex items-center gap-1.5 cursor-pointer" onClick={() => openModal("cases")}><MagnitudeDots band={outbreak.cases_band} /></span>
+                : <span className="inline-flex items-center gap-1.5 cursor-pointer" onClick={() => openModal("cases")}><MagnitudeDots band={outbreak.cases_band} locale={locale} /></span>
               }
             </p>
             {isPaid && trend && trend.direction !== "unknown" && (
@@ -784,7 +784,7 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
                   ? outbreak.deaths.toLocaleString(numLocale)
                   : <span className="text-gray-500 text-sm" title="Non rapporté dans cette source">—</span>
                 : (outbreak.deaths_band ?? null) !== null
-                  ? <span className="inline-flex items-center gap-1.5 cursor-pointer" onClick={() => openModal("cases")}><MagnitudeDots band={outbreak.deaths_band} /></span>
+                  ? <span className="inline-flex items-center gap-1.5 cursor-pointer" onClick={() => openModal("cases")}><MagnitudeDots band={outbreak.deaths_band} locale={locale} /></span>
                   : <span className="text-gray-600 text-sm">—</span>
               }
             </p>

@@ -714,7 +714,7 @@ export default async function LandingPage({ locale }: { locale: string }) {
                           {outbreak.cases.toLocaleString(locale === "ar" ? "ar-SA" : locale)} {locale === "fr" ? "cas" : locale === "es" ? "casos" : locale === "ar" ? "حالة" : locale === "id" ? "kasus" : "cases"}
                         </span>
                       ) : (
-                        <MagnitudeDots band={magnitudeBand(outbreak.cases)} className="justify-end" />
+                        <MagnitudeDots band={magnitudeBand(outbreak.cases)} locale={locale} className="justify-end" />
                       )}
                     </td>
                   </tr>
