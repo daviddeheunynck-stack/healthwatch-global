@@ -7,10 +7,12 @@ import { getIncidenceRate } from "@/lib/population-data";
 import RiskBadge from "@/components/RiskBadge";
 import LockedUpgradeButton from "@/components/LockedUpgradeButton";
 import { useUpgradeModal } from "@/lib/upgrade-modal-context";
+import { MagnitudeDots, SeverityWord, type CfrSeverityBand } from "@/components/MagnitudeIndicator";
 import { ArrowLeftRight, TrendingUp, Users, Skull, Activity, Globe, Calendar, AlertTriangle, Link as LinkIcon, Check, Lock } from "lucide-react";
 
-// Shape returned by /api/compare-outbreaks — cases/deaths/masked_cfr_pct are
-// already masked (or not) server-side per viewer plan, see that route.
+// Shape returned by /api/compare-outbreaks — cases/deaths are zeroed out
+// (never a rounded number) for a masked row, with cases_band/deaths_band/
+// cfr_band carrying a qualitative substitute instead. See that route.
 interface CompareOutbreak {
   id: string;
   disease: string; disease_en: string | null; disease_ar: string | null;
@@ -21,7 +23,9 @@ interface CompareOutbreak {
   date: string;
   cases: number;
   deaths: number | null;
-  masked_cfr_pct: number | null;
+  cases_band: number | null;
+  deaths_band: number | null;
+  cfr_band: CfrSeverityBand | null;
   is_free_featured: boolean;
 }
 
@@ -39,35 +43,29 @@ const LABELS: Record<string, {
   id: { title: "Bandingkan Wabah", subtitle: "Analisis dua epidemi secara berdampingan", selectA: "Wabah A", selectB: "Wabah B", all: "Pilih wabah…", cases: "Kasus", deaths: "Kematian", cfr: "CFR", incidence: "Insidensi / 100.000", date: "Tanggal", region: "Wilayah", pheic: "PHEIC", winner: "↓ Lebih rendah", lower: "↑ Lebih tinggi", selectBoth: "Pilih dua wabah untuk dibandingkan.", share: "Bagikan", copied: "Disalin!", lockedCta: "Buka Pro →", lockedBanner: "Kasus terkonfirmasi · Kematian · Tingkat fatalitas · Insidensi per 100.000" },
 };
 
-function StatRow({ label, valA, valB, icon, fmt = (v: number) => v.toLocaleString("en"), higherIsBad = true, lockedA = false, lockedB = false, onLockClick }: {
-  label: string; valA: number | null; valB: number | null; icon: React.ReactNode;
-  fmt?: (v: number) => string; higherIsBad?: boolean;
-  lockedA?: boolean; lockedB?: boolean;
-  onLockClick?: () => void;
+// `rankA`/`rankB` (real numeric values, only when both sides are unlocked)
+// drive the win/lose color — a masked cell never gets one, since a dot
+// scale or severity word isn't a number to compare. `contentA`/`contentB`
+// are pre-built by the caller: the real formatted value when unlocked, a
+// MagnitudeDots/SeverityWord (never a fabricated number) when not.
+function StatRow({ label, icon, contentA, contentB, rankA = null, rankB = null, higherIsBad = true }: {
+  label: string; icon: React.ReactNode;
+  contentA: React.ReactNode; contentB: React.ReactNode;
+  rankA?: number | null; rankB?: number | null; higherIsBad?: boolean;
 }) {
-  // Only color a winner/loser when both sides are actually visible — a
-  // masked row next to a real (featured) one isn't a fair comparison to
-  // highlight either way.
-  const both = !lockedA && !lockedB && valA !== null && valB !== null && valA > 0 && valB > 0;
-  const aWorse = both && (higherIsBad ? valA! > valB! : valA! < valB!);
-  const bWorse = both && (higherIsBad ? valB! > valA! : valB! < valA!);
-
-  const cell = (v: number | null, locked: boolean) => {
-    if (!v || v <= 0) return "—";
-    return locked
-      ? <span className="blur-sm select-none cursor-pointer" onClick={onLockClick}>{fmt(v).replace(/\d/g, "•")}</span>
-      : fmt(v);
-  };
+  const both = rankA !== null && rankB !== null && rankA > 0 && rankB > 0;
+  const aWorse = both && (higherIsBad ? rankA! > rankB! : rankA! < rankB!);
+  const bWorse = both && (higherIsBad ? rankB! > rankA! : rankB! < rankA!);
 
   return (
     <tr className="border-b border-gray-800">
       <td className="px-4 py-3 text-gray-500 text-sm"><div className="flex items-center gap-2">{icon}{label}</div></td>
-      <td className={`px-4 py-3 text-center font-bold text-lg ${lockedA ? "text-gray-600" : aWorse ? "text-red-400" : bWorse ? "text-green-400" : "text-white"}`}>
-        {cell(valA, lockedA)}
+      <td className={`px-4 py-3 text-center font-bold text-lg ${aWorse ? "text-red-400" : bWorse ? "text-green-400" : "text-white"}`}>
+        {contentA}
       </td>
       <td className="px-4 py-3 text-center text-gray-600 text-xs">vs</td>
-      <td className={`px-4 py-3 text-center font-bold text-lg ${lockedB ? "text-gray-600" : bWorse ? "text-red-400" : aWorse ? "text-green-400" : "text-white"}`}>
-        {cell(valB, lockedB)}
+      <td className={`px-4 py-3 text-center font-bold text-lg ${bWorse ? "text-red-400" : aWorse ? "text-green-400" : "text-white"}`}>
+        {contentB}
       </td>
     </tr>
   );
@@ -139,14 +137,18 @@ export default function ComparePage() {
   const oA = outbreaks.find(o => o.id === idA) ?? null;
   const oB = outbreaks.find(o => o.id === idB) ?? null;
   // A featured row's cases/deaths are already real (server-side, see
-  // /api/compare-outbreaks) — compute CFR from them directly rather than
-  // using masked_cfr_pct, which that route only fills in for locked rows.
+  // /api/compare-outbreaks) — a masked row's are zeroed out there, so CFR
+  // and incidence can only be computed from real figures when unlocked.
   const unlockedA = isPaid || (oA?.is_free_featured ?? false);
   const unlockedB = isPaid || (oB?.is_free_featured ?? false);
-  const cfrA = oA ? (unlockedA ? (oA.cases > 0 && oA.deaths !== null ? oA.deaths / oA.cases * 100 : null) : oA.masked_cfr_pct) : null;
-  const cfrB = oB ? (unlockedB ? (oB.cases > 0 && oB.deaths !== null ? oB.deaths / oB.cases * 100 : null) : oB.masked_cfr_pct) : null;
-  const incA = oA ? getIncidenceRate(oA.cases, oA.country_en) : null;
-  const incB = oB ? getIncidenceRate(oB.cases, oB.country_en) : null;
+  const cfrA = oA && unlockedA && oA.cases > 0 && oA.deaths !== null ? oA.deaths / oA.cases * 100 : null;
+  const cfrB = oB && unlockedB && oB.cases > 0 && oB.deaths !== null ? oB.deaths / oB.cases * 100 : null;
+  // Incidence is only meaningful from a real case count — a masked row's
+  // zeroed `cases` naturally yields no incidence rather than a fabricated
+  // one; it just renders as "—" for that row, no lock tease, rather than
+  // inventing a fourth band field for a secondary stat.
+  const incA = oA && unlockedA ? getIncidenceRate(oA.cases, oA.country_en) : null;
+  const incB = oB && unlockedB ? getIncidenceRate(oB.cases, oB.country_en) : null;
   const options = outbreaks
     .map(o => ({ id: o.id, label: `${getLocalizedDisease(o, locale)} — ${getLocalizedCountry(o, locale)}` }))
     .sort((a, b) => a.label.localeCompare(b.label));
@@ -221,10 +223,43 @@ export default function ComparePage() {
                 <th className="px-4 py-3 text-center text-amber-400 font-bold text-sm">B</th>
               </tr></thead>
               <tbody>
-                <StatRow label={l.cases} valA={oA.cases} valB={oB.cases} icon={<Users className="w-3.5 h-3.5" />} fmt={v => v.toLocaleString(locale === "ar" ? "ar-SA" : locale)} lockedA={!unlockedA} lockedB={!unlockedB} onLockClick={() => openModal("compare")} />
-                <StatRow label={l.deaths} valA={oA.deaths} valB={oB.deaths} icon={<Skull className="w-3.5 h-3.5" />} fmt={v => v.toLocaleString(locale === "ar" ? "ar-SA" : locale)} lockedA={!unlockedA} lockedB={!unlockedB} onLockClick={() => openModal("compare")} />
-                <StatRow label={l.cfr} valA={cfrA} valB={cfrB} icon={<TrendingUp className="w-3.5 h-3.5" />} fmt={v => v.toFixed(1) + "%"} lockedA={!unlockedA} lockedB={!unlockedB} onLockClick={() => openModal("compare")} />
-                <StatRow label={l.incidence} valA={incA} valB={incB} icon={<Activity className="w-3.5 h-3.5" />} fmt={v => v.toFixed(2)} lockedA={!unlockedA} lockedB={!unlockedB} onLockClick={() => openModal("compare")} />
+                {(() => {
+                  const numLocale = locale === "ar" ? "ar-SA" : locale;
+                  const lockCell = (band: React.ReactNode) => (
+                    <span className="inline-flex items-center justify-center gap-1.5 cursor-pointer" onClick={() => openModal("compare")}>
+                      {band}
+                      <Lock className="w-2.5 h-2.5 text-amber-500/60" />
+                    </span>
+                  );
+                  const casesA = unlockedA
+                    ? (oA.cases > 0 ? oA.cases.toLocaleString(numLocale) : "—")
+                    : lockCell(<MagnitudeDots band={oA.cases_band} />);
+                  const casesB = unlockedB
+                    ? (oB.cases > 0 ? oB.cases.toLocaleString(numLocale) : "—")
+                    : lockCell(<MagnitudeDots band={oB.cases_band} />);
+                  const deathsA = unlockedA
+                    ? (oA.deaths !== null ? oA.deaths.toLocaleString(numLocale) : "—")
+                    : lockCell(<MagnitudeDots band={oA.deaths_band} />);
+                  const deathsB = unlockedB
+                    ? (oB.deaths !== null ? oB.deaths.toLocaleString(numLocale) : "—")
+                    : lockCell(<MagnitudeDots band={oB.deaths_band} />);
+                  const cfrContentA = unlockedA
+                    ? (cfrA !== null ? cfrA.toFixed(1) + "%" : "—")
+                    : (oA.cfr_band ? lockCell(<SeverityWord band={oA.cfr_band} locale={locale} />) : "—");
+                  const cfrContentB = unlockedB
+                    ? (cfrB !== null ? cfrB.toFixed(1) + "%" : "—")
+                    : (oB.cfr_band ? lockCell(<SeverityWord band={oB.cfr_band} locale={locale} />) : "—");
+                  const incContentA = incA !== null ? incA.toFixed(2) : "—";
+                  const incContentB = incB !== null ? incB.toFixed(2) : "—";
+                  return (
+                    <>
+                      <StatRow label={l.cases} icon={<Users className="w-3.5 h-3.5" />} contentA={casesA} contentB={casesB} rankA={unlockedA ? oA.cases : null} rankB={unlockedB ? oB.cases : null} />
+                      <StatRow label={l.deaths} icon={<Skull className="w-3.5 h-3.5" />} contentA={deathsA} contentB={deathsB} rankA={unlockedA ? oA.deaths : null} rankB={unlockedB ? oB.deaths : null} />
+                      <StatRow label={l.cfr} icon={<TrendingUp className="w-3.5 h-3.5" />} contentA={cfrContentA} contentB={cfrContentB} rankA={cfrA} rankB={cfrB} />
+                      <StatRow label={l.incidence} icon={<Activity className="w-3.5 h-3.5" />} contentA={incContentA} contentB={incContentB} rankA={incA} rankB={incB} />
+                    </>
+                  );
+                })()}
                 <tr className="border-b border-gray-800">
                   <td className="px-4 py-3 text-gray-500 text-sm"><div className="flex items-center gap-2"><Calendar className="w-3.5 h-3.5" />{l.date}</div></td>
                   <td className="px-4 py-3 text-center text-white text-sm">{oA.date}</td>

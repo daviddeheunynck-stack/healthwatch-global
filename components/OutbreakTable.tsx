@@ -21,6 +21,7 @@ import RiskBadge from "@/components/RiskBadge";
 import LockedUpgradeButton from "@/components/LockedUpgradeButton";
 import { useUpgradeModal } from "@/lib/upgrade-modal-context";
 import ShareOutbreakButton from "@/components/ShareOutbreakButton";
+import { MagnitudeDots, SeverityWord } from "@/components/MagnitudeIndicator";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -204,6 +205,29 @@ interface Props {
   countryTags?:    Record<string, string>; // country_en → label
 }
 
+// For a masked row, `cases`/`deaths` are zeroed out server-side (see
+// app/[locale]/(dashboard)/page.tsx's mapTableOutbreaks) and `cases_band`/
+// `deaths_band` carry a 1-5 magnitude cue instead — these helpers give
+// sort/"is there data" logic a value to work with that behaves the same
+// for a real number (unlocked row) and a band (masked row), without ever
+// treating a band as if it were a real count.
+function hasCases(o: Outbreak): boolean {
+  return o.cases > 0 || (o.cases_band ?? 0) > 0;
+}
+function effectiveCases(o: Outbreak): number {
+  return o.cases > 0 ? o.cases : (o.cases_band ?? 0);
+}
+function effectiveDeaths(o: Outbreak): number | null {
+  if (o.deaths !== null) return o.deaths;
+  return o.deaths_band ?? null;
+}
+const CFR_BAND_RANK: Record<string, number> = { low: 0, moderate: 1, high: 2, very_high: 3 };
+function effectiveCfrRank(o: Outbreak): number | null {
+  if (o.cases > 0 && o.deaths !== null) return o.deaths / o.cases;
+  if (o.cfr_band) return CFR_BAND_RANK[o.cfr_band];
+  return null;
+}
+
 // Module-level (not redefined every render): React was remounting this on each
 // keystroke/sort-change because a function declared inside the component body
 // is a "new" component type each render — losing its identity, forcing a
@@ -366,16 +390,17 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
     return [...filtered].sort((a, b) => {
       let cmp = 0;
       if (sortKey === "risk")   cmp = (RISK_ORDER[a.risk_level] ?? 3) - (RISK_ORDER[b.risk_level] ?? 3);
-      if (sortKey === "cases")  cmp = a.cases  - b.cases;
+      if (sortKey === "cases")  cmp = effectiveCases(a) - effectiveCases(b);
       if (sortKey === "deaths") {
-        if (a.deaths === null && b.deaths === null) cmp = 0;
-        else if (a.deaths === null) cmp = 1;
-        else if (b.deaths === null) cmp = -1;
-        else cmp = a.deaths - b.deaths;
+        const dA = effectiveDeaths(a), dB = effectiveDeaths(b);
+        if (dA === null && dB === null) cmp = 0;
+        else if (dA === null) cmp = 1;
+        else if (dB === null) cmp = -1;
+        else cmp = dA - dB;
       }
       if (sortKey === "cfr") {
-        const cfrA = a.cases > 0 && a.deaths !== null ? a.deaths / a.cases : null;
-        const cfrB = b.cases > 0 && b.deaths !== null ? b.deaths / b.cases : null;
+        const cfrA = effectiveCfrRank(a);
+        const cfrB = effectiveCfrRank(b);
         if (cfrA === null && cfrB === null) cmp = 0;
         else if (cfrA === null) return 1;   // outbreaks without case data always sink to the bottom…
         else if (cfrB === null) return -1;  // …regardless of sort direction
@@ -1344,12 +1369,12 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                       {(isPaid || outbreak.is_free_featured) ? (
                         outbreak.cases > 0 ? outbreak.cases.toLocaleString(numLocale) : <span className="text-gray-600 italic text-xs">{l.noData}</span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 cursor-pointer" onClick={() => openModal("cases")} title="Pro — click to unlock">
-                          <span className="blur-sm select-none text-gray-500 pointer-events-none">{outbreak.cases.toLocaleString(numLocale).replace(/\d/g, "•")}</span>
+                        <span className="inline-flex items-center gap-1.5 cursor-pointer" onClick={() => openModal("cases")} title="Pro — click to unlock exact figure">
+                          <MagnitudeDots band={outbreak.cases_band} />
                           <Lock className="w-2.5 h-2.5 text-amber-500/60 pointer-events-none shrink-0" />
                         </span>
                       )}
-                      {outbreak.cases > 0 && <TrendBadge trend={trends?.[outbreak.id]} />}
+                      {hasCases(outbreak) && <TrendBadge trend={trends?.[outbreak.id]} />}
                       {isPaid && (() => {
                         const d24 = trends?.[outbreak.id]?.delta24h;
                         if (d24 === null || d24 === undefined || d24 === 0) return null;
@@ -1373,8 +1398,8 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                         ? outbreak.deaths.toLocaleString(numLocale)
                         : <span className="text-gray-500 text-sm" title="Non rapporté dans cette source">—</span>
                     ) : (
-                      <span className="inline-flex items-center gap-1 cursor-pointer" onClick={() => openModal("cases")} title="Pro — click to unlock">
-                        <span className="blur-sm select-none text-gray-500 pointer-events-none">{(outbreak.deaths ?? 0).toLocaleString(numLocale).replace(/\d/g, "•")}</span>
+                      <span className="inline-flex items-center gap-1.5 cursor-pointer" onClick={() => openModal("cases")} title="Pro — click to unlock exact figure">
+                        <MagnitudeDots band={outbreak.deaths_band} />
                         <Lock className="w-2.5 h-2.5 text-amber-500/60 pointer-events-none shrink-0" />
                       </span>
                     )}
@@ -1393,9 +1418,9 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                         <span className="text-gray-600 italic text-xs">{l.noData}</span>
                       )
                     ) : (
-                      outbreak.masked_cfr_pct !== null && outbreak.masked_cfr_pct !== undefined ? (
-                        <span className="inline-flex items-center gap-1 cursor-pointer" onClick={() => openModal("cases")} title="Pro — click to unlock">
-                          <span className="blur-sm select-none text-gray-500 pointer-events-none text-sm font-medium">{outbreak.masked_cfr_pct.toFixed(0).replace(/\d/g, "•")}%</span>
+                      outbreak.cfr_band ? (
+                        <span className="inline-flex items-center gap-1.5 cursor-pointer" onClick={() => openModal("cases")} title="Pro — click to unlock exact figure">
+                          <SeverityWord band={outbreak.cfr_band} locale={locale} />
                           <Lock className="w-2.5 h-2.5 text-amber-500/60 pointer-events-none shrink-0" />
                         </span>
                       ) : (
@@ -1460,14 +1485,21 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                         isPaid={isPaid}
                         locale={locale}
                       />
-                      <ShareOutbreakButton
-                        disease={getLocalizedDisease(outbreak, locale)}
-                        country={getLocalizedCountry(outbreak, locale)}
-                        cases={outbreak.cases}
-                        riskLevel={outbreak.risk_level}
-                        locale={locale}
-                        outbreakId={outbreak.id}
-                      />
+                      {/* A masked row has no real case count to put in a
+                          shareable tweet/report — sharing "0 cases" (or
+                          worse, a fabricated one) would broadcast bad data
+                          further than this table, so the button is simply
+                          absent until the row is unlocked. */}
+                      {(isPaid || outbreak.is_free_featured) && (
+                        <ShareOutbreakButton
+                          disease={getLocalizedDisease(outbreak, locale)}
+                          country={getLocalizedCountry(outbreak, locale)}
+                          cases={outbreak.cases}
+                          riskLevel={outbreak.risk_level}
+                          locale={locale}
+                          outbreakId={outbreak.id}
+                        />
+                      )}
                       <Link
                         href={`/${locale}/outbreak/${outbreak.id}`}
                         target="_blank"

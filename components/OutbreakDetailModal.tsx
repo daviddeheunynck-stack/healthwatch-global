@@ -20,6 +20,7 @@ import OutbreakCasesChart from "@/components/OutbreakCasesChart";
 import { createClient as createBrowserClient } from "@/lib/supabase-browser";
 import { wilsonCI } from "@/lib/cfr-ci";
 import OutbreakMetrics from "@/components/OutbreakMetrics";
+import { MagnitudeDots, SeverityWord } from "@/components/MagnitudeIndicator";
 import { computeEpidemicMetrics } from "@/lib/epidemic-metrics";
 import OutbreakWorkflow from "@/components/OutbreakWorkflow";
 import OutbreakCluster from "@/components/OutbreakCluster";
@@ -519,15 +520,12 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
   const disease     = getLocalizedDisease(outbreak, locale);
   const country     = getLocalizedCountry(outbreak, locale) ?? outbreak.country_en;
   const description = getLocalizedDescription(outbreak, locale);
-  const hasData    = outbreak.cases > 0;
-  const cfr        = hasData && outbreak.deaths !== null ? (outbreak.deaths / outbreak.cases * 100).toFixed(1) : null;
-  // For a masked (bucketed) row, `cfr` above would divide two independently
-  // rounded numbers and can print a nonsense "100%" — use the precomputed,
-  // real-figure-derived value instead. Only meaningful when !isPaid &&
-  // !is_free_featured, i.e. exactly where the blurred branches below use it.
-  const maskedCfr = outbreak.masked_cfr_pct !== null && outbreak.masked_cfr_pct !== undefined
-    ? outbreak.masked_cfr_pct.toFixed(0)
-    : null;
+  // `outbreak.cases`/`deaths` are zeroed out server-side for a masked row
+  // (see mapTableOutbreaks in app/[locale]/(dashboard)/page.tsx) — `cases_band`
+  // says whether there was real data to hide, without ever holding a
+  // fabricated number that could be mistaken for one.
+  const hasData    = outbreak.cases > 0 || (outbreak.cases_band ?? 0) > 0;
+  const cfr        = outbreak.cases > 0 && outbreak.deaths !== null ? (outbreak.deaths / outbreak.cases * 100).toFixed(1) : null;
   const incidence  = getIncidenceRate(outbreak.cases, outbreak.country_en);
 
   // Data freshness. `new Date()` (not `Date.now()`) keeps this pure for
@@ -735,13 +733,15 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
             >
               <ImageDown className="w-4 h-4" />
             </a>
-            <ShareOutbreakButton
-              disease={disease}
-              country={country ?? ""}
-              cases={outbreak.cases}
-              riskLevel={outbreak.risk_level}
-              locale={locale}
-            />
+            {(isPaid || outbreak.is_free_featured) && (
+              <ShareOutbreakButton
+                disease={disease}
+                country={country ?? ""}
+                cases={outbreak.cases}
+                riskLevel={outbreak.risk_level}
+                locale={locale}
+              />
+            )}
             <button
               onClick={onClose}
               aria-label={c.close}
@@ -761,7 +761,7 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
             <p className="text-lg font-bold text-white">
               {(isPaid || outbreak.is_free_featured)
                 ? (hasData ? outbreak.cases.toLocaleString(numLocale) : <span className="text-gray-600 text-sm italic">{c.noData}</span>)
-                : <span className="blur-sm select-none cursor-pointer" onClick={() => openModal("cases")}>{outbreak.cases.toLocaleString(numLocale).replace(/\d/g, "•")}</span>
+                : <span className="inline-flex items-center gap-1.5 cursor-pointer" onClick={() => openModal("cases")}><MagnitudeDots band={outbreak.cases_band} /></span>
               }
             </p>
             {isPaid && trend && trend.direction !== "unknown" && (
@@ -783,8 +783,8 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
                 ? outbreak.deaths !== null
                   ? outbreak.deaths.toLocaleString(numLocale)
                   : <span className="text-gray-500 text-sm" title="Non rapporté dans cette source">—</span>
-                : outbreak.deaths !== null
-                  ? <span className="blur-sm select-none cursor-pointer" onClick={() => openModal("cases")}>{outbreak.deaths.toLocaleString(numLocale).replace(/\d/g, "•")}</span>
+                : (outbreak.deaths_band ?? null) !== null
+                  ? <span className="inline-flex items-center gap-1.5 cursor-pointer" onClick={() => openModal("cases")}><MagnitudeDots band={outbreak.deaths_band} /></span>
                   : <span className="text-gray-600 text-sm">—</span>
               }
             </p>
@@ -794,15 +794,14 @@ export default function OutbreakDetailModal({ outbreak, locale, isPaid, watchlis
           <div className="bg-white/5 rounded-xl p-3 text-center space-y-1">
             <TrendingUp className="w-4 h-4 text-amber-400 mx-auto" />
             <p className="text-xs text-gray-500">{c.cfr}</p>
-            <p className={`text-lg font-bold ${(() => {
-              const shown = (isPaid || outbreak.is_free_featured) ? cfr : maskedCfr;
-              return shown && parseFloat(shown) > 10 ? "text-red-400" :
-                     shown && parseFloat(shown) > 3  ? "text-amber-400" : "text-gray-300";
-            })()}`}>
+            <p className={(isPaid || outbreak.is_free_featured) ? `text-lg font-bold ${
+              cfr && parseFloat(cfr) > 10 ? "text-red-400" :
+              cfr && parseFloat(cfr) > 3  ? "text-amber-400" : "text-gray-300"
+            }` : "text-lg"}>
               {(isPaid || outbreak.is_free_featured)
                 ? (cfr ? `${cfr}%` : <span className="text-gray-600 text-sm italic">{c.noData}</span>)
-                : maskedCfr
-                  ? <span className="blur-sm select-none cursor-pointer" onClick={() => openModal("cases")}>{maskedCfr.replace(/\d/g, "•")}%</span>
+                : outbreak.cfr_band
+                  ? <span className="inline-flex items-center gap-1.5 cursor-pointer" onClick={() => openModal("cases")}><SeverityWord band={outbreak.cfr_band} locale={locale} /></span>
                   : <span className="text-gray-600 text-sm italic">{c.noData}</span>
               }
             </p>

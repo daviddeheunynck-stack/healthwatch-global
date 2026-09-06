@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
-import { getOutbreaks, magnitudeBucket, maskedCfrPercent, pickFeaturedDiseases } from "@/lib/outbreaks";
+import { getOutbreaks, magnitudeBand, cfrSeverityBand, pickFeaturedDiseases } from "@/lib/outbreaks";
 import { resolvedPlan } from "@/lib/resolved-plan";
 
 export const dynamic = "force-dynamic";
@@ -11,9 +11,14 @@ export const dynamic = "force-dynamic";
 // already in the network response and the DOM for a free or anonymous
 // visitor regardless of what the UI drew on top, same leak class fixed
 // elsewhere on 2026-09-05. This route does the masking server-side instead,
-// reusing the same magnitude-bucket + one-featured-disease-per-continent
-// policy as the dashboard, so a visitor never receives the real figure for
-// a non-featured outbreak in the first place.
+// reusing the same one-featured-disease-per-continent policy as the
+// dashboard, so a visitor never receives the real figure for a non-featured
+// outbreak in the first place — cases/deaths are zeroed out (never a
+// rounded number) and cases_band/deaths_band/cfr_band carry a qualitative
+// substitute. A rounded figure is still real, plausible-looking data; once
+// extracted (`curl` on this very route) and compared to the real number —
+// already public elsewhere on the site — it reads as a bug or a lie, not a
+// gate (David, 2026-09-06, see magnitudeBand's doc comment).
 export async function GET() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -44,9 +49,11 @@ export async function GET() {
       risk_level: o.risk_level,
       is_pheic: o.is_pheic,
       date: o.date,
-      cases: unlocked ? o.cases : magnitudeBucket(o.cases),
-      deaths: unlocked ? o.deaths : (o.deaths === null ? null : magnitudeBucket(o.deaths)),
-      masked_cfr_pct: unlocked ? null : maskedCfrPercent(o.cases, o.deaths),
+      cases: unlocked ? o.cases : 0,
+      deaths: unlocked ? o.deaths : null,
+      cases_band: unlocked ? null : magnitudeBand(o.cases),
+      deaths_band: unlocked ? null : (o.deaths === null ? null : magnitudeBand(o.deaths)),
+      cfr_band: unlocked ? null : cfrSeverityBand(o.cases, o.deaths),
       is_free_featured: !isPaid && isFreeFeatured(o),
     };
   });

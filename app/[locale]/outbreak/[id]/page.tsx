@@ -12,7 +12,7 @@ import CitationBlock from "@/components/CitationBlock";
 import OutbreakStatsGrid from "@/components/OutbreakStatsGrid";
 import ShareOutbreakButton from "@/components/ShareOutbreakButton";
 import OutbreakCasesChart from "@/components/OutbreakCasesChart";
-import { getOutbreaks, getLocalizedDisease, getLocalizedCountry, getLocalizedDescription, sourceStatus, sourceName, publishableSourceName, publishableSourceUrl, staleOutbreakDays, isSourceConfirmed, lastVerifiedIso, magnitudeBucket, maskedCfrPercent, pickFeaturedDiseases } from "@/lib/outbreaks";
+import { getOutbreaks, getLocalizedDisease, getLocalizedCountry, getLocalizedDescription, sourceStatus, sourceName, publishableSourceName, publishableSourceUrl, staleOutbreakDays, isSourceConfirmed, lastVerifiedIso, magnitudeBand, cfrSeverityBand, pickFeaturedDiseases } from "@/lib/outbreaks";
 import { diseaseToSlug, matchDisease } from "@/lib/disease-data";
 import { jsonLdHtml } from "@/lib/json-ld";
 import { countryToSlug } from "@/lib/country-utils";
@@ -316,16 +316,18 @@ export default async function OutbreakPage({
   const featuredDiseaseByRegion = pickFeaturedDiseases(allOutbreaks.filter((x) => x.active));
   const isFeatured = featuredDiseaseByRegion.get(o.region) === (o.disease_en || o.disease);
 
-  // Bucketed figures for everyone else — this value is a prop on a client
-  // component embedded in an ISR-cached page (see the OutbreakStatsGrid call
-  // below), so it's public the moment it's rendered.
-  const bucketedCases  = isFeatured ? o.cases : magnitudeBucket(o.cases);
-  const bucketedDeaths = isFeatured ? o.deaths : (o.deaths !== null ? magnitudeBucket(o.deaths) : null);
-  const cfr = hasData
-    ? (isFeatured
-        ? (o.deaths !== null ? (o.deaths / o.cases * 100).toFixed(1) + "%" : l.noData)
-        : (maskedCfrPercent(o.cases, o.deaths) !== null ? maskedCfrPercent(o.cases, o.deaths) + "%" : l.noData))
-    : l.noData;
+  // For everyone else, a qualitative band (dot scale / severity word) —
+  // never a rounded number. This value is a prop on a client component
+  // embedded in an ISR-cached page, so it's public the moment it's
+  // rendered; a plausible-but-fake round figure (tried first, see
+  // magnitudeBand's doc comment) reads as a bug or a lie once compared to
+  // the real, already-public-elsewhere number.
+  const casesBand = isFeatured ? null : magnitudeBand(o.cases);
+  const deathsBand = isFeatured ? null : (o.deaths !== null ? magnitudeBand(o.deaths) : null);
+  const cfrBand = isFeatured ? null : cfrSeverityBand(o.cases, o.deaths);
+  const realCases  = isFeatured && hasData ? o.cases.toLocaleString(locale === "ar" ? "ar-SA" : locale) : null;
+  const realDeaths = isFeatured && o.deaths !== null ? o.deaths.toLocaleString(locale === "ar" ? "ar-SA" : locale) : null;
+  const cfr = isFeatured && hasData && o.deaths !== null ? (o.deaths / o.cases * 100).toFixed(1) + "%" : null;
   const donRef  = o.source ? DON_PATTERN.exec(o.source)?.[1] : null;
   const status  = sourceStatus(o);
 
@@ -477,17 +479,22 @@ export default async function OutbreakPage({
 
       {/* Stats — this page is ISR-cached (revalidate=3600) and serves the
           same HTML to every visitor, so it can never embed the real figures
-          in a prop no matter what the UI blurs on top (see magnitudeBucket's
-          doc comment). Bucketed placeholders go in the initial render;
-          OutbreakStatsGrid fetches the real numbers itself, client-side,
-          from the Pro-gated /api/outbreak-stats/[id] once it knows the
-          viewer is actually paid. */}
+          in a prop no matter what the UI draws on top (see magnitudeBand's
+          doc comment: even a rounded number is real, extractable data). A
+          qualitative band goes in the initial render; OutbreakStatsGrid
+          fetches the real numbers itself, client-side, from the Pro-gated
+          /api/outbreak-stats/[id] once it knows the viewer is actually
+          paid. */}
       <OutbreakStatsGrid
         outbreakId={o.id}
         isFeatured={isFeatured}
-        cases={hasData ? bucketedCases.toLocaleString(locale === "ar" ? "ar-SA" : locale) : l.noData}
-        deaths={hasData && bucketedDeaths !== null ? bucketedDeaths.toLocaleString(locale === "ar" ? "ar-SA" : locale) : l.noData}
-        cfr={cfr}
+        hasData={hasData}
+        realCases={realCases}
+        realDeaths={realDeaths}
+        realCfr={cfr}
+        casesBand={casesBand}
+        deathsBand={deathsBand}
+        cfrBand={cfrBand}
         labels={{
           cases:      l.cases,
           deaths:     l.deaths,

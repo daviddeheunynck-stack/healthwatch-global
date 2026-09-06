@@ -10,28 +10,39 @@ import type { OutbreakTrend } from "./outbreak-trend";
 const BOM   = String.fromCharCode(65279);
 const clean = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM), "").trim();
 
-// Rounds a case/death count to its order of magnitude (10, 100, 1000…) —
-// the free-plan substitute for the exact figure everywhere one would
-// otherwise be sent to the client (dashboard page, outbreak permalink page).
-// Never send the real number in a server-rendered prop or a cached page for
-// a non-paid viewer; this is what goes in its place. See page.tsx's
-// `mapTableOutbreaks` comment for why a client-component prop isn't safe
-// even when the UI blurs it.
-export function magnitudeBucket(n: number): number {
-  return n > 0 ? Math.pow(10, Math.floor(Math.log10(n))) : 0;
+// A qualitative magnitude cue (1-5) for the free-plan substitute everywhere
+// an exact case/death count would otherwise reach a non-paid viewer —
+// rendered as a dot scale (see components/MagnitudeIndicator.tsx), never as
+// a number. An earlier version of this masking (magnitudeBucket, rounding
+// to the nearest power of 10 — e.g. 8,742 -> 1,000) produced a plausible
+// but fake round FIGURE that existed as literal data in the API response
+// and page text, not just a CSS blur: anyone extracting it (view-source, a
+// scraper, `curl /api/compare-outbreaks`) and comparing it to the real
+// number — already public elsewhere on the same site (disease/country/
+// region pages) — would read the mismatch as a bug or a lie, not an
+// intentional gate. Found 2026-09-06 (David). A 1-5 band can never be
+// mistaken for a reported case count.
+export function magnitudeBand(n: number): number | null {
+  if (n <= 0) return null;
+  if (n < 100) return 1;
+  if (n < 1_000) return 2;
+  if (n < 10_000) return 3;
+  if (n < 100_000) return 4;
+  return 5;
 }
 
-// CFR for a masked (free-plan) view — rounded to the nearest 5 points from
-// the REAL cases/deaths, not derived from two independently-bucketed
-// figures. Deriving it from magnitudeBucket(cases)/magnitudeBucket(deaths)
-// looks right per-field but silently produces nonsense whenever cases and
-// deaths round to the same order of magnitude (common for a severe
-// outbreak — e.g. 6,342 cases / 3,072 deaths, both bucket to 1,000, giving
-// a false "100% fatality"). Found 2026-09-05 verifying the outbreak
-// permalink page. Coarse enough that it isn't the exact figure either.
-export function maskedCfrPercent(cases: number, deaths: number | null): number | null {
+export type CfrSeverityBand = "low" | "moderate" | "high" | "very_high";
+
+// Same reasoning as magnitudeBand, for CFR — a word, never a percentage
+// number. Bands chosen to roughly match the color thresholds already used
+// for the real (unlocked) CFR display (>10% red, >3% amber).
+export function cfrSeverityBand(cases: number, deaths: number | null): CfrSeverityBand | null {
   if (cases <= 0 || deaths === null) return null;
-  return Math.round((deaths / cases) * 100 / 5) * 5;
+  const pct = (deaths / cases) * 100;
+  if (pct < 3) return "low";
+  if (pct < 10) return "moderate";
+  if (pct < 25) return "high";
+  return "very_high";
 }
 
 function getServerClient() {
@@ -112,18 +123,19 @@ export interface Outbreak {
   ihr_event_id:  string | null; // WHO IHR event reference (Article 6/7)
   verification_status: string; // suspected | under_investigation | confirmed | closed
   response_phase:      string; // monitoring | investigating | active_response | contained
-  // Derived, request-scoped flag set by the dashboard and outbreak permalink
-  // pages for free-plan (or anonymous, on the permalink page) viewers only —
-  // never persisted, never present on rows fetched any other way. True for
-  // the one "showcase" disease per continent whose real cases/deaths/CFR
-  // stay unlocked as a free sample; every other row is magnitude-bucketed
-  // before it reaches a client component or a shared cached page. See
-  // `magnitudeBucket`/`pickFeaturedDiseases` below.
+  // Derived, request-scoped flag set by the dashboard, compare page and
+  // outbreak permalink page for free-plan (or anonymous, on the permalink
+  // page) viewers only — never persisted, never present on rows fetched any
+  // other way. True for the one "showcase" disease per continent whose real
+  // cases/deaths/CFR stay unlocked as a free sample. For every other row on
+  // those surfaces, `cases`/`deaths` are zeroed out (0 / null — never a
+  // fabricated round number, see magnitudeBand's doc comment) and the three
+  // fields below carry a qualitative substitute instead. See
+  // `magnitudeBand`/`cfrSeverityBand`/`pickFeaturedDiseases` above.
   is_free_featured?: boolean;
-  // Precomputed masked CFR (see maskedCfrPercent) for a bucketed row — set
-  // alongside is_free_featured so OutbreakTable/OutbreakDetailModal don't
-  // re-derive a misleading ratio from two independently-rounded fields.
-  masked_cfr_pct?: number | null;
+  cases_band?: number | null;
+  deaths_band?: number | null;
+  cfr_band?: CfrSeverityBand | null;
 }
 
 // One free "showcase" disease per continent — real cases/deaths/CFR stay

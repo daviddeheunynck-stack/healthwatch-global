@@ -2,7 +2,7 @@ import { getTranslations, getLocale } from "next-intl/server";
 import { headers } from "next/headers";
 import Link from "next/link";
 import { Activity, Globe, AlertTriangle } from "lucide-react";
-import { getOutbreaks, getStats, getLastSync, getLocalizedDisease, getLocalizedCountry, magnitudeBucket, maskedCfrPercent, pickFeaturedDiseases } from "@/lib/outbreaks";
+import { getOutbreaks, getStats, getLastSync, getLocalizedDisease, getLocalizedCountry, magnitudeBand, cfrSeverityBand, pickFeaturedDiseases } from "@/lib/outbreaks";
 import type { Outbreak } from "@/lib/outbreaks";
 import { ISO_REGION } from "@/lib/geo-data";
 import { getOutbreakTrendsBulkCached } from "@/lib/outbreak-trend";
@@ -288,17 +288,19 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
   const activeOutbreaks = outbreaks.filter((o) => o.active);
   const stats = getStats(activeOutbreaks);
 
-  // Free-plan cases/deaths are only ever meant to be blurred, not actually
-  // delivered — but WorldMap/OutbreakTable are client components, so any
-  // real number passed as a prop still lands in the page's RSC payload
-  // (readable via view-source) no matter what the UI renders on top of it.
-  // Round to an order of magnitude before it ever reaches a client
-  // component: keeps every `cases > 0` / sort / trend-badge check that
-  // already relies on this field working (unlike zeroing it out), while
-  // the exact figure never leaves the server for a free account — except
-  // for one showcase disease per continent (`featuredDiseaseByRegion`),
-  // which stays real end to end so the free plan gives a genuine, if
-  // narrow, taste of the data rather than a wall of bullets everywhere.
+  // Free-plan cases/deaths must never reach the client as a number at all —
+  // WorldMap/OutbreakTable are client components, so any value passed as a
+  // prop lands verbatim in the page's RSC payload (readable via view-source,
+  // or a plain `curl` on an API route built the same way) no matter what the
+  // UI draws on top of it. A rounded figure (magnitudeBucket, tried first)
+  // is still a real, plausible-looking number that doesn't correspond to
+  // any actual bulletin — extracted and compared to the real, already-
+  // public-elsewhere figure, it reads as a bug or a lie, not a gate (David,
+  // 2026-09-06). Zero the real fields out instead and carry a qualitative
+  // band (magnitudeBand/cfrSeverityBand — a dot scale, never a numeral) for
+  // display — except for one showcase disease per continent
+  // (`featuredDiseaseByRegion`), which stays real end to end so the free
+  // plan gives a genuine, if narrow, taste of the data.
   const featuredDiseaseByRegion = isPaid ? new Map<string, string>() : pickFeaturedDiseases(activeOutbreaks);
   const isFreeFeatured = (o: Outbreak) => featuredDiseaseByRegion.get(o.region) === (o.disease_en || o.disease);
   const mapTableOutbreaks = isPaid
@@ -308,13 +310,11 @@ async function DashboardContent({ demo = false, urlRegion, urlRisk }: { demo?: b
           ? { ...o, is_free_featured: true }
           : {
               ...o,
-              cases: magnitudeBucket(o.cases),
-              deaths: o.deaths === null ? null : magnitudeBucket(o.deaths),
-              // Precomputed from the REAL cases/deaths, not the two bucketed
-              // fields above — deriving CFR from two independently-rounded
-              // numbers can land both in the same bucket and print a
-              // nonsense "100%" for a severe outbreak. See maskedCfrPercent.
-              masked_cfr_pct: maskedCfrPercent(o.cases, o.deaths),
+              cases: 0,
+              deaths: null,
+              cases_band: magnitudeBand(o.cases),
+              deaths_band: o.deaths === null ? null : magnitudeBand(o.deaths),
+              cfr_band: cfrSeverityBand(o.cases, o.deaths),
             }
       );
 
