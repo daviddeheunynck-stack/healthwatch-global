@@ -49,6 +49,7 @@ const LABELS = {
     ctaFree: "Ou créer un compte gratuit",
     back: "← Tableau de bord",
     chartTitle: "Évolution des cas",
+    chartLocked: "Historique quotidien disponible pour l'abonnement Pro.",
     noData: "N/D",
     risk: { high: "RISQUE ÉLEVÉ", medium: "RISQUE MODÉRÉ", low: "RISQUE FAIBLE" },
     fpGuidance: "Guide d'action — Point focal",
@@ -79,6 +80,7 @@ const LABELS = {
     back: "← Dashboard",
     compareLabel: "Compare",
     chartTitle: "Case trend",
+    chartLocked: "Daily history available on the Pro plan.",
     noData: "N/A",
     risk: { high: "HIGH RISK", medium: "MEDIUM RISK", low: "LOW RISK" },
     fpGuidance: "Focal Point Guidance",
@@ -109,6 +111,7 @@ const LABELS = {
     back: "← Panel",
     compareLabel: "Comparar",
     chartTitle: "Evolución de casos",
+    chartLocked: "Historial diario disponible en el plan Pro.",
     noData: "N/D",
     risk: { high: "RIESGO ALTO", medium: "RIESGO MEDIO", low: "RIESGO BAJO" },
     fpGuidance: "Guía para el Punto Focal",
@@ -139,6 +142,7 @@ const LABELS = {
     back: "→ لوحة التحكم",
     compareLabel: "مقارنة",
     chartTitle: "اتجاه الحالات",
+    chartLocked: "السجل اليومي متاح لمشتركي خطة Pro.",
     noData: "غ/م",
     risk: { high: "خطر عالٍ", medium: "خطر متوسط", low: "خطر منخفض" },
     fpGuidance: "دليل نقطة الاتصال",
@@ -169,6 +173,7 @@ const LABELS = {
     back: "← Dasbor",
     compareLabel: "Bandingkan",
     chartTitle: "Tren kasus",
+    chartLocked: "Riwayat harian tersedia untuk paket Pro.",
     noData: "T/S",
     risk: { high: "RISIKO TINGGI", medium: "RISIKO SEDANG", low: "RISIKO RENDAH" },
     fpGuidance: "Panduan Focal Point",
@@ -183,7 +188,7 @@ const LABELS = {
     citeCopied: "Disalin!",
     staleBulletin: (d: number) => `Tidak ada buletin resmi dalam ${d} hari — mungkin sudah selesai atau tidak dilaporkan.`,
   },
-} satisfies Record<string, { cases: string; deaths: string; cfr: string; date: string; region: string; printReport: string; lastSynced: string; syncedAgo: (m: number) => string; sourceLabel: string; sourceVerified: string; sourceOfficial: string; pheic: string; archived: string; ctaTitle: string; ctaSub: string; ctaProBtn: string; ctaFree: string; back: string; compareLabel: string; chartTitle: string; noData: string; risk: Record<string, string>; fpGuidance: string; tierLabels: Record<string, string>; firstActions: string; reportingLag: string; dateSemantics: string; cumulativeAs: (date: string, source: string) => string; citeLabel: string; citeCopy: string; citeCopied: string; staleBulletin: (d: number) => string; operationalDisclaimer: string }>;
+} satisfies Record<string, { cases: string; deaths: string; cfr: string; date: string; region: string; printReport: string; lastSynced: string; syncedAgo: (m: number) => string; sourceLabel: string; sourceVerified: string; sourceOfficial: string; pheic: string; archived: string; ctaTitle: string; ctaSub: string; ctaProBtn: string; ctaFree: string; back: string; compareLabel: string; chartTitle: string; chartLocked: string; noData: string; risk: Record<string, string>; fpGuidance: string; tierLabels: Record<string, string>; firstActions: string; reportingLag: string; dateSemantics: string; cumulativeAs: (date: string, source: string) => string; citeLabel: string; citeCopy: string; citeCopied: string; staleBulletin: (d: number) => string; operationalDisclaimer: string }>;
 
 const RISK_STYLE: Record<string, string> = {
   high:   "text-red-400 bg-red-500/10 border-red-500/30",
@@ -234,7 +239,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string; id: string }>;
 }): Promise<Metadata> {
   const { locale, id } = await params;
-  const o = await getOutbreak(id);
+  const [o, allOutbreaks] = await Promise.all([getOutbreak(id), getOutbreaks()]);
   if (!o) return { title: "Outbreak not found" };
 
   const disease = getLocalizedDisease(o, locale) ?? o.disease_en ?? o.disease;
@@ -246,8 +251,16 @@ export async function generateMetadata({
     ? `${disease} — ${country} · WHO ${donRef}`
     : `${disease} outbreak — ${country} ${year}`;
 
-  const caseStr = o.cases > 0
+  // Same policy as the page body below (and the dashboard/compare/hub
+  // pages): a non-featured row's real figure must not reach ANY layer of
+  // the document, meta description included — a crawler or `curl` reads
+  // the meta tag exactly like the DOM (David, 2026-09-06).
+  const isFeatured = pickFeaturedDiseases(allOutbreaks.filter((x) => x.active)).get(o.region) === (o.disease_en || o.disease);
+  const caseBand   = !isFeatured && o.cases > 0 ? magnitudeBand(o.cases) : null;
+  const caseStr = isFeatured && o.cases > 0
     ? `${o.cases.toLocaleString("en")} cases${o.deaths !== null ? `, ${o.deaths.toLocaleString("en")} deaths` : ""}.`
+    : caseBand !== null
+    ? `Magnitude ${caseBand}/5 (exact figures for Pro subscribers).`
     : "";
   const description = [
     `${disease} outbreak in ${country}.`,
@@ -363,7 +376,13 @@ export default async function OutbreakPage({
       "@context": "https://schema.org",
       "@type": "Article",
       headline: `${disease} outbreak in ${country}`,
-      description: `${disease} outbreak tracking. ${hasData ? `${o.cases} cases${o.deaths !== null ? `, ${o.deaths} deaths` : ""}.` : ""}`,
+      description: `${disease} outbreak tracking. ${
+        isFeatured && hasData
+          ? `${o.cases} cases${o.deaths !== null ? `, ${o.deaths} deaths` : ""}.`
+          : casesBand !== null
+          ? `Magnitude ${casesBand}/5 (exact figures for Pro subscribers).`
+          : ""
+      }`,
       datePublished: o.date,
       dateModified: o.updated_at?.substring(0, 10) ?? o.date,
       image: `${BASE_URL}/api/outbreak-card/${id}?locale=${locale}`,
@@ -417,6 +436,12 @@ export default async function OutbreakPage({
         >
           {l.compareLabel} →
         </Link>
+        {/* A masked outbreak has no real case count to put in a shareable
+            tweet/report — see maskOutbreakRow's doc comment in
+            lib/outbreaks.ts. The button (and the real cases/deaths it would
+            otherwise carry into the RSC payload) is simply absent until
+            the outbreak is the region's free showcase. */}
+        {isFeatured && (
         <div className="ml-auto">
           <ShareOutbreakButton
             disease={disease}
@@ -431,6 +456,7 @@ export default async function OutbreakPage({
             reportDate={o.date ?? undefined}
           />
         </div>
+        )}
       </div>
 
       {/* Operational disclaimer */}
@@ -566,11 +592,21 @@ export default async function OutbreakPage({
         </div>
       )}
 
-      {/* Case trend chart */}
+      {/* Case trend chart — the daily series is real, unbucketed history
+          (same data as the Pro-gated /api/outbreak-history), so it can't be
+          rendered for a non-featured outbreak on this unauthenticated page
+          any more than the headline stat above it can (David, 2026-09-06).
+          A locked note replaces it rather than a version with faked/rounded
+          points, for the same reason a plausible-but-fake figure is worse
+          than no figure — see magnitudeBand's doc comment. */}
       {snapshots.length > 0 && (
         <div className="bg-gray-800/30 rounded-lg p-4 border border-gray-700/50 mb-6">
           <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">{l.chartTitle}</p>
-          <OutbreakCasesChart snapshots={snapshots} riskLevel={o.risk_level} locale={locale} />
+          {isFeatured ? (
+            <OutbreakCasesChart snapshots={snapshots} riskLevel={o.risk_level} locale={locale} />
+          ) : (
+            <p className="text-sm text-gray-500 py-6 text-center">{l.chartLocked}</p>
+          )}
         </div>
       )}
 

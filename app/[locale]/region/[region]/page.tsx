@@ -6,12 +6,13 @@ import { createClient } from "@supabase/supabase-js";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { getLocalizedDisease, getLocalizedCountry, filterDisplayActive, isAggregateOutbreakRow, dedupeAggregateOutbreakRows } from "@/lib/outbreaks";
+import { getLocalizedDisease, getLocalizedCountry, filterDisplayActive, isAggregateOutbreakRow, dedupeAggregateOutbreakRows, isFreeFeaturedRow, maskOutbreakRow, aggregateNeedsMasking, pickFeaturedDiseases, magnitudeBand } from "@/lib/outbreaks";
 import { diseaseToSlug, normalizeDisease } from "@/lib/disease-data";
 import { getOutbreakTrendsBulkCached } from "@/lib/outbreak-trend";
 import type { Outbreak } from "@/lib/outbreaks";
 import EmailCapture from "@/components/EmailCapture";
 import { jsonLdHtml } from "@/lib/json-ld";
+import { MagnitudeDots } from "@/components/MagnitudeIndicator";
 
 export const revalidate = 3600;
 
@@ -212,6 +213,16 @@ export default async function RegionPage({
   const activeIds = new Set(active.map((o) => o.id));
   const history   = allOutbreaks.filter((o) => !activeIds.has(o.id));
 
+  // Same policy as the disease/country hub pages and the dashboard/compare/
+  // outbreak-permalink pages: one real showcase disease per continent,
+  // everything else banded — unconditional here since this page has no
+  // isPaid concept at all (David, 2026-09-06). Unlike those pages, this
+  // fetch is already scoped to one region, which is exactly the granularity
+  // pickFeaturedDiseases needs — no extra site-wide fetch required.
+  const featuredDiseaseByRegion = pickFeaturedDiseases(active);
+  const maskedActive  = active.map((o)  => maskOutbreakRow(o, isFreeFeaturedRow(o, featuredDiseaseByRegion)));
+  const maskedHistory = history.map((o) => maskOutbreakRow(o, isFreeFeaturedRow(o, featuredDiseaseByRegion)));
+
   // Scoped to `active` (display-active), not allOutbreaks — same fix already applied to
   // the disease page (see b4044e5): summing every historical row inflates these far beyond
   // the current situation (found 2026-07-15: Africa region showed 169M cases, dominated by
@@ -232,6 +243,12 @@ export default async function RegionPage({
   const totalCases  = totalsSource.reduce((s, o) => s + (o.cases || 0), 0);
   const totalDeaths = totalsSource.reduce((s, o) => s + (o.deaths || 0), 0);
   const numLocale   = l === "ar" ? "ar-SA" : l;
+  // See disease/country pages' aggregateNeedsMasking comment: the exact
+  // total must not be shown once it mixes a masked and an unmasked row, or
+  // the masked rows' real combined figure is recoverable by subtraction.
+  const maskTotals      = aggregateNeedsMasking(totalsSource, featuredDiseaseByRegion);
+  const totalCasesBand  = maskTotals ? magnitudeBand(totalCases) : null;
+  const totalDeathsBand = maskTotals ? (totalDeaths > 0 ? magnitudeBand(totalDeaths) : null) : null;
   // Active real countries only — never the "Global"/regional aggregate itself (it's not a
   // place). Historical countries are still visible in the history section below.
   const countriesSet = new Set(
@@ -251,7 +268,7 @@ export default async function RegionPage({
       url: `${BASE_URL}/${l}/region/${region}`,
       spatialCoverage: { "@type": "Place", name: regionName },
       creator: { "@type": "Organization", name: "HealthWatch Global", url: BASE_URL },
-      ...(totalCases > 0 && { measurementTechnique: `${totalCases.toLocaleString("en")} confirmed cases tracked` }),
+      ...(totalCases > 0 && !maskTotals && { measurementTechnique: `${totalCases.toLocaleString("en")} confirmed cases tracked` }),
     },
     {
       "@context": "https://schema.org",
@@ -294,17 +311,22 @@ export default async function RegionPage({
 
       {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        {[
-          { label: lb.cases,     value: totalCases  > 0 ? totalCases.toLocaleString(numLocale)  : lb.noData },
-          { label: lb.deaths,    value: totalDeaths > 0 ? totalDeaths.toLocaleString(numLocale) : lb.noData },
-          { label: lb.countries, value: countriesSet.size.toString() },
-          { label: lb.outbreaks, value: allOutbreaks.length.toString() },
-        ].map(({ label, value }) => (
-          <div key={label} className="bg-gray-900 border border-gray-800 rounded-xl p-4 text-center">
-            <p className="text-2xl font-bold text-white">{value}</p>
-            <p className="text-xs text-gray-500 mt-1">{label}</p>
-          </div>
-        ))}
+        <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 text-center">
+          {maskTotals ? <MagnitudeDots band={totalCasesBand} className="justify-center" /> : <p className="text-2xl font-bold text-white">{totalCases > 0 ? totalCases.toLocaleString(numLocale) : lb.noData}</p>}
+          <p className="text-xs text-gray-500 mt-1">{lb.cases}</p>
+        </div>
+        <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 text-center">
+          {maskTotals ? <MagnitudeDots band={totalDeathsBand} className="justify-center" /> : <p className="text-2xl font-bold text-white">{totalDeaths > 0 ? totalDeaths.toLocaleString(numLocale) : lb.noData}</p>}
+          <p className="text-xs text-gray-500 mt-1">{lb.deaths}</p>
+        </div>
+        <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 text-center">
+          <p className="text-2xl font-bold text-white">{countriesSet.size.toString()}</p>
+          <p className="text-xs text-gray-500 mt-1">{lb.countries}</p>
+        </div>
+        <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 text-center">
+          <p className="text-2xl font-bold text-white">{allOutbreaks.length.toString()}</p>
+          <p className="text-xs text-gray-500 mt-1">{lb.outbreaks}</p>
+        </div>
       </div>
 
       {/* Active outbreaks */}
@@ -312,7 +334,7 @@ export default async function RegionPage({
         <section className="space-y-3">
           <h2 className="text-lg font-semibold text-white">{lb.activeSection}</h2>
           <div className="space-y-3">
-            {active.map((o) => {
+            {maskedActive.map((o) => {
               const trend    = trendsMap.get(o.id);
               const disease  = getLocalizedDisease(o, l);
               const country  = getLocalizedCountry(o, l);
@@ -336,10 +358,16 @@ export default async function RegionPage({
                       >
                         {disease}
                       </Link>
-                      <p className="text-sm text-gray-400">
+                      <p className="text-sm text-gray-400 flex items-center flex-wrap gap-1">
                         📍 {country}
-                        {o.cases > 0 && <span className="ml-2">· {o.cases.toLocaleString(numLocale)} {lb.cases_unit}</span>}
-                        {o.deaths !== null && o.deaths > 0 && <span className="ml-1 text-gray-500">· {o.deaths.toLocaleString(numLocale)} {lb.deaths_unit}</span>}
+                        {o.is_free_featured ? (
+                          <>
+                            {o.cases > 0 && <span>· {o.cases.toLocaleString(numLocale)} {lb.cases_unit}</span>}
+                            {o.deaths !== null && o.deaths > 0 && <span className="text-gray-500">· {o.deaths.toLocaleString(numLocale)} {lb.deaths_unit}</span>}
+                          </>
+                        ) : (
+                          <MagnitudeDots band={o.cases_band} />
+                        )}
                       </p>
                     </div>
                     <div className="flex items-center gap-2">
@@ -368,7 +396,7 @@ export default async function RegionPage({
         <section className="space-y-3">
           <h2 className="text-lg font-semibold text-white">{lb.historySection}</h2>
           <div className="space-y-2">
-            {history.map((o) => {
+            {maskedHistory.map((o) => {
               const disease = getLocalizedDisease(o, l);
               const country = getLocalizedCountry(o, l);
               return (
@@ -386,9 +414,13 @@ export default async function RegionPage({
                     </span>
                     <span className="text-gray-500 text-sm truncate hidden sm:block">· {country}</span>
                   </div>
-                  <span className="text-sm text-gray-500 shrink-0">
-                    {o.cases > 0 ? `${o.cases.toLocaleString(numLocale)} ${lb.cases_unit}` : lb.noData}
-                  </span>
+                  {o.is_free_featured ? (
+                    <span className="text-sm text-gray-500 shrink-0">
+                      {o.cases > 0 ? `${o.cases.toLocaleString(numLocale)} ${lb.cases_unit}` : lb.noData}
+                    </span>
+                  ) : (
+                    <MagnitudeDots band={o.cases_band} className="shrink-0" />
+                  )}
                 </Link>
               );
             })}

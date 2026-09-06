@@ -9,7 +9,7 @@ import type { Metadata } from "next";
 import { slugToDisease, diseaseToSlug, allDiseases, normalizeDisease, getContagiosityLevel } from "@/lib/disease-data";
 import { countryToSlug } from "@/lib/country-utils";
 import type { PathogenType, TransmissionMode, VaccineStatus, TreatmentStatus, ContagiosityLevel } from "@/lib/disease-data";
-import { getLocalizedDisease, getLocalizedCountry, filterDisplayActive, isAggregateOutbreakRow } from "@/lib/outbreaks";
+import { getOutbreaks, getLocalizedDisease, getLocalizedCountry, filterDisplayActive, isAggregateOutbreakRow, isFreeFeaturedRow, maskOutbreakRow, aggregateNeedsMasking, pickFeaturedDiseases, magnitudeBand, cfrSeverityBand } from "@/lib/outbreaks";
 import { getOutbreakTrendsBulkCached } from "@/lib/outbreak-trend";
 import type { Outbreak } from "@/lib/outbreaks";
 import EmailCapture from "@/components/EmailCapture";
@@ -19,6 +19,7 @@ import ShareOutbreakButton from "@/components/ShareOutbreakButton";
 import WatchButton from "@/components/WatchButton";
 import WatchDiseaseButton from "@/components/WatchDiseaseButton";
 import CitationBlock from "@/components/CitationBlock";
+import { MagnitudeDots, SeverityWord } from "@/components/MagnitudeIndicator";
 
 export const revalidate = 3600;
 
@@ -373,6 +374,20 @@ export default async function DiseasePage({
   const activeIds = new Set(active.map((o) => o.id));
   const history   = allOutbreaks.filter((o) => !activeIds.has(o.id));
 
+  // This page shows every outbreak for ONE disease, but "is this the free
+  // showcase for its region" is a competition across ALL diseases active in
+  // that region — so the map needs the site-wide active set, not just this
+  // disease's rows (getOutbreaks() is cached; this doesn't add a query on
+  // top of the disease-scoped fetch above). Same policy as the dashboard/
+  // compare/outbreak-permalink pages: one real showcase disease per
+  // continent, everything else banded, and here it applies unconditionally
+  // since this page has no isPaid concept at all — every visitor, logged in
+  // or not, sees the same output (David, 2026-09-06, see project-ideas-log
+  // "mur payant vs six surfaces publiques").
+  const featuredDiseaseByRegion = pickFeaturedDiseases((await getOutbreaks()).filter((o) => o.active));
+  const maskedActive  = active.map((o)  => maskOutbreakRow(o, isFreeFeaturedRow(o, featuredDiseaseByRegion)));
+  const maskedHistory = history.map((o) => maskOutbreakRow(o, isFreeFeaturedRow(o, featuredDiseaseByRegion)));
+
   // A disease can have both a "Global"/regional roll-up row (a WHO/ECDC bulletin that already
   // cumulates every country, e.g. Mpox's "Multi-country outbreak of mpox, external situation
   // report #67") and per-country rows tracked separately for the same outbreak (Kenya, Burundi,
@@ -403,6 +418,16 @@ export default async function DiseasePage({
   const totalDeaths = totalsSource.reduce((s, o) => s + (o.deaths || 0), 0);
   const numLocale   = l === "ar" ? "ar-SA" : l;
   const cfr         = totalCases > 0 ? ((totalDeaths / totalCases) * 100).toFixed(1) : null;
+  // The total mixes a masked and an unmasked row the moment ANY contributing
+  // outbreak isn't this region's featured showcase — showing the exact sum
+  // in that case would let `totalCases - sum(featured rows)` recover the
+  // masked rows' real combined figure by arithmetic, which defeats the mask
+  // as surely as printing it directly. Band the aggregate itself instead
+  // whenever that's true (see aggregateNeedsMasking's doc comment).
+  const maskTotals   = aggregateNeedsMasking(totalsSource, featuredDiseaseByRegion);
+  const totalCasesBand  = maskTotals ? magnitudeBand(totalCases) : null;
+  const totalDeathsBand = maskTotals ? (totalDeaths > 0 ? magnitudeBand(totalDeaths) : null) : null;
+  const cfrBand         = maskTotals ? cfrSeverityBand(totalCases, totalDeaths) : null;
   // Active real countries only — never the "Global"/regional aggregate itself (it's not a
   // place). Historical countries are still visible in the country pills section below.
   const countriesSet = new Set(activeCountryRows.map((o) => o.country_en || o.country).filter(Boolean));
@@ -478,7 +503,7 @@ export default async function DiseasePage({
       ...(info.family && { infectiousAgentClass: info.family }),
       ...(info.transmission.length > 0 && { transmissionMethod: info.transmission.join(", ") }),
       url: `${BASE_URL}/${l}/disease/${slug}`,
-      ...(totalCases > 0 && {
+      ...(totalCases > 0 && !maskTotals && {
         description: `${totalCases.toLocaleString("en")} cases and ${totalDeaths.toLocaleString("en")} deaths recorded across ${countriesSet.size} countries.`,
       }),
       mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${l}/disease/${slug}` },
@@ -506,15 +531,19 @@ export default async function DiseasePage({
         <Link href={`/${l}`} className="text-sm text-gray-500 hover:text-gray-300 transition-colors">
           {lb.back}
         </Link>
-        <ShareOutbreakButton
-          disease={diseaseName}
-          country={shareRepresentative ? (shareRepresentative.country_en ?? shareRepresentative.country) : ""}
-          cases={totalCases}
-          riskLevel={active.some((o) => o.risk_level === "high") ? "high" : active.some((o) => o.risk_level === "medium") ? "medium" : "low"}
-          locale={l}
-          pageUrl={`https://healthwatch-global.com/${l}/disease/${slug}`}
-          compact={false}
-        />
+        {/* A masked total has no real case count to put in a shareable
+            tweet/report — see maskOutbreakRow's doc comment. */}
+        {!maskTotals && (
+          <ShareOutbreakButton
+            disease={diseaseName}
+            country={shareRepresentative ? (shareRepresentative.country_en ?? shareRepresentative.country) : ""}
+            cases={totalCases}
+            riskLevel={active.some((o) => o.risk_level === "high") ? "high" : active.some((o) => o.risk_level === "medium") ? "medium" : "low"}
+            locale={l}
+            pageUrl={`https://healthwatch-global.com/${l}/disease/${slug}`}
+            compact={false}
+          />
+        )}
       </div>
 
       {/* Header */}
@@ -535,20 +564,27 @@ export default async function DiseasePage({
         )}
       </div>
 
-      {/* Stats bar */}
+      {/* Stats bar — a magnitude/severity band replaces the exact number the
+          moment any row behind the total is masked (see maskTotals above);
+          the country count is never sensitive on its own and stays exact. */}
       <div className="space-y-2">
         <div className="grid gap-4 grid-cols-2 sm:grid-cols-4">
-          {[
-            { label: lb.cases,     value: totalCases  > 0 ? totalCases.toLocaleString(numLocale)  : lb.noData },
-            { label: lb.deaths,    value: totalDeaths > 0 ? totalDeaths.toLocaleString(numLocale) : lb.noData },
-            { label: lb.cfr,       value: cfr ? `${cfr}%` : lb.noData },
-            { label: lb.countries, value: countriesSet.size > 0 ? countriesSet.size.toString() : lb.noData },
-          ].map(({ label, value }) => (
-            <div key={label} className="bg-gray-900 border border-gray-800 rounded-xl p-4 text-center">
-              <p className="text-2xl font-bold text-white">{value}</p>
-              <p className="text-xs text-gray-500 mt-1">{label}</p>
-            </div>
-          ))}
+          <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 text-center">
+            {maskTotals ? <MagnitudeDots band={totalCasesBand} className="justify-center" /> : <p className="text-2xl font-bold text-white">{totalCases > 0 ? totalCases.toLocaleString(numLocale) : lb.noData}</p>}
+            <p className="text-xs text-gray-500 mt-1">{lb.cases}</p>
+          </div>
+          <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 text-center">
+            {maskTotals ? <MagnitudeDots band={totalDeathsBand} className="justify-center" /> : <p className="text-2xl font-bold text-white">{totalDeaths > 0 ? totalDeaths.toLocaleString(numLocale) : lb.noData}</p>}
+            <p className="text-xs text-gray-500 mt-1">{lb.deaths}</p>
+          </div>
+          <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 text-center">
+            {maskTotals ? <SeverityWord band={cfrBand} locale={l} className="text-2xl" /> : <p className="text-2xl font-bold text-white">{cfr ? `${cfr}%` : lb.noData}</p>}
+            <p className="text-xs text-gray-500 mt-1">{lb.cfr}</p>
+          </div>
+          <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 text-center">
+            <p className="text-2xl font-bold text-white">{countriesSet.size > 0 ? countriesSet.size.toString() : lb.noData}</p>
+            <p className="text-xs text-gray-500 mt-1">{lb.countries}</p>
+          </div>
         </div>
         {latestUpdate && (
           <p className="text-xs text-gray-600 text-right">
@@ -662,7 +698,7 @@ export default async function DiseasePage({
         <section className="space-y-3">
           <h2 className="text-lg font-semibold text-white">{lb.activeSection}</h2>
           <div className="space-y-3">
-            {active.map((o) => {
+            {maskedActive.map((o) => {
               const trend    = trendsMap.get(o.id);
               const country  = getLocalizedCountry(o, l);
               const riskKey  = o.risk_level as string | undefined;
@@ -693,9 +729,15 @@ export default async function DiseasePage({
                       <p className="font-semibold text-white group-hover:text-red-400 transition-colors">
                         {country}
                       </p>
-                      <p className="text-sm text-gray-400">
-                        {o.cases > 0 && <span>{o.cases.toLocaleString(numLocale)} {lb.cases_unit}</span>}
-                        {o.deaths !== null && o.deaths > 0 && <span className="ml-2 text-gray-500">· {o.deaths.toLocaleString(numLocale)} {lb.deaths_unit}</span>}
+                      <p className="text-sm text-gray-400 flex items-center flex-wrap gap-1">
+                        {o.is_free_featured ? (
+                          <>
+                            {o.cases > 0 && <span>{o.cases.toLocaleString(numLocale)} {lb.cases_unit}</span>}
+                            {o.deaths !== null && o.deaths > 0 && <span className="text-gray-500">· {o.deaths.toLocaleString(numLocale)} {lb.deaths_unit}</span>}
+                          </>
+                        ) : (
+                          <MagnitudeDots band={o.cases_band} />
+                        )}
                         {o.date && (
                           <span className="ml-2 text-gray-600">
                             · {new Date(o.date).toLocaleDateString(
@@ -738,7 +780,7 @@ export default async function DiseasePage({
         <section className="space-y-3">
           <h2 className="text-lg font-semibold text-white">{lb.historySection}</h2>
           <div className="space-y-2">
-            {history.map((o) => {
+            {maskedHistory.map((o) => {
               const country = getLocalizedCountry(o, l);
               return (
                 <Link
@@ -754,9 +796,13 @@ export default async function DiseasePage({
                       {country}
                     </span>
                   </div>
-                  <span className="text-sm text-gray-500 shrink-0">
-                    {o.cases > 0 ? `${o.cases.toLocaleString(numLocale)} ${lb.cases_unit}` : lb.noData}
-                  </span>
+                  {o.is_free_featured ? (
+                    <span className="text-sm text-gray-500 shrink-0">
+                      {o.cases > 0 ? `${o.cases.toLocaleString(numLocale)} ${lb.cases_unit}` : lb.noData}
+                    </span>
+                  ) : (
+                    <MagnitudeDots band={o.cases_band} className="shrink-0" />
+                  )}
                 </Link>
               );
             })}

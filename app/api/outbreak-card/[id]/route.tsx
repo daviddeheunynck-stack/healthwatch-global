@@ -20,6 +20,49 @@ const RISK_LABEL: Record<string, Record<string, string>> = {
   low:    { fr: "RISQUE FAIBLE", en: "LOW RISK", es: "RIESGO BAJO", ar: "خطر منخفض", id: "RISIKO RENDAH" },
 };
 
+// Same one-showcase-disease-per-continent pick as lib/outbreaks.ts's
+// pickFeaturedDiseases() — reimplemented locally rather than imported so
+// this edge route (Satori/ImageResponse) never pulls in that module's
+// Node-oriented dependency chain (unstable_cache, Sentry, etc., none of
+// which any edge route in this repo currently imports). Same algorithm,
+// scoped to one region since that's all this route ever needs.
+function pickRegionFeaturedDisease(rows: { disease_en: string | null; disease: string; is_pheic: boolean; risk_level: string; cases: number }[]): string | null {
+  const RISK_WEIGHT: Record<string, number> = { high: 2, medium: 1, low: 0 };
+  const byDisease = new Map<string, { cases: number; pheic: boolean; risk: number }>();
+  for (const r of rows) {
+    const key = r.disease_en || r.disease;
+    const agg = byDisease.get(key) ?? { cases: 0, pheic: false, risk: 0 };
+    agg.cases += r.cases;
+    agg.pheic = agg.pheic || r.is_pheic;
+    agg.risk = Math.max(agg.risk, RISK_WEIGHT[r.risk_level] ?? 0);
+    byDisease.set(key, agg);
+  }
+  let bestKey: string | null = null;
+  let best: { cases: number; pheic: boolean; risk: number } | null = null;
+  for (const [key, agg] of byDisease) {
+    const better =
+      !best ||
+      (agg.pheic && !best.pheic) ||
+      (agg.pheic === best.pheic && agg.risk > best.risk) ||
+      (agg.pheic === best.pheic && agg.risk === best.risk && agg.cases > best.cases);
+    if (better) { best = agg; bestKey = key; }
+  }
+  return bestKey;
+}
+
+// 1-5 magnitude cue, never a rounded number that could be mistaken for a
+// real reported figure — see magnitudeBand's doc comment in lib/outbreaks.ts
+// (David, 2026-09-06): a plausible-but-fake round figure is still real,
+// extractable data once this image is generated, unlike a dot count.
+function magnitudeBand(n: number): number | null {
+  if (n <= 0) return null;
+  if (n < 100) return 1;
+  if (n < 1_000) return 2;
+  if (n < 10_000) return 3;
+  if (n < 100_000) return 4;
+  return 5;
+}
+
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -36,13 +79,25 @@ export async function GET(
 
   const { data: o } = await supabase
     .from("outbreaks")
-    .select("disease, disease_en, country, country_en, cases, deaths, risk_level, date, is_pheic")
+    .select("disease, disease_en, country, country_en, cases, deaths, risk_level, date, is_pheic, region")
     .eq("id", id)
     .single();
 
   if (!o) {
     return new Response("Not found", { status: 404 });
   }
+
+  // This card is embedded (OpenGraph/Twitter) in the outbreak permalink
+  // page's own HTML — it must carry the exact same mask as that page's
+  // body, or the "masked" page would still broadcast the real figure the
+  // instant it's shared to Slack/Twitter/WhatsApp, in an image that looks
+  // exactly as official as the unlocked ones.
+  const { data: regionRows } = await supabase
+    .from("outbreaks")
+    .select("disease_en, disease, is_pheic, risk_level, cases")
+    .eq("region", o.region)
+    .eq("active", true);
+  const isFeatured = pickRegionFeaturedDisease(regionRows ?? []) === (o.disease_en || o.disease);
 
   const disease  = (locale === "fr" ? o.disease : null) ?? o.disease_en ?? o.disease;
   const country  = o.country_en ?? o.country;
@@ -54,7 +109,11 @@ export async function GET(
   const riskLabel = (RISK_LABEL[o.risk_level] ?? RISK_LABEL.low)[labelLocale] ?? RISK_LABEL.low.en;
   const numLocale = locale === "ar" ? "ar-SA" : locale;
   const hasData  = o.cases > 0;
-  const cfr      = hasData && o.deaths !== null ? (o.deaths / o.cases * 100).toFixed(1) + "%" : "—";
+  const cfr      = isFeatured && hasData && o.deaths !== null ? (o.deaths / o.cases * 100).toFixed(1) + "%" : "—";
+  const casesBand  = !isFeatured && o.cases > 0 ? magnitudeBand(o.cases) : null;
+  const deathsBand = !isFeatured && o.deaths !== null ? magnitudeBand(o.deaths) : null;
+  const casesValue  = isFeatured ? (hasData ? o.cases.toLocaleString(numLocale) : "—") : (casesBand !== null ? "●".repeat(casesBand) + "○".repeat(5 - casesBand) : "—");
+  const deathsValue = isFeatured ? (hasData && o.deaths !== null ? o.deaths.toLocaleString(numLocale) : "—") : (deathsBand !== null ? "●".repeat(deathsBand) + "○".repeat(5 - deathsBand) : "—");
 
   const casesLabel  = { fr: "Cas", en: "Cases", es: "Casos", id: "Kasus" }[labelLocale] ?? "Cases";
   const deathsLabel = { fr: "Décès", en: "Deaths", es: "Fallecidos", id: "Kematian" }[labelLocale] ?? "Deaths";
@@ -115,9 +174,9 @@ export async function GET(
           {/* Stats row */}
           <div style={{ display: "flex", gap: 24 }}>
             {[
-              { label: casesLabel,  value: hasData ? o.cases.toLocaleString(numLocale) : "—", color: "#60a5fa" },
-              { label: deathsLabel, value: hasData && o.deaths !== null ? o.deaths.toLocaleString(numLocale) : "—", color: "#f87171" },
-              { label: cfrLabel,    value: cfr,                                        color: "#fbbf24" },
+              { label: casesLabel,  value: casesValue,  color: "#60a5fa" },
+              { label: deathsLabel, value: deathsValue, color: "#f87171" },
+              { label: cfrLabel,    value: cfr,         color: "#fbbf24" },
             ].map(({ label, value, color: c }) => (
               <div key={label} style={{
                 flex: 1, background: "rgba(255,255,255,0.05)",

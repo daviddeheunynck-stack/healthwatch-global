@@ -12,7 +12,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
+import { getOutbreaks, getLocalizedDisease, getLocalizedCountry, pickFeaturedDiseases, isFreeFeaturedRow, magnitudeBand } from "@/lib/outbreaks";
 
 export const revalidate = 3600;
 
@@ -87,6 +87,15 @@ export async function GET(req: NextRequest) {
   const outbreaks = data ?? [];
   const now = new Date().toUTCString();
 
+  // Public, unauthenticated feed — same one-showcase-disease-per-continent
+  // policy as every other surface (dashboard/compare/hub pages/permalink):
+  // real figures only for the region's free sample, a band for everything
+  // else. Needs the SITE-WIDE active set (getOutbreaks(), cached), not just
+  // this feed's own (region-filtered, top-50) result — a disease's standing
+  // in its region depends on every active outbreak there, not the subset
+  // that happens to be the 50 most recent (David, 2026-09-06).
+  const featuredDiseaseByRegion = pickFeaturedDiseases((await getOutbreaks()).filter((o) => o.active));
+
   const feedUrl = `${BASE_URL}/api/feed?locale=${locale}${filterRegion ? `&region=${filterRegion}` : ""}`;
   const feedTitle = FEED_TITLE[locale] ?? FEED_TITLE.en;
   const feedDesc  = FEED_DESC[locale] ?? FEED_DESC.en;
@@ -98,13 +107,19 @@ export async function GET(req: NextRequest) {
 
     const title = countryName ? `${diseaseName} — ${countryName}` : diseaseName;
     const risk  = o.risk_level ? (RISK_LABEL[locale]?.[o.risk_level] ?? o.risk_level.toUpperCase()) : "";
-    const cfr   = o.cases > 0 && o.deaths > 0 ? ` · CFR ${(o.deaths / o.cases * 100).toFixed(1)}%` : "";
     const pheicFlag = o.is_pheic ? " 🚨 PHEIC" : "";
+    const isFeatured = isFreeFeaturedRow(o, featuredDiseaseByRegion);
 
     const descParts: string[] = [];
     if (risk) descParts.push(risk);
-    if (o.cases)  descParts.push(`Cases: ${o.cases.toLocaleString(numLocale)}`);
-    if (o.deaths) descParts.push(`Deaths: ${o.deaths.toLocaleString(numLocale)}${cfr}`);
+    if (isFeatured) {
+      const cfr = o.cases > 0 && o.deaths > 0 ? ` · CFR ${(o.deaths / o.cases * 100).toFixed(1)}%` : "";
+      if (o.cases)  descParts.push(`Cases: ${o.cases.toLocaleString(numLocale)}`);
+      if (o.deaths) descParts.push(`Deaths: ${o.deaths.toLocaleString(numLocale)}${cfr}`);
+    } else {
+      const casesBand = o.cases > 0 ? magnitudeBand(o.cases) : null;
+      if (casesBand !== null) descParts.push(`Magnitude: ${casesBand}/5 (exact figures for Pro subscribers)`);
+    }
     if (pheicFlag) descParts.push(pheicFlag);
 
     const pubDate = o.date ? new Date(o.date).toUTCString() : now;

@@ -176,6 +176,53 @@ export function pickFeaturedDiseases(active: Outbreak[]): Map<string, string> {
   return featured;
 }
 
+// Per-row featured check shared by every masked surface (dashboard, compare,
+// outbreak permalink, and the disease/country/region hub pages) — region +
+// disease lookup into the map above. Kept as one function so "is this row
+// the free showcase" is answered identically everywhere it's asked.
+export function isFreeFeaturedRow(
+  o: Pick<Outbreak, "region" | "disease_en" | "disease">,
+  featuredDiseaseByRegion: Map<string, string>,
+): boolean {
+  return featuredDiseaseByRegion.get(o.region) === (o.disease_en || o.disease);
+}
+
+// Applies the standard mask to one row for a surface with no `isPaid`
+// concept at all — the disease/country/region hub pages render the same
+// output to every visitor, unlike the dashboard/compare (gated by plan) or
+// the outbreak permalink page (gated by plan, real data fetched client-side
+// for a paid viewer). Same substitution as everywhere else: cases/deaths
+// zeroed, banded fields attached — never a rounded number (see
+// magnitudeBand's doc comment). Returns the row unchanged (plus the
+// featured flag) when it's the region's free showcase disease.
+export function maskOutbreakRow<T extends { cases: number; deaths: number | null }>(
+  o: T,
+  isFeatured: boolean,
+): T & { is_free_featured?: boolean; cases_band?: number | null; deaths_band?: number | null; cfr_band?: CfrSeverityBand | null } {
+  if (isFeatured) return { ...o, is_free_featured: true };
+  return {
+    ...o,
+    cases: 0,
+    deaths: null,
+    cases_band: magnitudeBand(o.cases),
+    deaths_band: o.deaths === null ? null : magnitudeBand(o.deaths),
+    cfr_band: cfrSeverityBand(o.cases, o.deaths),
+  };
+}
+
+// Whether an aggregate (a sum of cases/deaths across several rows) must
+// itself be banded rather than shown as an exact number. True the moment
+// ANY contributing row is masked — otherwise `realTotal - sum(featured real
+// rows)` recovers the masked rows' combined figure exactly (arithmetic,
+// not extraction), defeating the mask for whichever rows were left out of
+// the total on purpose.
+export function aggregateNeedsMasking(
+  rows: Pick<Outbreak, "region" | "disease_en" | "disease">[],
+  featuredDiseaseByRegion: Map<string, string>,
+): boolean {
+  return rows.some((o) => !isFreeFeaturedRow(o, featuredDiseaseByRegion));
+}
+
 // The outbreak dataset is identical for every visitor (no user-specific data),
 // but the homepage and several other read routes are force-dynamic (per-request
 // auth), so each request was re-querying Supabase — including a select("*") that
