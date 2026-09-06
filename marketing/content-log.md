@@ -16084,3 +16084,25 @@ Brouillon créé dans Gmail par l'agent (`create_draft`, id `r705480141305351634
 ### 5️⃣ ARBRE DE TRAVAIL
 
 `marketing/qa/product-claims.manual.json` modifié ce run (2 claims ajoutées), non commité (appartient au dispositif QA). `marketing/qa/*.json` régénérés, non commités. Branche vérifiée : **master**.
+
+---
+
+## Relance ponctuelle — cgodwe2000@gmail.com — 6 septembre 2026
+
+Contexte : suite au signal du run `daily-marketing-check-healthwatch` du 06/09 — 2 nouveaux `pricing_page_view` (01/09, 04/09) depuis la relance du 09/08 (voir entrée ci-dessus), toujours sans réponse ni région d'alerte configurée. C'est sa 3e et 4e visite tarifs, et il reste le seul utilisateur réel avec un `pricing_page_view` depuis le 12/08.
+
+**Angle** : même principe que le 09/08 — personnalisé sur le comportement réel (2 visites datées), honnête sur le fait qu'il ne reçoit toujours aucune alerte, offre ouverte d'activation immédiate plutôt qu'un template générique.
+
+**Objet :** Back on pricing again — same question as last time
+
+> Hi,
+>
+> You've been back to check pricing twice more since I last wrote — Sept 1st and Sept 4th. I never heard back in between, so I'm not sure if that's a good sign or if something's stopping you.
+>
+> Just so it's said plainly: your account still isn't tracking any region, so you're not getting a single alert right now — not on Chad, not anywhere. Whatever brought you back to the pricing page, the dashboard as it stands today can't be what's pulling you, since it's silent for you.
+>
+> If there's a specific outbreak or region you actually care about, tell me which one and I'll turn on real alerts for it today, free, no strings — that's a five-minute fix on my end. If it's something else entirely — price, a missing feature, timing — I'd rather hear that too.
+>
+> David
+
+Brouillon créé dans Gmail par l'agent (`create_draft`, id `r3805081181551364539`, `messageId` `1a075789726cf49f`) sur demande explicite de David en session. Vérifié immédiatement via `list_drafts` : `labelIds: ["DRAFT"]`, rien envoyé (garde-fou `feedback_gmail_create_draft_can_send_immediately`). Envoi laissé à David.
