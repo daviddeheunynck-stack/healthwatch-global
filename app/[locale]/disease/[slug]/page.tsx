@@ -276,7 +276,7 @@ async function fetchDiseaseOutbreaks(diseaseNameEn: string): Promise<Outbreak[]>
 
   const { data } = await supabase
     .from("outbreaks")
-    .select("id, disease, disease_en, description, country, country_en, country_ar, cases, deaths, risk_level, date, active, is_seed, source_priority, updated_at, response_phase")
+    .select("id, disease, disease_en, description, country, country_en, country_ar, region, cases, deaths, risk_level, date, active, is_seed, source_priority, updated_at, response_phase")
     .in("id", matchingIds)
     .order("date", { ascending: false });
 
