@@ -35,7 +35,8 @@ const COPY: Record<string, LocaleCopy> = {
       highlights:  [
         "Chiffres exacts (cas & décès) par épidémie",
         "Alertes régionales instantanées",
-        "Export CSV illimité",
+        "Alertes de tendance prédictive — prévenu avant qu'un seuil soit franchi",
+        "Export CSV illimité — données courantes et historique complet",
         "Rapports PDF pour toutes les régions",
         "Alertes par maladie — Mpox, Ebola, Choléra où qu'ils surviennent",
       ],
@@ -51,7 +52,8 @@ const COPY: Record<string, LocaleCopy> = {
       highlights:  [
         "Chiffres exacts (cas & décès) par épidémie",
         "Alertes régionales instantanées",
-        "Export CSV illimité",
+        "Alertes de tendance prédictive — prévenu avant qu'un seuil soit franchi",
+        "Export CSV illimité — données courantes et historique complet",
         "Rapports PDF pour toutes les régions",
         "Alertes par maladie — Mpox, Ebola, Choléra où qu'ils surviennent",
       ],
@@ -69,7 +71,8 @@ const COPY: Record<string, LocaleCopy> = {
       highlights:  [
         "Exact case & death figures per outbreak",
         "Instant regional alerts",
-        "Unlimited CSV export",
+        "Predictive trend alerts — warned before a threshold is crossed",
+        "Unlimited CSV export — current data and full history",
         "PDF reports for all regions",
         "Disease-specific alerts — Mpox, Ebola, Cholera wherever they strike",
       ],
@@ -85,7 +88,8 @@ const COPY: Record<string, LocaleCopy> = {
       highlights:  [
         "Exact case & death figures per outbreak",
         "Instant regional alerts",
-        "Unlimited CSV export",
+        "Predictive trend alerts — warned before a threshold is crossed",
+        "Unlimited CSV export — current data and full history",
         "PDF reports for all regions",
         "Disease-specific alerts — Mpox, Ebola, Cholera wherever they strike",
       ],
@@ -103,7 +107,8 @@ const COPY: Record<string, LocaleCopy> = {
       highlights:  [
         "Cifras exactas (casos y fallecimientos) por brote",
         "Alertas regionales instantáneas",
-        "Exportación CSV ilimitada",
+        "Alertas de tendencia predictiva — avisado antes de superar un umbral",
+        "Exportación CSV ilimitada — datos actuales e historial completo",
         "Informes PDF para todas las regiones",
         "Alertas por enfermedad — Mpox, Ébola, Cólera donde quiera que aparezcan",
       ],
@@ -119,7 +124,8 @@ const COPY: Record<string, LocaleCopy> = {
       highlights:  [
         "Cifras exactas (casos y fallecimientos) por brote",
         "Alertas regionales instantáneas",
-        "Exportación CSV ilimitada",
+        "Alertas de tendencia predictiva — avisado antes de superar un umbral",
+        "Exportación CSV ilimitada — datos actuales e historial completo",
         "Informes PDF para todas las regiones",
         "Alertas por enfermedad — Mpox, Ébola, Cólera donde quiera que aparezcan",
       ],
@@ -137,7 +143,8 @@ const COPY: Record<string, LocaleCopy> = {
       highlights:  [
         "أرقام دقيقة (الحالات والوفيات) لكل تفشٍّ",
         "تنبيهات إقليمية فورية",
-        "تصدير CSV غير محدود",
+        "تنبيهات الاتجاه التنبؤية — إشعار قبل تجاوز العتبة",
+        "تصدير CSV غير محدود — البيانات الحالية والسجل الكامل",
         "تقارير PDF لجميع المناطق",
         "تنبيهات خاصة بالأمراض — Mpox، إيبولا، كوليرا أينما ظهرت",
       ],
@@ -153,7 +160,8 @@ const COPY: Record<string, LocaleCopy> = {
       highlights:  [
         "أرقام دقيقة (الحالات والوفيات) لكل تفشٍّ",
         "تنبيهات إقليمية فورية",
-        "تصدير CSV غير محدود",
+        "تنبيهات الاتجاه التنبؤية — إشعار قبل تجاوز العتبة",
+        "تصدير CSV غير محدود — البيانات الحالية والسجل الكامل",
         "تقارير PDF لجميع المناطق",
         "تنبيهات خاصة بالأمراض — Mpox، إيبولا، كوليرا أينما ظهرت",
       ],
@@ -171,7 +179,8 @@ const COPY: Record<string, LocaleCopy> = {
       highlights:  [
         "Angka tepat (kasus & kematian) per wabah",
         "Peringatan regional instan",
-        "Ekspor CSV tak terbatas",
+        "Peringatan tren prediktif — diperingatkan sebelum ambang batas terlampaui",
+        "Ekspor CSV tak terbatas — data terkini dan riwayat lengkap",
         "Laporan PDF untuk semua wilayah",
         "Peringatan per penyakit — Mpox, Ebola, Kolera di mana pun muncul",
       ],
@@ -187,7 +196,8 @@ const COPY: Record<string, LocaleCopy> = {
       highlights:  [
         "Angka tepat (kasus & kematian) per wabah",
         "Peringatan regional instan",
-        "Ekspor CSV tak terbatas",
+        "Peringatan tren prediktif — diperingatkan sebelum ambang batas terlampaui",
+        "Ekspor CSV tak terbatas — data terkini dan riwayat lengkap",
         "Laporan PDF untuk semua wilayah",
         "Peringatan per penyakit — Mpox, Ebola, Kolera di mana pun muncul",
       ],
