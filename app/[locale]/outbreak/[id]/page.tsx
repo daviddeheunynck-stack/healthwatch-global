@@ -10,8 +10,8 @@ import OutbreakBottomCta from "@/components/OutbreakBottomCta";
 import TrackPageView from "@/components/TrackPageView";
 import CitationBlock from "@/components/CitationBlock";
 import OutbreakStatsGrid from "@/components/OutbreakStatsGrid";
-import ShareOutbreakButton from "@/components/ShareOutbreakButton";
-import OutbreakCasesChart from "@/components/OutbreakCasesChart";
+import ShareOutbreakButtonGate from "@/components/ShareOutbreakButtonGate";
+import OutbreakCasesChartGate from "@/components/OutbreakCasesChartGate";
 import { getOutbreaks, getLocalizedDisease, getLocalizedCountry, getLocalizedDescription, sourceStatus, sourceName, publishableSourceName, publishableSourceUrl, staleOutbreakDays, isSourceConfirmed, lastVerifiedIso, magnitudeBand, cfrSeverityBand, pickFeaturedDiseases } from "@/lib/outbreaks";
 import { diseaseToSlug, matchDisease } from "@/lib/disease-data";
 import { jsonLdHtml } from "@/lib/json-ld";
@@ -436,27 +436,26 @@ export default async function OutbreakPage({
         >
           {l.compareLabel} →
         </Link>
-        {/* A masked outbreak has no real case count to put in a shareable
-            tweet/report — see maskOutbreakRow's doc comment in
-            lib/outbreaks.ts. The button (and the real cases/deaths it would
-            otherwise carry into the RSC payload) is simply absent until
-            the outbreak is the region's free showcase. */}
-        {isFeatured && (
+        {/* Real for a featured outbreak already; for anyone else,
+            ShareOutbreakButtonGate fetches the real cases/deaths itself
+            client-side once it confirms the viewer is actually paid — see
+            its own doc comment. Never a prop here for a masked row, so it
+            can't leak into this page's shared cache regardless of plan. */}
         <div className="ml-auto">
-          <ShareOutbreakButton
+          <ShareOutbreakButtonGate
+            outbreakId={id}
+            isFeatured={isFeatured}
             disease={disease}
             country={country}
-            cases={o.cases}
-            deaths={o.deaths ?? undefined}
+            cases={isFeatured ? o.cases : 0}
+            deaths={isFeatured ? (o.deaths ?? undefined) : undefined}
             riskLevel={o.risk_level}
             locale={locale}
-            outbreakId={id}
             compact={false}
             updatedAt={o.updated_at ?? undefined}
             reportDate={o.date ?? undefined}
           />
         </div>
-        )}
       </div>
 
       {/* Operational disclaimer */}
@@ -602,11 +601,14 @@ export default async function OutbreakPage({
       {snapshots.length > 0 && (
         <div className="bg-gray-800/30 rounded-lg p-4 border border-gray-700/50 mb-6">
           <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">{l.chartTitle}</p>
-          {isFeatured ? (
-            <OutbreakCasesChart snapshots={snapshots} riskLevel={o.risk_level} locale={locale} />
-          ) : (
-            <p className="text-sm text-gray-500 py-6 text-center">{l.chartLocked}</p>
-          )}
+          <OutbreakCasesChartGate
+            outbreakId={id}
+            isFeatured={isFeatured}
+            featuredSnapshots={isFeatured ? snapshots : []}
+            riskLevel={o.risk_level}
+            locale={locale}
+            lockedLabel={l.chartLocked}
+          />
         </div>
       )}
 

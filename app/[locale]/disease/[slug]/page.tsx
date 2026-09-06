@@ -19,7 +19,8 @@ import ShareOutbreakButton from "@/components/ShareOutbreakButton";
 import WatchButton from "@/components/WatchButton";
 import WatchDiseaseButton from "@/components/WatchDiseaseButton";
 import CitationBlock from "@/components/CitationBlock";
-import { MagnitudeDots, SeverityWord } from "@/components/MagnitudeIndicator";
+import RealStatsProvider from "@/components/RealStatsProvider";
+import { CasesDeathsInline, CasesOnlyInline, AggregateStat } from "@/components/CasesDisplay";
 
 export const revalidate = 3600;
 
@@ -428,6 +429,11 @@ export default async function DiseasePage({
   const totalCasesBand  = maskTotals ? magnitudeBand(totalCases) : null;
   const totalDeathsBand = maskTotals ? (totalDeaths > 0 ? magnitudeBand(totalDeaths) : null) : null;
   const cfrBand         = maskTotals ? cfrSeverityBand(totalCases, totalDeaths) : null;
+  const totalsSourceIds = totalsSource.map((o) => o.id);
+  // Every id whose display could be upgraded for a confirmed-paid viewer —
+  // one shared fetch (RealStatsProvider below) covers the stat-bar totals
+  // and every active/historical row on this page.
+  const paidUnlockIds = [...new Set([...totalsSourceIds, ...maskedActive.map((o) => o.id), ...maskedHistory.map((o) => o.id)])];
   // Active real countries only — never the "Global"/regional aggregate itself (it's not a
   // place). Historical countries are still visible in the country pills section below.
   const countriesSet = new Set(activeCountryRows.map((o) => o.country_en || o.country).filter(Boolean));
@@ -564,21 +570,30 @@ export default async function DiseasePage({
         )}
       </div>
 
+      <RealStatsProvider ids={paidUnlockIds}>
       {/* Stats bar — a magnitude/severity band replaces the exact number the
-          moment any row behind the total is masked (see maskTotals above);
-          the country count is never sensitive on its own and stays exact. */}
+          moment any row behind the total is masked (see maskTotals above),
+          upgraded in place for a confirmed-paid viewer by AggregateStat (see
+          RealStatsProvider wrapping this section below); the country count
+          is never sensitive on its own and stays exact either way. */}
       <div className="space-y-2">
         <div className="grid gap-4 grid-cols-2 sm:grid-cols-4">
           <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 text-center">
-            {maskTotals ? <MagnitudeDots band={totalCasesBand} className="justify-center" /> : <p className="text-2xl font-bold text-white">{totalCases > 0 ? totalCases.toLocaleString(numLocale) : lb.noData}</p>}
+            {maskTotals
+              ? <AggregateStat ids={totalsSourceIds} kind="cases" numLocale={numLocale} casesBand={totalCasesBand} deathsBand={totalDeathsBand} cfrBand={cfrBand} noDataLabel={lb.noData} locale={l} className="text-2xl font-bold text-white justify-center" />
+              : <p className="text-2xl font-bold text-white">{totalCases > 0 ? totalCases.toLocaleString(numLocale) : lb.noData}</p>}
             <p className="text-xs text-gray-500 mt-1">{lb.cases}</p>
           </div>
           <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 text-center">
-            {maskTotals ? <MagnitudeDots band={totalDeathsBand} className="justify-center" /> : <p className="text-2xl font-bold text-white">{totalDeaths > 0 ? totalDeaths.toLocaleString(numLocale) : lb.noData}</p>}
+            {maskTotals
+              ? <AggregateStat ids={totalsSourceIds} kind="deaths" numLocale={numLocale} casesBand={totalCasesBand} deathsBand={totalDeathsBand} cfrBand={cfrBand} noDataLabel={lb.noData} locale={l} className="text-2xl font-bold text-white justify-center" />
+              : <p className="text-2xl font-bold text-white">{totalDeaths > 0 ? totalDeaths.toLocaleString(numLocale) : lb.noData}</p>}
             <p className="text-xs text-gray-500 mt-1">{lb.deaths}</p>
           </div>
           <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 text-center">
-            {maskTotals ? <SeverityWord band={cfrBand} locale={l} className="text-2xl" /> : <p className="text-2xl font-bold text-white">{cfr ? `${cfr}%` : lb.noData}</p>}
+            {maskTotals
+              ? <AggregateStat ids={totalsSourceIds} kind="cfr" numLocale={numLocale} casesBand={totalCasesBand} deathsBand={totalDeathsBand} cfrBand={cfrBand} noDataLabel={lb.noData} locale={l} className="text-2xl font-bold text-white" />
+              : <p className="text-2xl font-bold text-white">{cfr ? `${cfr}%` : lb.noData}</p>}
             <p className="text-xs text-gray-500 mt-1">{lb.cfr}</p>
           </div>
           <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 text-center">
@@ -730,14 +745,12 @@ export default async function DiseasePage({
                         {country}
                       </p>
                       <p className="text-sm text-gray-400 flex items-center flex-wrap gap-1">
-                        {o.is_free_featured ? (
-                          <>
-                            {o.cases > 0 && <span>{o.cases.toLocaleString(numLocale)} {lb.cases_unit}</span>}
-                            {o.deaths !== null && o.deaths > 0 && <span className="text-gray-500">· {o.deaths.toLocaleString(numLocale)} {lb.deaths_unit}</span>}
-                          </>
-                        ) : (
-                          <MagnitudeDots band={o.cases_band} />
-                        )}
+                        <CasesDeathsInline
+                          id={o.id} isFeatured={!!o.is_free_featured}
+                          cases={o.cases} deaths={o.deaths}
+                          casesBand={o.cases_band ?? null} deathsBand={o.deaths_band ?? null}
+                          numLocale={numLocale} unitCases={lb.cases_unit} unitDeaths={lb.deaths_unit}
+                        />
                         {o.date && (
                           <span className="ml-2 text-gray-600">
                             · {new Date(o.date).toLocaleDateString(
@@ -796,19 +809,21 @@ export default async function DiseasePage({
                       {country}
                     </span>
                   </div>
-                  {o.is_free_featured ? (
-                    <span className="text-sm text-gray-500 shrink-0">
-                      {o.cases > 0 ? `${o.cases.toLocaleString(numLocale)} ${lb.cases_unit}` : lb.noData}
-                    </span>
-                  ) : (
-                    <MagnitudeDots band={o.cases_band} className="shrink-0" />
-                  )}
+                  <CasesOnlyInline
+                    id={o.id} isFeatured={!!o.is_free_featured}
+                    cases={o.cases} deaths={o.deaths}
+                    casesBand={o.cases_band ?? null} deathsBand={o.deaths_band ?? null}
+                    numLocale={numLocale} unitLabel={lb.cases_unit} noDataLabel={lb.noData}
+                    className="text-sm text-gray-500 shrink-0"
+                  />
                 </Link>
               );
             })}
           </div>
         </section>
       )}
+
+      </RealStatsProvider>
 
       {history.length === 0 && active.length === 0 && (
         <p className="text-gray-500 text-sm">{lb.noHistory}</p>

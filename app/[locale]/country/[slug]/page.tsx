@@ -17,7 +17,8 @@ import { jsonLdHtml } from "@/lib/json-ld";
 import WatchButton from "@/components/WatchButton";
 import EmailCapture from "@/components/EmailCapture";
 import CountryAlertNudge from "@/components/CountryAlertNudge";
-import { MagnitudeDots, SeverityWord } from "@/components/MagnitudeIndicator";
+import RealStatsProvider from "@/components/RealStatsProvider";
+import { CasesCfrBlock, CasesOnlyInline, AggregateStat } from "@/components/CasesDisplay";
 
 export const revalidate = 3600;
 
@@ -320,6 +321,10 @@ export default async function CountryPage({
   const totalCasesBand  = maskTotals ? magnitudeBand(totalCases) : null;
   const totalDeathsBand = maskTotals ? (totalDeaths > 0 ? magnitudeBand(totalDeaths) : null) : null;
   const cfrBand         = maskTotals ? cfrSeverityBand(totalCases, totalDeaths) : null;
+  const totalsSourceIds = active.map((o) => o.id);
+  // One shared paid-unlock fetch (RealStatsProvider below) covers the
+  // stat-bar totals and every active/historical row on this page.
+  const paidUnlockIds = [...new Set([...totalsSourceIds, ...maskedHistorical.map((o) => o.id)])];
 
   // Unique diseases for chips
   const diseaseChips = new Map<string, { name_en: string; displayName: string; hasActive: boolean }>();
@@ -447,30 +452,39 @@ export default async function CountryPage({
 
         {/* Stats row */}
         {totalCases > 0 && (
+          <RealStatsProvider ids={paidUnlockIds}>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <div className="bg-gray-900/60 border border-gray-800 rounded-xl p-4">
               <p className="text-xs text-gray-500 mb-1">{lb.cases}</p>
-              {maskTotals ? <MagnitudeDots band={totalCasesBand} /> : <p className="text-2xl font-bold text-blue-400">{totalCases.toLocaleString(numLocale)}</p>}
+              {maskTotals
+                ? <AggregateStat ids={totalsSourceIds} kind="cases" numLocale={numLocale} casesBand={totalCasesBand} deathsBand={totalDeathsBand} cfrBand={cfrBand} noDataLabel={lb.noData} locale={l} className="text-2xl font-bold text-blue-400" />
+                : <p className="text-2xl font-bold text-blue-400">{totalCases.toLocaleString(numLocale)}</p>}
             </div>
             <div className="bg-gray-900/60 border border-gray-800 rounded-xl p-4">
               <p className="text-xs text-gray-500 mb-1">{lb.deaths}</p>
-              {maskTotals ? <MagnitudeDots band={totalDeathsBand} /> : <p className="text-2xl font-bold text-red-400">{totalDeaths.toLocaleString(numLocale)}</p>}
+              {maskTotals
+                ? <AggregateStat ids={totalsSourceIds} kind="deaths" numLocale={numLocale} casesBand={totalCasesBand} deathsBand={totalDeathsBand} cfrBand={cfrBand} noDataLabel={lb.noData} locale={l} className="text-2xl font-bold text-red-400" />
+                : <p className="text-2xl font-bold text-red-400">{totalDeaths.toLocaleString(numLocale)}</p>}
             </div>
             <div className="bg-gray-900/60 border border-gray-800 rounded-xl p-4">
               <p className="text-xs text-gray-500 mb-1">{lb.cfr}</p>
-              {maskTotals ? <SeverityWord band={cfrBand} locale={l} /> : <p className="text-2xl font-bold text-yellow-400">{cfr}</p>}
+              {maskTotals
+                ? <AggregateStat ids={totalsSourceIds} kind="cfr" numLocale={numLocale} casesBand={totalCasesBand} deathsBand={totalDeathsBand} cfrBand={cfrBand} noDataLabel={lb.noData} locale={l} className="text-2xl font-bold text-yellow-400" />
+                : <p className="text-2xl font-bold text-yellow-400">{cfr}</p>}
             </div>
             <div className="bg-gray-900/60 border border-gray-800 rounded-xl p-4">
               <p className="text-xs text-gray-500 mb-1">{lb.diseases}</p>
               <p className="text-2xl font-bold text-purple-400">{String(uniqueDiseases)}</p>
             </div>
           </div>
+          </RealStatsProvider>
         )}
       </div>
 
       <CountryAlertNudge locale={l} countryName={displayName} />
 
       {/* Active outbreaks */}
+      <RealStatsProvider ids={paidUnlockIds}>
       <section className="space-y-4">
         <h2 className="text-xl font-bold text-white border-b border-gray-800 pb-3">
           {lb.activeSection}
@@ -481,7 +495,6 @@ export default async function CountryPage({
           <div className="space-y-3">
             {maskedActive.map((o) => {
               const disease = getLocalizedDisease(o, l) ?? o.disease_en ?? o.disease;
-              const cfr1 = o.cases > 0 && o.deaths !== null ? (o.deaths / o.cases * 100).toFixed(1) + "%" : lb.noData;
               const trend = trendsMap.get(o.id);
               return (
                 <div
@@ -519,16 +532,12 @@ export default async function CountryPage({
                           {trend.deltaPercent !== 0 && ` ${Math.abs(trend.deltaPercent)}%`}
                         </span>
                       )}
-                      {o.is_free_featured ? (
-                        o.cases > 0 && (
-                          <div className="text-right">
-                            <p className="text-sm font-bold text-white">{o.cases.toLocaleString(numLocale)}</p>
-                            <p className="text-xs text-gray-500">{cfr1}</p>
-                          </div>
-                        )
-                      ) : (
-                        <MagnitudeDots band={o.cases_band} />
-                      )}
+                      <CasesCfrBlock
+                        id={o.id} isFeatured={!!o.is_free_featured}
+                        cases={o.cases} deaths={o.deaths}
+                        casesBand={o.cases_band ?? null} deathsBand={o.deaths_band ?? null}
+                        numLocale={numLocale} noDataLabel={lb.noData}
+                      />
                       <WatchButton outbreakId={o.id} locale={l} />
                     </div>
                   </div>
@@ -538,6 +547,7 @@ export default async function CountryPage({
           </div>
         )}
       </section>
+      </RealStatsProvider>
 
       {/* Traveler health advisory */}
       {region && (travelerHigh.length > 0 || travelerMod.length > 0) && (
@@ -619,6 +629,7 @@ export default async function CountryPage({
 
       {/* Historical outbreaks */}
       {historical.length > 0 && (
+        <RealStatsProvider ids={paidUnlockIds}>
         <section className="space-y-4">
           <h2 className="text-xl font-bold text-white border-b border-gray-800 pb-3">
             {lb.historySection}
@@ -651,11 +662,13 @@ export default async function CountryPage({
                     </div>
                   </div>
                   <div className="flex items-center gap-4 shrink-0 text-right">
-                    {o.is_free_featured ? (
-                      o.cases > 0 && <span className="text-sm text-gray-400">{o.cases.toLocaleString(numLocale)} {lb.cases.toLowerCase()}</span>
-                    ) : (
-                      <MagnitudeDots band={o.cases_band} />
-                    )}
+                    <CasesOnlyInline
+                      id={o.id} isFeatured={!!o.is_free_featured}
+                      cases={o.cases} deaths={o.deaths}
+                      casesBand={o.cases_band ?? null} deathsBand={o.deaths_band ?? null}
+                      numLocale={numLocale} unitLabel={lb.cases.toLowerCase()} noDataLabel={lb.noData}
+                      className="text-sm text-gray-400"
+                    />
                     {o.date && (
                       <span className="text-xs text-gray-600 w-24">{o.date}</span>
                     )}
@@ -665,6 +678,7 @@ export default async function CountryPage({
             })}
           </div>
         </section>
+        </RealStatsProvider>
       )}
 
     </div>
