@@ -175,7 +175,7 @@ export async function GET(req: Request) {
   // it's been at zero for a full week: `site_config` persists a
   // "first seen at zero" timestamp per source, cleared as soon as the count
   // recovers above zero.
-  const sourceCoverage: { stale: string[] } = { stale: [] };
+  const sourceCoverage: { stale: string[]; frozen: string[] } = { stale: [], frozen: [] };
   if (deep) {
     try {
       const supabase3 = createClient(
@@ -199,7 +199,57 @@ export async function GET(req: Request) {
         const days = Math.floor((Date.now() - new Date(existing.value).getTime()) / 86_400_000);
         if (days >= ZERO_SINCE_DAYS) sourceCoverage.stale.push(`${s.name} (0 foyer actif depuis ${days}j)`);
       }
-      checks.source_coverage = sourceCoverage.stale.length > 0 ? "error" : "ok";
+      // ── Source frozen: keeps its rows, stops refreshing them ──────────────
+      // The zero-count check above cannot see this failure mode by
+      // construction: a frozen source still has `count > 0`, so its
+      // `zero_since` key is deleted on every run and the timer never starts.
+      // Two confirmed occurrences in six days, both found by accident rather
+      // than by any check — ECDC/West Nile frozen 9 days (a silent wording
+      // change on the source page broke a regex, the cron logged "ok"
+      // throughout) and the PAHO measles sitrep frozen 16 days (a failed
+      // parse produced a skip, and a skip stays green forever). See
+      // _shared/fix-queue.md, entry c04a158a of 2026-09-05.
+      //
+      // Tracks the highest `outbreaks.date` per source (its data's own as-of
+      // date, not our sync time — see max_as_of in lib/data-status.ts) and
+      // flags a source whose maximum has not advanced in STALE_ASOF_DAYS.
+      //
+      // RECENT_ASOF_DAYS is what keeps a seasonal source quiet out of
+      // season: ECDC's WNV page stops publishing every autumn, so its
+      // max_as_of drifts steadily away from today and no longer qualifies —
+      // whereas an in-season freeze leaves max_as_of stuck a few days behind
+      // today, which is exactly the 2026-08-27 -> 09-05 case above. Chosen
+      // over an exemption list, which would have had to exempt WNV — the one
+      // source whose freeze motivated this check in the first place.
+      const STALE_ASOF_DAYS  = 10;
+      const RECENT_ASOF_DAYS = 30;
+      for (const s of sources) {
+        if (!s.max_as_of) continue;
+        const key = `source_coverage:max_asof:${s.name}`;
+        const { data: tracked } = await supabase3
+          .from("site_config").select("value").eq("key", key).maybeSingle();
+
+        let stored: { value?: string; seen_at?: string } = {};
+        try { stored = tracked?.value ? JSON.parse(tracked.value) : {}; } catch { stored = {}; }
+
+        // First sighting, or the source published something newer since the
+        // last run — restamp and move on.
+        if (stored.value !== s.max_as_of || !stored.seen_at) {
+          await supabase3.from("site_config").upsert(
+            { key, value: JSON.stringify({ value: s.max_as_of, seen_at: new Date().toISOString() }) },
+            { onConflict: "key" },
+          );
+          continue;
+        }
+
+        const frozenDays = Math.floor((Date.now() - new Date(stored.seen_at).getTime()) / 86_400_000);
+        const asOfAgeDays = Math.floor((Date.now() - new Date(s.max_as_of).getTime()) / 86_400_000);
+        if (frozenDays >= STALE_ASOF_DAYS && asOfAgeDays <= RECENT_ASOF_DAYS) {
+          sourceCoverage.frozen.push(`${s.name} (donnees figees au ${s.max_as_of}, inchangees depuis ${frozenDays}j)`);
+        }
+      }
+
+      checks.source_coverage = sourceCoverage.stale.length > 0 || sourceCoverage.frozen.length > 0 ? "error" : "ok";
     } catch {
       checks.source_coverage = "error";
     }
@@ -219,7 +269,7 @@ export async function GET(req: Request) {
       checks,
       ...(Object.keys(priceDetail).length ? { stripe_prices_detail: priceDetail } : {}),
       ...(checks.sentry && checks.sentry !== "unconfigured" ? { sentry_issues: sentrySummary } : {}),
-      ...(sourceCoverage.stale.length ? { source_coverage_detail: sourceCoverage } : {}),
+      ...(sourceCoverage.stale.length || sourceCoverage.frozen.length ? { source_coverage_detail: sourceCoverage } : {}),
       timestamp: new Date().toISOString(),
     },
     { status: status === "ok" ? 200 : 503 }

@@ -55,6 +55,13 @@ export interface SourceStatusRow {
   age_hours: number | null;
   window_hours: number;
   freshness: SourceFreshness;
+  // Most recent `outbreaks.date` (the data's own as-of date, not our sync
+  // time) across this source's active rows. A source can keep its rows and
+  // log "ok" forever while this value stops advancing — the failure mode
+  // that froze 7 ECDC WNV rows for 9 days (2026-08-27 -> 09-05) and the PAHO
+  // measles sitrep for 16 days, both found by accident. `last_synced_at`
+  // above cannot see it: the cron did run, it just parsed nothing usable.
+  max_as_of: string | null;
 }
 
 interface CronRun {
@@ -69,14 +76,17 @@ export async function getDataSourceStatus(): Promise<{ sources: SourceStatusRow[
 
   const cronKeys = Object.values(SOURCE_TO_CRON).map((c) => `cron:run:${c}`);
   const [{ data: outbreakRows }, { data: cronRows }] = await Promise.all([
-    supabase.from("outbreaks").select("source").eq("active", true),
+    supabase.from("outbreaks").select("source, date").eq("active", true),
     supabase.from("site_config").select("key,value").in("key", cronKeys),
   ]);
 
   const countBySource = new Map<string, number>();
-  for (const row of (outbreakRows ?? []) as { source: string | null }[]) {
+  const maxAsOfBySource = new Map<string, string>();
+  for (const row of (outbreakRows ?? []) as { source: string | null; date: string | null }[]) {
     const src = inferSource(row.source);
     countBySource.set(src, (countBySource.get(src) ?? 0) + 1);
+    // Dates are ISO "YYYY-MM-DD", so a string compare is a date compare.
+    if (row.date && row.date > (maxAsOfBySource.get(src) ?? "")) maxAsOfBySource.set(src, row.date);
   }
 
   const cronByKey = new Map<string, CronRun>();
@@ -92,9 +102,10 @@ export async function getDataSourceStatus(): Promise<{ sources: SourceStatusRow[
     const windowHours = CRON_WINDOWS[cronName] ?? 26;
     const run = cronByKey.get(`cron:run:${cronName}`);
     const count = countBySource.get(name) ?? 0;
+    const maxAsOf = maxAsOfBySource.get(name) ?? null;
 
     if (!run) {
-      return { name, last_synced_at: null, count, age_hours: null, window_hours: windowHours, freshness: "unknown" as SourceFreshness };
+      return { name, last_synced_at: null, count, age_hours: null, window_hours: windowHours, freshness: "unknown" as SourceFreshness, max_as_of: maxAsOf };
     }
     const ageHours = (now - new Date(run.ts).getTime()) / 3_600_000;
     const freshness: SourceFreshness = run.status === "error" ? "delayed" : ageHours <= windowHours ? "ok" : "delayed";
@@ -105,6 +116,7 @@ export async function getDataSourceStatus(): Promise<{ sources: SourceStatusRow[
       age_hours: Math.round(ageHours),
       window_hours: windowHours,
       freshness,
+      max_as_of: maxAsOf,
     };
   });
 
