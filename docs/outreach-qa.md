@@ -7,8 +7,23 @@ relit. C'est la raison pour laquelle David redemande une relecture à la main :
 ce n'est pas une checklist qui manque, c'est un regard qui n'a pas écrit le
 texte.
 
-Le dispositif remplace l'auto-relecture par trois étages qui ne partagent pas le
-même angle mort.
+Le dispositif remplace l'auto-relecture par ~~trois~~ **deux étages** *(trois à
+l'origine ; ramené à deux le 2026-09-06, voir l'encadré ci-dessous)* qui ne
+partagent pas le même angle mort.
+
+**⚠️ Retrait permanent du relecteur — 2026-09-06, ~21h50, session interactive.**
+David a demandé explicitement de retirer le relecteur du dispositif QA (« supprime
+le relecteur »), confirmé **« de façon permanente »** après clarification demandée
+par l'agent. Aucun motif détaillé en session. **`§3. Le relecteur` plus bas décrit
+un mécanisme qui n'est plus invoqué sur aucun run — gardé pour l'historique, comme
+`§4. La boucle`.** Le dispositif se limite désormais au registre de faits (§1/1
+bis) et au contrôle mécanique (§2) ; le point 8 des huit exigences de
+`hwg-social-policy.md` §5 (relecture éditoriale finale, faite par le rédacteur
+lui-même) est la seule relecture restante. C'est exactement l'angle mort que ce
+document décrit en ouverture — « un rédacteur qui vient de choisir un chiffre le
+retrouve juste quand il se relit » — retiré en connaissance de cause, sur décision
+de David. `CLAUDE.md` fait foi sur cette décision ; ce document et
+`_shared/hwg-social-policy.md` §5 n'en sont que le détail opérationnel.
 
 **⚠️ Schéma mis à jour le 2026-08-26 (soir) — le modèle en boucle avec `ABANDON` décrit
 plus bas dans ce document (§4, §5) est obsolète, gardé pour l'historique.** David
@@ -35,20 +50,22 @@ rédacteur (agent)                écrit le brouillon, ne cite que le registre
         ↓
 check-outreach-message.mjs       contrôle mécanique, chiffres/gabarits/contexte
         ↓  (le verdict est une note jointe, pas un couperet)
-relecteur (agent, contexte neuf) 12 questions, réponse justifiée par une citation
-        ↓  (ses 12 réponses sont une note jointe, pas un couperet)
-        ↓
+~~relecteur (agent, contexte neuf) 12 questions, réponse justifiée par une citation~~
+~~        ↓  (ses 12 réponses sont une note jointe, pas un couperet)~~
+        ↓  (RETIRÉ le 2026-09-06 — relecture éditoriale finale par le rédacteur seul, item 8)
    DM, session interactive ──┐   DM, run automatisé ──┐   commentaire / note ──┐
    ↓                         │   ↓ (exception 03/09,   │   ↓                   │
 file de validation           │   à l'essai, voir       │   l'agent tranche     │
-(linkedin-contacts.md),      │   CLAUDE.md)            │   seul à partir des   │
-jamais envoyé par la routine │   retravaillé jusqu'à   │   deux rapports :     │
-   ↓                         │   verdict propre, PUIS  │   corrige, publie,    │
-David corrige avec l'agent,  │   envoyé par la routine │   ou renonce si le    │
-puis décide seul d'envoyer ──┘   elle-même, sans       │   fond ne tient pas   │
-                                  validation préalable ─┘   — publié direct ───┘
-                                                             (content-log.md),
-                                                             jamais mis en file
+(linkedin-contacts.md),      │   CLAUDE.md)            │   seul à partir du    │
+jamais envoyé par la routine │   retravaillé jusqu'à   │   rapport mécanique   │
+   ↓                         │   verdict propre, PUIS  │   et de sa propre     │
+David corrige avec l'agent,  │   envoyé par la routine │   relecture : corrige,│
+puis décide seul d'envoyer ──┘   elle-même, sans       │   publie, ou renonce  │
+                                  validation préalable ─┘   si le fond ne      │
+                                                             tient pas — publié │
+                                                             direct (content-   │
+                                                             log.md), jamais    │
+                                                             mis en file        │
 ```
 
 ⚠️ **La branche « DM, run automatisé » existe depuis le 2026-09-03, décidée par
@@ -138,9 +155,10 @@ les deux durées). « 340 clients actifs » est bloqué deux fois — chiffre no
 sourcé, et chiffre de traction interdit en sortant.
 
 **Ce que le contrôle mécanique ne fait pas ici** : juger une affirmation en
-langue naturelle. Il vérifie l'origine des nombres et remonte chaque phrase
-mentionnant HWG au relecteur. La différence avec avant est que le relecteur a
-maintenant une liste fermée à confronter, au lieu de sa mémoire.
+langue naturelle. Il vérifie l'origine des nombres et signale chaque phrase
+mentionnant HWG (`hwg.claim`) comme un point à confronter au registre produit —
+**par le rédacteur lui-même depuis le 2026-09-06** (auparavant remonté au
+relecteur, retiré ce jour-là, voir en tête de document).
 
 ## 2. Le contrôle mécanique
 
@@ -223,8 +241,9 @@ C'est le défaut d'outillage listé depuis plusieurs jours sous « annotations d
 `threadFile` analysées comme du fil ». **Il n'a pas besoin d'un correctif dans le
 script : il suffit de ne rien mettre d'autre que le fil dans le fichier.** Tout ce
 qui relève du contexte, de l'intention ou de la justification va dans le
-`ctx-<slug>.json`, dans le prompt du relecteur, ou dans le journal d'archive —
-pas là.
+`ctx-<slug>.json` ou dans le journal d'archive — pas là. *(Cette phrase citait
+aussi « le prompt du relecteur » jusqu'au 2026-09-06 ; le relecteur est retiré,
+voir en tête de document.)*
 
 ⚠️ **Le marqueur CTA `\blien\b` se déclenche sur le mot français courant, et il le fera
 indéfiniment sur ce compte — trouvé le 2026-08-27 (créneau 13h).** `context.cta-repeat` a
@@ -263,8 +282,13 @@ destinataire verbatim) **dans sa langue d'origine**, et rien de plus. C'est ce
 matériau qui détermine légitimement la langue du canal, et le mettre tel quel
 rend `context.language` exact au lieu de le rendre trompeur.
 
-## 3. Le relecteur
+## 3. Le relecteur — RETIRÉ DU DISPOSITIF LE 2026-09-06, SECTION GARDÉE POUR L'HISTORIQUE
 
+**Ce qui suit décrit un mécanisme qui n'existe plus.** Voir l'encadré en tête de
+document. Le prompt ci-dessous n'est plus invoqué par aucune routine ; il reste
+ici comme trace de ce que le dispositif faisait entre le 2026-08-24 et le
+2026-09-06, et parce que les huit exigences de rédaction (`hwg-social-policy.md`
+§5) continuent d'y renvoyer par endroits pour expliquer leur origine.
 
 Un agent distinct, lancé avec un **contexte neuf**. Il reçoit quatre choses et
 rien d'autre :
@@ -471,9 +495,12 @@ service. Il en a un depuis le 2026-08-24 (créneaux 9h et 13h). Trois risques
 concrets, dont les deux premiers se lisent dans le relevé QA de fin de session :
 
 - **Le contrôle mécanique ne juge pas la pertinence.** Un message creux mais
-  irréprochable passe. C'est le relecteur, question 12, qui doit l'arrêter — et
-  c'est le seul étage dont la fiabilité n'est pas mesurable autrement qu'en
-  relisant a posteriori ce qui est parti.
+  irréprochable passe. *(Jusqu'au 2026-09-06, c'était le relecteur, question 12,
+  qui devait l'arrêter — c'était le seul étage dont la fiabilité n'était pas
+  mesurable autrement qu'en relisant a posteriori ce qui était parti. Depuis le
+  retrait du relecteur, plus rien n'arrête ce cas précis avant l'item 8 de la
+  grille de rédaction, fait par le rédacteur seul — risque à surveiller
+  explicitement, pas un point réglé.)*
 - **Les abandons répétés sur le même motif** ne veulent pas dire que le rédacteur
   est mauvais : le plus souvent, c'est une règle du lexique trop large. Un motif
   qui revient plus de deux fois dans la semaine se corrige dans
@@ -499,11 +526,14 @@ concrets, dont les deux premiers se lisent dans le relevé QA de fin de session 
     contexte de la phrase. La correction en toutes lettres (« une cinquantaine »)
     a fait passer le contrôle et introduit une erreur d’arrondi de 11 % que le
     relecteur a dû rattraper.
-- **Le dispositif inspire une confiance qu'il ne mérite pas encore.** Trois étages,
-  un verdict en majuscules et un score sur 12 donnent à une session l'impression
-  d'avoir une autorité qu'elle n'a pas. C'est ce qui s'est produit le 24/08 : le
-  dispositif a été lu comme s'il remplaçait la validation de David. **Un verdict
-  `ENVOYER` est un avis sur un texte, pas une autorisation.**
+- **Le dispositif inspire une confiance qu'il ne mérite pas encore.** Écrit quand
+  le dispositif avait trois étages, un verdict en majuscules et un score sur 12,
+  qui donnaient à une session l'impression d'avoir une autorité qu'elle n'a pas.
+  C'est ce qui s'est produit le 24/08 : le dispositif a été lu comme s'il
+  remplaçait la validation de David. **Depuis le retrait du relecteur le
+  2026-09-06, il ne reste que deux étages et plus aucun verdict en majuscules ni
+  score sur 12** — le risque de sur-confiance change de forme mais ne disparaît
+  pas : un `PASS` mécanique reste un contrôle de forme, pas un avis sur le fond.
 
 Une relecture par David d'un échantillon de ce qui est mis en file, au bout d'une
 semaine, vaut mieux que n'importe quel garde-fou ajouté d'avance.

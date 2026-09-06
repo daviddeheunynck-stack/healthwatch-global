@@ -1,3 +1,5 @@
+**⚠️ Document historique, non référencé par aucun SKILL.md actif (vérifié le 2026-09-06) — décrit un modèle à 4 essais et une file DM déjà remplacés depuis. Ne pas s'en servir comme référence : `_shared/hwg-social-policy.md` §5 et `docs/outreach-qa.md` font foi sur le dispositif actuel (2 étages depuis le 2026-09-06 soir, relecteur retiré).**
+
 # Bloc à coller dans les SKILL.md des routines d'outreach
 
 À insérer dans `linkedin-hwg-monitoring`, `linkedin-hwg-followup-check`,
