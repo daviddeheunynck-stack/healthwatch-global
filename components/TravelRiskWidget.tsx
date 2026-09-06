@@ -4,6 +4,8 @@ import { useState } from "react";
 import { Plane, AlertTriangle, CheckCircle, ShieldAlert, ShieldOff } from "lucide-react";
 import { getLocalizedDisease, COUNTRY_FR, COUNTRY_ES, COUNTRY_ID } from "@/lib/outbreaks";
 import { findCountry } from "@/lib/geo-data";
+import { MagnitudeDots } from "@/components/MagnitudeIndicator";
+import RealStatsProvider, { useRealStats } from "@/components/RealStatsProvider";
 
 // Same fix as TravelRiskFullPage.tsx (2026-08-02): result.country_en is the
 // canonical English name, shown unlocalized on every non-English locale.
@@ -17,12 +19,38 @@ function localizedCountryLabel(countryEn: string, locale: string): string {
 
 type Risk = "none" | "low" | "medium" | "high" | "critical";
 
+// `is_free_featured`/`cases_band` since 2026-09-06 — see the same note in
+// TravelRiskFullPage.tsx: /api/travel-risk masks non-featured rows for every
+// visitor (its response is publicly cached), and a paid viewer's real figures
+// are filled in here, client-side, via RealStatsProvider.
+interface WidgetOutbreak {
+  id: string;
+  disease: string; disease_en: string | null; disease_ar: string | null;
+  cases: number | null;
+  risk_level: string;
+  is_pheic: boolean;
+  is_free_featured?: boolean;
+  cases_band?: number | null;
+}
+
 interface TravelResult {
   country_en: string;
   risk: Risk;
-  outbreaks: { id: string; disease: string; disease_en: string | null; disease_ar: string | null; cases: number | null; risk_level: string; is_pheic: boolean }[];
+  outbreaks: WidgetOutbreak[];
   recommendation: string;
   checked_at: string;
+}
+
+// Must be a child of RealStatsProvider to see the context.
+function WidgetCases({ o, locale }: { o: WidgetOutbreak; locale: string }) {
+  const real = useRealStats();
+  const unlocked = o.is_free_featured === false ? real?.get(o.id) : { cases: o.cases };
+  if (!unlocked) return <MagnitudeDots band={o.cases_band ?? null} locale={locale} />;
+  return (
+    <span className="tabular-nums text-gray-500">
+      {unlocked.cases != null ? unlocked.cases.toLocaleString(locale === "ar" ? "ar-SA" : (locale || "en")) : "—"}
+    </span>
+  );
 }
 
 const COPY: Record<string, {
@@ -114,12 +142,13 @@ export default function TravelRiskWidget({ locale }: { locale: string }) {
           <p className="text-xs text-gray-400 leading-relaxed">{result.recommendation}</p>
 
           {result.outbreaks.length > 0 && (
+            <RealStatsProvider ids={result.outbreaks.filter((o) => o.is_free_featured === false).map((o) => o.id)}>
             <div className="space-y-1 pt-1 border-t border-gray-700/40">
               {result.outbreaks.map((o) => (
                 <div key={o.id} className="flex items-center justify-between text-[11px]">
                   <span className="text-gray-400">{getLocalizedDisease(o, locale) || "Unknown"}{o.is_pheic ? " 🚨" : ""}</span>
                   <div className="flex items-center gap-1.5">
-                    <span className="tabular-nums text-gray-500">{o.cases != null ? o.cases.toLocaleString(locale === "ar" ? "ar-SA" : (locale || "en")) : "—"}</span>
+                    <WidgetCases o={o} locale={locale} />
                     <span className={`px-1 rounded text-[9px] font-bold ${o.risk_level === "high" ? "bg-red-900/40 text-red-400" : o.risk_level === "medium" ? "bg-amber-900/40 text-amber-400" : "bg-green-900/40 text-green-400"}`}>
                       {(RISK_STYLE[o.risk_level as Risk]?.label[locale] ?? o.risk_level).toUpperCase()}
                     </span>
@@ -127,6 +156,7 @@ export default function TravelRiskWidget({ locale }: { locale: string }) {
                 </div>
               ))}
             </div>
+            </RealStatsProvider>
           )}
 
           <p className="text-[10px] text-gray-600">{c.asOf} {new Date(result.checked_at).toLocaleString(LOCALE_TAG[locale] ?? "en-GB", { dateStyle: "short", timeStyle: "short" })}</p>

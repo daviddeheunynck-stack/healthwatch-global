@@ -3,6 +3,10 @@ import { createClient } from "@supabase/supabase-js";
 import * as Sentry from "@sentry/nextjs";
 import { fetchFcdoAdvisory, getGovLinks } from "@/lib/travel-advisory";
 import { findCountry } from "@/lib/geo-data";
+import {
+  getOutbreaks, pickFeaturedDiseases, isFreeFeaturedRow,
+  magnitudeBand, cfrSeverityBand, type CfrSeverityBand,
+} from "@/lib/outbreaks";
 
 export const dynamic = "force-dynamic";
 
@@ -15,11 +19,21 @@ const SUPABASE_SERVICE = clean(process.env.SUPABASE_SERVICE_ROLE_KEY);
 interface ActiveOutbreak {
   id: string;
   disease: string; disease_en: string | null; disease_ar: string | null;
+  region: string;
   cases: number | null;
   deaths: number | null;
   risk_level: string;
   date: string;
   is_pheic: boolean;
+}
+
+// What actually leaves this route per outbreak: the real figures only for a
+// region's free showcase disease, a qualitative band otherwise.
+interface TravelOutbreak extends ActiveOutbreak {
+  is_free_featured: boolean;
+  cases_band: number | null;
+  deaths_band: number | null;
+  cfr_band: CfrSeverityBand | null;
 }
 
 function aggregateRisk(outbreaks: ActiveOutbreak[]): "none" | "low" | "medium" | "high" | "critical" {
@@ -75,14 +89,20 @@ export async function GET(req: Request) {
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE);
 
-  const [{ data: outbreaks, error }, fcdo] = await Promise.all([
+  const [{ data: outbreaks, error }, fcdo, allActive] = await Promise.all([
     supabase
       .from("outbreaks")
-      .select("id, disease, disease_en, disease_ar, cases, deaths, risk_level, date, is_pheic")
+      .select("id, disease, disease_en, disease_ar, region, cases, deaths, risk_level, date, is_pheic")
       .eq("active", true)
       .eq("country_en", dbCountryEn)
       .order("risk_level", { ascending: true }),
     fetchFcdoAdvisory(countryEn),
+    // Only used to decide which disease is a region's free showcase, so it
+    // is deliberately NOT part of the health/safety path above: getOutbreaks
+    // returns [] on failure (it degrades rather than throwing), which yields
+    // an empty featured map, which masks EVERY row. The mask fails closed;
+    // the risk verdict keeps its own query and its own 503.
+    getOutbreaks(),
   ]);
 
   // A failed query previously fell through `outbreaks ?? []` into
@@ -108,10 +128,37 @@ export async function GET(req: Request) {
   const risk   = aggregateRisk(active);
   const lang   = locale in RECOMMENDATIONS.none ? locale : "en";
 
+  // This page is public and its response is cached `public` for an hour, so
+  // it carries the same mask as the disease/country/region hub pages — the
+  // same output for every visitor, with a paid viewer's real figures filled
+  // in client-side afterwards (RealStatsProvider → /api/outbreak-stats).
+  // Until 2026-09-06 the route returned exact cases/deaths with no auth of
+  // any kind: `?list=1` names the 80 countries holding an active row, so 81
+  // anonymous requests recovered 96 of 96 masked rows in clear — including
+  // the Ebola/DR Congo figures that fd646a97 had closed on /compare that
+  // morning. Only the per-outbreak figures are masked: the risk verdict,
+  // the recommendation, the FCDO advisory and the government links are not
+  // numbers and stay exactly as they were.
+  const featuredDiseaseByRegion = pickFeaturedDiseases(allActive.filter((o) => o.active));
+  const masked: TravelOutbreak[] = active.map((o) => {
+    const featured = isFreeFeaturedRow(o, featuredDiseaseByRegion);
+    const cases  = o.cases ?? 0;
+    const deaths = o.deaths;
+    return {
+      ...o,
+      cases:  featured ? o.cases  : 0,
+      deaths: featured ? o.deaths : null,
+      is_free_featured: featured,
+      cases_band:  featured ? null : magnitudeBand(cases),
+      deaths_band: featured ? null : (deaths === null ? null : magnitudeBand(deaths)),
+      cfr_band:    featured ? null : cfrSeverityBand(cases, deaths),
+    };
+  });
+
   return NextResponse.json({
     country_en: countryEn,
     risk,
-    outbreaks: active,
+    outbreaks: masked,
     recommendation: RECOMMENDATIONS[risk][lang as keyof typeof RECOMMENDATIONS["none"]],
     fcdo:     fcdo ?? null,
     govLinks: getGovLinks(countryEn),

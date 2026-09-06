@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { createClient as createServerClient } from "@/lib/supabase-server";
+import { resolvedPlan } from "@/lib/resolved-plan";
 import { haversineKm } from "@/lib/haversine";
 import { getCountryCoords } from "@/lib/country-coords";
 import * as Sentry from "@sentry/nextjs";
@@ -15,6 +17,28 @@ const SUPABASE_SERVICE = clean(process.env.SUPABASE_SERVICE_ROLE_KEY);
 const RADIUS_KM = 1500;
 
 export async function GET(req: Request) {
+  // Paid gate. This route returns exact cases/deaths for every active
+  // outbreak within 1500 km of the origin — the same figures the
+  // qualitative-band mask hides from anonymous and free viewers on every
+  // page — and it had no auth check at all: 81 anonymous requests (one per
+  // country listed by /api/travel-risk?list=1) pulled 87 of the 96 masked
+  // rows in clear. It has exactly one caller, already paid-only
+  // (OutbreakDetailModal.tsx, under `if (!outbreak || !isPaid) return`), so
+  // gating it like its six sibling panel routes changes no interface.
+  // Found 2026-09-06, after that day's page-by-page paywall sweep.
+  const auth = await createServerClient();
+  const { data: { user } } = await auth.auth.getUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { data: profile } = await auth
+    .from("profiles")
+    .select("plan, trial_ends_at, stripe_subscription_id")
+    .eq("id", user.id)
+    .single();
+
+  if (!["starter", "pro", "team", "enterprise"].includes(resolvedPlan(profile)))
+    return NextResponse.json({ error: "Pro plan required" }, { status: 403 });
+
   const { searchParams } = new URL(req.url);
   const countryEn = searchParams.get("country_en") ?? "";
   const latParam  = searchParams.get("lat");
@@ -35,8 +59,9 @@ export async function GET(req: Request) {
     .eq("active", true)
     .neq("country_en", countryEn);
 
-  // Public + cached 1h like travel-risk/outbreak-history-by-country — same
-  // fix: a failed query must not render as "no nearby outbreaks" for an hour.
+  // Cached 1h (privately, see the gate above) — same fix as
+  // travel-risk/outbreak-history-by-country: a failed query must not render
+  // as "no nearby outbreaks" for an hour.
   if (error) {
     console.error("[outbreak-neighbors] query failed:", error.message);
     Sentry.captureException(new Error(`[outbreak-neighbors] query failed: ${error.message}`), { tags: { route: "outbreak-neighbors", country: countryEn } });
@@ -64,5 +89,8 @@ export async function GET(req: Request) {
     .sort((a, b) => a.distKm - b.distKm)
     .slice(0, 10);
 
-  return NextResponse.json({ neighbors }, { headers: { "Cache-Control": "public, max-age=3600, s-maxage=3600" } });
+  // `private` since the paid gate above: a shared/CDN cache holding this
+  // response would hand a paid viewer's exact figures to the next anonymous
+  // request for the same country, re-opening the hole the gate just closed.
+  return NextResponse.json({ neighbors }, { headers: { "Cache-Control": "private, max-age=3600" } });
 }

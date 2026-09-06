@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Loader2, Link2, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import RiskBadge from "@/components/RiskBadge";
+import { MagnitudeDots } from "@/components/MagnitudeIndicator";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 
 interface ClusterOutbreak {
@@ -12,6 +13,10 @@ interface ClusterOutbreak {
   country: string; country_en: string | null; country_ar: string | null;
   risk_level: string;
   cases: number;
+  // Set by /api/outbreak-cluster: real `cases` only when unlocked (paid
+  // viewer, or the region's free showcase disease), a 1-5 band otherwise.
+  is_free_featured?: boolean;
+  cases_band?: number | null;
   date: string;
 }
 
@@ -67,9 +72,11 @@ export default function OutbreakCluster({ eventId, excludeId, locale }: Props) {
                 </p>
                 <p className="text-[10px] text-gray-600 truncate">{getLocalizedCountry(o, locale)}</p>
               </div>
-              {o.cases > 0 && (
-                <span className="text-[10px] text-gray-600 shrink-0">{o.cases.toLocaleString(locale === "ar" ? "ar-SA" : locale)}</span>
-              )}
+              {o.is_free_featured === false
+                ? <MagnitudeDots band={o.cases_band} locale={locale} className="shrink-0" />
+                : o.cases > 0 && (
+                    <span className="text-[10px] text-gray-600 shrink-0">{o.cases.toLocaleString(locale === "ar" ? "ar-SA" : locale)}</span>
+                  )}
               <ExternalLink className="w-3 h-3 text-gray-700 group-hover:text-gray-400 transition-colors shrink-0" />
             </Link>
           ))}

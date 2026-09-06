@@ -10,6 +10,8 @@ import {
 } from "lucide-react";
 import { getLocalizedDisease, COUNTRY_FR, COUNTRY_ES, COUNTRY_ID } from "@/lib/outbreaks";
 import { findCountry } from "@/lib/geo-data";
+import { MagnitudeDots } from "@/components/MagnitudeIndicator";
+import RealStatsProvider, { useRealStats } from "@/components/RealStatsProvider";
 
 // WORLD_COUNTRIES holds canonical ISO English names only — the picker and
 // result header showed them unlocalized on every non-English locale, even
@@ -35,6 +37,29 @@ interface ActiveOutbreak {
   risk_level: string;
   date: string;
   is_pheic: boolean;
+  // Set by /api/travel-risk since 2026-09-06: this page is public and its API
+  // response is cached `public` for an hour, so the route serves the same
+  // masked payload to everyone and real figures reach a paid viewer here,
+  // client-side — the same arrangement as the disease/country/region hub
+  // pages. Before that the route returned exact cases/deaths to anyone.
+  is_free_featured?: boolean;
+  cases_band?: number | null;
+  deaths_band?: number | null;
+}
+
+// One cases/deaths figure: the real number for a region's free showcase
+// disease or for a viewer the paid-gated fetch has confirmed, a 1-5 band
+// otherwise. Must be a child of RealStatsProvider to see the context.
+function OutbreakFigure({ o, kind, locale }: { o: ActiveOutbreak; kind: "cases" | "deaths"; locale: string }) {
+  const real = useRealStats();
+  const unlocked = o.is_free_featured === false
+    ? real?.get(o.id)
+    : { cases: o.cases, deaths: o.deaths };
+  if (!unlocked) {
+    return <MagnitudeDots band={kind === "cases" ? (o.cases_band ?? null) : (o.deaths_band ?? null)} locale={locale} className="justify-end" />;
+  }
+  const value = kind === "cases" ? unlocked.cases : unlocked.deaths;
+  return <>{value != null ? value.toLocaleString(locale === "ar" ? "ar-SA" : locale) : "—"}</>;
 }
 
 interface FcdoAdvisory {
@@ -419,6 +444,7 @@ export default function TravelRiskFullPage({ locale }: { locale: string }) {
 
           {/* Outbreaks list */}
           {result.outbreaks.length > 0 ? (
+            <RealStatsProvider ids={result.outbreaks.filter((o) => o.is_free_featured === false).map((o) => o.id)}>
             <div className="bg-gray-900/60 border border-gray-700/50 rounded-2xl overflow-hidden">
               <div className="px-6 py-4 border-b border-gray-800 flex items-center gap-2">
                 <AlertTriangle className="w-4 h-4 text-amber-400" />
@@ -444,11 +470,11 @@ export default function TravelRiskFullPage({ locale }: { locale: string }) {
                       </div>
                       <div className="flex items-center gap-5 shrink-0">
                         <div className="text-right hidden sm:block">
-                          <p className="text-sm font-semibold text-white tabular-nums">{o.cases != null ? o.cases.toLocaleString(locale === "ar" ? "ar-SA" : locale) : "—"}</p>
+                          <p className="text-sm font-semibold text-white tabular-nums"><OutbreakFigure o={o} kind="cases" locale={locale} /></p>
                           <p className="text-[10px] text-gray-500 uppercase tracking-wide">{c.cases}</p>
                         </div>
                         <div className="text-right hidden sm:block">
-                          <p className="text-sm font-semibold text-gray-400 tabular-nums">{o.deaths != null ? o.deaths.toLocaleString(locale === "ar" ? "ar-SA" : locale) : "—"}</p>
+                          <p className="text-sm font-semibold text-gray-400 tabular-nums"><OutbreakFigure o={o} kind="deaths" locale={locale} /></p>
                           <p className="text-[10px] text-gray-500 uppercase tracking-wide">{c.deaths}</p>
                         </div>
                         <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full ${oc.badgeBg} ${oc.text} border ${oc.border} uppercase tracking-wide`}>
@@ -461,6 +487,7 @@ export default function TravelRiskFullPage({ locale }: { locale: string }) {
                 })}
               </div>
             </div>
+            </RealStatsProvider>
           ) : (
             <div className="bg-gray-900/60 border border-green-700/30 rounded-2xl p-8 text-center">
               <CheckCircle className="w-10 h-10 text-green-400 mx-auto mb-3" />

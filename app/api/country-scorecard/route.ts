@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
+import { resolvedPlan } from "@/lib/resolved-plan";
 import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
@@ -25,6 +26,25 @@ export async function GET() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  // Paid gate, not just "is signed in". `total_cases` below is an exact sum
+  // of the very figures the qualitative-band mask hides from a free viewer
+  // everywhere else, and an aggregate is not a softer disclosure than a row:
+  // see aggregateNeedsMasking()'s doc comment in lib/outbreaks.ts — a total
+  // that includes masked rows lets `total - sum(featured rows)` recover them
+  // by subtraction. The route's only consumer is already paid-only
+  // (`{isPaid && <CountryScorecardTab …>}`, dashboard page.tsx), so this
+  // closes a curl-only hole and changes no interface. Found 2026-09-06: the
+  // paywall sweep of that day was conducted page by page and never opened
+  // the API routes feeding panels inside pages it had already covered.
+  const { data: gateProfile } = await supabase
+    .from("profiles")
+    .select("plan, trial_ends_at, stripe_subscription_id")
+    .eq("id", user.id)
+    .single();
+
+  if (!["starter", "pro", "team", "enterprise"].includes(resolvedPlan(gateProfile)))
+    return NextResponse.json({ error: "Pro plan required" }, { status: 403 });
 
   const { data: outbreaks, error } = await supabase
     .from("outbreaks")
