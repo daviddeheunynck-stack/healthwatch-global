@@ -1084,14 +1084,14 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                 <Search className="w-4 h-4 text-amber-400" />
               </div>
               <p className="text-sm font-semibold text-amber-300">
-                {locale === "fr" ? "Filtre par région · Rapports PDF · Alertes instantanées"
-                : locale === "es" ? "Filtro por región · Informes PDF · Alertas instantáneas"
-                : locale === "ar" ? "تصفية حسب المنطقة · تقارير PDF · تنبيهات فورية"
-                : locale === "id" ? "Filter wilayah · Laporan PDF · Peringatan instan"
-                : "Region filter · PDF reports · Instant alerts"}
+                {locale === "fr" ? "Cas confirmés · Décès · Rapports PDF · Alertes instantanées"
+                : locale === "es" ? "Casos confirmados · Fallecidos · Informes PDF · Alertas instantáneas"
+                : locale === "ar" ? "الحالات المؤكدة · الوفيات · تقارير PDF · تنبيهات فورية"
+                : locale === "id" ? "Kasus terkonfirmasi · Kematian · Laporan PDF · Peringatan instan"
+                : "Confirmed cases · Deaths · PDF reports · Instant alerts"}
               </p>
             </div>
-            <LockedUpgradeButton feature="list" label={l.lockedCta} variant="banner" />
+            <LockedUpgradeButton feature="cases" label={l.lockedCta} variant="banner" />
           </div>
         </div>
       )}
@@ -1181,6 +1181,14 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                       {isNewOutbreak(outbreak) && (
                         <span className="inline-flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded bg-green-900/50 border border-green-700/50 text-green-300 shrink-0 animate-pulse">
                           {{ fr: "NOUVEAU", en: "NEW", es: "NUEVO", ar: "جديد", id: "BARU" }[locale] ?? "NEW"}
+                        </span>
+                      )}
+                      {!isPaid && outbreak.is_free_featured && (
+                        <span
+                          title={{ fr: "Chiffres réels débloqués — un foyer vedette par continent", en: "Real figures unlocked — one showcase outbreak per continent", es: "Cifras reales desbloqueadas — un brote destacado por continente", ar: "أرقام حقيقية غير مقيّدة — بؤرة بارزة واحدة لكل قارة", id: "Angka asli terbuka — satu wabah unggulan per benua" }[locale] ?? "Real figures unlocked — one showcase outbreak per continent"}
+                          className="inline-flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-900/50 border border-emerald-700/50 text-emerald-300 shrink-0 cursor-help"
+                        >
+                          {{ fr: "APERÇU GRATUIT", en: "FREE SAMPLE", es: "MUESTRA GRATIS", ar: "عرض مجاني", id: "CONTOH GRATIS" }[locale] ?? "FREE SAMPLE"}
                         </span>
                       )}
                       {outbreak.is_pheic && (
@@ -1333,7 +1341,14 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                   </td>
                   <td className="px-4 py-3 text-gray-300">
                     <div className="flex items-center gap-1.5">
-                      {outbreak.cases > 0 ? outbreak.cases.toLocaleString(numLocale) : <span className="text-gray-600 italic text-xs">{l.noData}</span>}
+                      {(isPaid || outbreak.is_free_featured) ? (
+                        outbreak.cases > 0 ? outbreak.cases.toLocaleString(numLocale) : <span className="text-gray-600 italic text-xs">{l.noData}</span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 cursor-pointer" onClick={() => openModal("cases")} title="Pro — click to unlock">
+                          <span className="blur-sm select-none text-gray-500 pointer-events-none">{outbreak.cases.toLocaleString(numLocale).replace(/\d/g, "•")}</span>
+                          <Lock className="w-2.5 h-2.5 text-amber-500/60 pointer-events-none shrink-0" />
+                        </span>
+                      )}
                       {outbreak.cases > 0 && <TrendBadge trend={trends?.[outbreak.id]} />}
                       {isPaid && (() => {
                         const d24 = trends?.[outbreak.id]?.delta24h;
@@ -1353,22 +1368,45 @@ export default function OutbreakTable({ outbreaks, locale, isPaid, labels: l, tr
                     </div>
                   </td>
                   <td className="px-4 py-3 text-red-400 hidden sm:table-cell">
-                    {outbreak.deaths !== null
-                      ? outbreak.deaths.toLocaleString(numLocale)
-                      : <span className="text-gray-500 text-sm" title="Non rapporté dans cette source">—</span>
-                    }
+                    {(isPaid || outbreak.is_free_featured) ? (
+                      outbreak.deaths !== null
+                        ? outbreak.deaths.toLocaleString(numLocale)
+                        : <span className="text-gray-500 text-sm" title="Non rapporté dans cette source">—</span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 cursor-pointer" onClick={() => openModal("cases")} title="Pro — click to unlock">
+                        <span className="blur-sm select-none text-gray-500 pointer-events-none">{(outbreak.deaths ?? 0).toLocaleString(numLocale).replace(/\d/g, "•")}</span>
+                        <Lock className="w-2.5 h-2.5 text-amber-500/60 pointer-events-none shrink-0" />
+                      </span>
+                    )}
                   </td>
                   {/* CFR */}
                   <td className="px-4 py-3 hidden sm:table-cell">
-                    {outbreak.cases > 0 && outbreak.deaths !== null ? (
-                      <span className={`text-sm font-medium ${
-                        (outbreak.deaths / outbreak.cases) > 0.1 ? "text-red-400" :
-                        (outbreak.deaths / outbreak.cases) > 0.03 ? "text-amber-400" : "text-gray-400"
-                      }`}>
-                        {(outbreak.deaths / outbreak.cases * 100).toFixed(1)}%
-                      </span>
+                    {(isPaid || outbreak.is_free_featured) ? (
+                      outbreak.cases > 0 && outbreak.deaths !== null ? (
+                        <span className={`text-sm font-medium ${
+                          (outbreak.deaths / outbreak.cases) > 0.1 ? "text-red-400" :
+                          (outbreak.deaths / outbreak.cases) > 0.03 ? "text-amber-400" : "text-gray-400"
+                        }`}>
+                          {(outbreak.deaths / outbreak.cases * 100).toFixed(1)}%
+                        </span>
+                      ) : (
+                        <span className="text-gray-600 italic text-xs">{l.noData}</span>
+                      )
                     ) : (
-                      <span className="text-gray-600 italic text-xs">{l.noData}</span>
+                      outbreak.masked_cfr_pct !== null && outbreak.masked_cfr_pct !== undefined ? (
+                        <span className="inline-flex items-center gap-1 cursor-pointer" onClick={() => openModal("cases")} title="Pro — click to unlock">
+                          <span className="blur-sm select-none text-gray-500 pointer-events-none text-sm font-medium">{outbreak.masked_cfr_pct.toFixed(0).replace(/\d/g, "•")}%</span>
+                          <Lock className="w-2.5 h-2.5 text-amber-500/60 pointer-events-none shrink-0" />
+                        </span>
+                      ) : (
+                        <button
+                          onClick={() => openModal("cases")}
+                          className="flex items-center gap-1 text-xs text-amber-500/70 hover:text-amber-400 transition-colors"
+                        >
+                          <Lock className="w-3 h-3" />
+                          Pro
+                        </button>
+                      )
                     )}
                   </td>
                   <td className="px-4 py-3">

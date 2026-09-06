@@ -28,7 +28,7 @@ const COPY: Record<string, Record<string, PlanCopy>> = {
       headline: "Votre plan Pro est actif.",
       intro:    "Accès complet à la surveillance épidémique mondiale. Voici ce qui est déverrouillé :",
       features: [
-        "🗺️ Filtre par région — au-delà de « Toutes »",
+        "📊 Chiffres exacts — cas confirmés et décès pour chaque foyer",
         "📄 Rapports PDF — toutes les régions mondiales",
         "📥 Export CSV — données complètes pour vos analyses",
         "⚡ Alertes instantanées — hourly sync depuis l'OMS, l'ECDC, l'OPAS et l'Africa CDC",
@@ -47,7 +47,7 @@ const COPY: Record<string, Record<string, PlanCopy>> = {
       headline: "Your Pro plan is now active.",
       intro:    "Full access to global epidemic surveillance. Here's what's unlocked:",
       features: [
-        "🗺️ Region filtering — beyond \"All\"",
+        "📊 Exact figures — confirmed cases and deaths for every outbreak",
         "📄 PDF reports — all global regions",
         "📥 CSV export — complete data for your analysis",
         "⚡ Instant alerts — hourly sync from WHO, ECDC, PAHO & Africa CDC",
@@ -66,7 +66,7 @@ const COPY: Record<string, Record<string, PlanCopy>> = {
       headline: "Su plan Pro ya está activo.",
       intro:    "Acceso completo a la vigilancia epidémica mundial. Esto es lo que está desbloqueado:",
       features: [
-        "🗺️ Filtro por región — más allá de «Todas»",
+        "📊 Cifras exactas — casos y fallecidos por brote",
         "📄 Informes PDF — todas las regiones mundiales",
         "📥 Exportación CSV — datos completos para su análisis",
         "⚡ Alertas instantáneas — hourly sync desde la OMS, ECDC, PAHO y Africa CDC",
@@ -85,7 +85,7 @@ const COPY: Record<string, Record<string, PlanCopy>> = {
       headline: "خطة Pro الخاصة بك نشطة الآن.",
       intro:    "وصول كامل إلى مراقبة الأوبئة العالمية. إليك ما تم فتحه:",
       features: [
-        "🗺️ التصفية حسب المنطقة — أبعد من «الكل»",
+        "📊 الأرقام الدقيقة — الحالات والوفيات لكل تفشٍّ",
         "📄 تقارير PDF — جميع المناطق العالمية",
         "📥 تصدير CSV — بيانات كاملة لتحليلاتك",
         "⚡ تنبيهات فورية — مزامنة كل ساعة من WHO وECDC وPAHO وAfrica CDC",
@@ -104,7 +104,7 @@ const COPY: Record<string, Record<string, PlanCopy>> = {
       headline: "Paket Pro Anda sekarang aktif.",
       intro:    "Akses penuh ke pemantauan epidemi global. Berikut yang telah dibuka:",
       features: [
-        "🗺️ Filter wilayah — lebih dari \"Semua\"",
+        "📊 Angka tepat — kasus dan kematian setiap wabah",
         "📄 Laporan PDF — semua wilayah global",
         "📥 Ekspor CSV — data lengkap untuk analisis Anda",
         "⚡ Peringatan instan — sinkronisasi tiap jam dari WHO, ECDC, PAHO & Africa CDC",
@@ -128,7 +128,7 @@ const COPY: Record<string, Record<string, PlanCopy>> = {
       intro:    "Accès Pro complet pour toute votre équipe — 5 sièges, une seule facture institutionnelle. Voici ce qui est inclus :",
       features: [
         "👥 5 sièges — invitez vos collaborateurs depuis les paramètres du compte",
-        "🗺️ Filtre par région — au-delà de « Toutes »",
+        "📊 Chiffres exacts — cas confirmés et décès pour chaque foyer",
         "📄 Rapports PDF — toutes les régions mondiales",
         "📥 Export CSV — données complètes pour vos analyses d'équipe",
         "⚡ Alertes instantanées — hourly sync depuis l'OMS, l'ECDC, l'OPAS et l'Africa CDC",
@@ -148,7 +148,7 @@ const COPY: Record<string, Record<string, PlanCopy>> = {
       intro:    "Full Pro access for your entire team — 5 seats, one institutional invoice. Here's what's included:",
       features: [
         "👥 5 seats — invite your colleagues from your account settings",
-        "🗺️ Region filtering — beyond \"All\"",
+        "📊 Exact figures — confirmed cases and deaths for every outbreak",
         "📄 PDF reports — all global regions",
         "📥 CSV export — complete data for your team's analyses",
         "⚡ Instant alerts — hourly sync from WHO, ECDC, PAHO & Africa CDC",
@@ -168,7 +168,7 @@ const COPY: Record<string, Record<string, PlanCopy>> = {
       intro:    "Acceso Pro completo para todo su equipo — 5 puestos, una sola factura institucional. Esto es lo que incluye:",
       features: [
         "👥 5 puestos — invite a sus colegas desde la configuración de la cuenta",
-        "🗺️ Filtro por región — más allá de «Todas»",
+        "📊 Cifras exactas — casos y fallecidos por brote",
         "📄 Informes PDF — todas las regiones mundiales",
         "📥 Exportación CSV — datos completos para los análisis del equipo",
         "⚡ Alertas instantáneas — hourly sync desde la OMS, ECDC, PAHO y Africa CDC",
@@ -188,7 +188,7 @@ const COPY: Record<string, Record<string, PlanCopy>> = {
       intro:    "وصول Pro كامل لفريقك بالكامل — 5 مقاعد، فاتورة مؤسسية واحدة:",
       features: [
         "👥 5 مقاعد — ادعُ زملاءك من إعدادات الحساب",
-        "🗺️ التصفية حسب المنطقة — أبعد من «الكل»",
+        "📊 الأرقام الدقيقة — الحالات والوفيات لكل تفشٍّ",
         "📄 تقارير PDF — جميع المناطق العالمية",
         "📥 تصدير CSV — بيانات كاملة لتحليلات فريقك",
         "⚡ تنبيهات فورية — مزامنة كل ساعة من WHO وECDC وPAHO وAfrica CDC",
@@ -208,7 +208,7 @@ const COPY: Record<string, Record<string, PlanCopy>> = {
       intro:    "Akses Pro penuh untuk seluruh tim Anda — 5 kursi, satu faktur institusional. Berikut yang termasuk:",
       features: [
         "👥 5 kursi — undang rekan Anda dari pengaturan akun",
-        "🗺️ Filter wilayah — lebih dari \"Semua\"",
+        "📊 Angka tepat — kasus dan kematian setiap wabah",
         "📄 Laporan PDF — semua wilayah global",
         "📥 Ekspor CSV — data lengkap untuk analisis tim Anda",
         "⚡ Peringatan instan — sinkronisasi tiap jam dari WHO, ECDC, PAHO & Africa CDC",
@@ -232,7 +232,7 @@ const COPY: Record<string, Record<string, PlanCopy>> = {
       intro:    "Accès complet + API REST pour intégrer les données dans vos outils. Voici ce qui est disponible :",
       features: [
         "🔑 API REST — accès programmatique aux données de foyers (300 req/min)",
-        "📊 Toutes les fonctionnalités Pro — filtre par région, PDF, alertes, Slack",
+        "📊 Toutes les fonctionnalités Pro — chiffres exacts, PDF, alertes, Slack",
         "🌍 Toutes les régions — couverture mondiale sans restriction",
         "🛠️ 5 clés API — gestion multi-environnements (prod, staging…)",
       ],
@@ -248,7 +248,7 @@ const COPY: Record<string, Record<string, PlanCopy>> = {
       intro:    "Full access + REST API to integrate outbreak data into your own tools:",
       features: [
         "🔑 REST API — programmatic access to outbreak data (300 req/min)",
-        "📊 All Pro features — region filtering, PDF reports, alerts, Slack",
+        "📊 All Pro features — exact figures, PDF reports, alerts, Slack",
         "🌍 All regions — worldwide coverage, no restrictions",
         "🛠️ 5 API keys — multi-environment management (prod, staging…)",
       ],
@@ -264,7 +264,7 @@ const COPY: Record<string, Record<string, PlanCopy>> = {
       intro:    "Acceso completo + API REST para integrar datos en sus propias herramientas:",
       features: [
         "🔑 API REST — acceso programático a datos de brotes (300 req/min)",
-        "📊 Todas las funciones Pro — filtro por región, PDF, alertas, Slack",
+        "📊 Todas las funciones Pro — cifras exactas, PDF, alertas, Slack",
         "🌍 Todas las regiones — cobertura mundial sin restricciones",
         "🛠️ 5 claves API — gestión multi-entorno (prod, staging…)",
       ],
@@ -280,7 +280,7 @@ const COPY: Record<string, Record<string, PlanCopy>> = {
       intro:    "وصول كامل + API REST لدمج البيانات في أدواتك الخاصة:",
       features: [
         "🔑 API REST — وصول برمجي لبيانات التفشيات (300 طلب/دقيقة)",
-        "📊 جميع مزايا Pro — التصفية حسب المنطقة، PDF، تنبيهات، Slack",
+        "📊 جميع مزايا Pro — أرقام دقيقة، PDF، تنبيهات، Slack",
         "🌍 جميع المناطق — تغطية عالمية بلا قيود",
         "🛠️ 5 مفاتيح API — إدارة متعددة البيئات (إنتاج، تجريبي…)",
       ],
@@ -296,7 +296,7 @@ const COPY: Record<string, Record<string, PlanCopy>> = {
       intro:    "Akses penuh + REST API untuk mengintegrasikan data ke alat Anda sendiri:",
       features: [
         "🔑 REST API — akses programatik ke data wabah (300 req/mnt)",
-        "📊 Semua fitur Pro — filter wilayah, PDF, peringatan, Slack",
+        "📊 Semua fitur Pro — angka tepat, PDF, peringatan, Slack",
         "🌍 Semua wilayah — cakupan global tanpa batasan",
         "🛠️ 5 kunci API — manajemen multi-lingkungan (prod, staging…)",
       ],

@@ -74,7 +74,7 @@ const COPY: Record<string, {
     question: "S'agit-il du prix ? Du besoin d'un devis institutionnel ? Ou simplement du bon moment ?",
     offerLabel: "Ce que vous perdez chaque jour sans Pro",
     offerItems: [
-      "🗺️ Le filtre par région — au-delà de « Toutes »",
+      "📊 Les chiffres exacts de cas et de décès — floutés sans Pro",
       "📬 Les alertes email régionales en temps réel",
       "📄 Les rapports PDF épidémiologiques régionaux",
       "📥 L'export CSV complet des données brutes",
@@ -95,7 +95,7 @@ const COPY: Record<string, {
     question: "Is it the price? Do you need an institutional quote? Or is it just not the right time?",
     offerLabel: "What you're missing every day without Pro",
     offerItems: [
-      "🗺️ Region filtering — beyond \"All\"",
+      "📊 Exact case and death figures — blurred without Pro",
       "📬 Real-time regional email alerts",
       "📄 Regional epidemiological PDF reports",
       "📥 Full CSV export of raw data",
@@ -116,7 +116,7 @@ const COPY: Record<string, {
     question: "¿Es el precio? ¿Necesita un presupuesto institucional? ¿O simplemente no es el momento adecuado?",
     offerLabel: "Lo que pierde cada día sin Pro",
     offerItems: [
-      "🗺️ El filtro por región — más allá de «Todas»",
+      "📊 Cifras exactas de casos y fallecidos — borrosas sin Pro",
       "📬 Alertas email regionales en tiempo real",
       "📄 Informes PDF epidemiológicos regionales",
       "📥 Exportación CSV completa de datos brutos",
@@ -137,7 +137,7 @@ const COPY: Record<string, {
     question: "هل هو السعر؟ هل تحتاج إلى عرض مؤسسي؟ أم أن التوقيت غير مناسب؟",
     offerLabel: "ما تخسره كل يوم بدون Pro",
     offerItems: [
-      "🗺️ التصفية حسب المنطقة — أبعد من «الكل»",
+      "📊 أرقام دقيقة للحالات والوفيات — مطموسة بدون Pro",
       "📬 تنبيهات بريد إلكتروني إقليمية فورية",
       "📄 تقارير PDF وبائية إقليمية",
       "📥 تصدير CSV كامل للبيانات الخام",
@@ -158,7 +158,7 @@ const COPY: Record<string, {
     question: "Apakah masalah harga? Apakah Anda membutuhkan penawaran institusional? Atau memang belum waktunya?",
     offerLabel: "Yang Anda lewatkan setiap hari tanpa Pro",
     offerItems: [
-      "🗺️ Filter wilayah — lebih dari \"Semua\"",
+      "📊 Angka kasus dan kematian tepat — dikaburkan tanpa Pro",
       "📬 Peringatan email regional real-time",
       "📄 Laporan PDF epidemiologi regional",
       "📥 Ekspor CSV lengkap dari data mentah",
@@ -194,7 +194,7 @@ const COPY_J7: Record<string, {
     missedLabel: "Ce qui s'est passé pendant votre absence",
     missedItems: [
       "🦠 Nouveaux foyers en Afrique et en Asie du Sud-Est signalés dans les 7 derniers jours",
-      "🗺️ Le filtre par région — impossible d'isoler l'Afrique ou l'Asie du Sud-Est sans Pro",
+      "📊 Données de cas et de décès mises à jour quotidiennement — invisibles depuis l'expiration",
       "📬 Alertes email en temps réel — silencieuses depuis 7 jours",
       "🦠 Alertes Mpox/Ebola/Choléra — votre surveillance maladie par maladie est en pause",
     ],
@@ -211,7 +211,7 @@ const COPY_J7: Record<string, {
     missedLabel: "What happened while you were away",
     missedItems: [
       "🦠 New outbreaks in Africa and Southeast Asia reported in the last 7 days",
-      "🗺️ Region filtering — can't isolate Africa or Southeast Asia without Pro",
+      "📊 Case and death counts updated daily — invisible since your trial ended",
       "📬 Real-time email alerts — silent for 7 days",
       "🦠 Mpox/Ebola/Cholera tracking — your disease-specific surveillance has been paused",
     ],
@@ -228,7 +228,7 @@ const COPY_J7: Record<string, {
     missedLabel: "Lo que ocurrió durante su ausencia",
     missedItems: [
       "🦠 Nuevos brotes en África y el Sudeste Asiático reportados en los últimos 7 días",
-      "🗺️ El filtro por región — no puede aislar África o el Sudeste Asiático sin Pro",
+      "📊 Recuentos de casos y fallecidos actualizados diariamente — invisibles desde la expiración",
       "📬 Alertas email en tiempo real — silenciadas durante 7 días",
       "🦠 Seguimiento de Mpox/Ébola/Cólera — su vigilancia por enfermedad está en pausa",
     ],
@@ -245,7 +245,7 @@ const COPY_J7: Record<string, {
     missedLabel: "ما حدث في غيابك",
     missedItems: [
       "🦠 تفشيات جديدة في أفريقيا وجنوب شرق آسيا أُبلغ عنها في الأيام السبعة الماضية",
-      "🗺️ التصفية حسب المنطقة — لا يمكنك عزل أفريقيا أو جنوب شرق آسيا بدون Pro",
+      "📊 أرقام الحالات والوفيات تُحدَّث يومياً — غير مرئية منذ انتهاء التجربة",
       "📬 تنبيهات بريد إلكتروني فورية — صامتة منذ 7 أيام",
       "🦠 تتبع Mpox/إيبولا/كوليرا — مراقبتك المرضية توقفت منذ 7 أيام",
     ],
@@ -262,7 +262,7 @@ const COPY_J7: Record<string, {
     missedLabel: "Yang terjadi selama Anda tidak aktif",
     missedItems: [
       "🦠 Wabah baru di Afrika dan Asia Tenggara dilaporkan dalam 7 hari terakhir",
-      "🗺️ Filter wilayah — tidak bisa mengisolasi Afrika atau Asia Tenggara tanpa Pro",
+      "📊 Jumlah kasus dan kematian diperbarui setiap hari — tidak terlihat sejak masa percobaan berakhir",
       "📬 Peringatan email real-time — diam selama 7 hari",
       "🦠 Pemantauan Mpox/Ebola/Kolera — pengawasan per penyakit Anda telah dijeda",
     ],

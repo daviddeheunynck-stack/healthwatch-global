@@ -90,7 +90,7 @@ const J3_CONTENT: Record<string, {
     intro: "Vous avez accès à toutes les fonctionnalités Pro pendant encore 11 jours. Voici celles qui font la différence pour les équipes de veille sanitaire :",
     featuresTitle: "À explorer cette semaine",
     features: [
-      "🗺️ <strong>Filtre par région</strong> — au-delà de « Toutes », dans le tableau de bord",
+      "📊 <strong>Chiffres exacts</strong> — cas confirmés et décès par foyer, sans floutage",
       "📄 <strong>Rapports PDF régionaux</strong> — téléchargeables en 1 clic depuis la page d'un foyer",
       "📬 <strong>Alertes email régionales</strong> — configurez votre région dans votre compte",
       "📥 <strong>Export CSV</strong> — bouton « Exporter » en haut du tableau de bord",
@@ -108,7 +108,7 @@ const J3_CONTENT: Record<string, {
     intro: "You have access to all Pro features for 11 more days. Here are the ones that make the biggest difference for health surveillance teams:",
     featuresTitle: "Worth exploring this week",
     features: [
-      "🗺️ <strong>Region filtering</strong> — beyond \"All\", in the dashboard",
+      "📊 <strong>Exact figures</strong> — confirmed cases and deaths per outbreak, unblurred",
       "📄 <strong>Regional PDF reports</strong> — downloadable in 1 click from any outbreak page",
       "📬 <strong>Regional email alerts</strong> — configure your region in your account settings",
       "📥 <strong>CSV export</strong> — 'Export' button at the top of the dashboard",
@@ -126,7 +126,7 @@ const J3_CONTENT: Record<string, {
     intro: "Tiene acceso a todas las funciones Pro durante 11 días más. Estas son las que marcan la diferencia para los equipos de vigilancia sanitaria:",
     featuresTitle: "Vale la pena explorar esta semana",
     features: [
-      "🗺️ <strong>Filtro por región</strong> — más allá de «Todas», en el panel",
+      "📊 <strong>Cifras exactas</strong> — casos confirmados y fallecidos por brote, sin desenfoque",
       "📄 <strong>Informes PDF regionales</strong> — descargables en 1 clic desde cualquier página de brote",
       "📬 <strong>Alertas email regionales</strong> — configure su región en la configuración de su cuenta",
       "📥 <strong>Exportación CSV</strong> — botón 'Exportar' en la parte superior del panel",
@@ -144,7 +144,7 @@ const J3_CONTENT: Record<string, {
     intro: "لديك وصول إلى جميع ميزات Pro لمدة 11 يوماً آخر. إليك الميزات الأكثر أهمية لفرق المراقبة الصحية:",
     featuresTitle: "يستحق الاستكشاف هذا الأسبوع",
     features: [
-      "🗺️ <strong>التصفية حسب المنطقة</strong> — أبعد من «الكل»، في لوحة التحكم",
+      "📊 <strong>الأرقام الدقيقة</strong> — الحالات المؤكدة والوفيات لكل تفشٍّ، بدون طمس",
       "📄 <strong>تقارير PDF إقليمية</strong> — قابلة للتنزيل بنقرة واحدة من أي صفحة تفشٍّ",
       "📬 <strong>تنبيهات بريدية إقليمية</strong> — اضبط منطقتك في إعدادات حسابك",
       "📥 <strong>تصدير CSV</strong> — زر 'تصدير' أعلى لوحة التحكم",
@@ -162,7 +162,7 @@ const J3_CONTENT: Record<string, {
     intro: "Anda memiliki akses ke semua fitur Pro selama 11 hari lagi. Inilah fitur yang paling membuat perbedaan bagi tim surveilans kesehatan:",
     featuresTitle: "Layak dijelajahi minggu ini",
     features: [
-      "🗺️ <strong>Filter wilayah</strong> — lebih dari \"Semua\", di dasbor",
+      "📊 <strong>Angka tepat</strong> — kasus terkonfirmasi dan kematian per wabah, tanpa blur",
       "📄 <strong>Laporan PDF regional</strong> — diunduh dalam 1 klik dari halaman wabah mana pun",
       "📬 <strong>Peringatan email regional</strong> — atur wilayah Anda di pengaturan akun",
       "📥 <strong>Ekspor CSV</strong> — tombol 'Ekspor' di bagian atas dasbor",
@@ -302,7 +302,7 @@ const J12_CONTENT: Record<string, {
     intro: "Vous avez utilisé HealthWatch Pro pendant 12 jours. Dans 48 heures, votre accès sera limité au plan gratuit si vous ne souscrivez pas.",
     loseTitle: "Ce que vous perdez à la fin de l'essai",
     loseItems: [
-      "🗺️ Filtre par région — au-delà de « Toutes »",
+      "📊 Chiffres exacts — cas confirmés et décès (retour au floutage)",
       "📬 Alertes email régionales — plus de notifications en temps réel",
       "📄 Rapports PDF régionaux — plus d'exports en 1 clic",
       "📥 Export CSV — plus d'accès aux données brutes",
@@ -324,7 +324,7 @@ const J12_CONTENT: Record<string, {
     intro: "You've used HealthWatch Pro for 12 days. In 48 hours, your access will be limited to the free plan if you don't subscribe.",
     loseTitle: "What you lose at the end of the trial",
     loseItems: [
-      "🗺️ Region filtering — beyond \"All\"",
+      "📊 Exact figures — confirmed cases and deaths (back to blurred data)",
       "📬 Regional email alerts — no more real-time notifications",
       "📄 Regional PDF reports — no more 1-click exports",
       "📥 CSV export — no more raw data access",
@@ -346,7 +346,7 @@ const J12_CONTENT: Record<string, {
     intro: "Ha utilizado HealthWatch Pro durante 12 días. En 48 horas, su acceso se limitará al plan gratuito si no se suscribe.",
     loseTitle: "Lo que pierde al final de la prueba",
     loseItems: [
-      "🗺️ Filtro por región — más allá de «Todas»",
+      "📊 Cifras exactas — casos confirmados y fallecidos (vuelta a datos borrosos)",
       "📬 Alertas email regionales — sin más notificaciones en tiempo real",
       "📄 Informes PDF regionales — sin más exportaciones en 1 clic",
       "📥 Exportación CSV — sin más acceso a datos brutos",
@@ -368,7 +368,7 @@ const J12_CONTENT: Record<string, {
     intro: "لقد استخدمت HealthWatch Pro لمدة 12 يوماً. خلال 48 ساعة، سيُقيَّد وصولك بالخطة المجانية إذا لم تشترك.",
     loseTitle: "ما الذي ستفقده عند انتهاء التجربة",
     loseItems: [
-      "🗺️ التصفية حسب المنطقة — أبعد من «الكل»",
+      "📊 الأرقام الدقيقة — الحالات المؤكدة والوفيات (عودة إلى البيانات المطموسة)",
       "📬 التنبيهات البريدية الإقليمية — لن تصلك إشعارات فورية بعد الآن",
       "📄 تقارير PDF الإقليمية — لن تتمكن من التصدير بنقرة واحدة",
       "📥 تصدير CSV — لن تتمكن من الوصول إلى البيانات الخام",
@@ -390,7 +390,7 @@ const J12_CONTENT: Record<string, {
     intro: "Anda telah menggunakan HealthWatch Pro selama 12 hari. Dalam 48 jam, akses Anda akan dibatasi ke paket gratis jika tidak berlangganan.",
     loseTitle: "Yang Anda kehilangan di akhir uji coba",
     loseItems: [
-      "🗺️ Filter wilayah — lebih dari \"Semua\"",
+      "📊 Angka tepat — kasus terkonfirmasi dan kematian (kembali ke data dikaburkan)",
       "📬 Peringatan email regional — tidak ada lagi notifikasi real-time",
       "📄 Laporan PDF regional — tidak ada lagi ekspor 1 klik",
       "📥 Ekspor CSV — tidak ada lagi akses data mentah",
@@ -428,10 +428,10 @@ const TRIAL_EXPIRED_CONTENT: Record<string, {
   fr: {
     subject: "Votre essai Pro HealthWatch a expiré — réactivez en 1 clic",
     headline: "Votre essai Pro a pris fin.",
-    intro: "Votre accès Pro est maintenant revenu au plan gratuit. Vous n'avez plus accès au filtre par région, aux alertes et aux rapports PDF que vous utilisiez.",
+    intro: "Votre accès Pro est maintenant revenu au plan gratuit. Vous n'avez plus accès aux données exactes, alertes et rapports PDF que vous utilisiez.",
     lostTitle: "Ce que vous avez perdu",
     lostItems: [
-      "🗺️ Filtre par région (au-delà de « Toutes »)",
+      "📊 Chiffres exacts de cas et de décès (retour au floutage)",
       "📬 Alertes email régionales en temps réel",
       "📄 Rapports PDF régionaux téléchargeables",
       "📥 Export CSV des données brutes",
@@ -449,10 +449,10 @@ const TRIAL_EXPIRED_CONTENT: Record<string, {
   en: {
     subject: "Your HealthWatch Pro trial has expired — reactivate in 1 click",
     headline: "Your Pro trial has ended.",
-    intro: "Your Pro access has reverted to the free plan. You no longer have access to the region filtering, alerts and PDF reports you were using.",
+    intro: "Your Pro access has reverted to the free plan. You no longer have access to the exact figures, alerts and PDF reports you were using.",
     lostTitle: "What you've lost",
     lostItems: [
-      "🗺️ Region filtering (beyond \"All\")",
+      "📊 Exact case and death figures (back to blurred data)",
       "📬 Real-time regional email alerts",
       "📄 Downloadable regional PDF reports",
       "📥 CSV export of raw data",
@@ -470,10 +470,10 @@ const TRIAL_EXPIRED_CONTENT: Record<string, {
   es: {
     subject: "Su prueba Pro de HealthWatch ha expirado — reactive en 1 clic",
     headline: "Su prueba Pro ha terminado.",
-    intro: "Su acceso Pro ha vuelto al plan gratuito. Ya no tiene acceso al filtro por región, alertas e informes PDF que utilizaba.",
+    intro: "Su acceso Pro ha vuelto al plan gratuito. Ya no tiene acceso a las cifras exactas, alertas e informes PDF que utilizaba.",
     lostTitle: "Lo que ha perdido",
     lostItems: [
-      "🗺️ Filtro por región (más allá de «Todas»)",
+      "📊 Cifras exactas de casos y fallecidos (vuelta a datos borrosos)",
       "📬 Alertas email regionales en tiempo real",
       "📄 Informes PDF regionales descargables",
       "📥 Exportación CSV de datos brutos",
@@ -491,10 +491,10 @@ const TRIAL_EXPIRED_CONTENT: Record<string, {
   ar: {
     subject: "انتهت تجربتك Pro في HealthWatch — أعد التفعيل بنقرة واحدة",
     headline: "انتهت تجربتك Pro.",
-    intro: "عاد وصولك Pro إلى الخطة المجانية. لم تعد تتمكن من الوصول إلى التصفية حسب المنطقة والتنبيهات وتقارير PDF التي كنت تستخدمها.",
+    intro: "عاد وصولك Pro إلى الخطة المجانية. لم تعد تتمكن من الوصول إلى الأرقام الدقيقة والتنبيهات وتقارير PDF التي كنت تستخدمها.",
     lostTitle: "ما الذي فقدته",
     lostItems: [
-      "🗺️ التصفية حسب المنطقة (أبعد من «الكل»)",
+      "📊 الأرقام الدقيقة للحالات والوفيات (عودة إلى البيانات المطموسة)",
       "📬 تنبيهات البريد الإلكتروني الإقليمية الفورية",
       "📄 تقارير PDF الإقليمية القابلة للتحميل",
       "📥 تصدير CSV للبيانات الخام",
@@ -512,10 +512,10 @@ const TRIAL_EXPIRED_CONTENT: Record<string, {
   id: {
     subject: "Uji coba Pro HealthWatch Anda telah berakhir — aktifkan kembali dalam 1 klik",
     headline: "Uji coba Pro Anda telah berakhir.",
-    intro: "Akses Pro Anda telah kembali ke paket gratis. Anda tidak lagi memiliki akses ke filter wilayah, peringatan, dan laporan PDF yang Anda gunakan.",
+    intro: "Akses Pro Anda telah kembali ke paket gratis. Anda tidak lagi memiliki akses ke angka tepat, peringatan, dan laporan PDF yang Anda gunakan.",
     lostTitle: "Yang telah Anda kehilangan",
     lostItems: [
-      "🗺️ Filter wilayah (lebih dari \"Semua\")",
+      "📊 Angka kasus dan kematian yang tepat (kembali ke data dikaburkan)",
       "📬 Peringatan email regional real-time",
       "📄 Laporan PDF regional yang dapat diunduh",
       "📥 Ekspor CSV data mentah",
@@ -710,7 +710,7 @@ const PILOT_CONVERSION_CONTENT: Record<string, {
     intro: "Vous avez bénéficié d'un accès complet pendant 32 jours. Dans 72 heures, votre compte sera limité au plan gratuit si vous ne souscrivez pas. Répondez à cet email pour continuer — on cale un tarif Team adapté (à partir de 149€/mois pour 5 sièges).",
     loseTitle: "Ce que votre équipe perd à l'expiration",
     loseItems: [
-      "🗺️ Filtre par région — au-delà de « Toutes »",
+      "📊 Chiffres exacts — cas confirmés et décès (retour au floutage)",
       "📬 Alertes email et push en temps réel",
       "📄 Rapports PDF régionaux exportables",
       "📥 Export CSV des données brutes",
@@ -732,7 +732,7 @@ const PILOT_CONVERSION_CONTENT: Record<string, {
     intro: "You've had full access for 32 days. In 72 hours, your account will be limited to the free plan unless you subscribe. Reply to this email to continue — we'll set up a Team plan that fits (from €149/month for 5 seats).",
     loseTitle: "What your team loses at expiry",
     loseItems: [
-      "🗺️ Region filtering — beyond \"All\"",
+      "📊 Exact figures — confirmed cases and deaths (back to blurred data)",
       "📬 Real-time email and push alerts",
       "📄 Exportable regional PDF reports",
       "📥 CSV export of raw data",
@@ -754,7 +754,7 @@ const PILOT_CONVERSION_CONTENT: Record<string, {
     intro: "Ha tenido acceso completo durante 32 días. En 72 horas, su cuenta se limitará al plan gratuito si no se suscribe. Responda a este email para continuar — buscamos juntos un plan Team adaptado (desde 149€/mes para 5 puestos).",
     loseTitle: "Lo que su equipo pierde al vencer",
     loseItems: [
-      "🗺️ Filtro por región — más allá de «Todas»",
+      "📊 Cifras exactas — casos confirmados y fallecidos (vuelta a datos borrosos)",
       "📬 Alertas email y push en tiempo real",
       "📄 Informes PDF regionales exportables",
       "📥 Exportación CSV de datos brutos",
@@ -776,7 +776,7 @@ const PILOT_CONVERSION_CONTENT: Record<string, {
     intro: "تمتّعت بوصول كامل لمدة 32 يوماً. خلال 72 ساعة، سيُقيَّد حسابك بالخطة المجانية إذا لم تشترك. ردّ على هذا البريد للاستمرار — سنحدد معاً خطة Team مناسبة (ابتداءً من 149€/شهر لـ 5 مقاعد).",
     loseTitle: "ما الذي سيفقده فريقك عند الانتهاء",
     loseItems: [
-      "🗺️ التصفية حسب المنطقة (أبعد من «الكل»)",
+      "📊 الأرقام الدقيقة للحالات والوفيات (عودة إلى البيانات المطموسة)",
       "📬 تنبيهات البريد والدفع الفوري",
       "📄 تقارير PDF الإقليمية القابلة للتصدير",
       "📥 تصدير CSV للبيانات الخام",
@@ -798,7 +798,7 @@ const PILOT_CONVERSION_CONTENT: Record<string, {
     intro: "Anda telah memiliki akses penuh selama 32 hari. Dalam 72 jam, akun Anda akan dibatasi ke paket gratis jika tidak berlangganan. Balas email ini untuk melanjutkan — kami akan menyiapkan paket Team yang sesuai (mulai €149/bulan untuk 5 kursi).",
     loseTitle: "Yang akan hilang dari tim Anda saat berakhir",
     loseItems: [
-      "🗺️ Filter wilayah — lebih dari \"Semua\"",
+      "📊 Angka tepat — kasus terkonfirmasi dan kematian (kembali ke data dikaburkan)",
       "📬 Peringatan email dan push real-time",
       "📄 Laporan PDF regional yang dapat diekspor",
       "📥 Ekspor CSV data mentah",

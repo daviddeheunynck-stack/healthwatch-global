@@ -44,12 +44,12 @@ const COPY: Record<string, {
       },
       {
         title: "Le tableau de bord épidémiologique",
-        body: "Tous les foyers actifs triés par niveau de risque, avec cas et décès confirmés.",
+        body: "Tous les foyers actifs triés par niveau de risque. Les chiffres exacts de cas et de décès sont disponibles avec les plans Pro et Team — les utilisateurs gratuits voient les données floutées.",
         cta: "Suivant",
       },
       {
         title: "Débloquez la surveillance complète",
-        body: "Filtre par région · Rapports PDF · Alertes instantanées · Export CSV. Essai Pro 7 jours — carte requise, aucun débit avant la fin de l'essai.",
+        body: "Cas confirmés · Décès · Rapports PDF · Alertes instantanées · Export CSV. Essai Pro 7 jours — carte requise, aucun débit avant la fin de l'essai.",
         cta: "C'est parti →",
       },
     ],
@@ -76,12 +76,12 @@ const COPY: Record<string, {
       },
       {
         title: "The epidemiological dashboard",
-        body: "All active outbreaks sorted by risk level, with confirmed cases and deaths.",
+        body: "All active outbreaks sorted by risk level. Exact case and death figures are available on the Pro and Team plans — free users see blurred data.",
         cta: "Next",
       },
       {
         title: "Unlock full surveillance",
-        body: "Region filter · PDF reports · Instant alerts · CSV export. 7-day Pro trial — card required, no charge until it ends.",
+        body: "Confirmed cases · Deaths · PDF reports · Instant alerts · CSV export. 7-day Pro trial — card required, no charge until it ends.",
         cta: "Let's go →",
       },
     ],
@@ -108,12 +108,12 @@ const COPY: Record<string, {
       },
       {
         title: "El panel epidemiológico",
-        body: "Todos los brotes activos ordenados por nivel de riesgo, con casos y fallecidos confirmados.",
+        body: "Todos los brotes activos ordenados por nivel de riesgo. Las cifras exactas de casos y fallecidos están disponibles en los planes Pro y Team.",
         cta: "Siguiente",
       },
       {
         title: "Desbloquee la vigilancia completa",
-        body: "Filtro por región · Informes PDF · Alertas instantáneas · Exportación CSV. Prueba Pro de 7 días — tarjeta requerida, sin cobro hasta que termine.",
+        body: "Casos confirmados · Fallecidos · Informes PDF · Alertas instantáneas · Exportación CSV. Prueba Pro de 7 días — tarjeta requerida, sin cobro hasta que termine.",
         cta: "¡Vamos! →",
       },
     ],
@@ -140,12 +140,12 @@ const COPY: Record<string, {
       },
       {
         title: "لوحة التحكم الوبائية",
-        body: "جميع التفشيات النشطة مرتّبة حسب مستوى الخطر، مع الحالات والوفيات المؤكدة.",
+        body: "جميع التفشيات النشطة مرتّبة حسب مستوى الخطر. الأرقام الدقيقة للحالات والوفيات متاحة في خطط Pro و Team.",
         cta: "التالي",
       },
       {
         title: "افتح المراقبة الكاملة",
-        body: "تصفية حسب المنطقة · تقارير PDF · تنبيهات فورية · تصدير CSV. تجربة Pro 7 أيام — البطاقة مطلوبة، لا خصم قبل انتهاء التجربة.",
+        body: "الحالات المؤكدة · الوفيات · تقارير PDF · تنبيهات فورية · تصدير CSV. تجربة Pro 7 أيام — البطاقة مطلوبة، لا خصم قبل انتهاء التجربة.",
         cta: "لنبدأ →",
       },
     ],
@@ -172,12 +172,12 @@ const COPY: Record<string, {
       },
       {
         title: "Dasbor epidemiologi",
-        body: "Semua wabah aktif diurutkan berdasarkan tingkat risiko, dengan kasus dan kematian terkonfirmasi.",
+        body: "Semua wabah aktif diurutkan berdasarkan tingkat risiko. Angka kasus dan kematian yang tepat tersedia di paket Pro dan Team.",
         cta: "Lanjut",
       },
       {
         title: "Buka pemantauan lengkap",
-        body: "Filter wilayah · Laporan PDF · Peringatan instan · Ekspor CSV. Uji coba Pro 7 hari — kartu diperlukan, tidak ada tagihan sebelum uji coba berakhir.",
+        body: "Kasus terkonfirmasi · Kematian · Laporan PDF · Peringatan instan · Ekspor CSV. Uji coba Pro 7 hari — kartu diperlukan, tidak ada tagihan sebelum uji coba berakhir.",
         cta: "Ayo mulai →",
       },
     ],
