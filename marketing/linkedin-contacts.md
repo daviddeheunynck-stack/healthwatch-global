@@ -58,6 +58,10 @@ Deux candidats déjà dans le tracker écartés de la sélection : **Baba Ceesay
 
 **Aucune invitation envoyée par l'agent** (clic simulé inopérant sur « Se connecter », `browser-click-reliability.md` §6) : les 4 profils sont prêts, bouton « Se connecter » confirmé présent sur chacun. Amène le quota à **7/7** si les 4 sont envoyées.
 
+### ✅ Clôture — 07/09/2026 (14h30) : les 4 confirmées, quota du jour PLEIN
+
+David a cliqué « Se connecter » sur les quatre profils. **Confirmé par l'agent sur chacun** (Gail Carson, Armand Simisi Mbalanda, Seontae Kim, Namwoo Heo) : « *En attente, cliquez pour retirer l'invitation envoyée* ». **Quota de notes de connexion du jour : 3/7 → 7/7 (PLEIN).**
+
 ---
 
 ## 📅 Session linkedin-hwg-followup-check — 07/09/2026 (13h, 1er des 2 créneaux après-midi) — ❌ **0 DM envoyé : aucun message entrant nouveau depuis 11h15, les 10 fils sont tous en attente de réponse de l'interlocuteur** — ✅ **4 commentaires publiés, quota du jour PLEIN 7/7** (détail dans `content-log.md`) — ✅ **connexions acceptées et nouveaux abonnés vérifiés en propre, rien à traiter** — 🔴 **une invitation est partie aujourd'hui (Elie Caleb MIMBULA) sans qu'aucune session archivée ne la revendique** — ⚠️ **capacité d'invitation testée en propre : le bouton apparaît puis disparaît, les notes personnalisées restent épuisées**
