@@ -4923,3 +4923,15 @@ Le run du 06/09 avait écarté `recepcion@pasteur.edu.uy` au motif précis « **
 | IP Montevideo | `/es/country/uruguay` |
 
 ⚠️ Slugs calculés avec `countryToSlug` (`lib/country-utils.ts`) à partir du nom anglais usuel. Si la valeur `country_en` en base diffère (« Czech Republic » plutôt que « Czechia », « Republic of Moldova » plutôt que « Moldova »…), le slug diffère d'autant — à vérifier au moment de poser le lien.
+
+---
+
+### 🔒 Georgetown HSOC — CLÔTURÉ, refus poli après essai (2026-09-07, session interactive)
+
+Le point d'usage envoyé par David le 06/09 à 21:51 UTC (« the 35-day period runs out around September 28, so before it lapses quietly I'd rather ask… ») a reçu une réponse humaine le **07/09 vers 10:30**, depuis `Health Security Operations Center <...>` (adresse d'expédition affichée : « Health Security Operations Center », boîte `hsoc@georgetown.edu`) :
+
+> « Thank you for reaching out and for providing access to assess HealthWatch Global. To date, our assessment would be that there is an overlap in sources, as well as a slightly different focus from what our users are keen to know about. But we appreciate the opportunity to try it out. »
+
+**Lecture : refus net, sans demande de prolongation ni de passage payant.** Motif donné : chevauchement de sources avec ce qu'ils utilisent déjà, angle produit pas assez différenciant pour leurs utilisateurs. Aucune question ouverte de leur part, rien à répondre côté David — accusé de réception suffisant si besoin, aucune relance à prévoir.
+
+**Ferme le fil ouvert depuis le 24/08** (accès Pro accordé le jour même, silence prolongé, deux points d'usage relayés dans ce journal les 04-05/09 l. 4753 et 06/09 l. 4794/4819). **Les runs futurs de prospection/relance ne doivent plus mentionner Georgetown HSOC comme « en attente » ou « silencieux » — c'est un cycle terminé, verdict négatif.** Pas un échec de process : c'est la première réponse honnête sur le fit produit reçue depuis la réouverture du canal le 02/08, à mettre en regard des 2 conversions Pro (IDCU Malte, HSOC lui-même à l'origine) plutôt qu'à charge contre le ciblage académique en général — un seul point de données.
