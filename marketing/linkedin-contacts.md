@@ -1,6 +1,32 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
+## 📅 Reprise interactive — 07/09/2026 (13h30, David « on avait des demandes de connexion à envoyer en attente ») — ❌ **0 invitation envoyée : le canal invitation est intégralement muet aujourd'hui, diagnostic affiné**
+
+**Contexte** : David a signalé qu'une file de notes de connexion en attente n'avait pas été traitée dans le bilan précédent. Reprise de la file : `Joseph T. Hicks`, `Jafar Oyugi`, `Emmanuel Pembi` (slug non capturé), `Stéphanie Maltais` (slug non capturé).
+
+### Jafar Oyugi — pas d'action nécessaire, déjà en attente
+Sa propre page affiche « *En attente, cliquez pour retirer l'invitation envoyée à Jafar Oyugi* » — une invitation lui a **déjà été envoyée** à une date antérieure non identifiée (absente des 10 premières lignes de `invitation-manager/sent/`, la liste ne charge que 10 entrées sans pagination visible malgré le défilement). **Le tracker le disait « à traiter », c'est faux : il est déjà « en attente ».** Corrigé ci-dessous.
+
+### Joseph T. Hicks — tenté sur 2 profils, 1 tab neuf, navigateur re-sélectionné : le dialogue d'invitation ne s'ouvre plus, sur AUCUN profil testé
+
+**Diagnostic mené avant de conclure** (pour que 17h ne rejoue pas le même diagnostic à vide) :
+1. Clic réel (`computer`, coordonnées puis `ref`) sur le bouton de son profil : aucun effet, bouton reste « Se connecter ».
+2. Re-sélection du navigateur (`23c7ecdd-…`) + nouvel onglet + rechargement complet (F5) : aucun changement.
+3. `.click()` et `onclick()` invoqués directement en JS (donc indépendants de la livraison CDP des clics) : **toujours aucun dialogue**.
+4. **Test de contrôle décisif** : le même bouton « Se connecter », sur un tag/filtre `Vidéos` d'une page d'entreprise sans rapport, répond correctement au `.click()` JS — donc le rendu React et les gestionnaires d'événements de la page **fonctionnent** en général.
+5. **Test sur un 2e profil jamais touché** (`Christian Wilfried Mendo, PhD`, 2e degré, jamais ouvert avant) : **même silence total** — le clic (`ref`, réel) n'ouvre aucun dialogue.
+
+**Conclusion retenue** : ce n'est pas Hicks qui pose problème, ni un bug de livraison de clic généralisé (le test Vidéos l'exclut) — c'est **l'action « Se connecter » elle-même qui est bloquée aujourd'hui, sur tout profil**, silencieusement, sans message d'erreur. L'hypothèse la plus cohérente avec les observations de 13h (bouton apparu puis disparu, note personnalisée épuisée, capacité « intermittente ») est un **plafond quotidien de nouvelles demandes de connexion atteint** — LinkedIn supprime alors l'ouverture du dialogue côté client sans le signaler, plutôt que d'afficher une erreur. Le premier clic réussi sur Hicks (13h, dialogue « Ajouter une note ? » ouvert puis fermé sur l'écran Premium) a eu lieu **avant** que ce plafond soit atteint ; tout ce qui a suivi (sur Hicks et sur un profil neuf) est tombé après.
+
+**Rien envoyé, rien de perdu** : aucune invitation n'est partie par erreur sur un mauvais profil (identité revérifiée dans le même appel JS à chaque tentative, §7 et §12). Le profil Mendo, ouvert uniquement pour ce test, n'a reçu aucune invitation réelle et n'a pas été évalué pour la pertinence — **à ne pas compter comme candidat tant qu'il n'a pas été vetté normalement**.
+
+**🏷️HORS-ROUTINE, pour information plutôt que blocage** : la mystérieuse invitation Elie Caleb MIMBULA signalée dans le bilan précédent reste inexpliquée par ce diagnostic — si c'est un plafond quotidien atteint aujourd'hui, MIMBULA doit être partie **avant** que ce plafond ne se déclenche, ce qui est cohérent avec sa position en tête de liste (« envoyé aujourd'hui », donc plus tôt que ce test).
+
+**Conduite recommandée pour 17h** : retester une seule fois, sur un profil neuf, avant de reprendre le diagnostic à zéro — si le canal est toujours muet, ce n'est plus la peine d'insister, le plafond (s'il existe) se lève seul en 24h. Ne pas répéter les 5 méthodes ci-dessus, ce point est réglé.
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check — 07/09/2026 (13h, 1er des 2 créneaux après-midi) — ❌ **0 DM envoyé : aucun message entrant nouveau depuis 11h15, les 10 fils sont tous en attente de réponse de l'interlocuteur** — ✅ **4 commentaires publiés, quota du jour PLEIN 7/7** (détail dans `content-log.md`) — ✅ **connexions acceptées et nouveaux abonnés vérifiés en propre, rien à traiter** — 🔴 **une invitation est partie aujourd'hui (Elie Caleb MIMBULA) sans qu'aucune session archivée ne la revendique** — ⚠️ **capacité d'invitation testée en propre : le bouton apparaît puis disparaît, les notes personnalisées restent épuisées**
 
 **Contexte d'ouverture** : navigateur `23c7ecdd-…` (« Browser 2 ») sélectionné directement, sans question — session planifiée. Quotas hérités du run de 9h et de la session interactive de 11h : commentaires 3/7, DM 6/8, suivis 10/10, notes de connexion 0/7. Aucun run antérieur de ce `taskId` aujourd'hui.
