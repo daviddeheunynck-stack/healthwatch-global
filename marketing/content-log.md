@@ -92,8 +92,9 @@ Le fil a demandé **trois tentatives** de composition. Aucune n'a produit de pub
 - **Ligne HWG Rougeole/États-Unis périmée d'un cycle** : la base porte 2 465 cas (sitrep PAHO #8, arrêt SE 29), alors que le **sitrep #10 donne 2 777** (arrêt SE 33) et que le **CDC affiche 3 134 cas au 3 septembre**, dont « *95% of confirmed cases (2,969 of 3,134) are outbreak-associated* » sur **38 foyers**. Les 6 lignes rougeole/Amériques mériteraient un passage au sitrep #10 (Guatemala 32 566, Mexique 12 607, Canada 1 117, Bolivie, Pérou). **Pour `morning-don-check`, décision à David.**
 - **Pérou** : 211 cas sur la seule quinzaine SE 31-32, 3e contributeur régional, alors que son cumul HWG n'est que de 1 277 (08/08). PAHO écrit noir sur blanc que la transmission soutenue dans le **sud du Pérou** exporte vers la **Bolivie et le Brésil**. Ligne à rafraîchir en priorité.
 
+---
 
-## 📅 Session linkedin-hwg-monitoring — 07/09/2026 (9h) — ✅ **1 commentaire publié** (Abduljalal Nadabo, carry-over de la veille bloqué par le classifieur)
+## 📅 Session linkedin-hwg-monitoring — 07/09/2026 (9h) — ✅ **3 commentaires publiés** (Abduljalal Nadabo carry-over, Africa CDC, Christianah Oki abandonnée hier après 5 jets) — ✅ **10 suivis** (vivier neuf : la cohorte African STARS) — 🔴 **la capacité d'invitation du compte est bloquée : 99 invitations en attente pour un plafond de 100**
 
 **Contexte d'ouverture** : premier run LinkedIn de la journée (le run `linkedin-hwg-content-proposal` de 8h35 a produit un brouillon de post de marque, en attente de David, hors périmètre de cette routine). Quotas repartis à zéro : commentaires 0/7, notes de connexion 0/7, DM 0/8, suivis 0 (7-10). Navigateur `23c7ecdd-…` (affiché « Browser 2 » ce matin, les labels de slot ont encore tourné) sélectionné directement, sans question — session planifiée, David absent par construction.
 
@@ -119,6 +120,79 @@ Texte rédigé, passé au registre de faits et au contrôle mécanique **hier so
 ⚠️ **Piège de sélecteur rencontré, à retenir** : sur cette page, l'éditeur de commentaire n'est **pas** sous `.comments-comment-box` (il est dans un `form`, sous `.editor-content.ql-container`), alors que le bouton d'envoi porte bien `button.comments-comment-box__submit-button--cr`. Un premier clic conditionné à `document.querySelector('.comments-comment-box .ql-editor')` n'a donc rien fait, le garde-fou d'identité renvoyant `null` faute d'éditeur trouvé — le garde-fou a fonctionné comme prévu (aucun clic à l'aveugle), mais le bon sélecteur d'éditeur est `.ql-editor` seul. Le bouton d'envoi s'intitule **« Commenter »**, pas « Publier » : un `find` sur `/^Publier$/` ne le trouve pas.
 
 `QA : registre de faits + mécanique PASS (313 car., en/en) la veille | angle tiré du registre produit (claim 5, Ervebo « Zaire strain only ») | relecture éditoriale : faite | statut : publié le 07/09`
+
+---
+
+### 2️⃣ ✅ COMMENTAIRE 2/7 — **Africa CDC** (page institutionnelle, 225 034 abonnés), post à 1 h, 0 commentaire avant le nôtre
+
+`urn:li:activity:7502606700613402624`. Post du jour : *« 97.8% of AU Member States have National Action Plans on Antimicrobial Resistance. But only 32.6% are costed, budgeted and monitored. That gap is where implementation must begin. »* — atelier de Mombasa (Africa CDC, AU-IBAR, AU-PANVAC, AU-IAPSC) sur le cadre UA de lutte contre la RAM 2026-2030.
+
+**Forme retenue** : extension « oui, et » (forme 4 de `_shared/burned-templates.md`), pas de question de clôture, pas de constat de manque. L'idée neuve est structurelle et vérifiable : la résistance antimicrobienne n'a pas de forme d'événement, là où une flambée se déclare, se date et se clôt.
+
+**Texte publié :**
+
+> Costed, budgeted and monitored is a much harder bar than published, and the distance between 97.8 and 32.6 measures exactly that. Part of what keeps it hard is structural: resistance has no event shape. An outbreak gets declared, dated and eventually closed, which is what lets funding arrive in a burst. AMR has to be paid for across years in which nothing is ever declared.
+
+**Publication confirmée** : 1 commentaire sur le post (0 avant), 1 occurrence du texte dans la page, éditeur vidé.
+
+`QA : mécanique PASS (375 car., en/en, 0 blocker) | les deux chiffres (97.8 / 32.6) viennent du post lui-même | relecture éditoriale : faite | statut : publié le 07/09`
+
+---
+
+### 3️⃣ ✅ COMMENTAIRE 3/7 — **Christianah Oki**, la cible abandonnée hier après 5 jets, publiée aujourd'hui au 1er jet
+
+`urn:li:activity:7502080577295253504`. **Carry-over ⭐⭐ le plus difficile du corpus** : le 06/09, 5 jets sur 5 angles différents ont tous échoué, avec un diagnostic explicite en fin de journée — « *un post de gratitude sur une semaine de formation n'offre aucune prise analytique qui ne se lise pas comme un déclassement des remerciements* ». Post rouvert ce matin : **47 réactions, 1 republication, toujours 0 commentaire**, encore dans la fenêtre 48 h (dernier jour).
+
+**Ce qui a débloqué le cas** : ne plus chercher à commenter la *semaine de formation* mais à répondre à la **question d'ouverture du post lui-même** (« *What does it really take to be ready for an outbreak?* ») — c'est la forme 1 de `_shared/burned-templates.md`, et l'exemple cité dans ce fichier pour illustrer cette forme est **littéralement cette question-là**. Le sujet retenu est celui de son propre exercice d'équipe (fièvre de la vallée du Rift), pas le remerciement.
+
+**Texte publié :**
+
+> On Rift Valley Fever, a lot of the readiness is decided before the human curve starts. The livestock signal, abortion storms and unexplained deaths in herds, usually runs weeks ahead of the first confirmed human case, and it arrives in a veterinary reporting line rather than a public health one. Whether those two lines are already connected in the quiet months decides how much of that head start is still there when a team sits down to ask what it knows.
+
+La clôture reprend sa propre formule (« *What do we know? What don't we know?* ») sans la questionner. Aucun jugement sur l'exercice, aucune question, aucun constat de manque : les trois motifs qui ont fait tomber les 5 jets d'hier.
+
+**Publication confirmée** : 1 commentaire (0 avant), 1 occurrence, éditeur vidé. **Blocage hebdomadaire créé jusqu'au 14/09.**
+
+`QA : mécanique PASS (457 car., en/en, 0 blocker) | aucun chiffre | relecture éditoriale : faite | statut : publié le 07/09`
+
+---
+
+### 4️⃣ ✅ 10 SUIVIS — quota au plafond haut (**10/10**), vivier neuf trouvé dans la cohorte African STARS
+
+Le corpus de recherche par mots-clés (`field epidemiologist outbreak surveillance`) est **épuisé** : les 10 premiers résultats étaient tous déjà évalués dans le tracker. Le vivier neuf de ce run vient de deux méthodes prévues par le SKILL mais peu exploitées jusqu'ici : la **recherche par programme** (`African STARS Fellow epidemiology`) et surtout les **personnes taguées dans le post commenté** (l'équipe filovirus de Nadabo).
+
+| # | Profil | Intitulé | Origine |
+|---|---|---|---|
+| 1 | **Flywell Kawonga** `/in/flywell-kawonga-7a4191134/` | *African Stars Fellow at CERI - Centre for Epidemic Response and Innovation*, Blantyre, Malawi, 889 abonnés | Coéquipière filovirus de Nadabo, taguée dans le post commenté |
+| 2 | **Fatou Samba Diouf** `/in/fatousambadiouf/` | *PhD, Postdoctoral Researcher in Microbiology & Infectious Diseases, African Stars Fellow*, 761 abonnés | Recherche `African STARS Fellow epidemiology` |
+| 3 | **kabugo joel** `/in/kabugojs/` | *Infectious diseases Researcher, microbiologist, African Stars Fellow, clinical immunology*, Kampala, 737 abonnés | idem |
+| 4 | **Emmanuel Saidu** `/in/emmanuelsaidu/` | *Research Scientist (High Consequence Pathogens), Pre-Doctoral Fellow UTMB, African Stars Fellow 2025*, Galveston, 892 abonnés | idem |
+| 5 | **Tulio de Oliveira** `/in/tulio-de-oliveira/` | *Pro-VC Stellenbosch University*, directeur du CERI, **25 271 abonnés** | Tagué dans le post de Nadabo. Figure majeure de la surveillance génomique, absent du tracker jusqu'ici |
+| 6 | **Doreen Lugano, Ph.D.** `/in/doreen-lugano-ph-d-a796b6112/` | *Post-Doctoral Fellow, African STARS Fellow 2026*, KEMRI-Wellcome, 369 abonnés | Coéquipière filovirus de Nadabo |
+| 7 | **Tshephang Iris Kabelo** `/in/tshephang-iris-kabelo/` | *PhD candidate, Biological Sciences, Virology, African STARS Fellow*, 521 abonnés | idem |
+| 8 | **Hana Haileyesus** `/in/hanahaileyesus/` | *African STARS Fellow @ CERI, Veterinary Microbiology*, Éthiopie, 2 499 abonnés | idem |
+| 9 | **Emelia Azayele Kpiebaya** `/in/emelia-azayele-kpiebaya-2696a5205/` | *Biomedical Scientist, MasterCard Foundation Scholar, African STARS Fellow*, 2 495 abonnés | idem |
+| 10 | **Abduljalal Nadabo** `/in/abduljalal-nadabo-16b153196/` | *African STAR, Pharmacist in Vaccinology*, 3 750 abonnés | Auteur du post commenté ce matin |
+
+Chaque suivi vérifié individuellement (bouton passé de « Suivre » à « Suivi » dans la section Activité du profil, jamais depuis une sidebar ni une page de résultats).
+
+⚠️ **Le quota est au plafond haut (10/10) dès 9h** : les créneaux de 13h et 17h **ne pourront pas faire de follow-back** si de nouveaux abonnés apparaissent d'ici là (c'est exactement ce qui s'est produit le 05/09 à 17h). Arbitrage assumé : le vivier trouvé ce matin est d'une qualité rare (une cohorte entière de boursiers en réponse aux épidémies, plus le directeur du CERI), et aucun nouvel abonné n'était en attente au moment du run.
+
+⚠️ **Piège de clic à retenir** : sur `/in/abduljalal-nadabo-…/`, le clic sur l'entrée « Suivre » du menu « Plus » a répondu `clicked: true` **sans aucun effet** (bouton toujours « Suivre » après rechargement). C'est le bouton « Suivre » de la **section Activité** qui a fonctionné. Sur un profil sans bouton d'action direct, ne pas se fier au retour du clic dans le menu : recharger et vérifier l'état.
+
+---
+
+### 5️⃣ 🔴 DÉCOUVERTE — **la capacité d'invitation est bloquée par le plafond LinkedIn : 99 invitations en attente**
+
+**Constat.** Sur **4 profils consécutifs** ouverts ce run (Abduljalal Nadabo, Hana Haileyesus, Doreen Lugano, Jafar Oyugi), **aucun bouton « Se connecter »** n'existe, ni en accès direct, ni dans le menu « Plus » (où il se cache habituellement). Le menu ne propose que « Enregistrer au format PDF », « Suivre/Suivi », « Signaler », « Bloquer », « À propos de ce membre ».
+
+**Cause trouvée** : `linkedin.com/mynetwork/invitation-manager/sent/` affiche **« Personnes (99) »** — 99 invitations envoyées et toujours en attente. Le plafond LinkedIn d'invitations en attente est de **100**. Sur les 30 premières lignes chargées, **22 datent d'il y a 2 semaines** ; la file contient des cibles institutionnelles de premier plan jamais acceptées (Dr. Stella Chungong, Directrice Health Security Preparedness au programme des urgences sanitaires de l'OMS ; Dr Ahmed ZOUITEN, Représentant OMS ; Bernard Haufiku, ancien ministre de la Santé de Namibie ; Béatrice SERRA, ALIMA ; Linda Esso ; Patrick Masenga, épidémiologiste senior OMS).
+
+**Ce que ça explique rétroactivement** : les incidents « **capacité d'invitation inerte** » des 05/09 (13h puis 17h) et du 04/09, diagnostiqués à l'époque comme des pannes d'interface, sans cause trouvée. Ce n'était pas le navigateur : c'est le compte qui est à son plafond. Le fait que 2 invitations soient tout de même parties le 06/09 s'explique par des acceptations qui libéraient une place au compte-gouttes.
+
+🏷️**HORS-ROUTINE :** débloquer ce canal suppose de **retirer des invitations en attente**, ce qui est irréversible (LinkedIn interdit de réinviter la même personne avant 3 semaines) et touche des contacts institutionnels réels. **Décision qui revient à David**, pas à la routine (politique commune §10). Proposition : retirer les invitations les plus anciennes et les moins susceptibles d'être acceptées (grands comptes institutionnels à très forte audience, jamais acceptés après plusieurs semaines), en gardant les cibles récentes et les profils accessibles. **Tant que ce n'est pas fait, le quota de 7 connexions/jour des trois routines LinkedIn est inatteignable, et le quota de notes de connexion l'est doublement** (le plafond mensuel d'invitation personnalisée est par ailleurs consommé depuis le 04/09).
+
+**Aucune invitation envoyée ce run, aucune note rédigée** : rédiger une note aurait été du travail perdu, comme le prévoit le SKILL (« lire le compteur avant d'engager la rédaction »).
 
 ---
 

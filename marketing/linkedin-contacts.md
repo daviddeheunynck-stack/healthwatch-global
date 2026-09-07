@@ -1,6 +1,123 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
+## 📅 Session linkedin-hwg-monitoring — 07/09/2026 (9h) — ✅ **3 commentaires publiés** (Abduljalal Nadabo, Africa CDC, Christianah Oki) — ✅ **4 DM envoyés en autonomie** (3 messages de bienvenue + 1 réponse en fil actif) — ✅ **3 invitations reçues acceptées** — ✅ **10 suivis, quota au plafond haut** — 🔴 **découverte : la capacité d'invitation est bloquée par le plafond LinkedIn, 99 invitations en attente**
+
+**Contexte d'ouverture** : premier run LinkedIn de la journée. Quotas repartis à zéro. Navigateur `23c7ecdd-…` (affiché « Browser 2 » aujourd'hui) sélectionné directement, sans question, conformément à `hwg-social-policy.md` §7 (session planifiée). Le commentaire publié est détaillé dans `content-log.md`.
+
+---
+
+### 1️⃣ ✅ INVITATIONS REÇUES — 5 en attente, 3 acceptées, 2 laissées
+
+La boîte d'invitations reçues n'avait pas été ouverte depuis plusieurs jours : **5 invitations en attente**, dont 3 clairement dans le périmètre HWG.
+
+| Profil | Intitulé | Décision |
+|---|---|---|
+| **Adane Etore** `/in/adane-etore/` | *Public Health Specialist \| Epidemiologist \| Disease Surveillance & Outbreak Investigation \| PHEM \| WIDP/DHIS2 \| AHRI \| Harvard ALP'25 \| Former WFP* — Hossana, Éthiopie, 14 620 abonnés, 64 relations en commun | ✅ **Acceptée** — surveillance et investigation de flambée, plus la couche système de données (WIDP/DHIS2) |
+| **Lissanework Mola** `/in/lissanework-mola🌟-bb8088138/` | *Researcher of Veterinary Epidemiology* — Amhara Agricultural Research Institute (ARARI) / Bahir Dar University, Éthiopie, 1 682 abonnés | ✅ **Acceptée** — épidémiologie vétérinaire, One Health |
+| **Jean Claude Nshimiyimana** `/in/jean-claude-nshimiyimana-…-aa751555/` | *Clinical Laboratory & Diagnostics Expert \| Biorisk, Biosafety & Biosecurity \| Transfusion Medicine & Blood Bank \| Tropical Medicine* — Deutsche Rote Kreuz Public Health Unit / Euclid University, Danemark, 1 870 abonnés, 25 relations en commun | ✅ **Acceptée** — **déjà suivi par nous** lors d'un run précédent (table des suivis, `linkedin-contacts.md:792`) : l'invitation vient de lui après ce suivi |
+| **Zachariah G. Houdari** `/in/zachariahhoudari/` | *Financial Services Professional \| Relationship Management \| Client Experience \| Life Sciences, Global Health Advocacy and Golf* | ⏸️ **Laissée en attente** — services financiers, hors périmètre épidémiologie/santé publique. Non refusée (l'ignorer est irréversible côté LinkedIn et le profil n'a rien de problématique), simplement non acceptée |
+| **OLAOLUWA PHILIP** `/in/olaoluwa-philip-oguntoyinbo5/` | *GIScientist \| Climate Action Researcher \| Co-Founder GeoDev Lab \| Founder CLIMORA Initiative* | ⏸️ **Laissée en attente** — géospatial et climat, périphérique. Relation en commun avec Pete Macharia (géographie de la santé) : **à réévaluer** si son activité montre un versant santé/maladie explicite |
+
+### 2️⃣ ✅ 3 DM DE BIENVENUE ENVOYÉS EN AUTONOMIE (quota DM 0/8 → **3/8**)
+
+Vérification bidirectionnelle faite en propre, sans la supposer faite ailleurs (règle du 2026-09-06) : `mynetwork/invite-connect/connections/` ouverte et lue ce run. Les connexions acceptées des jours précédents (Ofelia CAZACU, Préféré Matutu Molongo, Dr Fabrice KHADDY, Miriam Mbueshi, Christian BABOKO) ont **toutes déjà un fil de messagerie** : aucune n'est restée sans suite. Les 3 nouvelles acceptations de ce run n'avaient aucun fil, d'où les 3 messages ci-dessous. `inboundCount = 0` sur les trois : **aucun CTA, aucun lien** (spécification DM de David du 06/09, point 4 — CTA à partir de la 2e interaction de l'interlocuteur). Les trois se ferment sur une **question ouverte** (point 5).
+
+**① Adane Etore — envoyé à 09h14**
+
+> Adane, thanks for the invitation, and glad to be connected.
+>
+> Your headline lists WIDP and DHIS2 right next to field outbreak investigation and PHEM. In most of what I read, those two live with different people: whoever writes up the case is rarely the one maintaining the platform it lands in.
+>
+> What did working across both show you that neither one would have on its own?
+
+`QA : mécanique PASS (372 car., en/en, 0 blocker) | inboundCount 0, pas de CTA ni lien | clôture en question ouverte | relecture éditoriale : faite`
+
+**② Lissanework Mola — envoyé à 09h18**
+
+> Lissanework, thank you for connecting.
+>
+> Veterinary epidemiology inside an agricultural research institute is a vantage point I rarely get to hear from. The outbreak bulletins I follow come from the human health side, so an animal signal usually reaches me only once it has already crossed into people.
+>
+> What does a livestock signal look like in Amhara before anyone on the human health side hears about it?
+
+`QA : mécanique PASS (406 car., en/en, 0 blocker) | inboundCount 0, pas de CTA ni lien | clôture en question ouverte`
+
+⚠️ **Accroche écartée** : sa seule activité visible est un repartage en amharique d'un post sur le pouvoir d'achat d'un cadre de la fonction publique. Terrain socio-économique, sans rapport avec l'épidémiologie : non utilisé (règle « pas de sujets politiques », et hook non pertinent).
+
+⚠️ **Faux positif QA documenté** : premier jet noté `context.language` (fil = fr, brouillon = en) alors qu'**il n'existe aucun fil** — c'est mon propre fichier de contexte, rédigé en français, que le script lit comme « le fil ». Contexte réécrit en anglais, verdict PASS sans changer une lettre du brouillon. Même mécanisme que le cas Kaushik Sanyal documenté dans `docs/outreach-qa.md`.
+
+**③ Jean Claude Nshimiyimana — envoyé à 09h23**
+
+> Jean Claude, glad to be connected.
+>
+> I spent part of this morning inside the ECDC weekly West Nile overview. The page states plainly that it is built to support donor deferral and testing decisions for blood and other substances of human origin, and that it is not a comprehensive epidemiological assessment of transmission in Europe. From where I sit, aggregating bulletins, I mostly see that table quoted as a European case count.
+>
+> You work on the side it was actually built for. What moves inside a blood establishment when a new area gets flagged?
+
+`QA : mécanique — 1 blocker `ngram.history` assumé (550 car., en/en) | inboundCount 0, pas de CTA ni lien | clôture en question ouverte`
+
+**Jugement assumé sur le blocker `ngram.history`** : le premier jet en levait **9**, toutes tirées du **verbatim ECDC** cité dans le brouillon de post de marque archivé ce matin même par `linkedin-hwg-content-proposal` (`content-log.md`, entrée de 8h35). Reformulation de la première clause → il en reste **une seule**, « a comprehensive epidemiological assessment of », qui est la formule propre de l'ECDC et la seule qui porte le sens du disclaimer. C'est la famille de faux positifs documentée (citation de source obligatoire) : gardée en connaissance de cause, le contrôle mécanique n'ayant plus valeur de couperet depuis le 26/08.
+
+⚠️ **À savoir pour la suite** : ce DM et le post de marque en attente de publication portent sur le **même fait ECDC**. Ce n'est pas un doublon au sens de §15 (cible différente, canal différent, argument tourné en question et non en thèse), mais la densité est réelle si David publie le post aujourd'hui.
+
+⚠️ **Incident technique, sans conséquence** : le 1er essai d'envoi à Jean Claude a été **entièrement perdu** — après la saisie complète et vérifiée, le rendu de la page s'est corrompu (capture montrant une grille de champs « Rédigez un message… » vides) et le clic sur Envoyer n'a rien produit. **Vérifié avant de recommencer** : aucun fil créé avec lui dans la messagerie, donc **aucun risque de doublon**. Message resaisi et envoyé proprement au 2e essai. Le même symptôme (zoom de page corrompu, timeouts CDP sur `Page.captureScreenshot`) est déjà consigné le 04/09 sur `linkedin-hwg-followup-check-2`.
+
+⚠️ **Motif à surveiller (anti-gabarit)** : mes trois derniers DM de bienvenue ouvrent tous sur un remerciement suivi de « glad to be connected / glad we're connected » (Ofelia 06/09, Adane et Jean Claude ce matin). Le contrôle mécanique ne l'attrape pas (moins de 4 mots consécutifs identiques), mais c'est bien un gabarit d'ouverture. Ligne ajoutée à `_shared/burned-templates.md` ce run.
+
+---
+
+### 3️⃣ ✅ RÉPONSE REÇUE ET TRAITÉE DANS LE RUN — **Adane Etore** a répondu 25 minutes après le DM de bienvenue
+
+Il a répondu à **09h39** au message de 09h14, avec un message long et de fond (1 056 caractères) : les équipes d'investigation et les équipes qui tiennent DHIS2/WIDP travaillent séparément, « *every number in a system has a story and context behind it* », et il décrit la chaîne complète — détection du signal, investigation, remontée, analyse, réponse.
+
+**Réponse envoyée à 09h42** (DM 4/8) :
+
+> That is a fuller answer than I hoped for, thank you.
+>
+> Between the signal and the published bulletin sit the five steps you list, and the delay across them varies enormously: the same country can take a week for one disease and a month for another. In your experience, which of those steps absorbs the most time?
+
+**Pas de CTA, pas de lien : `inboundCount = 1`.** La spécification DM de David du 06/09 (point 4) exige **deux** messages de l'interlocuteur avant tout CTA. S'il répond une seconde fois, le CTA devient dû et non optionnel (politique commune §3, encadré « aucune dérogation »).
+
+⚠️ **Angle volontairement écarté** : la réponse la plus naturelle à « *chaque chiffre a une histoire et un contexte derrière lui* » aurait été l'argument « la définition de cas n'est pas un champ », qui est **déjà publié en entier chez Melvin Sanicas** (`_shared/burned-templates.md`, section « Arguments déjà publiés en entier »). Angle remplacé par la latence entre les cinq étapes qu'il nomme lui-même. Deux autres charpentes brûlées évitées à la rédaction : « the part I would [verbe] » en clôture et la position d'observateur extérieur (servie à Nirmal Kandel).
+
+`QA : mécanique PASS (311 car., en/en, 0 blocker) | fil complet relu avant réponse | clôture en question ouverte | relecture éditoriale : faite`
+
+---
+
+### 3️⃣ bis ✅ 10 SUIVIS EXÉCUTÉS — quota au plafond haut (10/10)
+
+Détail complet, origine de chaque candidat et arbitrage dans `content-log.md` (§4 de l'entrée du jour) ; une ligne par profil dans `linkedin-candidates-tracker.md`. Dans l'ordre : **Flywell Kawonga**, **Fatou Samba Diouf**, **kabugo joel**, **Emmanuel Saidu**, **Tulio de Oliveira**, **Doreen Lugano**, **Tshephang Iris Kabelo**, **Hana Haileyesus**, **Emelia Azayele Kpiebaya**, **Abduljalal Nadabo**. Tous vérifiés un par un (bouton passé de « Suivre » à « Suivi » dans la section Activité du profil, jamais depuis une sidebar).
+
+Le vivier vient de la cohorte **African STARS / CERI** : cinq des dix sont taguées dans le post de Nadabo commenté ce matin, quatre viennent de la recherche `African STARS Fellow epidemiology`. La recherche par mots-clés classique (`field epidemiologist outbreak surveillance`) est en revanche **épuisée** : les 10 premiers résultats étaient tous déjà dans le tracker.
+
+---
+
+### 4️⃣ 🔴 CAPACITÉ D'INVITATION BLOQUÉE — 99 invitations en attente, plafond LinkedIn atteint
+
+Constat détaillé, cause et proposition dans `content-log.md` (§5 de l'entrée du jour). En résumé : **aucun bouton « Se connecter » sur 4 profils consécutifs**, ni direct ni dans le menu « Plus » ; `invitation-manager/sent/` affiche **99 personnes en attente** contre un plafond de 100. Les incidents « invitation inerte » des 04 et 05/09, restés sans cause, s'expliquent par là.
+
+🏷️**HORS-ROUTINE :** le déblocage suppose de retirer des invitations en attente (irréversible, 3 semaines avant de pouvoir réinviter, et la file contient des cibles institutionnelles réelles). **Décision de David.** Tant qu'elle n'est pas prise, le quota de 7 connexions/jour est inatteignable pour les trois routines LinkedIn.
+
+---
+
+### 5️⃣ 🔁 CARRY-OVER
+
+1. ⭐⭐⭐ **Adane Etore** — fil ouvert et vivant (il répond en 25 minutes). **À sa prochaine réponse, il sera à 2 interactions : le CTA devient dû**, avec lien vers la page maladie si le fil porte sur une maladie précise, sinon l'accueil. À surveiller dès le créneau de 13h.
+2. ⭐⭐ **Lissanework Mola** et ⭐⭐ **Jean Claude Nshimiyimana** — DM de bienvenue envoyés ce matin, pas encore de réponse. Même règle : CTA seulement à partir de leur 2e message.
+3. ⭐⭐ **Ofelia CAZACU** — DM de bienvenue envoyé le 06/09 au soir, **toujours sans réponse**. Ne pas relancer, laisser venir.
+4. ⭐ **Ifedayo Adetifa** — pas de nouvelle réponse depuis la nôtre d'hier soir (le fil en compte 5 tours). Bloqué en commentaire jusqu'au 11/09 de toute façon.
+5. ⭐ **Joseph Cephas Kyari** — a aimé notre commentaire, sans y répondre à nouveau. Bloqué jusqu'au 13/09.
+6. ⭐ **Préféré Matutu Molongo** — inchangé depuis hier (« D accord »), rien à dire, ne pas relancer pour relancer.
+7. ⭐⭐ **Sahar Khalid** — post NHIC encore dans la fenêtre **jusqu'au 08/09**, 4 jets brûlés le 06/09, jamais tenté aujourd'hui faute de temps de run. Contraintes listées dans `content-log.md` du 06/09 (17h). Cible encore ouverte pour 13h ou 17h.
+8. ❌ **Tedros** — instruit et écarté ce run : ses deux posts du jour sont des **rediffusions LinkedIn Live sans texte** (remarques d'ouverture du Comité régional OMS Asie du Sud-Est), et le troisième porte sur **Gaza**, terrain politique exclu par la politique commune §3. Aucune prise. Ne pas le recompter comme candidat non traité.
+9. ⏸️ **OLAOLUWA PHILIP** (`/in/olaoluwa-philip-oguntoyinbo5/`) — invitation reçue laissée en attente, à accepter si son activité montre un versant santé/maladie explicite. **Prémisse à tester une seule fois**, pas à recopier de run en run.
+10. **Quotas en fin de run** : commentaires **3/7**, DM **4/8**, suivis **10/10 (plafond haut atteint)**, notes de connexion **0/7 — canal bloqué par la plateforme**, invitations **0**.
+11. **Blocages hebdomadaires créés ce run** : **Abduljalal Nadabo et Christianah Oki (14/09)**, page **Africa CDC (14/09)**. Inchangés par ailleurs : Joseph Cephas Kyari, Robert Herriman (13/09) ; Yilkal Kebede, Tambe Elvis Akem, Keneth Mugume (12/09) ; Ifedayo Adetifa, Pete Macharia (11/09) ; Adesoye Emmanuel Tunde, Kyaw Thowai Prue Prince, Rocham Mulumbwe, Dr. Rashi Bhardwaj, Dr Fabrice KHADDY, Miriam Mbueshi (09/09) ; Dr. Jean Kaseya, page ECDC, Jacob Banda (08/09).
+12. **Vivier neuf repéré, non traité faute de quota de suivi** (10/10 atteint) : **Jafar Oyugi** (`/in/jafar-oyugi-26775aa0/`, *Epidemic Intelligence Services Officer*, Kenya), **Joseph T. Hicks** (`/in/joseph-t-hicks/`, *Applied Epidemiologist, Surveillance Systems & Modeling, ancien CDC EIS*, Londres), **Emmanuel Pembi** (*Public Health Surveillance & Epidemic Intelligence*, Nigéria). Repérés par la recherche `epidemic intelligence surveillance`, tous 2e degré, **aucun dans le tracker**. À traiter demain en priorité.
+
+---
+
 ## 📅 Session interactive — 06/09/2026 (soir, 21h40-22h46, « remplis les quotas » puis refonte des règles DM) — ✅ **2 commentaires publiés** (Ifedayo Adetifa, Joseph Cephas Kyari — quota 2/7 → **4/7**) — ✅ **1 DM envoyé** (Ofelia CAZACU, message de bienvenue, quota 6/8 → **7/8**) — 🔴 **le relecteur indépendant a été retiré du dispositif QA, sur ordre de David** — 🔴 **spécification DM entièrement remplacée par 6 règles de David** — ⏹️ **session close par un blocage du classifieur sur les actions d'écriture navigateur**
 
 **Contexte** : session ouverte à 21h40 sur « remplis les quotas », après le run automatique de 17h. Aucune autre session LinkedIn n'a tourné entre les deux. Navigateur : **Browser 1 (`a466bc2e`) sélectionné sur choix explicite de David, puis constaté non fonctionnel** (`tabs_context_mcp` → « No group with id » sur 3 tentatives, cohérent avec l'étiquette « zombie » déjà portée par ce deviceId) ; bascule sur `23c7ecdd` (le deviceId habituel) sur arbitrage de David. **Aucune entrée `browser-status.md`** : le navigateur habituel n'a jamais été en panne, seul l'alternatif l'était, et c'est déjà documenté.
