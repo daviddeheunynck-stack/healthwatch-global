@@ -4552,4 +4552,139 @@ la pratique par écrit. Périmètre volontairement borné aux pages
 pays / maladie / région : la page d'accueil, `/compare` et `/reports` listent
 aussi des foyers et **ne sont pas couvertes** ce soir.
 
-### Statut : PROPOSÉE — construction dans la même session, voir la mise à jour en fin d'entrée
+
+
+### Construction — les deux idées sont livrées (`8225cf84`)
+
+Verrou de code partagé acquis avant la première édition, relâché après le
+push. Les deux idées passent les quatre garde-fous : effort petit / petit à
+moyen, aucune migration ni DDL, aucun e-mail / paiement / envoi externe
+touché, aucune source de données externe nouvelle — rien de ce run ne lit
+quoi que ce soit hors du dépôt, de la base et des pages déjà publiées par
+HWG lui-même.
+
+Les deux idées touchant les deux mêmes fichiers, elles partent dans **un seul
+commit** plutôt qu'en deux passes qui se seraient chevauchées ; le message
+sépare explicitement les deux défauts.
+
+**Idée 1.** Les deux réducteurs lisent `date` — la date d'arrêt du bulletin —
+au lieu de `updated_at`. Sur la page pays, le périmètre suit désormais celui
+des tuiles agrégées juste en dessous : les lignes **actives** s'il y en a,
+l'ensemble sinon, pour qu'un pays sans foyer en cours date quand même son
+historique au lieu de perdre l'étiquette. Les deux emplacements portent le
+commentaire qui dit pourquoi `updated_at` était faux et pourquoi
+`lastVerifiedIso` ne l'aurait pas corrigé — c'est exactement l'information qui
+manquait au balayage du 25/08 et qui lui a fait écrire « the last two surfaces
+still on the raw value ».
+
+**Idée 2.** Nouveau `components/SourceBadge.tsx`, rendu sur les listes de
+foyers en cours des trois familles de pages. `source` ajoutée aux deux
+`select` qui ne l'avaient pas. Libellés **repris mot pour mot** de
+`FILTER_COPY` du tableau de bord (5 langues) : une même ligne ne peut pas
+être décrite d'une façon en public et d'une autre une fois connecté.
+Volontairement **pas un lien**, contrairement à la version du tableau de bord
+— ces cartes sont déjà couvertes de bord à bord par un `<Link>` absolu vers
+le permalien, et imbriquer une ancre dedans est du HTML invalide ; c'est le
+permalien, à un clic, qui porte le lien sortant « Source : … ↗ ».
+
+`npx tsc --noEmit` et `npx eslint` propres sur les 4 fichiers avant commit ;
+hooks de pré-commit et de pré-push passés (`check-restricted-fetch` : aucune
+URL non déclarée ; `check-migrations` : 90 migrations toutes appliquées).
+
+### Vérification en production, après déploiement
+
+**Idée 1 — le balayage qui a servi à écrire l'idée, rejoué sur les pages
+réellement servies** (`scripts/verify-asof-2026-09-07.mjs`, ignoré par git
+comme tous les scripts datés : il lit l'étiquette rendue dans le HTML de prod
+et la compare à la date d'arrêt des lignes que la page résume) :
+
+```
+pages pays lues avec une étiquette : 112   (2 non testées : mon slug naïf
+                                            rate « Côte d'Ivoire » et « Réunion »)
+pages annonçant une date POSTÉRIEURE à leur donnée : 0     ← était 113/114
+```
+
+Les quatre cas nommés dans la proposition, relus sur la prod déployée :
+
+```
+/fr/country/ghana         « Aucun foyer actif · Données au 1er janvier 2024 »   (était 23 août 2026)
+/fr/country/south-africa  « 1 foyer actif · Données au 8 mars 2026 »            (était 5 septembre 2026)
+/fr/country/saudi-arabia  « 1 foyer actif · Données au 2 juillet 2026 »         (était 2 août 2026)
+/fr/country/cuba          « 1 foyer actif · Données au 27 août 2026 »           (était 5 septembre 2026)
+/fr/country/greece        « 1 foyer actif · Données au 2 septembre 2026 »       (inchangé, il était juste)
+```
+
+**Idée 2 — les pastilles sur les pages publiques** :
+
+```
+/fr/country/greece           « euronews.com » : 0 → 3 occurrences
+/fr/region/europe            euronews.com, trn.mk, gds.ro : 0 → 3 chacune
+/fr/disease/west-nile-fever  idem
+/en/disease/cholera          « WHO DON » : 0 → 18 occurrences
+```
+
+Rendu réel d'une ligne sur `/fr/region/europe`, texte extrait de la page
+servie :
+
+```
+Fièvre du Nil occidental  📍 Roumanie  gds.ro                  ▲ 29%  RISQUE MODÉRÉ
+Fièvre du Nil occidental  📍 France    Santé publique France   ▲ 39%  RISQUE MODÉRÉ
+Fièvre du Nil occidental  📍 Grèce     euronews.com            ▲ 36%  RISQUE MODÉRÉ
+```
+
+Trois lignes de la même maladie, dans le même tableau, dont on peut
+maintenant dire laquelle vient d'une agence nationale et lesquelles viennent
+d'un média — sans se connecter et sans cliquer. C'est précisément ce que
+demandait ETIENNE GUENOU le 20/08.
+
+**Ce qui n'a pas pu être vérifié en navigateur, et pourquoi.** Le démarrage
+d'un serveur de prévisualisation est refusé dans un run planifié (personne
+n'est présent pour approuver la commande) — refus obtenu explicitement ce
+soir, pas supposé. La vérification a donc été faite contre la production
+déployée, ci-dessus, ce qui est plus fort qu'un rendu local mais ne dit rien
+du **placement visuel** de la pastille (retour à la ligne sur mobile,
+alignement avec le badge de tendance). Le composant reprend les classes
+utilitaires exactes de la pastille équivalente d'`OutbreakTable`, et chaque
+insertion se fait dans un conteneur déjà en `flex-wrap`, mais ça reste un
+contrôle par lecture de code, pas par l'œil.
+
+### Périmètre volontairement laissé de côté
+
+- **Pastille de provenance** : seules les listes de **foyers en cours** des
+  pages pays / maladie / région la portent. Les sections « Historique » de ces
+  mêmes pages, la page d'accueil, `/compare` et `/reports` listent aussi des
+  foyers et **ne l'ont pas**. Extension mécanique, à faire si David trouve le
+  résultat convaincant sur les trois premières.
+- **`dateModified` du JSON-LD** du permalien (`outbreak/[id]/page.tsx:388`)
+  lit toujours `updated_at`. Laissé tel quel **après examen** : au sens de
+  schema.org, `dateModified` qualifie la page, pas la donnée, et `updated_at`
+  y est le bon horodatage. Ce n'est pas un oubli.
+- **`ResolvedOutbreaksWidget`** affiche « il y a N jours » depuis `updated_at`
+  pour un foyer clos. Même examen, même conclusion : pour une ligne archivée,
+  `updated_at` **est** le moment où on l'a marquée close.
+
+### Constat annexe, aucune action prise
+
+Six lignes actives de chikungunya (Brésil, Cuba, Suriname, Maurice, Bolivie,
+Argentine) citent toutes le même PDF : le *Global Health Update* du
+**département de santé de l'État de New York**. La source est authentiquement
+institutionnelle, donc `sourceStatusOf` la classe `official` et la pastille
+posée ce soir affichera « NY State DOH » — ce qui est vrai, et pourtant c'est
+un **agrégateur tertiaire** qui résume des chiffres nationaux, pas la source
+primaire (ministère brésilien, OPAS…). C'est exactement le défaut qu'ETIENNE
+GUENOU décrivait pour `237actu` au Cameroun, sauf qu'ici aucune pastille ne
+peut le signaler : le classement mesure la nature de l'éditeur, pas sa
+position dans la chaîne. Le corriger suppose de re-sourcer six lignes vers
+leurs bulletins nationaux — du travail de donnée avec due-diligence de source
+(garde-fou 4), pas un correctif de code. Noté pour David, rien fait.
+
+### Fichiers modifiés par d'autres, laissés intacts (AGENTS.md)
+
+Aucun : l'arbre était propre au démarrage et l'est resté jusqu'au commit. Les
+4 fichiers ont été stagés un par un, jamais par `git add -A`. Les scripts de
+sonde datés créés pendant le run (`scripts/probe-*-2026-09-07.mjs`,
+`scripts/verify-asof-2026-09-07.mjs`) sont couverts par la règle
+`scripts/*-20[0-9][0-9]-[0-9][0-9]-[0-9][0-9].mjs` du `.gitignore` : ils
+restent sur le disque de David et n'entrent pas dans l'historique.
+
+### Statut final : idée 1 CONSTRUITE (`8225cf84`) · idée 2 CONSTRUITE (`8225cf84`)
