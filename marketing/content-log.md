@@ -209,7 +209,7 @@ Fil parcouru en fin de run (défilement du conteneur `main`, pas de `window`, co
 
 ---
 
-## 📅 Session linkedin-hwg-content-proposal — 07/09/2026 (lundi MWF, 8h35) — 🟡 **PRÊT — en attente de publication** — West Nile / Europe, le tableau hebdomadaire de l'ECDC est un instrument de sécurité transfusionnelle, pas un décompte épidémiologique, et l'ECDC l'écrit lui-même
+## 📅 Session linkedin-hwg-content-proposal — 07/09/2026 (lundi MWF, 8h35) — ✅ **PUBLIÉ le 07/09/2026**, sur ordre explicite de David tapé en session (« publie »), après un double-check demandé par lui-même — West Nile / Europe, le tableau hebdomadaire de l'ECDC est un instrument de sécurité transfusionnelle, pas un décompte épidémiologique, et l'ECDC l'écrit lui-même
 
 **Étape 0 — aucun brouillon en attente.** Dernier post de marque LinkedIn : **04/09** (Diphtérie/Niger, antitoxine), publié sur ordre de David. Le 05/09 (vendredi) n'a pas produit de post de marque, le 06/09 est un dimanche hors MWF. Aucun statut `PRÊT` résiduel frais dans le fichier (le plus récent, Dengue/Taïwan, a été retiré le 31/08). Rédaction entièrement neuve.
 
@@ -217,7 +217,7 @@ Fil parcouru en fin de run (défilement du conteneur `main`, pas de `window`, co
 
 **Origine de l'angle** : report explicite de `linkedin-hwg-followup-check-2` du 05/09 (§ pistes), qui notait que « les décomptes nationaux et le décompte ECDC ne comptent pas la même chose » et que c'était « exactement le genre de sujet que le compte de marque traite bien », **à condition de lire la page ECDC elle-même avant d'écrire**. C'est ce qui a été fait ce run.
 
-### TEXTE — statut : 🟡 **PRÊT — en attente de publication**
+### TEXTE — statut : ✅ **PUBLIÉ le 07/09/2026**
 
 ```
 Two European agencies published a West Nile count for France this month, two days apart. The one with the earlier cut off is the higher of the two.
@@ -256,6 +256,16 @@ Un premier remplacement (« …is where the mistake happens. ») collisionnait �
 **Reste, sans changement depuis ce matin** : la citation verbatim ECDC (« *a comprehensive epidemiological assessment of* ») revient aussi dans un DM envoyé ce matin par `linkedin-hwg-monitoring` (`linkedin-contacts.md`, même citation, jugement déjà assumé là-bas comme exception de citation de source obligatoire) — même fait, deux canaux différents (DM privé vs post public), pas une redite au sens de la règle. Et le préfixe d'URL de fiche maladie (`ngram.history` sur `healthwatch global com en disease`) reste le faux positif structurel remonté ce matin, inchangé.
 
 Contrôle mécanique final sur le texte corrigé : **1628 caractères, 11 paragraphes, langue anglaise cohérente, 0 tiret cadratin**, sous la limite de 3000 caractères d'un post LinkedIn.
+
+### ✅ Publication — 07/09/2026, sur ordre explicite de David tapé en session (« publie »)
+
+**Deux tentatives.** La première (navigateur `23c7ecdd`, avant redémarrage) a été abandonnée en cours de route : la carte de lien avait fini par se charger, mais des timeouts CDP intermittents sur les captures d'écran rendaient l'état visuel non fiable — une inspection JavaScript directe montrait à un moment que le composeur n'existait plus dans le DOM alors que les captures continuaient d'afficher le brouillon complet. Plutôt que de cliquer Publier à l'aveugle sur un état qui ne pouvait plus être confirmé, la session s'est arrêtée et a demandé à David de vérifier son écran. **Aucune publication n'a eu lieu à ce stade, aucun texte n'a été perdu** (déjà archivé et poussé).
+
+David a redémarré son navigateur. **Deuxième tentative** : brouillon retapé à l'identique dans un nouvel onglet, texte intégralement relu à l'écran (`Ctrl+Home` puis `Ctrl+End`, conforme mot pour mot à l'archive dans les deux cas). En cherchant à faire apparaître la carte de lien (chargement anormalement long), une touche `F11` a temporairement dérégimé la fenêtre du navigateur (capture d'écran retournée à 684×17 pixels) — session arrêtée une seconde fois, David sollicité pour vérifier/rétablir sa fenêtre plutôt que de continuer à deviner des actions clavier à l'aveugle sur son poste.
+
+**David a publié lui-même** pendant cet arrêt et l'a signalé explicitement (« j'ai publié »). Vérifié ensuite dans le fil : toast de confirmation « Le post a bien été publié », post en tête de fil sous le profil David Deheunynck, horodatage « maintenant ». Texte relu intégralement dans le post publié (haut et bas) : identique caractère pour caractère au brouillon archivé ci-dessus. Le lien a été raccourci par LinkedIn en `https://lnkd.in/exikM9Cs` (comportement normal de la plateforme) et la carte de lien s'est bien affichée : « West Nile fever — Global outbreak surveillance · HealthWatch Global », domaine `healthwatch-global.com` visible.
+
+**Leçon pour la procédure technique** (SKILL.md, section publication) : deux pannes de rendu du pont navigateur rencontrées dans ce seul run (timeouts CDP intermittents, puis un `F11` qui a dérégimé la fenêtre) — la seconde causée par une tentative de contournement de la première plutôt que par le navigateur lui-même. `F11` ne doit plus être utilisé pour tenter d'obtenir plus d'espace vertical dans le composeur ; en cas de carte de lien lente à charger, la seule réponse validée reste l'attente, sans changement de fenêtre.
 
 ### Sources primaires, lues ce run, pas reprises d'une mémoire
 
