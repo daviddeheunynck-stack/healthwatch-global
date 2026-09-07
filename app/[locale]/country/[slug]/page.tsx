@@ -19,6 +19,7 @@ import EmailCapture from "@/components/EmailCapture";
 import CountryAlertNudge from "@/components/CountryAlertNudge";
 import RealStatsProvider from "@/components/RealStatsProvider";
 import { CasesCfrBlock, CasesOnlyInline, AggregateStat } from "@/components/CasesDisplay";
+import SourceBadge from "@/components/SourceBadge";
 
 export const revalidate = 3600;
 
@@ -179,7 +180,7 @@ async function getAllCountryEn(): Promise<string[]> {
 async function getCountryOutbreaks(countryEn: string): Promise<Outbreak[]> {
   const { data } = await db()
     .from("outbreaks")
-    .select("id, disease, disease_en, disease_ar, country, country_en, country_ar, region, cases, deaths, risk_level, date, is_pheic, active, is_seed, source_priority, updated_at, response_phase")
+    .select("id, disease, disease_en, disease_ar, country, country_en, country_ar, region, cases, deaths, risk_level, date, is_pheic, active, is_seed, source, source_priority, updated_at, response_phase")
     .eq("country_en", countryEn)
     .order("date", { ascending: false });
   return (data ?? []) as Outbreak[];
@@ -306,8 +307,25 @@ export default async function CountryPage({
   const totalCases  = active.reduce((s, o) => s + (o.cases  ?? 0), 0);
   const totalDeaths = active.reduce((s, o) => s + (o.deaths ?? 0), 0);
   const numLocale   = l === "ar" ? "ar-SA" : l;
-  const latestUpdate = outbreaks.reduce<string | null>((latest, o) => {
-    const t = (o as { updated_at?: string }).updated_at ?? o.date ?? null;
+  // Label reads "Data as of" / "Données au", so it must carry the cut-off date of the
+  // FIGURES — o.date, the source bulletin's own date — not updated_at, our last DB write.
+  // Read updated_at until 2026-09-07: any incidental row touch (a QC edit, a locale
+  // backfill, a fix-*.mjs script) dated the whole country page to that write. Measured
+  // that evening on prod: 113 of 114 country pages claimed a date later than any figure
+  // they held, 92 by a week or more, up to 965 days (/fr/country/ghana said "Aucun foyer
+  // actif · Données au 23 août 2026" over a single archived row stopping 1 January 2024).
+  // Same root cause getLastSyncCached documents in lib/outbreaks.ts; its "the last two
+  // surfaces still on the raw value" note (2026-08-25) missed the two public SEO pages.
+  // lastVerifiedIso (max with source_confirmed_at) was measured too and is NOT the right
+  // value here: it answers "when did we last reopen the source", which would still leave
+  // 72 pages ahead of their own figures, 58 of them by a week or more.
+  //
+  // Scoped to `active` when there is one — that is what the aggregate tiles just below
+  // count — and to the whole set otherwise, so an archive-only country still dates its
+  // history instead of losing the label.
+  const dateScope = active.length > 0 ? active : outbreaks;
+  const latestUpdate = dateScope.reduce<string | null>((latest, o) => {
+    const t = o.date ?? null;
     if (!t) return latest;
     if (!latest || t > latest) return t;
     return latest;
@@ -521,9 +539,12 @@ export default async function CountryPage({
                         <p className="font-semibold text-white truncate group-hover:text-red-300 transition-colors">
                           {disease}
                         </p>
-                        {o.date && (
-                          <p className="text-xs text-gray-500">{o.date}</p>
-                        )}
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          {o.date && (
+                            <p className="text-xs text-gray-500">{o.date}</p>
+                          )}
+                          <SourceBadge source={o.source} locale={l} />
+                        </div>
                       </div>
                     </div>
                     <div className="flex items-center gap-3 shrink-0">

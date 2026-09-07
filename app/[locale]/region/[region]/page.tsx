@@ -14,6 +14,7 @@ import EmailCapture from "@/components/EmailCapture";
 import { jsonLdHtml } from "@/lib/json-ld";
 import RealStatsProvider from "@/components/RealStatsProvider";
 import { CasesDeathsInline, CasesOnlyInline, AggregateStat } from "@/components/CasesDisplay";
+import SourceBadge from "@/components/SourceBadge";
 
 export const revalidate = 3600;
 
@@ -123,7 +124,7 @@ async function fetchRegionOutbreaks(region: string): Promise<Outbreak[]> {
   );
   const { data } = await supabase
     .from("outbreaks")
-    .select("id, disease, disease_en, disease_ar, country, country_en, country_ar, cases, deaths, risk_level, date, is_pheic, active, is_seed, source_priority, updated_at, response_phase")
+    .select("id, disease, disease_en, disease_ar, country, country_en, country_ar, cases, deaths, risk_level, date, is_pheic, active, is_seed, source, source_priority, updated_at, response_phase")
     .eq("region", region)
     .order("date", { ascending: false });
   return (data ?? []) as Outbreak[];
@@ -386,6 +387,7 @@ export default async function RegionPage({
                           casesBand={o.cases_band ?? null} deathsBand={o.deaths_band ?? null}
                           numLocale={numLocale} locale={l} unitCases={lb.cases_unit} unitDeaths={lb.deaths_unit}
                         />
+                        <SourceBadge source={o.source} locale={l} className="ml-1" />
                       </p>
                     </div>
                     <div className="flex items-center gap-2">

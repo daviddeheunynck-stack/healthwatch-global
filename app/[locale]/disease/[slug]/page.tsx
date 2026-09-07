@@ -21,6 +21,7 @@ import WatchDiseaseButton from "@/components/WatchDiseaseButton";
 import CitationBlock from "@/components/CitationBlock";
 import RealStatsProvider from "@/components/RealStatsProvider";
 import { CasesDeathsInline, CasesOnlyInline, AggregateStat } from "@/components/CasesDisplay";
+import SourceBadge from "@/components/SourceBadge";
 
 export const revalidate = 3600;
 
@@ -276,7 +277,7 @@ async function fetchDiseaseOutbreaks(diseaseNameEn: string): Promise<Outbreak[]>
 
   const { data } = await supabase
     .from("outbreaks")
-    .select("id, disease, disease_en, description, country, country_en, country_ar, region, cases, deaths, risk_level, date, active, is_seed, source_priority, updated_at, response_phase")
+    .select("id, disease, disease_en, description, country, country_en, country_ar, region, cases, deaths, risk_level, date, active, is_seed, source, source_priority, updated_at, response_phase")
     .in("id", matchingIds)
     .order("date", { ascending: false });
 
@@ -438,10 +439,14 @@ export default async function DiseasePage({
   // place). Historical countries are still visible in the country pills section below.
   const countriesSet = new Set(activeCountryRows.map((o) => o.country_en || o.country).filter(Boolean));
 
-  // Most recent update across active outbreaks — used as "data as of" timestamp
+  // "Data as of" timestamp: the latest cut-off date among the active outbreaks summed in
+  // the stat tiles above — o.date, the source bulletin's own date. Read updated_at (our
+  // last DB write) until 2026-09-07; see the longer note on the country page, fixed in the
+  // same commit, and getLastSyncCached in lib/outbreaks.ts for why the raw write timestamp
+  // is never the right answer to "how current is this figure".
   const latestUpdate = active.reduce<string | null>((latest, o) => {
-    if (!o.updated_at) return latest;
-    if (!latest || o.updated_at > latest) return o.updated_at;
+    if (!o.date) return latest;
+    if (!latest || o.date > latest) return o.date;
     return latest;
   }, null);
 
@@ -764,6 +769,7 @@ export default async function DiseasePage({
                             ({lb.daysAgo(daysAgo)})
                           </span>
                         )}
+                        <SourceBadge source={o.source} locale={l} className="ml-1" />
                       </p>
                     </div>
                     <div className="flex items-center gap-2 flex-wrap">
