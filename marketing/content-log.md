@@ -2,6 +2,126 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Thread hebdo — lundi 7 septembre 2026 — ✅ **PUBLIÉ EN AUTONOMIE** par l'agent (`x-hwg-content-proposal`) le 2026-09-07 — Rougeole/Amériques, le budget 7-1-7 dure exactement une génération de rougeole, donc un score parfait arrive quand même une génération trop tard
+
+**Lien du fil** : https://x.com/HWatchGlobal/status/2096862299826885020
+
+**Étape 0 — aucun brouillon X en attente.** Dernier thread `x-hwg-content-proposal` : **31/08** (Ebola/RDC, démarrage de la vaccination Ervebo, protection des soignants « absente → inconnue »), publié. Rien rédigé depuis (routine hebdomadaire, un seul créneau par semaine). Rédaction entièrement neuve.
+
+**Étape 0 bis — contenu LinkedIn des 7 derniers jours, lu avant de choisir l'angle (texte publié, pas seulement les titres) :**
+
+| Date | Canal | Angle | Verdict pour ce run |
+|---|---|---|---|
+| **07/09 (ce matin, 8h35)** | LinkedIn, statut 🟡 PRÊT | West Nile/Europe, le tableau hebdomadaire de l'ECDC est un **instrument de sécurité transfusionnelle**, pas un décompte épidémiologique | 🚫 **West Nile et l'ECDC entièrement écartés**, y compris comme source secondaire. La mécanique « deux documents ne mesurent pas la même chose » est aussi écartée comme charpente. |
+| **04/09** | LinkedIn, publié | Diphtérie/Niger, l'antitoxine est le seul intrant qui se rationne | 🚫 Terrain diphtérie écarté. |
+| **02/09** | LinkedIn, publié | Ebola/RDC, l'essai PARTNERS recrute dans une flambée à 48,1 % de létalité | 🚫 Terrain Ebola/RDC écarté (déjà porté aussi par le thread X du 31/08). |
+
+⚠️ Le run LinkedIn de ce matin avait laissé une note explicite : « *si `x-hwg-content-proposal` choisit West Nile aujourd'hui, c'est ce run-ci qui l'aura précédé* ». Elle a été lue et respectée : **le thread ne touche ni au West Nile, ni à l'ECDC, ni à la lecture d'un tableau de comptage.**
+
+**Angles instruits puis écartés en cours de run** (traçabilité, tous vérifiés contre l'archive avant abandon) :
+
+1. ❌ **Rougeole/Amériques, « l'importation ne crée pas un foyer, elle en trouve un qui attend »** (3 cas importés → 100 brigades). Matière parfaite, mais c'est **la thèse du papier Nature Medicine d'Ana Bento**, commentée par HWG sur LinkedIn les 17-18/08, avec deux verbatim déjà publiés (`content-log.md` l. 7876-7878). Redite de fond, pas de forme.
+2. ❌ **Rougeole/Amériques, la profondeur du délai de déclaration** : le sitrep dit lui-même que sur les 1 616 cas de la SE 29-30, **921 ont été rattachés rétrospectivement après la publication du sitrep précédent** (57 %), donc la dernière barre de la courbe est à ~40 % de complétude et la « baisse de 28,1 % » compare une barre pleine à une barre creuse. Fait remarquable et vérifié, mais c'est **exactement l'angle « artefact de reporting » du thread X rougeole/Amériques du 20/07**. Écarté, et volontairement **absent du texte publié**.
+3. ❌ **Choléra, l'écart de létalité entre foyers concomitants** (Afghanistan 97 965 cas / 50 décès contre RCA 447 / 36). Écarté : « le CFR choléra est une mesure d'accès, pas de virulence » est **le thread de marque du 27/07** (RCA) et la reply Soudan du 06/07.
+4. ❌ **West Nile/États-Unis, 407 cas dont 285 neuro-invasifs au 01/09.** Double motif : même maladie que le post LinkedIn de ce matin, et charpente « phénomène réel vs artefact de détection » déclarée brûlée dans `_shared/burned-templates.md`.
+5. ❌ **Rougeole, le statut d'élimination est une horloge de 12 mois et pas un compteur.** Écarté deux fois : reply X du 22/07 (@washingtonpost) et redite de la mécanique « deux instruments » du post LinkedIn de ce matin.
+
+**Angle retenu, et pourquoi il tient** : PAHO fait tourner des évaluations **7-1-7** en pleine épidémie (Mexique début août, Bolivie en cours). Le fil ne relit pas un chiffre et ne dit pas qu'un compteur trompe : il met en regard le **budget de temps** que 7-1-7 alloue à une riposte (7+1+7 = 15 jours) et **l'horloge propre de la rougeole** telle que le CDC la publie (éruption ~14 jours après l'exposition, contagiosité 4 jours avant l'éruption). Les deux durées sont du même ordre, donc une riposte qui atteint toutes les cibles se termine quand la génération suivante est déjà infectée. C'est une observation **biologie × opérations**, pas une observation sur le comptage — la seule famille que le corpus n'avait pas encore servie sur ce canal. **7-1-7 n'avait jamais porté un thread de marque X** (il n'apparaît qu'en commentaires et hooks de DM LinkedIn : Amanda McClelland 20/08 « pendant spatial », Usman Rabi, Tyler Porth, Buno Tona).
+
+### TEXTE PUBLIÉ (3 tweets)
+
+```
+Measles in the Americas reached 51,027 confirmed cases across 17 countries and territories in weeks 1 to 33, PAHO said on 1 September, a 4.6 fold increase over the same weeks of 2025. It also records a 7-1-7 evaluation in Mexico in early August, one underway in Bolivia.
+```
+
+```
+7-1-7 allows 7 days to detect an outbreak, 1 to notify, 7 to complete early response. Fifteen days, if every target is met. CDC puts the measles rash at about 14 days after exposure, and patients are contagious 4 days before it appears. One generation fits inside that budget.
+```
+
+```
+Bolivia met three cases imported from Peru with 100 vaccination brigades and 14,676 household visits in La Paz and El Alto. Even a perfect score lands one generation late, so sizing follows the susceptible pocket, not the case count.
+https://healthwatch-global.com/en/disease/measles
+```
+
+### Sources primaires, lues ce run
+
+- ⭐ **PAHO/WHO, *Regional Situation Report No. 10, Measles in the Region of the Americas*, 1er septembre 2026** (`paho.org/sites/default/files/2026/09/measles-sitrep-10-sept01-2026.pdf`, PDF téléchargé et **lu page par page**, WebFetch ne rendant que du binaire). Période SE 1-33 (4 janvier → **22 août 2026**). Verbatim retenus :
+  - « *the Region of the Americas reported 51,027 confirmed cases of measles in 17 countries and territories, representing a 4.6-fold increase compared with the same period in 2025* »
+  - « *Guatemala (32,566), Mexico (12,607), the United States (2,777), and Canada (1,117) account for the vast majority (96%) of confirmed cases. A total of 55 deaths have been reported, including 36 in Guatemala, 18 in Mexico, and one in Bolivia.* » (CFR régional affiché : 0,10 %)
+  - Bolivie, tableau opérationnel : « *In La Paz and El Alto, PAHO supported the mobilization of 100 vaccination brigades across 10 health networks in response to three imported cases from Peru. Preliminary results include 2,505 children under five vaccinated and 14,676 households visited* »
+  - Pilier surveillance : « *In Bolivia, a 7-1-7 evaluation is underway, supported by a regional field mission, In Mexico, the 7-1-7 evaluation was conducted during the first week of August* »
+  - Lu mais non publié : « *Sustained transmission in the southern part of Peru remains a concern, including the exportation of measles cases to neighboring countries, including Bolivia and Brazil.* »
+- **US CDC, *Measles Clinical Overview*** (`cdc.gov/measles/hcp/clinical-overview/`). Verbatim : « *The rash usually appears about 14 days after a person is exposed.* » et « *Patients are considered to be contagious from 4 days before to 4 days after the rash appears.* » Le fil ne publie que la moitié « avant », la seule qui porte sur le délai de détection ; l'autre moitié n'aurait rien changé à l'argument (pas de tri sélectif des faits).
+- **Resolve To Save Lives, cible 7-1-7** (`resolvetosavelives.org/how-we-save-lives/epidemic-prevention/7-1-7/`) : détecter sous 7 jours, notifier sous 1, achever la riposte précoce sous 7. 7+1+7 = 15, seule arithmétique du fil, faite à la main.
+
+### Double-check (dispositif à deux étages depuis le 06/09, relecteur retiré)
+
+1. **Registre de faits** — `npm run qa:facts` et `npm run qa:claims` relancés ce run (232 faits citables, 81 lignes `is_seed` exclues ; 805 chaînes de copie publique, 7 claims manuelles).
+2. **Contrôle mécanique** — `scripts/check-outreach-message.mjs`, canal `linkedin-post` (il n'existe pas de canal `x-thread` dans `lexicon.json`, le plus proche a été utilisé ; la limite de caractères de X est contrôlée séparément, voir le tableau ci-dessous), les trois sources primaires passées en `threadFile`. **843 caractères, 3 paragraphes, langue `en`, 0 tiret cadratin, 0 hashtag.**
+   - Les nombres du fil (51 027, 17, 1, 33, 4.6, 7, 1, 7, 14, 4, 100, 14 676) résolus en `facts.from-thread` : tous viennent des documents lus ce run, aucun d'une mémoire.
+   - **Deux n-grammes réels attrapés et corrigés** : la première version du tweet 1 disait « *report puts the Americas at* » et « *fold rise on the same* », deux formules déjà servies dans l'archive. Tweet 1 réécrit avant publication. Le contrôle a fait exactement son travail.
+   - **Verdict final, texte privé de sa dernière ligne : `PASS`, 0 signalement.**
+3. **Relecture éditoriale finale** (point 8 de la grille, faite par le rédacteur depuis le retrait du relecteur) : passage en revue de `_shared/burned-templates.md` charpente par charpente. Aucune des familles brûlées n'est employée (« X is the one that », « the part I keep returning to », « X on its own tells you A and nothing about B », binaire fermé, « what gets counted », « downstream », « the same problem from two ends », relative libre + copule de saillance). Aucune question de clôture, aucune formule de saillance.
+
+**🔴 Faux positif structurel du contrôle mécanique, déjà remonté à David ce matin par `linkedin-hwg-content-proposal`, 2e occurrence ici.** Avec sa dernière ligne, le fil échoue sur `ngram.history` avec **exactement deux** formules : `https healthwatch global com en` et `healthwatch global com en disease` — **les deux moitiés de l'URL de la fiche maladie**, rien d'autre. Vérifié en relançant le même contrôle sur le même texte sans la dernière ligne : **PASS, 0 bloquant**. La règle du 06/09 impose de lier la fiche maladie précise ; `check-outreach-message.mjs` tokenise les URL comme du texte ; donc **tout contenu conforme à la règle du 06/09 échouera indéfiniment sur ce bloquant**, sur les deux canaux. Correctif évident côté outil (exclure les URL de la tokenisation n-gram), **non appliqué ce run** : `scripts/` n'appartient à aucune routine documentaire (`AGENTS.md`) et c'est un changement de code, pas de contenu. La cible précise, elle, est neuve : `disease/measles` n'avait **jamais** été liée (0 occurrence dans `marketing/`).
+
+### Vérifications de longueur et de publication
+
+| Tweet | Calcul agent (URL = 23 car.) | Compteur natif X | Marge |
+|---|---|---|---|
+| 1 | 270 | **10 restants** (= 270) ✅ concordant | 10 |
+| 2 | 276 | anneau presque plein, sous la limite | 4 |
+| 3 | 257 (233 texte + 1 saut de ligne + 23 URL) | anneau bas | 23 |
+
+- **Note de péremption du SKILL respectée** : le compteur natif de X a confirmé le calcul fait avec la constante t.co de 23 caractères sur le tweet 1 (270 = 280 − 10). **Constante toujours valable au 07/09**, rien à corriger dans le SKILL.
+- **Identité du compte vérifiée AVANT la première frappe** : `document.querySelector('[data-testid="SideNav_AccountSwitcher_Button"]').innerText` → `HealthWatchGlobal / @HWatchGlobal`. ✅
+- **Texte comparé au brouillon validé avant le clic** : les trois champs relus par appel JS et **diffés octet à octet** contre le brouillon passé au contrôle mécanique → identiques.
+- **Publication vérifiée après coup** sur `x.com/HWatchGlobal/status/2096862299826885020` : les 3 tweets présents dans l'ordre, textes identiques, et le lien rendu en **carte d'aperçu** titrée « Measles — Global outbreak surveillance · HealthWatch Global », domaine `healthwatch-global.com`. Fiche cible testée avant rédaction : **HTTP 200**.
+- **Pas de ProMED, pas de ReliefWeb, pas de polioeradication.org, pas de NCDC** : PAHO, CDC et Resolve To Save Lives, aucune au registre `_shared/sources-interdites.md`. **Aucun témoignage, aucune citation de personne.**
+
+### ⚠️ Incidents de composition (2 brouillons perdus avant la bonne prise, aucun contenu publié par erreur)
+
+Le fil a demandé **trois tentatives** de composition. Aucune n'a produit de publication accidentelle, mais les causes valent d'être notées, elles sont réutilisables :
+
+1. **Décalage d'échelle entre le repère des captures et `getBoundingClientRect()`.** Le viewport CSS fait **1280 × 550**, les captures **1568 × 674** : facteur **1,225** (`devicePixelRatio` vaut 1,5, ce n'est donc pas lui). Un clic posé aux coordonnées CSS brutes tombe ~20 % trop haut et trop à gauche. Le 1er essai a ainsi cliqué **hors de la boîte de dialogue**, ce qui l'a fermée, et le texte suivant est parti dans la page comme raccourcis clavier (navigation involontaire vers `/explore`). **Toujours multiplier par 1,225 une coordonnée issue de `getBoundingClientRect()` avant de la donner à `computer`**, ou mieux, relever la coordonnée sur la capture elle-même comme le demande le SKILL.
+2. **`.click()` en JavaScript sur `[data-testid="addButton"]` ne marche pas et vide le composeur.** Le bouton « + » de X est un composant React qui n'écoute pas un `click()` synthétique : au 2e essai, l'appel n'a pas créé de champ **et a fait perdre le tweet 1 déjà saisi**. Seul le clic réel (`computer/left_click`) fonctionne. La procédure du SKILL (clic réel sur « + », **puis défilement manuel, puis capture, puis clic sur le champ vide repéré à l'écran**) est la seule qui a marché, et elle a marché du premier coup les deux fois.
+3. **Deux timeouts de capture d'écran** (`Page.captureScreenshot` après 30 s), dont un juste après le clic de publication. **Ce n'était pas une panne du pont** : `javascript_tool` a répondu normalement dans la seconde qui suivait, avec de vraies valeurs et non `{}` (la signature de renderer dégradé décrite dans le SKILL). Aucune re-sélection de navigateur n'a été nécessaire, aucun redémarrage tenté, aucune ligne ajoutée à `_shared/browser-status.md`. La publication a bien eu lieu pendant le timeout, confirmée ensuite par lecture du profil. **À retenir : un timeout de capture isolé, avec `javascript_tool` qui répond, ne justifie ni escalade ni re-sélection ; vérifier l'état par JS avant de conclure quoi que ce soit.**
+
+### 🟡 Signalements repérés en passant, hors périmètre de cette routine
+
+- **Ligne HWG Rougeole/États-Unis périmée d'un cycle** : la base porte 2 465 cas (sitrep PAHO #8, arrêt SE 29), alors que le **sitrep #10 donne 2 777** (arrêt SE 33) et que le **CDC affiche 3 134 cas au 3 septembre**, dont « *95% of confirmed cases (2,969 of 3,134) are outbreak-associated* » sur **38 foyers**. Les 6 lignes rougeole/Amériques mériteraient un passage au sitrep #10 (Guatemala 32 566, Mexique 12 607, Canada 1 117, Bolivie, Pérou). **Pour `morning-don-check`, décision à David.**
+- **Pérou** : 211 cas sur la seule quinzaine SE 31-32, 3e contributeur régional, alors que son cumul HWG n'est que de 1 277 (08/08). PAHO écrit noir sur blanc que la transmission soutenue dans le **sud du Pérou** exporte vers la **Bolivie et le Brésil**. Ligne à rafraîchir en priorité.
+
+
+## 📅 Session linkedin-hwg-monitoring — 07/09/2026 (9h) — ✅ **1 commentaire publié** (Abduljalal Nadabo, carry-over de la veille bloqué par le classifieur)
+
+**Contexte d'ouverture** : premier run LinkedIn de la journée (le run `linkedin-hwg-content-proposal` de 8h35 a produit un brouillon de post de marque, en attente de David, hors périmètre de cette routine). Quotas repartis à zéro : commentaires 0/7, notes de connexion 0/7, DM 0/8, suivis 0 (7-10). Navigateur `23c7ecdd-…` (affiché « Browser 2 » ce matin, les labels de slot ont encore tourné) sélectionné directement, sans question — session planifiée, David absent par construction.
+
+---
+
+### 1️⃣ ✅ COMMENTAIRE 1/7 — **Abduljalal Nadabo**, carry-over publié
+
+`urn:li:activity:7502451418935730176` — post de la veille ~22h, **11 h au moment de la publication**, donc largement dans la fenêtre 48 h. Post à **0 commentaire** avant le nôtre.
+
+Texte rédigé, passé au registre de faits et au contrôle mécanique **hier soir** (mécanique PASS, 313 caractères) ; sa publication seule avait été bloquée par le classifieur de permissions. Aucune réécriture ce matin : le texte publié est celui validé la veille, mot pour mot.
+
+**Contrôles avant publication :**
+- **§15 (verrouillage par cible)** : relecture de `content-log.md` et `linkedin-contacts.md` à l'ouverture du run — aucune entrée du 07/09 sur cette cible, aucune autre session LinkedIn n'a tourné depuis le 06/09 au soir.
+- **§16 (densité par événement)** : ce commentaire et celui d'Adetifa (06/09 au soir) portent tous deux sur le diagnostic filovirus, mais à un jour d'écart et sur deux arguments réellement distincts (Adetifa : pourquoi un PoC filovirus n'est pas traçable comme un TDR palu ; Nadabo : pourquoi la différenciation d'espèce conditionne l'usage du vaccin). Pas de 3e texte sur ce thème aujourd'hui.
+- **Identité de la cible revérifiée dans le même appel JS que le clic** (URN dans `location.href` + longueur et contenu du brouillon), conformément à `hwg-social-policy.md` §7.
+
+**Texte publié :**
+
+> Differentiation is the word doing the work in that sentence. Ervebo is licensed for the Zaire strain, and the current outbreak is Bundibugyo, so a positive filovirus result and a usable vaccine decision are not the same milestone. A platform that stops at "filovirus" leaves the response exactly where it started.
+
+**Publication confirmée** : 1 commentaire sur le post (0 avant), 1 seule occurrence du texte dans la page, éditeur vidé, auteur = David Deheunynck. Mise en forme relue à l'écran avant le clic (capture).
+
+⚠️ **Piège de sélecteur rencontré, à retenir** : sur cette page, l'éditeur de commentaire n'est **pas** sous `.comments-comment-box` (il est dans un `form`, sous `.editor-content.ql-container`), alors que le bouton d'envoi porte bien `button.comments-comment-box__submit-button--cr`. Un premier clic conditionné à `document.querySelector('.comments-comment-box .ql-editor')` n'a donc rien fait, le garde-fou d'identité renvoyant `null` faute d'éditeur trouvé — le garde-fou a fonctionné comme prévu (aucun clic à l'aveugle), mais le bon sélecteur d'éditeur est `.ql-editor` seul. Le bouton d'envoi s'intitule **« Commenter »**, pas « Publier » : un `find` sur `/^Publier$/` ne le trouve pas.
+
+`QA : registre de faits + mécanique PASS (313 car., en/en) la veille | angle tiré du registre produit (claim 5, Ervebo « Zaire strain only ») | relecture éditoriale : faite | statut : publié le 07/09`
+
+---
+
 ## 📅 Session linkedin-hwg-content-proposal — 07/09/2026 (lundi MWF, 8h35) — 🟡 **PRÊT — en attente de publication** — West Nile / Europe, le tableau hebdomadaire de l'ECDC est un instrument de sécurité transfusionnelle, pas un décompte épidémiologique, et l'ECDC l'écrit lui-même
 
 **Étape 0 — aucun brouillon en attente.** Dernier post de marque LinkedIn : **04/09** (Diphtérie/Niger, antitoxine), publié sur ordre de David. Le 05/09 (vendredi) n'a pas produit de post de marque, le 06/09 est un dimanche hors MWF. Aucun statut `PRÊT` résiduel frais dans le fichier (le plus récent, Dengue/Taïwan, a été retiré le 31/08). Rédaction entièrement neuve.
