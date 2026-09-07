@@ -2,6 +2,97 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session linkedin-hwg-content-proposal — 07/09/2026 (lundi MWF, 8h35) — 🟡 **PRÊT — en attente de publication** — West Nile / Europe, le tableau hebdomadaire de l'ECDC est un instrument de sécurité transfusionnelle, pas un décompte épidémiologique, et l'ECDC l'écrit lui-même
+
+**Étape 0 — aucun brouillon en attente.** Dernier post de marque LinkedIn : **04/09** (Diphtérie/Niger, antitoxine), publié sur ordre de David. Le 05/09 (vendredi) n'a pas produit de post de marque, le 06/09 est un dimanche hors MWF. Aucun statut `PRÊT` résiduel frais dans le fichier (le plus récent, Dengue/Taïwan, a été retiré le 31/08). Rédaction entièrement neuve.
+
+**Étape 0 bis — recroisement X vérifié.** Dernier thread `x-hwg-content-proposal` : **31/08** (Ebola/RDC, démarrage de la vaccination, protection des soignants « absente → inconnue »). Dans la fenêtre des 7 jours, donc contrôlé : **aucun recroisement**, ni sur le fait, ni sur la source, ni sur la bascule. Sujet, source et mécanisme entièrement disjoints. ⚠️ Le thread X du 07/09 (lundi 9h) n'avait pas encore tourné au moment de ce run : **si `x-hwg-content-proposal` choisit West Nile aujourd'hui, c'est ce run-ci qui l'aura précédé**, la trace est ici pour ça.
+
+**Origine de l'angle** : report explicite de `linkedin-hwg-followup-check-2` du 05/09 (§ pistes), qui notait que « les décomptes nationaux et le décompte ECDC ne comptent pas la même chose » et que c'était « exactement le genre de sujet que le compte de marque traite bien », **à condition de lire la page ECDC elle-même avant d'écrire**. C'est ce qui a été fait ce run.
+
+### TEXTE — statut : 🟡 **PRÊT — en attente de publication**
+
+```
+Two European agencies published a West Nile count for France this month, two days apart. The one with the earlier cut off is the higher of the two.
+
+Santé publique France, bulletin published 2 September: 39 locally acquired cases as of 30 August.
+
+ECDC, weekly overview published 4 September, data up to and including 3 September: 36 cases for France.
+
+Same country, same locally acquired wording, four extra days of data, three fewer cases.
+
+These are not two revisions of one number. They are two instruments.
+
+The ECDC weekly overview is built for blood establishments. Its stated job is to help authorities decide on deferring or testing donors who may have been exposed, under EU directives on substances of human origin. Its unit is the affected area, 144 of them across 15 countries this season, and one reported locally acquired case is enough to flag an area. The country totals fall out of that process rather than drive it.
+
+ECDC writes it on the page itself. The overview "should not be considered a comprehensive epidemiological assessment of WNV transmission in Europe."
+
+It carries no death count either. A donor safety instrument has no reason to.
+
+None of that makes the table wrong. It makes it specific. The failure mode is reading it as a European case tally and then comparing countries with it.
+
+At HealthWatch Global we badge every outbreak line by the kind of source it came from, so a national bulletin and a European overview never quietly merge into one figure. On West Nile in Europe right now, that difference is most of the story.
+
+https://healthwatch-global.com/en/disease/west-nile-fever
+```
+
+### Sources primaires, lues ce run, pas reprises d'une mémoire
+
+- **ECDC**, *Surveillance of West Nile Virus infections in humans in Europe, weekly report*, **Week 36, 2026** (`https://wnv-weekly.ecdc.europa.eu/`, HTTP 200 avec User-Agent navigateur ; la page était injoignable les 05 et 06/09, elle répond de nouveau). Verbatim retenus :
+  - « *Published on 04 September 2026, based on data submitted up until and including 3 September 2026.* »
+  - « *144 areas affected by West Nile virus (WNV) have been identified in 15 countries across Europe* »
+  - « *The 15 countries have reported 1 086 locally acquired human cases of WNV infection* », dont « *France (36 cases)* »
+  - Objet du tableau : « *can assist competent authorities responsible for substances of human origin (SoHO), in particular for blood and blood components, with decisions on the deferral or testing of donors who may have been exposed to WNV, in accordance with Commission Directives 2004/33/EC and 2014/110/EU* »
+  - Définition d'une zone affectée : « *an area where local transmission of WNV to humans has been identified through the reporting of at least one locally acquired human case* »
+  - ⭐ La phrase qui porte le post : « *This weekly overview is intended to support the implementation of safety measures for donors of blood and blood components and other SoHO and should not be considered a comprehensive epidemiological assessment of WNV transmission in Europe.* »
+- **Santé publique France**, *Chikungunya, dengue, Zika et West Nile en France hexagonale. Bulletin de la surveillance renforcée du 2 septembre 2026* (`santepubliquefrance.fr/.../chikungunya-dengue-zika-et-22`, HTTP 200, titre vérifié). Verbatim : « *Au 30 août 2026, 39 cas autochtones (9 cas supplémentaires par rapport à la semaine précédente) d'infection à virus West Nile ont été identifiés en France hexagonale.* » C'est la source de la ligne HWG France (39 cas, `asOf` 2026-09-02, `ageDays` 1, non périmée au registre).
+- **« It carries no death count either »** : vérifié mécaniquement sur le rapport W36 — **0 occurrence** de `death`/`died`/`fatal`/`mortality` dans le texte lisible (le seul `died` du HTML brut est à l'intérieur d'un blob base64 d'actif embarqué, pas du contenu). Cohérent avec l'observation du 05/09 (« l'ECDC n'a pas de colonne décès »).
+
+### Chiffres HWG mis en regard de l'ECDC W36 (non publiés, contexte de décision)
+
+| Pays | Ligne HWG (source) | ECDC W36 (coupure 03/09) |
+|---|---|---|
+| Italie | 521 / 26 décès (bollettino ISS) | 516 |
+| Grèce | 290 / 24 (euronews, **presse**) | 284 |
+| Espagne | 88 / 4 (ECDC + décès d'ailleurs) | 88 |
+| Roumanie | 58 / 3 (gds.ro, **presse**) | 56 |
+| Macédoine du Nord | 56 / 7 (trn.mk, **presse**) | 55 |
+| France | 39 / 0 (**SpF, primaire**) | 36 |
+| Allemagne | 2 / 0 (ECDC) | 2 |
+
+**Décision de rédaction** : le post ne cite **que le couple France** (SpF 39 / ECDC 36), le seul dont les deux termes remontent à une source primaire lue ce run. Grèce, Roumanie et Macédoine du Nord sont sourcées presse côté HWG : elles auraient illustré le même écart, mais la règle « toute affirmation chiffrée vérifiée contre une source primaire citable » interdit de les publier telles quelles. Le post ne calcule **aucune létalité** et ne compare **aucun pays à un autre**, ce qui serait précisément l'erreur qu'il dénonce.
+
+### QA (dispositif à deux étages depuis le 06/09, relecteur retiré)
+
+1. **Registre de faits** — `npm run qa:facts` relancé ce run : 232 faits citables, 81 lignes `is_seed` exclues. Ligne France/West Nile présente, `ageDays` 1, `stale: false`. `npm run qa:claims` relancé : 805 chaînes de copie publique, 7 claims manuelles.
+2. **Contrôle mécanique** — `qa:check`, canal `linkedin-post`, avec les deux sources primaires passées en `threadFile`. **1 619 caractères, 11 paragraphes, langue `en`, 0 tiret cadratin.**
+   - Tous les chiffres du texte (39, 36, 30, 144, 15, 2, 3, 4) résolus en `facts.from-thread` : ils viennent des documents lus, pas d'une mémoire.
+   - `hwg.claim` sur « *we badge every outbreak line by the kind of source it came from* » : **confronté et conforme** à la claim autorisée du registre produit (« Badge chaque ligne selon la source (DON, source officielle, presse, non vérifiée) via `lib/source-trust.ts` »). Aucune affirmation de couverture, d'antériorité, de traction ni de partenariat.
+   - 🔴 **Seul bloquant restant : `ngram.history`, et c'est un faux positif structurel, à remonter à David** (voir ci-dessous).
+3. **Relecture de mise en forme** — 11 paragraphes séparés par des lignes vides, aucun bloc dense, aucun tiret cadratin, guillemets droits autour de la seule citation.
+
+### 🔴 Faux positif structurel du contrôle mécanique, à arbitrer par David
+
+`qa:check` bloque le brouillon sur `ngram.history`, avec **exactement deux** formules « déjà servies » : `https healthwatch global com en` et `healthwatch global com en disease`. **Ce sont les deux moitiés de l'URL de la fiche maladie**, rien d'autre. Vérifié en relançant le même contrôle sur le même texte privé de sa dernière ligne : verdict **PASS**, 0 bloquant. La prose ne réutilise donc aucune formule d'archive.
+
+Les deux règles se contredisent mécaniquement :
+- la règle du **06/09** impose de lier la **fiche maladie précise** (`/{locale}/disease/{slug}`) plutôt que l'accueil générique ;
+- `check-outreach-message.mjs` tokenise les URL comme du texte, donc ce préfixe imposé est déjà dans l'historique **11 fois rien que dans `content-log.md`**, et le sera un peu plus à chaque post.
+
+**Conséquence** : tout futur post ou DM qui respecte la règle du 06/09 échouera sur ce même bloquant, indéfiniment. Ce n'est pas propre à ce brouillon. La cible précise, elle, est neuve : `disease/west-nile-fever` n'a **jamais** été liée (0 occurrence dans tout `marketing/`). Correctif évident côté outil (exclure les URL de la tokenisation n-gram), **non appliqué ce run** : `scripts/` n'appartient à aucune routine documentaire (règle `AGENTS.md`) et c'est un changement de code, pas de contenu. À David de trancher.
+
+### Vérifications de publication
+
+- **Fiche maladie liée** : `https://healthwatch-global.com/en/disease/west-nile-fever` répond **HTTP 200**, titre « West Nile fever, Global outbreak surveillance · HealthWatch Global », la France y figure. Le CTA ne renvoie pas vers une page vide (piège du 15/07, Guatemala).
+- **Hook structurel, pas événementiel** : aucune date butoir, aucun événement daté. Le post reste vrai s'il est publié plus tard dans la semaine ; seuls les deux chiffres vieilliront au prochain bulletin (SpF le mardi, ECDC le jeudi). **Si publié après le 09/09, rafraîchir les deux chiffres avant.**
+- **Pas de ProMED, pas de ReliefWeb, pas de polioeradication.org, pas de NCDC** : les deux sources sont l'ECDC et Santé publique France, aucune ne figure au registre `_shared/sources-interdites.md`.
+- **Aucun témoignage, aucune citation de personne.** La seule citation est celle d'un document institutionnel public, attribuée à l'ECDC dans le texte.
+
+### 🟡 Signalement pour `morning-don-check` (donnée épi vue en passant, hors périmètre de cette routine)
+
+L'ECDC W36 liste **les Pays-Bas à neuf cas** locaux et cinq zones affectées. HWG n'a **toujours aucune ligne West Nile / Pays-Bas** : signalement déjà ouvert par `linkedin-hwg-followup-check-2` le 06/09 (RIVM : 1 décès au 26/08 et 3 signalements locaux). **La divergence 3 vs 9 s'éclaire** : le RIVM comptait les infections *probablement contractées aux Pays-Bas* au 26/08, l'ECDC compte 9 cas locaux au 03/09. Ce ne sont pas deux chiffres contradictoires mais deux dates de coupure. **Décision de création de ligne toujours à prendre par David.**
+
+
 ## 📅 Session interactive — 06/09/2026 (soir, 21h40-22h46, « remplis les quotas » puis refonte des règles DM) — ✅ **2 commentaires publiés** (Ifedayo Adetifa, Joseph Cephas Kyari — quota 2/7 → **4/7**) — ✅ **1 DM envoyé** (Ofelia CAZACU, message de bienvenue, quota 6/8 → **7/8**) — 🔴 **le relecteur indépendant a été retiré du dispositif QA, sur ordre de David** — 🔴 **spécification DM entièrement remplacée par 6 règles de David** — ⏹️ **session close par un blocage du classifieur sur les actions d'écriture navigateur**
 
 **Contexte** : session ouverte à 21h40 sur « remplis les quotas », après le run automatique de 17h. Aucune autre session LinkedIn n'a tourné entre les deux. Navigateur : **Browser 1 (`a466bc2e`) sélectionné sur choix explicite de David, puis constaté non fonctionnel** (`tabs_context_mcp` → « No group with id » sur 3 tentatives, cohérent avec l'étiquette « zombie » déjà portée par ce deviceId) ; bascule sur `23c7ecdd` (le deviceId habituel) sur arbitrage de David. **Aucune entrée `browser-status.md`** : le navigateur habituel n'a jamais été en panne, seul l'alternatif l'était, et c'est déjà documenté.
