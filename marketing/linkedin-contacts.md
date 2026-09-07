@@ -1,7 +1,7 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
-## 📅 Session interactive — 07/09/2026 (11h, David « check les dms et demandes d'invitation ») — ✅ **2 réponses en fil actif** (Miriam Mbueshi, Adane Etore — **1er CTA du fil Adane, inboundCount passé à 2**) — ✅ **invitations reçues vérifiées, aucune nouvelle**
+## 📅 Session interactive — 07/09/2026 (11h, David « check les dms et demandes d'invitation » puis « retire les dix plus anciennes non converties ») — ✅ **2 réponses en fil actif** (Miriam Mbueshi, Adane Etore — **1er CTA du fil Adane, inboundCount passé à 2**) — ✅ **invitations reçues vérifiées, aucune nouvelle** — ✅ **10 invitations envoyées retirées sur ordre explicite (99 → 89 en attente)** — ⚠️ **le bouton « Se connecter » reste absent, hypothèse d'un plafond hebdomadaire distinct**
 
 **Contexte** : reprise interactive, David présent. Vérification demandée des DM et des demandes d'invitation. Navigateur `23c7ecdd-…` sélectionné directement (navigateur habituel).
 
@@ -39,13 +39,38 @@ Il a répondu une 2e fois à 09h45 (990 caractères) : le goulot n'est pas la te
 
 2 invitations toujours en attente, identiques à ce matin : **Zachariah G. Houdari** (services financiers, hors sujet, laissé en attente) et **OLAOLUWA PHILIP** (GIScientist/climat). Activité de ce dernier revérifiée en détail : posts sur son programme GeoDev Lab (formation géospatiale), une republication mentionnant en passant un « Professor of Epidemiology and GIS » comme intervenant invité — lien trop indirect avec l'épidémiologie/surveillance pour justifier une acceptation. **Laissé en attente, pas écarté.**
 
-### 4️⃣ 🔁 Carry-over
+### 4️⃣ ✅ Retrait des 10 invitations envoyées les plus anciennes, sur ordre explicite de David (« retire les dix plus anciennes non converties »)
+
+Objectif : redonner de la marge sous le plafond de 100 invitations en attente signalé ce matin. Les 10 les plus anciennes (`invitation-manager/sent/`, liste triée du plus récent au plus ancien, 99 chargées en scrollant jusqu'au bas) ont été identifiées puis retirées une par une, identité revérifiée dans le même appel JS que le clic à chaque fois (nom complet + poste dans la carte), conformément à `hwg-social-policy.md` §7.
+
+**Constat avant retrait, à noter** : les 10 plus anciennes ne sont pas toutes des profils épidémiologie/santé publique au sens strict — 6 sur 10 sont des professionnels de la sûreté internationale / gestion de crise / travel risk management. Vérifié avant de les inclure : ce ne sont **pas** de l'outreach freelance égaré dans la liste, mais une piste HWG assumée (surveillance épidémique comme composante de l'évaluation de risque voyage/sécurité) — chaque note d'invitation le confirme explicitement (ex. Clémentine Monsallier : « je travaille sur les signaux épidémiques comme composante de l'évaluation de risque voyage »).
+
+**10 invitations retirées** (de la plus ancienne à la plus récente des dix) :
+
+| # | Nom | Envoyée il y a | Angle |
+|---|---|---|---|
+| 1 | Bouna Souheib | 3 mois | Médecin infectiologue, note HWG standard |
+| 2 | Lova Andrianina RAZAFINDRAKOTO | 3 mois | Épidémiologiste de terrain, note HWG standard |
+| 3 | Camille Kepeklian | 2 mois | Interne de santé publique Sorbonne, via Noak |
+| 4 | Dr KEOULA Marcel David | 2 mois | Résident médecine interne, suivait déjà HWG depuis juin |
+| 5 | Clémentine Monsallier | 2 mois | Travel Risk Management — angle signaux épidémiques |
+| 6 | Coleen Essengue | 2 mois | Coordinatrice Sûreté Internationale — angle briefings pré-départ |
+| 7 | Thibaut Pellerin | 2 mois | International Security Operations — angle veille épidémique zones de déploiement |
+| 8 | Camille Rives | 2 mois | Sûreté/gestion de crise — angle outils de suivi de situations à risque |
+| 9 | Gérard Laurent | 2 mois | Conseiller sûreté internationale indépendant |
+| 10 | Olivier Sannier | 2 mois | Référent sûreté, Direction de la coopération internationale |
+
+**Résultat vérifié** : compteur `invitation-manager/sent/` passé de **99 à 89**, confirmé après rechargement de la page. Chaque retrait confirmé individuellement par le toast LinkedIn (« L'invitation envoyée à … a été retirée »).
+
+⚠️ **Le bouton « Se connecter » n'est toujours pas revenu**, testé sur 2 profils distincts (Hana Haileyesus — déjà rencontrée ce matin — et Jafar Oyugi — jamais touché), y compris après rechargement complet de la page. Ce résultat contredit l'hypothèse posée ce matin (« le plafond de 100 invitations en attente bloque le bouton ») : à 89 en attente, le bouton devrait être revenu si c'était la seule cause. **Hypothèse alternative, plus probable a posteriori** : LinkedIn applique aussi un **plafond hebdomadaire d'envoi** (comportement documenté de la plateforme, indépendant du nombre d'invitations en attente), qui ne se lève pas en retirant des invitations déjà envoyées — seul le temps le réinitialise. Le rapprochement avec le compteur « 99/100 » de ce matin était une corrélation, pas forcément la cause. **À vérifier dans quelques jours** (le compteur en attente est descendu, mais le blocage d'émission, lui, persiste) plutôt qu'à retenter un retrait supplémentaire qui ne changerait rien à cette hypothèse.
+
+### 5️⃣ 🔁 Carry-over
 
 - **Miriam Mbueshi** : à sa prochaine réponse, `inboundCount` passera à 2, le CTA deviendra dû.
 - **Adane Etore** : CTA envoyé, fil à surveiller pour sa réponse.
 - **Lissanework Mola, Jean Claude Nshimiyimana** : DM de bienvenue du matin, toujours sans réponse.
 - **Quota DM du jour** : 4/8 (matin) → **6/8** après ces 2 réponses.
-- **Capacité d'invitation toujours bloquée** (99/100, signalé ce matin) : rien de nouveau à ajouter, David informé par notification.
+- **Capacité d'invitation en attente désengorgée sur ordre de David** (99 → 89), **mais le bouton « Se connecter » reste absent** : la cause probable est un plafond hebdomadaire d'envoi distinct, pas (seulement) le compteur en attente. Ne pas retirer d'autres invitations pour tester cette hypothèse sans nouvel ordre de David — l'action déjà faite est irréversible (3 semaines avant de pouvoir réinviter chacun des 10).
 
 ---
 
