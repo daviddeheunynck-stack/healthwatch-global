@@ -236,12 +236,26 @@ ECDC writes it on the page itself. The overview "should not be considered a comp
 
 It carries no death count either. A donor safety instrument has no reason to.
 
-None of that makes the table wrong. It makes it specific. The failure mode is reading it as a European case tally and then comparing countries with it.
+The table is doing exactly the job it was built for. Reading it as a running European case count, then comparing countries on that basis, is the actual mistake.
 
 At HealthWatch Global we badge every outbreak line by the kind of source it came from, so a national bulletin and a European overview never quietly merge into one figure. On West Nile in Europe right now, that difference is most of the story.
 
 https://healthwatch-global.com/en/disease/west-nile-fever
 ```
+
+### 🔁 Double-check demandé par David en session, plus tard le même matin — un vrai défaut trouvé et corrigé
+
+Re-vérification complète avant publication : sources ECDC et Santé publique France re-téléchargées (tailles et contenu éditorial identiques à ce matin, seul un hash de cache CSS a changé côté SpF), ligne DB France/West Nile inchangée (39/0, source SpF), fiche maladie toujours en HTTP 200 avec la France citée, registre de faits et registre produit régénérés (232 faits, 805 chaînes, valeurs identiques). Aucun recroisement avec le run `linkedin-hwg-monitoring` de 9h (3 commentaires publiés, aucun ne touche au West Nile/ECDC) ni avec le thread X publié à 9h33 (rougeole/Amériques, sujet disjoint, l'étape 0 bis de ce thread confirme avoir écarté West Nile à cause de ce brouillon).
+
+**Le contrôle mécanique relancé sur le brouillon archivé signalait 206 formules « déjà servies »**, contre 2 ce matin. Cause identifiée : le brouillon est désormais lui-même dans `content-log.md`, qui fait partie du corpus anti-gabarit (`marketing/qa/lexicon.json`, `ngram.corpus`) — le texte se retrouve donc à matcher sa propre copie archivée. Ce n'est pas un vrai signal ; **relancé le même contrôle contre une copie du corpus privée de cette seule entrée** pour voir au travers de l'auto-collision : il ne reste que 4 hits réels.
+
+Parmi ces 4, un **vrai défaut, pas un artefact** : « None of that makes the table wrong. It makes it specific. » reproduisait, presque mécaniquement, la charpente de clôture du post Dengue/Taïwan retiré le 31/08 (« *None of that makes the figure wrong. It makes it not comparable with the line above it…* », toujours archivé plus haut dans ce fichier, jamais publié). Même construction « None of that makes X wrong, it makes it Y » sur le même type d'angle (deux compteurs qui ne mesurent pas la même chose). Exactement le cas que [[feedback_anti_template_check_structure_not_just_wording]] met en garde : une reprise de forme rhétorique, pas de mots identiques. **Phrase réécrite** : « The table is doing exactly the job it was built for. Reading it as a running European case count, then comparing countries on that basis, is the actual mistake. » (texte ci-dessus, déjà à jour).
+
+Un premier remplacement (« …is where the mistake happens. ») collisionnait à son tour, par coïncidence, avec un tour de phrase générique (« is where the… ») utilisé ailleurs sur un sujet sans rapport (mobilité et signal prédictif, Ebola/RDC) — écarté par prudence bien que la ressemblance y soit purement lexicale, pas structurelle. Le texte final ne partage plus aucun n-gramme de 5 mots avec l'historique en dehors de la citation ECDC obligatoire et du préfixe d'URL déjà documenté ci-dessous.
+
+**Reste, sans changement depuis ce matin** : la citation verbatim ECDC (« *a comprehensive epidemiological assessment of* ») revient aussi dans un DM envoyé ce matin par `linkedin-hwg-monitoring` (`linkedin-contacts.md`, même citation, jugement déjà assumé là-bas comme exception de citation de source obligatoire) — même fait, deux canaux différents (DM privé vs post public), pas une redite au sens de la règle. Et le préfixe d'URL de fiche maladie (`ngram.history` sur `healthwatch global com en disease`) reste le faux positif structurel remonté ce matin, inchangé.
+
+Contrôle mécanique final sur le texte corrigé : **1628 caractères, 11 paragraphes, langue anglaise cohérente, 0 tiret cadratin**, sous la limite de 3000 caractères d'un post LinkedIn.
 
 ### Sources primaires, lues ce run, pas reprises d'une mémoire
 
