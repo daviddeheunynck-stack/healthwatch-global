@@ -1,5 +1,88 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
+## 📅 Reprise interactive — 07/09/2026 (18h20, David « Envoie les messages de bienvenue aux nouvelles connexions ») — ✅ **4 DM de bienvenue envoyés, sur ordre explicite de David**
+
+**Contexte** : le carry-over du run de 17h laissait 4 messages de bienvenue dus (Gail Carson, Joseph T. Hicks, Seontae Kim, Stéphanie Maltais — connexions acceptées le 07/09, quota DM 8/8 plein). David a demandé explicitement en session de les envoyer maintenant — validation explicite (`report-conventions.md`), qui prime sur le quota de pacing.
+
+**Dispositif QA** : registres de faits et produit déjà régénérés ce soir (moins d'1h, frais) ; contrôle mécanique (`scripts/check-outreach-message.mjs`, canal `linkedin-dm`) sur chaque brouillon, avec les brouillons précédents en `peers`. Aucun relecteur. Chaque profil ouvert et son activité récente lue en entier avant rédaction — hook réel, jamais inventé (§5 item 5).
+
+---
+
+### 1️⃣ ✅ Gail Carson (`/in/gail-carson-16435183/`) — ISARIC & systems leadership, Royaume-Uni
+
+**Hook vérifié** : elle a republié un post de John-Arne Røttingen relayant un commentaire *The Lancet* co-signé par les co-présidents du G20 High Level Independent Panel (dont elle), sur le financement de la continuité des contre-mesures médicales entre flambées, avant la réunion de haut niveau de l'ONU sur la préparation aux pandémies.
+
+**Texte envoyé :**
+
+> Gail, the Lancet comment you shared on sustaining the medical countermeasure ecosystem between outbreaks names a financing problem that has a mirror on the reporting side.
+>
+> HealthWatch Global is the daily surveillance read I maintain, built from that same class of agency bulletins. How often does an ISARIC protocol get exercised between epidemics, rather than only opened once one is declared?
+
+**1er jet retravaillé une fois** : `ngram.history` a bloqué l'énumération d'agences et « I only ever see from » (déjà servis). Reformulé, 0 blocker au 2e jet. Aucun CTA (premier contact), question ouverte sur un paramètre (fréquence), pas un jugement d'adéquation.
+
+`QA : mécanique PASS (395 car., en, 0 blocker au 2e jet) | aucun chiffre | relecture éditoriale : faite | statut : envoyé le 07/09`
+
+---
+
+### 2️⃣ ✅ Joseph T. Hicks (`/in/joseph-t-hicks/`) — Applied Epidemiologist, Imperial College London, ex-CDC EIS
+
+**Hook vérifié** : son propre post (1 mois) annonçant la publication dans *The Lancet Microbe* de son framework open-source `anatembea`, qui traduit des données mensuelles de prévalence en soins prénataux en estimations de saisonnalité et d'incidence clinique du paludisme. Un 3e post (9 mois) sur la Journée mondiale du sida a été écarté comme hook : terrain politique (§3).
+
+**Texte envoyé :**
+
+> Joseph, anatembea is exactly the kind of proxy signal I look for: data collected continuously standing in for something that would otherwise only get measured every few years by household survey.
+>
+> HealthWatch Global runs a version of that same trade-off, reading whatever cadence each agency bulletin happens to publish on. For antenatal-care prevalence, how much lag sits between a clinic visit and the data point that reaches your model?
+
+**PASS au 1er jet.** Aucun CTA, question ouverte sur un paramètre (durée du délai), pas de jugement.
+
+`QA : mécanique PASS (439 car., en, 0 blocker) | aucun chiffre | relecture éditoriale : faite | statut : envoyé le 07/09`
+
+---
+
+### 3️⃣ ✅ Seontae Kim (`/in/seontae-kim-051063184/`) — Field Epidemiologist, OMS Timor-Leste
+
+**Hook vérifié** : son propre post (4 mois) sur l'atelier de surveillance collaborative multi-source (MSCS) soutenu par le bureau régional OMS Asie du Sud-Est — sa réflexion : renforcer la surveillance ne tient pas qu'aux systèmes de données, mais aussi au partage en temps utile et à la traduction des données en décision.
+
+**Texte envoyé :**
+
+> Seontae, the multi-source collaborative surveillance workshop you described names something I don't often see said directly: that data sharing itself, not just the systems, is the harder problem.
+>
+> HealthWatch Global only ever sees the health side of that picture, one line per published outbreak bulletin. When agriculture, livestock and health sit inside the same collaborative system, what keeps their reporting schedules in step with each other?
+
+**1er jet retravaillé une fois** : `context.closing-question-binary` (warn, pas bloquant) sur une clôture à alternative nommée (« do they report on the same schedule, or does timing become one more thing to reconcile? »), contraire à la spécification DM de David (question ouverte, sans alternative nommée). Reformulé en question ouverte pure, 0 warn au 2e jet.
+
+`QA : mécanique PASS (448 car., en, 0 warn au 2e jet) | aucun chiffre | relecture éditoriale : faite | statut : envoyé le 07/09`
+
+---
+
+### 4️⃣ ✅ Stéphanie Maltais, PhD (`/in/smaltaisphd/`) — Professeure adjointe, Université de Montréal
+
+**Hook vérifié** : son propre post publié il y a 1h, depuis le World One Health Congress à Lisbonne — parution de son article DOPERAUS (co-signé Janyck Beaulieu) sur l'intégration des sciences sociales dans l'approche One Health, terrain Guinée et **RDC**. Sa thèse : la contribution des sciences sociales (comprendre les vulnérabilités, mobiliser les communautés, analyser la gouvernance) est reconnue, mais son intégration concrète reste inégale, freinée par des obstacles interdisciplinaires et épistémologiques.
+
+**Angle retenu, pour éviter un gabarit déjà brûlé** : la thèse « ce que le document public ne laisse pas voir » est explicitement interdite (`burned-templates.md`, servie à Nirmal Kandel puis 4× à Ofelia CAZACU). Angle choisi à la place : question directe et spécifique sur les trois usages qu'elle nomme elle-même dans son article, sans détour par « mon outil ne voit pas X ».
+
+**Texte envoyé (français, langue du post) :**
+
+> Stéphanie, félicitations pour l'article DOPERAUS, publié exactement pendant le Congrès qui en discute. Le contraste entre les trois usages que vous citez, comprendre les vulnérabilités, mobiliser les communautés, analyser la gouvernance, et leur intégration concrète inégale, résonne avec ce que je vois du côté agrégation.
+>
+> De mon côté, ce que j'agrège pour HealthWatch Global reste presque toujours du comptage. Sur le terrain en RDC, lequel des trois usages a été le plus difficile à faire vraiment entrer dans le processus de décision plutôt que rester en annexe du rapport ?
+
+**1er jet retravaillé une fois** : `ngram.history` a bloqué « je tiens HealthWatch Global, un suivi des » — déjà servi à Armand Simisi Mbalanda ce soir même. Reformulé, 0 blocker au 2e jet.
+
+`QA : mécanique PASS (579 car., fr, 0 blocker au 2e jet) | aucun chiffre | relecture éditoriale : faite | statut : envoyé le 07/09`
+
+---
+
+### 5️⃣ Vérification d'envoi, commune aux 4 DM
+
+Pour chacun : composeur ouvert depuis le bouton « Message » du profil, destinataire relu dans l'en-tête du composeur avant saisie, texte comparé caractère pour caractère au brouillon validé **dans le même appel JS que le clic** (§5 item 4 — anti mauvais-destinataire), fil rouvert après envoi pour confirmer l'unique occurrence du message. Aucun CTA sur les 4 (premiers contacts, `inboundCount` = 0), clôture en question ouverte sur les 4, aucune ouverture « ravi d'être en contact » (charpente brûlée le 07/09 matin).
+
+**Incident technique récurrent, sans conséquence** : sur 3 des 4 profils (Hicks, Kim, Maltais), le premier clic sur le bouton « Message » (via `ref` ou coordonnées) n'a pas ouvert de composeur — un second clic, ou un rechargement de la page suivi d'un clic aux coordonnées corrigées, a systématiquement fonctionné. Chaque cas vérifié avant saisie (aucun texte tapé dans un composeur non confirmé).
+
+**Quota DM** : ces 4 envois sont explicitement hors quota (validation directe de David), comme la réponse à Oke Ikpekpe plus tôt ce soir. Le compteur de pacing (8/8) reste affiché comme plein pour les prochains runs planifiés — cette dérogation ne le réinitialise pas.
+
+---
 
 ## 📅 Session linkedin-hwg-followup-check-2 — 07/09/2026 (17h, 2e des 2 créneaux après-midi) — ✅ **2 DM envoyés en autonomie** (James Schlitt, réponse en fil actif ; Armand Simisi Mbalanda, bienvenue après acceptation) — **quota DM 6/8 → 8/8 PLEIN** — ✅ **5 connexions acceptées vérifiées en propre**, 4 restent sans message de bienvenue faute de quota
 
