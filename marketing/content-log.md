@@ -2,6 +2,36 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Reprise interactive — 07/09/2026 (17h40, David « réponds à Oke Ikpekpe maintenant ») — ✅ **1 réponse publiée en sous-fil, sur ordre explicite de David**
+
+**Contexte** : le carry-over du run de 17h signalait le sous-fil Oke Ikpekpe (`urn:li:activity:7499051354368331776`) comme non traité, quota commentaires plein (7/7). David a demandé explicitement en session de répondre maintenant — validation explicite (`report-conventions.md`), qui prime sur le quota du jour (le quota est un dispositif de pacing autonome, pas un plafond opposable à une instruction directe de David).
+
+**Fil relu en entier** (14 messages avant la réponse, remontés via « Voir les réponses précédentes »). Son dernier message (3 j, verbatim) :
+
+> If a preparedness check is meant to happen every month or every quarter, it is easier to know when one has been missed. There is already a schedule to follow. But if it only happens when someone asks for it, it can easily be overlooked. Having regular checks could also make accountability easier.
+
+Il reprend et confirme l'idée de David sur la numérotation comme dispositif de « custody » (mon avant-dernier message : un bulletin numéroté par semaine épidémiologique rend visible son propre trou). Pas de question nouvelle de sa part — juste une confirmation étendue.
+
+**Angle retenu, pour ne pas se limiter à un accusé de réception habillé** : pousser l'idée de la numérotation un cran plus loin — la semaine épidémiologique fonctionne comme dispositif de custody précisément parce que personne ne possède le calendrier ; un cycle trimestriel de contrôle de préparation, lui, est généralement fixé par l'organisme même qui est contrôlé. Distinction non encore posée dans le fil, question de mécanisme (pas de jugement d'adéquation) à la clôture.
+
+**Texte publié :**
+
+> The epi-week numbering works because nobody who might miss a report also owns the calendar. Week 34 sits outside any single institution's control, so a missing issue shows up whether or not anyone remembers to look.
+>
+> A quarterly preparedness cadence usually doesn't have that anchor: the interval is set by the same body being checked. Does that interval get fixed anywhere the checking body doesn't also hold the pen, or is the schedule theirs to move?
+
+**1er jet retravaillé une fois** : `ngram.history` a bloqué « sit in the same office » — **formule que j'avais moi-même utilisée trois messages plus tôt dans ce même fil** (« do both ends sit in the same office? »), pas un gabarit d'un autre destinataire. Reformulée (« get fixed anywhere the checking body doesn't also hold the pen, or is the schedule theirs to move »), 0 blocker au 2e jet.
+
+**Faux positif documenté, ignoré** : `facts.value-no-context-match` sur « 34 » (semaine épidémiologique 34, un exemple illustratif de calendrier, pas un chiffre de foyer) — aucune ligne du registre ne concerne cette phrase, pas un chiffre épidémiologique.
+
+**Aucun CTA, aucun lien** : règle des commentaires publics, jamais de CTA commercial sur une réponse en sous-fil.
+
+**Envoi vérifié** : mention automatique « Oke Ikpekpe » confirmée en tête, texte comparé au brouillon validé avant clic (`okText`/`okName` vrais), bouton « Répondre » identifié par position (aucun `aria-label`, distinct du bouton emoji) plutôt que par ordre d'apparition. Fil rouvert après publication : **14 réponses (contre 13 avant), notre message apparaît en dernier**, horodaté « il y a 1 s », texte intact.
+
+`QA : mécanique PASS (453 car., en/en, 0 blocker au 2e jet) | aucun chiffre épidémiologique (semaine 34 = calendrier, faux positif documenté) | relecture éditoriale : faite | statut : publié le 07/09, sur ordre explicite de David en session interactive`
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check-2 — 07/09/2026 (17h, 2e des 2 créneaux après-midi) — ⏹️ **0 commentaire publié : quota du jour déjà PLEIN (7/7) depuis le créneau de 13h** — 🔴 **un sous-fil actif retrouvé sans réponse depuis 3 jours (Oke Ikpekpe)** — ✅ **2 DM envoyés** (détail dans `linkedin-contacts.md`)
 
 **Contexte d'ouverture** : quotas hérités des runs de 9h, 13h et des séquences interactives de 11h et 14h : commentaires **7/7 (PLEIN)**, DM 6/8, suivis 10/10 (plafond haut), notes de connexion 7/7 (PLEIN). Aucun run antérieur de ce `taskId` aujourd'hui. **Trois des quatre quotas étaient déjà pleins à l'ouverture** ; le seul canal restant ouvert était le DM, et il a été rempli (8/8, voir `linkedin-contacts.md`).
