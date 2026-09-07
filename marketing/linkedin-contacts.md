@@ -1,6 +1,54 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
+## 📅 Session interactive — 07/09/2026 (11h, David « check les dms et demandes d'invitation ») — ✅ **2 réponses en fil actif** (Miriam Mbueshi, Adane Etore — **1er CTA du fil Adane, inboundCount passé à 2**) — ✅ **invitations reçues vérifiées, aucune nouvelle**
+
+**Contexte** : reprise interactive, David présent. Vérification demandée des DM et des demandes d'invitation. Navigateur `23c7ecdd-…` sélectionné directement (navigateur habituel).
+
+### 1️⃣ ✅ Miriam Mbueshi — réponse en fil actif, `inboundCount` 0 → 1, pas de CTA
+
+Elle a répondu à 10h57 au message de bienvenue du 06/09 (question sur les trois obstacles adressés par son application), avec une réponse de fond (1136 caractères) : le retard de notification recule le plus, les difficultés de communication et la capacité du système à traiter les alertes restent des enjeux.
+
+**Réponse envoyée à 11h11** :
+
+> Merci pour cette réponse détaillée, Miriam.
+>
+> Ce qui ressort, c'est que la transmission et le traitement ne se règlent pas au même endroit : l'application comprime le premier délai, mais le second reste tributaire du système en aval. Une fois l'alerte remontée par un relais communautaire, qu'est-ce qui détermine la vitesse à laquelle elle est ensuite analysée et traitée ?
+
+**Pas de CTA** : `inboundCount = 1` seulement, le seuil de David (2 interactions) n'est pas atteint.
+
+`QA : mécanique PASS (373 car., fr/fr, 0 blocker) | clôture en question ouverte | relecture éditoriale : faite`
+
+### 2️⃣ ✅ Adane Etore — réponse en fil actif, `inboundCount` 1 → 2, **1er CTA envoyé sur ce fil**
+
+Il a répondu une 2e fois à 09h45 (990 caractères) : le goulot n'est pas la technologie mais le passage de relais entre investigation de terrain, remontée, validation et décision entre niveaux. C'est sa **2e interaction** dans le fil — le CTA devient dû (spécification DM de David, 06/09, point 4).
+
+**Réponse envoyée à 11h15** :
+
+> That handoff between field investigation, reporting, validation and decision-making is basically the same seam we work on at HealthWatch Global, just one level up: reconciling how different national bulletins, WHO regional offices and ECDC each count the same outbreak before a single line goes live. Curious what that consolidation looks like from the aggregation side? healthwatch-global.com opens a Pro trial for 7 days without asking for a card first.
+>
+> When two levels in your own reporting chain disagree on the same case, what settles it?
+
+**CTA amené depuis un point réel du fil** : sa propre description du goulot (« handoff », « validation », « decision-making » entre niveaux) est exactement le mécanisme de consolidation que fait HWG entre bulletins nationaux, OMS régionale et ECDC — pont honnête, pas plaqué. Chiffre 7 (durée d'essai) et absence de carte vérifiés dans `product-claims.manual.json` (`lib/activate-trial.ts`, `pricing.faq4_a`). Page maladie non pertinente : le fil ne porte sur aucune maladie précise.
+
+⚠️ **Premier jet retravaillé** : le contrôle mécanique a d'abord relevé un `blocker` `ngram.history` — la formule de clôture du CTA (« day pro trial on healthwatch global com if you want ») reprenait 6 séquences déjà servies dans l'historique. Reformulée (« healthwatch-global.com opens a Pro trial for 7 days without asking for a card first ») : 0 blocker au 2e jet.
+
+`QA : mécanique PASS (544 car., en/en, 0 blocker au 2e jet) | claims produit vérifiées (7 jours, sans carte) | clôture en question ouverte, non binaire | relecture éditoriale : faite`
+
+### 3️⃣ ✅ Invitations reçues — vérifiées, rien de nouveau
+
+2 invitations toujours en attente, identiques à ce matin : **Zachariah G. Houdari** (services financiers, hors sujet, laissé en attente) et **OLAOLUWA PHILIP** (GIScientist/climat). Activité de ce dernier revérifiée en détail : posts sur son programme GeoDev Lab (formation géospatiale), une republication mentionnant en passant un « Professor of Epidemiology and GIS » comme intervenant invité — lien trop indirect avec l'épidémiologie/surveillance pour justifier une acceptation. **Laissé en attente, pas écarté.**
+
+### 4️⃣ 🔁 Carry-over
+
+- **Miriam Mbueshi** : à sa prochaine réponse, `inboundCount` passera à 2, le CTA deviendra dû.
+- **Adane Etore** : CTA envoyé, fil à surveiller pour sa réponse.
+- **Lissanework Mola, Jean Claude Nshimiyimana** : DM de bienvenue du matin, toujours sans réponse.
+- **Quota DM du jour** : 4/8 (matin) → **6/8** après ces 2 réponses.
+- **Capacité d'invitation toujours bloquée** (99/100, signalé ce matin) : rien de nouveau à ajouter, David informé par notification.
+
+---
+
 ## 📅 Session linkedin-hwg-monitoring — 07/09/2026 (9h) — ✅ **3 commentaires publiés** (Abduljalal Nadabo, Africa CDC, Christianah Oki) — ✅ **4 DM envoyés en autonomie** (3 messages de bienvenue + 1 réponse en fil actif) — ✅ **3 invitations reçues acceptées** — ✅ **10 suivis, quota au plafond haut** — 🔴 **découverte : la capacité d'invitation est bloquée par le plafond LinkedIn, 99 invitations en attente**
 
 **Contexte d'ouverture** : premier run LinkedIn de la journée. Quotas repartis à zéro. Navigateur `23c7ecdd-…` (affiché « Browser 2 » aujourd'hui) sélectionné directement, sans question, conformément à `hwg-social-policy.md` §7 (session planifiée). Le commentaire publié est détaillé dans `content-log.md`.
