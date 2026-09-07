@@ -8,6 +8,7 @@ Table volontairement compacte (une ligne par profil). Le détail complet (hook, 
 
 | Nom | Profil | Statut | Date | Raison / contexte court |
 |---|---|---|---|---|
+| Stéphanie Maltais, PhD | (slug non capturé, suggestion du fil) | **à traiter** (quota de suivi épuisé) | 2026-09-07 (9h) | *Professeure adjointe, Public & Global Health Researcher, Health Systems Resilience & Pandemic Preparedness, One Health*, Université de Montréal. 2e degré, repérée dans les suggestions du fil |
 | Flywell Kawonga | `/in/flywell-kawonga-7a4191134/` | **suivi (1/7-10)** | 2026-09-07 (9h) | *African Stars Fellow at CERI - Centre for Epidemic Response and Innovation*, Blantyre (Malawi), 889 abonnés. Coéquipière filovirus d'Abduljalal Nadabo, taguée dans le post commenté ce matin. Republie Tulio de Oliveira |
 | Fatou Samba Diouf | `/in/fatousambadiouf/` | **suivie (2/7-10)** | 2026-09-07 (9h) | *PhD, Postdoctoral Researcher in Microbiology & Infectious Diseases, Global Health Research, African Stars Fellow*, 761 abonnés. Recherche active `African STARS Fellow epidemiology` |
 | kabugo joel | `/in/kabugojs/` | **suivi (3/7-10)** | 2026-09-07 (9h) | *Infectious diseases Researcher, microbiologist, African Stars Fellow, clinical immunology*, Kampala (Ouganda), 737 abonnés |

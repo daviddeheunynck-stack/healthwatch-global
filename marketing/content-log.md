@@ -196,6 +196,19 @@ Chaque suivi vérifié individuellement (bouton passé de « Suivre » à « Sui
 
 ---
 
+### 6️⃣ 🔎 Balayage du fil — le vivier de commentaires du jour est réellement mince, ce n'est pas un balayage bâclé
+
+Fil parcouru en fin de run (défilement du conteneur `main`, pas de `window`, conformément aux notes techniques du SKILL). Les 8 posts chargés se répartissent ainsi :
+
+- **Hors fenêtre 48 h** : John Omari Baso (3 j, certificat TEPHINET), WHO AFRO (4 j, extension du centre de traitement Ebola à Nizi), INGRIDE SIEMENI (5 j).
+- **Sans prise analytique** : KEBBA BIBANGO DANGONNE (11 h) — annonce d'un certificat de formation en management de projet, exactement le type de post de félicitations dont le 06/09 a montré qu'il ne se commente pas sans déclasser le remerciement.
+- **Posts sponsorisés** : 2 (Intentwise, LinkedIn for Marketing).
+- **Suggestion de profil, pas un post** : Stéphanie Maltais, PhD (*Health Systems Resilience & Pandemic Preparedness, One Health*, Université de Montréal) — ajoutée au tracker comme candidate à suivre, quota de suivi épuisé ce run.
+
+**Conclusion honnête** : au-delà des 3 commentaires publiés et de Sahar Khalid (fenêtre ouverte jusqu'au 08/09, laissée aux créneaux suivants), le vivier commentable du matin est épuisé — les cibles les plus fortes du corpus (Kyari, Adetifa, Yilkal Kebede, Herriman) sont toutes sous blocage hebdomadaire, et Tedros n'offre que des rediffusions Live sans texte et un post sur Gaza. Le quota de 7 commentaires reste donc à 3/7 à la fermeture, avec 4 places pour 13h et 17h.
+
+---
+
 ## 📅 Session linkedin-hwg-content-proposal — 07/09/2026 (lundi MWF, 8h35) — 🟡 **PRÊT — en attente de publication** — West Nile / Europe, le tableau hebdomadaire de l'ECDC est un instrument de sécurité transfusionnelle, pas un décompte épidémiologique, et l'ECDC l'écrit lui-même
 
 **Étape 0 — aucun brouillon en attente.** Dernier post de marque LinkedIn : **04/09** (Diphtérie/Niger, antitoxine), publié sur ordre de David. Le 05/09 (vendredi) n'a pas produit de post de marque, le 06/09 est un dimanche hors MWF. Aucun statut `PRÊT` résiduel frais dans le fichier (le plus récent, Dengue/Taïwan, a été retiré le 31/08). Rédaction entièrement neuve.
