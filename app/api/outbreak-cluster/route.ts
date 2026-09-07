@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
 import { resolvedPlan } from "@/lib/resolved-plan";
 import { getOutbreaks, pickFeaturedDiseases, isFreeFeaturedRow, magnitudeBand } from "@/lib/outbreaks";
+import { getServiceClient } from "@/lib/supabase-service";
 
 export const dynamic = "force-dynamic";
 
@@ -16,7 +17,12 @@ export async function GET(req: Request) {
 
   if (!event_id) return NextResponse.json({ outbreaks: [] });
 
-  let query = supabase
+  // Service-role read: this route needs the REAL cases/deaths in order to
+  // decide what to band out below, and those columns stopped being readable
+  // by anon/authenticated in the 2026-09-07 audit. The masking that follows
+  // is what protects a free viewer here — not the caller's own database
+  // rights, which is precisely why the mask has to be applied server-side.
+  let query = getServiceClient()
     .from("outbreaks")
     .select("id, disease, disease_en, disease_ar, country, country_en, country_ar, risk_level, cases, deaths, date, region")
     .eq("event_id", event_id)

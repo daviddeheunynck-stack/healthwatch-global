@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
 import { resolvedPlan } from "@/lib/resolved-plan";
+import { getServiceClient } from "@/lib/supabase-service";
 import * as Sentry from "@sentry/nextjs";
 
 export const dynamic = "force-dynamic";
@@ -46,7 +47,14 @@ export async function GET() {
   if (!["starter", "pro", "team", "enterprise"].includes(resolvedPlan(gateProfile)))
     return NextResponse.json({ error: "Pro plan required" }, { status: 403 });
 
-  const { data: outbreaks, error } = await supabase
+  // Read through the service role, not the caller's own (publishable-key)
+  // session: `cases` is one of the columns the paywall masks, and as of the
+  // 2026-09-07 audit those columns are no longer readable by `anon` /
+  // `authenticated` at all — the qualitative-band mask was bypassable by
+  // querying PostgREST directly with the publishable key lifted from the
+  // public bundle. The Pro gate three lines above is what authorises this
+  // read; same shape as /api/outbreak-stats.
+  const { data: outbreaks, error } = await getServiceClient()
     .from("outbreaks")
     .select("country_en, country, country_ar, region, cases, is_pheic, risk_level, updated_at, disease_en, disease, disease_ar")
     .eq("active", true);

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
 import { resolvedPlan } from "@/lib/resolved-plan";
+import { getServiceClient } from "@/lib/supabase-service";
 
 export const dynamic = "force-dynamic";
 
@@ -20,7 +21,12 @@ export async function GET(req: NextRequest) {
   const outbreakId = url.searchParams.get("outbreak_id");
   if (!outbreakId) return NextResponse.json({ error: "Missing outbreak_id" }, { status: 400 });
 
-  const { data: current } = await supabase
+  // Service-role reads: cases/deaths are paywall-masked columns, revoked
+  // from anon/authenticated by the 2026-09-07 audit. Authorised by the Pro
+  // gate above.
+  const service = getServiceClient();
+
+  const { data: current } = await service
     .from("outbreaks")
     .select("id, disease_en, country_en, cases, date")
     .eq("id", outbreakId)
@@ -29,7 +35,7 @@ export async function GET(req: NextRequest) {
   if (!current || !current.disease_en || !current.country_en || current.cases <= 0)
     return NextResponse.json({ benchmark: null });
 
-  const { data: historical } = await supabase
+  const { data: historical } = await service
     .from("outbreaks")
     .select("id, cases, date, deaths")
     .eq("disease_en", current.disease_en)

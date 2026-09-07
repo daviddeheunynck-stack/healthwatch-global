@@ -2,10 +2,7 @@
 // URL: /widget?locale=fr&region=africa&theme=dark
 // Copy-paste embed code: <iframe src="https://healthwatch-global.com/widget" ...></iframe>
 
-import { createClient } from "@supabase/supabase-js";
-
-const BOM   = String.fromCharCode(65279);
-const clean = (v: string | undefined) => (v || "").replace(new RegExp("^" + BOM), "").trim();
+import { getServiceClient } from "@/lib/supabase-service";
 
 const RISK_COLOR: Record<string, string> = {
   high: "#ef4444", medium: "#f59e0b", low: "#22c55e",
@@ -38,10 +35,14 @@ export default async function WidgetPage({
   const l         = LABEL[locale] ?? LABEL.en;
   const isRtl     = locale === "ar";
 
-  const supabase = createClient(
-    clean(process.env.NEXT_PUBLIC_SUPABASE_URL),
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
+  // Service role rather than the publishable key: this server component reads
+  // cases/deaths, and those columns stopped being readable by anon /
+  // authenticated in the 2026-09-07 audit — the publishable key is lifted
+  // straight from the public bundle, so it handed every visitor the exact
+  // figures the paywall bands out elsewhere. What this widget chooses to
+  // SHOW publicly is unchanged: that is a product decision, not this audit's
+  // to make (flagged as an open question in the report).
+  const supabase = getServiceClient();
 
   let query = supabase
     .from("outbreaks")

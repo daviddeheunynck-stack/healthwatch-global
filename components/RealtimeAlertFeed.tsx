@@ -40,6 +40,32 @@ export default function RealtimeAlertFeed() {
     });
   }, []);
 
+  // Real cases/deaths per outbreak id, fetched from the Pro-gated
+  // /api/outbreak-stats rather than read off the Realtime payload.
+  //
+  // Two reasons, both from the 2026-09-07 audit. (1) The `if (plan !== …)`
+  // guard below is client-side only: anyone could subscribe to this same
+  // channel with the publishable key from the public bundle, so the payload
+  // is not a place a paywalled figure may travel. cases/deaths are now
+  // revoked from anon/authenticated, which closes that at the source.
+  // (2) Consequently `payload.new` no longer carries those columns at all,
+  // and reading them straight off it would render "undefined". Same shape as
+  // RealStatsProvider on the hub pages: the row identifies itself over the
+  // public channel, the figures come from a gated route.
+  const [stats, setStats] = useState<Record<string, { cases: number; deaths: number | null }>>({});
+
+  useEffect(() => {
+    const missing = alerts.map((a) => a.data.id).filter((id) => id && !(id in stats));
+    if (missing.length === 0) return;
+    const ids = [...new Set(missing)].slice(0, 200).join(",");
+    let cancelled = false;
+    fetch(`/api/outbreak-stats?ids=${encodeURIComponent(ids)}`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((j) => { if (!cancelled && j?.stats) setStats((prev) => ({ ...j.stats, ...prev })); })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, [alerts, stats]);
+
   // Connect to Supabase Realtime (Pro, Team & Enterprise only)
   useEffect(() => {
     if (plan !== "pro" && plan !== "team" && plan !== "enterprise") return;
@@ -150,9 +176,21 @@ export default function RealtimeAlertFeed() {
                   </span>
                 </div>
                 <p className="text-gray-400 text-xs mt-0.5">
-                  {getLocalizedCountry(alert.data, locale)} ·{" "}
-                  {alert.data.cases.toLocaleString(locale === "ar" ? "ar-SA" : locale)} {t("realtimeCases")} ·{" "}
-                  {alert.data.deaths !== null ? `${alert.data.deaths.toLocaleString(locale === "ar" ? "ar-SA" : locale)} ${t("realtimeDeaths")}` : ""}
+                  {getLocalizedCountry(alert.data, locale)}
+                  {(() => {
+                    // Figures appear once /api/outbreak-stats has answered for
+                    // this row; until then the alert still shows disease,
+                    // country and risk, which is what makes it actionable.
+                    const s = stats[alert.data.id];
+                    if (!s) return null;
+                    const num = (n: number) => n.toLocaleString(locale === "ar" ? "ar-SA" : locale);
+                    return (
+                      <>
+                        {" "}· {num(s.cases)} {t("realtimeCases")}
+                        {s.deaths !== null ? ` · ${num(s.deaths)} ${t("realtimeDeaths")}` : ""}
+                      </>
+                    );
+                  })()}
                 </p>
               </div>
             </div>
