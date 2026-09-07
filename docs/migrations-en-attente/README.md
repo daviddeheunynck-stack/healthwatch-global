@@ -35,30 +35,28 @@ Une fois appliquée et committée, retirer son entrée de la liste ci-dessous.
 
 ## En attente
 
-### `20260907050000_revoke_paywalled_columns_from_public_roles.sql`
+_(aucune pour le moment)_
 
-Déposée le **2026-09-07** par `daily-security-audit-healthwatch`.
+## Historique
 
-**Ce qu'elle corrige.** Le mur payant sur `cases`/`deaths`/`description` est
-contournable en une requête : la clé publiable se lit dans le bundle JS public,
-et `outbreaks` accorde `SELECT` sur **toutes** ses colonnes à `anon` /
-`authenticated`. Vérifié en production le jour même — les 121 lignes actives
-sortent en clair sur un simple `GET /rest/v1/outbreaks?select=cases,deaths`.
-Tout le masquage construit les 05–06/09 ne ferme que les chemins que
-l'application emprunte ; celui-ci ne passe pas par elle.
+### `20260907050000_revoke_paywalled_columns_from_public_roles.sql` — APPLIQUÉE le 2026-09-07
 
-**Sans risque de casse au moment de l'appliquer.** La moitié « code » est déjà
-poussée et déployée (commit `e9bb2123`) : plus aucune surface ne lit ces
-colonnes avec la clé publiable. C'est justement pour ça qu'elle a été séparée.
+Déposée le 2026-09-07 par `daily-security-audit-healthwatch`, appliquée le
+même jour en session interactive sur ordre explicite de David (« applique la
+migration »). Corrigeait une fuite du mur payant : `outbreaks` accordait
+`SELECT` sur toutes ses colonnes (dont `cases`/`deaths`/`description`) à
+`anon`/`authenticated`, contournable en une requête PostgREST avec la clé
+publiable lisible dans le bundle JS public.
 
-**Pourquoi elle n'a pas été appliquée par la routine.** Les deux tentatives de
-`supabase db push` ont été refusées par le classificateur de permissions de la
-session (modification de schéma en production). Refus non contourné,
-délibérément.
+Vérifié après application : `GET .../outbreaks?select=cases,deaths` avec la
+clé publiable renvoie `401 permission denied for table outbreaks` ; les
+colonnes non payantes (`id`, `disease_en`, `risk_level`, `region`, …) restent
+lisibles ; smoke check des pages publiques (dashboard, hub disease/country/
+region, widget) tous 200 ; `check-migrations-applied.mjs` confirme 90
+migrations locales, toutes appliquées en base.
 
-**Question de conception laissée ouverte, à trancher par David** (elle n'est
-pas un préalable à cette migration, qui vaut le coup indépendamment) : la page
-permalien `app/[locale]/outbreak/[id]/page.tsx` réimprime toujours les chiffres
-exacts dans sa `meta description` (l. 262) et son JSON-LD, alors que son corps
-les masque. C'est un arbitrage SEO, pas un bug — voir le rapport d'audit du
-2026-09-07.
+**Question restée ouverte, non tranchée à cette occasion** : la page permalien
+`app/[locale]/outbreak/[id]/page.tsx` réimprime les chiffres exacts dans sa
+`meta description` (l. 262) et son JSON-LD, alors que son corps les masque —
+c'est désormais la dernière surface publique à le faire. Arbitrage SEO, pas un
+bug ; voir le rapport d'audit du 2026-09-07.
