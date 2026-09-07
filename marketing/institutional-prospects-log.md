@@ -4754,3 +4754,67 @@ Balayage des réponses reçues (`subject:` HealthWatch/outbreak/brotes/épidémi
 3. **🔵 PAHO Équateur (`andradeest@paho.org`) mérite une 2e tentative, pas un abandon.** Le NDR invoque une taille de message excessive sur un mail de ~2,3 Ko : ce n'est pas une adresse morte. Un renvoi à quelques jours d'intervalle coûte peu. **Non retenté par ce run** (hors périmètre : la routine ne prospecte pas et ne renvoie pas d'original). Rappel de la règle du 17/08 : un re-bounce sur ce contact **n'ajouterait ni un bounce ni un délivré en moins**, il figure déjà à la liste nominative.
 4. **🔴 Leçon PAHO Jamaïque à retenir pour la prospection.** Le run du 29/08 avait explicitement écarté `email@jam.paho.org` faute de confirmation que le sous-domaine route ; le run du 05/09 a levé l'écart sur un contrôle MX seul, et le mail a bouncé. **Un MX valide atteste du domaine, jamais de l'existence de la boîte** — même erreur que PNG le 02/09. Un écart posé pour un motif précis ne devrait être levé que par une vérification qui répond à **ce** motif.
 5. **Aucun incident technique.** `list_drafts` stable ce run (2 appels concordants), aucun brouillon créé, aucune recréation, aucun doublon. Arbre de travail **propre** en début et en fin de run ; aucun fichier étranger à cette routine n'a été touché.
+
+---
+
+## 🔁 RELANCE J+10 — 2026-09-07, run automatique `daily-relance-check-healthwatch`
+
+**Résultat : 0 relance créée — aucun lot n'atteint J+10 aujourd'hui, et c'est vérifié en direct, pas repris du journal.** Le lot qui serait mûr ce jour aurait dû partir le **28/08** : il n'existe pas. **Le run remonte en revanche 2 bounces neufs du 06/09 au soir (le cumul passe de 24 à 26), l'envoi du lot du 06/09, et la trace des deux suivis d'usage que David a envoyés hier soir en réponse aux signalements du run précédent.**
+
+### 🚦 Frein de file — 17 en entrée, 17 en sortie
+
+`list_drafts` (`pageSize: 50`, vue métadonnées) : **17 brouillons réels**, tous créés par le run de prospection de ce matin entre **06:20:58 et 06:22:33 UTC** (11 bureaux pays OMS EURO — Albanie, Macédoine du Nord, Bosnie-Herzégovine, Monténégro, Biélorussie, Bulgarie, Croatie, Chypre, Tchéquie, Grèce, Hongrie ; 4 boîtes PAHO — Haïti, Mexique, Colombie, `peraltaana` ; Institut Pasteur de Montevideo). Les 17 portent `labelIds: ["DRAFT"]`, aucun n'est passé en `SENT` (contrôle du bug d'envoi instantané : négatif). **Aucun brouillon de relance en attente.** File à 17, sous le seuil de ~25 — le frein n'a joué aucun rôle dans le zéro de ce run, qui tient uniquement à l'absence de lot mûr. C'est le run de prospection qui a puisé dans la réserve OMS EURO de 18 bureaux constituée hier, d'où un lot de 17 plutôt que 10.
+
+### 🔎 Aucun lot à J+10 — le 28/08 est une journée sans envoi, reconfirmée en direct
+
+Le run du 06/09 annonçait « 07/09 : rien à relancer (aucun envoi le 28/08) ». **Contrôle refait indépendamment ce run, pas repris sur parole** : balayage `in:sent after:2026/08/26 before:2026/08/30`, corbeille incluse, 55 fils remontés — **tous les envois de la fenêtre sont datés du 26/08 (relances 10:58:45–10:59:08, prospection 12:27:31–12:29:31) ou du 29/08 (16:44:36–16:50:30). Zéro message envoyé le 27/08, zéro le 28/08.** Cohérent avec les deux entrées de prospection « 🛑 FREIN DE FILE DÉCLENCHÉ, aucun contact neuf produit » des 28 et 29/08.
+
+**Chaîne de couverture vérifiée sur l'ensemble des lots antérieurs, aucun orphelin :** 18/08 et 19/08 (run du 30/08), 20/08 (01/09), 21/08 et 22/08 (02/09), 24/08 (03/09), 25/08 (04/09), 26/08 (05/09). **Pas de lot le 23/08** (dimanche, aucune section de prospection à cette date dans ce journal), pas de lot les 27 et 28/08 (frein de file). Le seul lot en attente est celui du 27/08, **envoyé le 29/08**, à traiter demain.
+
+- **08/09** → lot du 27/08 **envoyé le 29/08** (10 contacts, vérifiés propres et éligibles par le run du 06/09) — ⚠️ **`diseasesurveillance.health@gov.mt` reste à exclure d'office** de la fenêtre d'envoi du 29/08 : c'est le fil Malte, contact ayant répondu et converti, **et David lui a écrit à nouveau hier soir** (voir plus bas).
+- **11/09** → lots du 30/08 (7 contacts, envoyés le 01/09) et du 01/09 (9 délivrés sur 10).
+- **12/09** → 02/09 (9 délivrés + CAPRISA) ; `health_ministry@health.gov.pg` écarté définitivement.
+- **13/09** → 03/09 (16) ; **14/09** → 04/09 (16) ; **15/09** → 05/09 (21 = 23 envoyés − Jamaïque et Équateur bouncés) ; **16/09** → 06/09 (8 = 10 envoyés − Bahamas et Africa CDC bouncés, voir ci-dessous).
+
+### 🔴 2 bounces neufs sur le lot du 06/09 — le cumul passe de 24 à 26
+
+Balayage bounces (`subject:Undeliverable`, `subject:"Delivery Status Notification"`, `subject:"Undelivered Mail"`, `subject:"Mail delivery failed"`, `from:mailer-daemon`, `from:postmaster`, `newer_than:3d`, corbeille incluse) : **4 fils, dont 2 neufs.** Les deux datent du **06/09 à 19h52-19h53 UTC**, soit une quinzaine de secondes après les envois de David — donc **après** la clôture du run de relance d'hier (06:35 UTC) et **avant** ce run : personne ne pouvait les voir plus tôt.
+
+25. **OPS/PAHO Bahamas & Turks-et-Caicos** (06/09) — `mcfalltan@paho.org`, NDR Office 365 `postmaster@paho.onmicrosoft.com` : « Your message is too large to send… the maximum message size ». **Message de 2 431 octets.** Contact jamais bouncé auparavant (grep : n'apparaît que comme ligne de prospection des 21/08 et 06/09, jamais dans la liste nominative) — la liste s'allonge bien d'une unité. **Deuxième occurrence exacte du même NDR aberrant sur `@paho.org` en deux jours**, après Équateur le 05/09 — voir signalement ci-dessous.
+26. **Africa CDC (Union africaine)** (06/09) — `africacdc@africa-union.org`, DSN Gmail : « Boîte de réception du destinataire pleine ». **Bounce transitoire**, même nature que EPHI Éthiopie (12/08) et ISED Sénégal (15/08) : l'adresse existe et le domaine route. Contact jamais bouncé auparavant (grep : 0 occurrence de `africa-union.org` avant le lot du 06/09 ; `merawia@africacdc.org` de la vague 1 est un **domaine différent**). Compté comme non délivré, **mais retentable**.
+
+**Bilan bounces cumulés depuis le 02/08 : 26** — recalculé depuis la liste nominative au moment de l'écrire, **+2 par rapport au 06/09**. Les 24 premières sont inchangées (l. 3040-3059 pour les 20 premières, Antigua en 21e, NDoH PNG en 22e, PAHO Jamaïque en 23e, PAHO Équateur en 24e).
+
+### ✅ Envoi du lot du 06/09 vérifié en direct — 10 originaux + 3 messages hors périmètre
+
+Balayage `in:sent after:2026/09/05 before:2026/09/08`, corbeille incluse. **Les 10 brouillons de prospection du 06/09 sont partis le 06/09 entre 19:52:08 et 19:53:22 UTC**, d'une traite, en ordre de relecture inverse (Africa CDC en premier, OMS Ukraine en dernier). Écart création → envoi ≈ **13 h 30**, aucune signature « même seconde » : relecture humaine, **pas** le bug d'envoi instantané du connecteur. Aucun brouillon de relance dans la fenêtre — cette routine n'en avait créé aucun.
+
+**Trois envois supplémentaires à 19:51:37–19:51:47, hors périmètre de cette routine mais directement liés aux signalements du run d'hier :**
+- **`diseasesurveillance.health@gov.mt`** (19:51:47, 7 318 octets) — **David a fait le point d'usage sur IDCU Malte**, signalement n° 1 du run du 06/09. Aucune réponse à ce stade.
+- **`hsoc@georgetown.edu`** (19:51:41, 8 379 octets) — **David a fait le point d'usage sur Georgetown HSOC**, signalement n° 2. **Accusé de réception automatique reçu à 19:51:58** (« Your message has been received and will be reviewed by our team within 24 hours »). Pas de réponse humaine à ce stade.
+- **`cgodwe2000@gmail.com`** (19:51:37) — hors canal institutionnel, non traité ici.
+
+**Les deux signalements d'hier ont donc été suivis d'effet le soir même.** Ils sortent du périmètre de cette routine (contacts ayant répondu) et n'y rentrent pas : aucun brouillon créé, aucune relance possible.
+
+### 📬 Réponses institutionnelles — aucune nouvelle réponse humaine
+
+Balayage (`-in:sent -in:draft`, mots-clés HealthWatch/outbreak/epidemic/brotes/épidémique/surveillance/dashboard, `after:2026/09/04`, corbeille incluse) : 15 fils relus. **Une seule entrée pertinente, l'accusé automatique HSOC ci-dessus.** Le reste est du bruit non institutionnel (Search Console, Sentry, digests LinkedIn). **Aucune réponse humaine neuve depuis les deux réponses du 24/08 remontées rétroactivement hier** (IDCU Malte, ECDC).
+
+### 📊 Bilan cumulé
+
+**Totaux au 2026-09-07, 06:30 UTC :**
+- **Prospectés : 393** = 383 (état du 06/09) **+ 10** (lot du 06/09, envoi vérifié en direct ce run).
+- **Envoyés : 393** = 383 **+ 10**. Les 17 brouillons de prospection du 07/09 ne sont pas partis.
+- **Délivrés : 367** = 393 envoyés − 26 (taille de la liste nominative de bounces), recompté dans le même mouvement que la liste, pas repris d'une ligne précédente.
+- **Taux de délivrabilité : 93,4 % (367/393)** — −0,3 pt sur le 06/09 (93,7 %), les 2 bounces du 06/09 pesant plus que les 10 envois du jour.
+- **⚠️ Réserve maintenue** : les 393 envoyés comptent **4 envois vers des institutions déjà contactées** (incident du 22/08), **1 seconde tentative sur Antigua** et **1 sur PNG**. Le nombre d'**institutions distinctes** atteintes reste inférieur d'autant.
+- **Relances : 257 envoyées, 0 en attente d'envoi** — **total cumulé de relances créées depuis le début : 257**, inchangé, ce run n'en ayant créé aucune.
+
+**Profondeur de file en fin de run : 17 brouillons** — les 17 de la prospection du matin, inchangés.
+
+### ⚠️ Signalements à David
+
+1. **🔵 Deux NDR « message trop volumineux » sur `@paho.org` en deux jours — ce n'est pas une coïncidence, et ce n'est pas non plus tout le tenant.** Équateur (`andradeest@`, 05/09, 2 255 o) puis Bahamas (`mcfalltan@`, 06/09, 2 431 o), même NDR Office 365, même émetteur `postmaster@paho.onmicrosoft.com`, sur des messages de ~2,3 Ko. **Mais 5 autres boîtes `@paho.org` ont été délivrées sans incident sur les deux mêmes journées** (`palmagon`, `delpintan` le 05/09 ; `lashleyb`, `hoyteang`, `oxandaba` le 06/09). C'est donc un réglage **par boîte** — quota atteint ou limite de taille mal configurée côté destinataire — pas une règle du domaine. **Conséquence pratique : ces deux boîtes-là sont à considérer comme injoignables en l'état, mais le vivier PAHO reste exploitable.** À rapprocher du précédent ZNPHI Zambie (02/08), même profil « adresse valide, règle de remise cassée ».
+2. **🟢 Africa CDC mérite une 2e tentative rapide.** Boîte pleine = bounce transitoire, exactement comme EPHI Éthiopie le 12/08. `africacdc@africa-union.org` est une boîte institutionnelle relevée en direct hier sur le pied de page des pages RCC ; rien n'indique une adresse morte. **Non retenté par ce run** (hors périmètre : cette routine ne renvoie pas d'original). Rappel de la règle du 17/08 : un re-bounce sur ce contact **n'ajouterait ni un bounce ni un délivré en moins**, il figure déjà à la liste nominative.
+3. **🟡 Malte et Georgetown : les deux points d'usage sont partis hier soir, les deux sont silencieux.** HSOC a renvoyé son accusé automatique à 24 h ; Malte n'a rien renvoyé. L'accès Pro maltais expire le **2 octobre**. Rien à faire aujourd'hui — c'est un délai d'un jour, pas un silence. À reprendre si rien n'arrive d'ici la fin de semaine.
+4. **Aucun incident technique.** `list_drafts` stable (1 appel, 17 brouillons cohérents avec les horodatages du run de prospection), aucun brouillon créé, aucune recréation, aucun doublon. Arbre de travail **propre** en début de run ; aucun fichier étranger à cette routine n'a été touché. Le run de prospection du 07/09 n'avait pas encore écrit son entrée dans ce journal au moment de la rédaction de celle-ci — ses 17 brouillons sont donc décrits ici depuis Gmail, pas depuis le journal.
