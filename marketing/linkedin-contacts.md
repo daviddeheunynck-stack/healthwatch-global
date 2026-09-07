@@ -1,5 +1,37 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
+## 📅 Reprise interactive — 07/09/2026 (21h50, David « Miriam a répondu ») — ✅ **1 réponse en fil actif, message coupé signalé plutôt que deviné**
+
+**Contexte** : elle a envoyé deux messages coup sur coup (21h30 et 21h31) après le CTA de 20h50.
+
+**Fil relu en entier ce run.** Message [5], 21h30 (verbatim) :
+
+> Je dirais que c'est la capacité de vérification terrain qui varie le plus d'un site à l'autre.
+> Dans notre contexte, une alerte peut être transmise très rapidement, mais sa confirmation dépend ensuite fortement de la capacité locale à aller vérifier l'information.
+> C'est justement là que le contexte local devient déterminant : deux sites peuvent recevoir une alerte au même moment, mais ne pas être en mesure de la qualifier ou de la confirmer à la même vitesse.
+
+Message [6], 21h31, **manifestement coupé en plein milieu d'une phrase** (verbatim exact, y compris l'espace final) :
+
+> Contente de savoir aussi que vous y travaillez. Et j'apprécie votre approche. Cependant, je me dis aussi que les bulletins déjà publiés cachent une partie d'originalité des messages communautaire. À mon avis
+
+**Vérifié avant de répondre** : DOM de l'élément relu directement (`innerText`, 208 caractères), pas de troncature CSS ni de lien « … plus » à déplier — c'est le texte réellement envoyé. Attendu ~10-15 s puis rechargé la page en entier (un incident navigateur transitoire, « Votre réseau LinkedIn sera bientôt accessible », a résolu de lui-même) : aucun message supplémentaire n'est arrivé. Le fil compte toujours 7 messages au moment de répondre.
+
+**Décision : signaler la coupure plutôt qu'inventer la suite.** Sa phrase « les bulletins déjà publiés cachent une partie d'originalité des messages communautaires » laisse deviner une critique réelle (le passage par un bulletin publié lisse ce qu'un message communautaire porte de spécifique), mais compléter à sa place aurait été une invention — §5 item 5 de la politique commune l'interdit pour les faits personnels, et le principe vaut ici pour la pensée de l'interlocutrice.
+
+**Réponse envoyée à 21h51 :**
+
+> Miriam, la vérification terrain qui varie plus que la remontée elle-même, c'est un point net : deux sites peuvent recevoir la même alerte au même instant et ne pas la confirmer à la même vitesse, ce qui veut dire que le goulot se déplace entièrement en aval de l'application.
+>
+> Votre message suivant s'arrête à « à mon avis », je pense qu'il ne m'est pas arrivé en entier. Qu'est-ce que vous vouliez dire sur les bulletins et les messages communautaires ?
+
+**Statut CTA : absent, motif admis n° 2 — déjà servi à 20h50 dans ce même fil.** Pas de répétition de l'argumentaire commercial.
+
+**PASS au 1er jet**, aucune correction nécessaire.
+
+`QA : mécanique PASS (454 car., fr/fr, 0 blocker) | aucun chiffre | relecture éditoriale : faite | statut : envoyé le 07/09`
+
+---
+
 ## 📅 Reprise interactive — 07/09/2026 (20h50, David « vérifie s'ils ont répondu ») — ✅ **2 réponses trouvées et traitées** (Miriam Mbueshi, Stéphanie Maltais) — 2 sans réponse (Gail Carson, Joseph T. Hicks, Seontae Kim)
 
 **Contexte** : vérification demandée après les 4 DM de bienvenue de 18h20 et la réponse à Oke Ikpekpe de 17h40. Messagerie relue en entier (8 premiers fils).
