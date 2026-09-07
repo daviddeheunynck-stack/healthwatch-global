@@ -1,6 +1,84 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
+## 📅 Session linkedin-hwg-followup-check — 07/09/2026 (13h, 1er des 2 créneaux après-midi) — ❌ **0 DM envoyé : aucun message entrant nouveau depuis 11h15, les 10 fils sont tous en attente de réponse de l'interlocuteur** — ✅ **4 commentaires publiés, quota du jour PLEIN 7/7** (détail dans `content-log.md`) — ✅ **connexions acceptées et nouveaux abonnés vérifiés en propre, rien à traiter** — 🔴 **une invitation est partie aujourd'hui (Elie Caleb MIMBULA) sans qu'aucune session archivée ne la revendique** — ⚠️ **capacité d'invitation testée en propre : le bouton apparaît puis disparaît, les notes personnalisées restent épuisées**
+
+**Contexte d'ouverture** : navigateur `23c7ecdd-…` (« Browser 2 ») sélectionné directement, sans question — session planifiée. Quotas hérités du run de 9h et de la session interactive de 11h : commentaires 3/7, DM 6/8, suivis 10/10, notes de connexion 0/7. Aucun run antérieur de ce `taskId` aujourd'hui.
+
+---
+
+### 1️⃣ ❌ DM — aucun message entrant nouveau, aucun brouillon
+
+Les **10 fils de la messagerie** ont été relus (nom, dernier message, auteur du dernier message). **Dans neuf d'entre eux le dernier message est le nôtre** ; le dixième (Préféré Matutu Molongo) se termine sur son « D accord » du 06/09, déjà traité et explicitement laissé sans relance. **Aucun message reçu depuis 11h15.**
+
+| Fil | Dernier message | Auteur | Statut |
+|---|---|---|---|
+| **Adane Etore** | 11h12 | nous | CTA envoyé ce matin (`inboundCount` 2), pas de réponse depuis. Fil relu en entier ce run (5 messages) |
+| **Miriam Mbueshi** | 11h11 | nous | `inboundCount` 1, CTA non dû |
+| **Jean Claude Nshimiyimana** | 09h23 | nous | bienvenue, sans réponse |
+| **Lissanework Mola** | 09h18 | nous | bienvenue, sans réponse |
+| **Ofelia CAZACU** | 06/09 | nous | bienvenue, toujours sans réponse. Ne pas relancer |
+| **Préféré Matutu Molongo** | 06/09 | lui (« D accord ») | rien à ajouter, ne pas relancer pour relancer |
+| **Dr Fabrice KHADDY**, **Christian BABOKO**, **Ngoy Guillaume**, **Dr. Siaka Condé** | 05-06/09 | nous | tous en attente |
+
+**Point CTA du run (règle [[feedback_always_report_cta_status_in_dm_checks]])** : aucun DM rédigé, donc aucun CTA à statuer. Le seul fil au seuil (`inboundCount >= 2`) est **Adane Etore**, et son CTA est **déjà parti** ce matin à 11h12.
+
+Le filtre « Autres » de la messagerie a été ouvert : il renvoie la même liste de 10 fils, aucune boîte séparée à traiter.
+
+---
+
+### 2️⃣ ✅ CONNEXIONS ACCEPTÉES — vérification faite en propre, pas supposée (règle du 2026-09-06)
+
+`mynetwork/invite-connect/connections/` ouverte et lue ce run, tri « Ajouts récents ». **303 relations.** Les trois acceptations les plus récentes datent toutes du **7 septembre** : **Jean Claude Nshimiyimana**, **Lissanework Mola**, **Adane Etore** — les trois invitations reçues acceptées ce matin, et les trois ont **déjà reçu leur message de bienvenue** (9h14, 9h18, 9h23). **Aucune connexion acceptée sans suite. Aucun DM de bienvenue dû ce run.**
+
+### 3️⃣ ✅ NOUVEAUX ABONNÉS — aucun nouveau, et le quota de suivi est de toute façon au plafond
+
+`mynetwork/network-manager/people-follow/followers/` ouverte, onglet « Abonnés », **419 personnes**. Les entrées les plus récentes sont les trois relations du jour, **toutes déjà marquées « Suivi »**. Aucun abonné nouveau depuis le run de 9h, donc **aucun follow-back dû** — ce qui tombe bien, le quota de suivis étant à **10/10** (plafond haut) depuis 9h. Aucun nouvel abonné à évaluer non plus comme candidat à une demande de connexion (règle du 06/09).
+
+### 4️⃣ ✅ INVITATIONS REÇUES — inchangées
+
+Toujours **2 invitations en attente**, les mêmes qu'à 9h et à 11h : **Zachariah G. Houdari** (services financiers, hors périmètre) et **OLAOLUWA PHILIP** (GIScientist/climat, versant santé jamais établi). Laissées en attente, ni acceptées ni refusées. **Prémisse déjà retestée à 11h, non rejouée ici** (`report-conventions.md` : un carry-over reporté deux fois se reteste, il l'a été).
+
+---
+
+### 5️⃣ ⚠️ CAPACITÉ D'INVITATION — testée en propre, résultat plus précis que ce matin, et toujours inexploitable
+
+**Test mené sur un profil neuf**, jamais ouvert avant aujourd'hui : **Joseph T. Hicks** `/in/joseph-t-hicks/` (*Applied Epidemiologist, Surveillance Systems & Modeling, ancien CDC Epidemic Intelligence Service*, Imperial College London, 905 abonnés, 4 relations en commun ; repéré et vetté au run de 9h, en file « à traiter »). Trois observations, toutes nouvelles :
+
+1. **Le bouton « Se connecter » était bien présent** sur son profil au premier chargement, et le clic a ouvert la boîte de dialogue normale (« *Ajouter une note à votre invitation ?* », avec « Ajouter une note » et « Envoyer sans note »). **Ce n'est donc pas un blocage dur du canal**, contrairement à ce que la lecture de 9h laissait penser.
+2. **Les notes personnalisées restent épuisées.** « Ajouter une note » ouvre l'écran commercial « *Envoyez un nombre illimité d'invitations personnalisées avec Premium* » — « *Vos messages d'invitation personnalisés gratuits sont épuisés.* » Le plafond mensuel consommé le 04/09 **n'est pas réinitialisé**. Modale fermée sans rien envoyer.
+3. **Le bouton a disparu ensuite et n'est pas revenu** : après fermeture de la modale, deux rechargements complets de la même page ne présentent plus aucun bouton « Se connecter » pour Joseph T. Hicks — seuls subsistent ceux de la barre latérale « Plus de profils pour vous », qui visent d'autres personnes (**vérifié par `aria-label` avant tout clic, §12 : « Inviter Jodie Ah-Sing… », « Inviter Paco Esposito… » — cliquer à l'aveugle aurait invité quelqu'un d'autre**).
+
+**Conclusion pour les runs suivants** : la capacité n'est ni ouverte ni fermée, elle est **intermittente**. Une note de connexion rédigée d'avance reste du travail perdu (le canal note est fermé), mais **une invitation sans note peut passer si le bouton est présent au moment où on l'ouvre** — donc tester le bouton *avant* de choisir une cible, pas l'inverse. L'hypothèse du plafond hebdomadaire posée à 11h reste la plus cohérente avec ce comportement. **Aucune invitation envoyée ce run. Notes de connexion : 0/7.**
+
+---
+
+### 6️⃣ 🔴 UNE INVITATION EST PARTIE AUJOURD'HUI SANS QU'AUCUNE SESSION NE LA REVENDIQUE
+
+`mynetwork/invitation-manager/sent/` affiche **« Personnes (90) »**, contre **89** relevées à 11h après le retrait des 10 plus anciennes. La ligne en tête de liste est :
+
+> **Elie Caleb MIMBULA** — *MD, MPH, MCIAH | Health Systems Strengthening & Program Management Specialist | Epidemiological Surveillance & Emergency Response | M&E and DQI* — **« Envoyé aujourd'hui »**
+
+**Structure de la carte vérifiée avant de conclure** (nom → intitulé → date → « Retirer »), donc la date appartient bien à MIMBULA et non à la carte voisine — c'est exactement le piège de métadonnée décalée documenté ailleurs, il a été écarté par lecture ligne à ligne. Les cartes suivantes concordent avec l'archive (Mahamba Nzanzu « envoyé hier » = invitation du 06/09 matin ✅, Keneth Mugume « il y a 2 jours » = 05/09 ✅), donc **les libellés de date sont fiables**.
+
+**Or aucune session ne revendique cet envoi** : le run de 9h a documenté **0 invitation envoyée** (canal jugé bloqué), la session interactive de 11h a documenté **0 envoi et 10 retraits**, et ce run n'a envoyé aucune invitation (le seul clic de connexion a visé Joseph T. Hicks, qui **n'apparaît pas** dans la liste). `list_sessions` ne montre aucune autre session en cours d'exécution.
+
+**Rien n'a été retiré.** Le profil est parfaitement dans le périmètre HWG (surveillance épidémiologique, Kinshasa, RDC — théâtre du foyer Ebola actif ; déjà suivi par nous en août, `linkedin-contacts.md:12968`), donc l'invitation n'est pas nuisible et un retrait serait irréversible pour trois semaines. 🏷️**HORS-ROUTINE :** l'anomalie est signalée telle quelle plutôt qu'expliquée après coup — **si David a envoyé cette invitation lui-même depuis son téléphone ou une autre session, c'est l'explication la plus simple** et il n'y a rien à faire ; sinon, une action sortante non tracée sur ce compte mérite un regard.
+
+---
+
+### 7️⃣ 🔁 CARRY-OVER
+
+1. ⭐⭐ **Adane Etore** — CTA envoyé à 11h12, `inboundCount` à 2. Fil à surveiller à 17h : sa réponse ouvrirait la suite du fil, pas un nouveau CTA.
+2. ⭐ **Miriam Mbueshi** — à sa prochaine réponse, `inboundCount` passe à 2 et **le CTA devient dû** (aucune dérogation, [[feedback_cta_rule_no_exceptions_2026_09_04]]).
+3. ⭐⭐ **Lissanework Mola**, ⭐⭐ **Jean Claude Nshimiyimana** — bienvenue de ce matin, sans réponse. CTA seulement à partir de leur 2e message.
+4. ⭐ **Ofelia CAZACU** — bienvenue du 06/09, toujours sans réponse. Ne pas relancer.
+5. ⏸️ **OLAOLUWA PHILIP** — invitation reçue laissée en attente, prémisse déjà retestée à 11h, ne pas la rejouer avant un signal neuf sur son activité.
+6. 🕐 **File d'invitation, à tenter dès que le bouton réapparaît** (sans note, le canal note étant fermé) : **Joseph T. Hicks** `/in/joseph-t-hicks/`, **Jafar Oyugi** `/in/jafar-oyugi-26775aa0/`, **Emmanuel Pembi**, **Stéphanie Maltais**.
+7. **Quotas en fin de run** : commentaires **7/7 (PLEIN)**, DM **6/8**, suivis **10/10 (plafond haut)**, notes de connexion **0/7 (canal fermé)**, invitations **0**.
+
+---
+
 ## 📅 Session interactive — 07/09/2026 (11h, David « check les dms et demandes d'invitation » puis « retire les dix plus anciennes non converties ») — ✅ **2 réponses en fil actif** (Miriam Mbueshi, Adane Etore — **1er CTA du fil Adane, inboundCount passé à 2**) — ✅ **invitations reçues vérifiées, aucune nouvelle** — ✅ **10 invitations envoyées retirées sur ordre explicite (99 → 89 en attente)** — ⚠️ **le bouton « Se connecter » reste absent, hypothèse d'un plafond hebdomadaire distinct**
 
 **Contexte** : reprise interactive, David présent. Vérification demandée des DM et des demandes d'invitation. Navigateur `23c7ecdd-…` sélectionné directement (navigateur habituel).

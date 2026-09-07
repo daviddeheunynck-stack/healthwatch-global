@@ -2,6 +2,115 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session linkedin-hwg-followup-check — 07/09/2026 (13h, 1er des 2 créneaux après-midi) — ✅ **4 commentaires publiés, quota du jour porté de 3/7 à 7/7 (PLEIN)** — Tshephang Iris Kabelo (réponse en sous-fil), Sahar Khalid (carry-over ⭐⭐ débloqué au 1er jet après 4 jets brûlés hier), Amref Health Africa, Kenya National Public Health Institute — 🟡 **écart de données Ebola/RDC repéré sur une source tierce** — 🔴 **une invitation partie aujourd'hui sans qu'aucune session ne la revendique**
+
+**Contexte d'ouverture** : navigateur `23c7ecdd-…` (« Browser 2 ») sélectionné directement, sans question — session planifiée, David absent par construction. Quotas à l'ouverture, après le run de 9h et la session interactive de 11h : commentaires **3/7**, DM **6/8**, suivis **10/10 (plafond haut)**, notes de connexion **0/7**. Aucun run de ce `taskId` plus tôt aujourd'hui (vérifié : `report-conventions.md`, convention double déclenchement).
+
+**Dispositif QA de ce run** : registre de faits (`npm run qa:facts` relancé — 232 faits citables, 81 lignes `is_seed` exclues) + contrôle mécanique (`scripts/check-outreach-message.mjs`, canal `linkedin-comment`, chaque brouillon passé avec les précédents en `peers`). **Aucun relecteur** — retiré définitivement le 06/09 sur décision de David. Relecture éditoriale (point 8) faite par le rédacteur, avec relecture préalable de `_shared/burned-templates.md` charpente par charpente pour les quatre textes.
+
+---
+
+### 1️⃣ ✅ COMMENTAIRE 4/7 — **Tshephang Iris Kabelo**, réponse en sous-fil (politique commune §14)
+
+`urn:li:activity:7502451418935730176` — le post d'Abduljalal Nadabo commenté ce matin. Elle a **aimé notre commentaire puis y a répondu** (« *David Deheunynck absolutely! I think the differentiation part of this is exactly what we need. If we can differentiate from an early point we can better and rapidly contain outbreaks! Exciting stuff* »). §14 : une réponse trouvée sur un fil actif est une opportunité de commentaire à part entière, pas un point de veille — elle consomme le quota et se publie en autonomie.
+
+**Angle** : ne pas redire le point du matin (vaccin), mais l'étendre au versant thérapeutique, qui n'avait pas été touché.
+
+**Texte publié :**
+
+> Agreed, and the species call gates the treatment side too. Inmazeb and Ebanga are approved against Zaire ebolavirus, so a Bundibugyo confirmation leaves optimised supportive care as the standard rather than a licensed monoclonal. Early differentiation is therefore also what tells the clinical team, not just the vaccination team, what it has to work with.
+
+**Forme** : extension « oui, et » (forme 4 de `burned-templates.md`), aucune question de clôture, aucun chiffre. Publication confirmée : 3 entités de commentaire sur le post (le nôtre du matin, sa réponse, la nôtre), 1 seule occurrence du texte, éditeur vidé.
+
+`QA : mécanique PASS (356 car., en/en, 0 blocker) | aucun chiffre | relecture éditoriale : faite | statut : publié le 07/09`
+
+---
+
+### 2️⃣ ✅ COMMENTAIRE 5/7 — **Sahar Khalid**, le carry-over ⭐⭐ publié au 1er jet
+
+`urn:li:activity:7502321747258482689`, post d'1 j (fenêtre 48 h, dernier jour). **4 jets brûlés hier** (2 à 13h, 2 à 17h), texte abandonné, candidate laissée intacte. Post à **0 commentaire** avant le nôtre, 14 réactions.
+
+**Ce qui a débloqué le cas** : ne pas commenter la visite ni le NHIC en général, mais **son point 2** (la triangulation entre signal villageois et stock de TDR au poste de santé), et dire ce que cette triangulation produit — vu depuis l'agrégation de bulletins, qui est le métier réel de HWG. Aucun des axes interdits par le tracker n'est rejoué (« ce qui vient après le test », charnière « travels through », angle du résultat négatif, clause de suffisance ou de manque).
+
+**Texte publié :**
+
+> The pairing in your second point does work that cannot be redone afterwards. A village malaria spike with rapid tests on the shelf and the same spike without them are two different operational situations, yet by the time either reaches a national or regional bulletin both have become the same case count. Recording the signal beside the stock holds them apart at the only stage where the difference is still visible.
+
+**Publication confirmée** : 1 commentaire (0 avant), 1 occurrence, éditeur vidé, texte relu dans le DOM après publication. **Blocage hebdomadaire créé jusqu'au 14/09.**
+
+`QA : mécanique PASS (417 car., en/en, 0 blocker) | aucun chiffre | relecture éditoriale : faite | statut : publié le 07/09`
+
+---
+
+### 3️⃣ ✅ COMMENTAIRE 6/7 — **Amref Health Africa** (page, 322 878 abonnés), post à 33 min, 0 commentaire avant le nôtre
+
+`urn:li:activity:7502678781325762560`. Post : l'Ouganda déclaré exempt d'Ebola le 28 juillet, mais les cas en cours en RDC voisine maintiennent le risque transfrontalier ; Dr. Patrick Tumusiime Kagurusi (Country Director Amref Ouganda) explique **pourquoi la préparation doit se poursuivre au-delà de la fin d'une flambée**.
+
+**Angle** : donner à leur thèse sa structure chiffrée réelle — l'intervalle est écrit dans le protocole OMS.
+
+**⚠️ Les deux chiffres ont été vérifiés contre la source primaire dans ce run**, précisément parce qu'une session du 24/08 avait **refusé** de citer le standard des 90 jours faute de l'avoir vérifié (`content-log.md`, « aucune durée avancée pour la surveillance renforcée »). Vérification faite ici :
+- **WHO AFRO, « Democratic Republic of the Congo declares end of 16th Ebola outbreak »** : « *no new cases were reported in the past 42 days since the last patient was discharged from treatment centre* » et « *The country now begins a 90-day period of enhanced disease surveillance.* »
+- **WHO AFRO, « Uganda ends Ebola outbreak following completion of 42-day countdown »** : « *The completion of the 42-day period, equivalent to twice the upper limit of the incubation period for Ebola* ».
+- Aucune date calculée n'est publiée, conformément à [[reference_uganda_ebola_42day_countdown_dates]].
+
+**Texte publié :**
+
+> Ending an outbreak and ending the risk are separated by an interval written into the protocol: the declaration comes 42 days after the last patient leaves care, twice the longest incubation period, and the country then begins a 90-day period of enhanced surveillance. What Dr Kagurusi describes lives inside that second window, on a border where one side has just stopped counting cases and the other has not.
+
+**Légitimité de la page vérifiée avant publication (§12)** : `/company/amref/`, Amref Health Africa, Nairobi, **322 878 abonnés**. À ne pas confondre avec `/company/amref-health-africa/` (« AMREF HEALTH AFRICA », Londres, 2 248 abonnés), ouverte par erreur en premier — deux pages distinctes au nom quasi identique, exactement le piège de §12. **Premier contact** : aucun commentaire HWG antérieur sur cette page (les seules occurrences « Amref » de l'archive concernent `@Amref_Worldwide` sur X). **Blocage hebdomadaire créé jusqu'au 14/09.**
+
+`QA : mécanique PASS (409 car., en/en, 0 blocker ; 42 et 90 résolus en facts.from-thread, les deux verbatim OMS étant dans le fichier de contexte) | relecture éditoriale : faite | statut : publié le 07/09`
+
+---
+
+### 4️⃣ ✅ COMMENTAIRE 7/7 — **Kenya National Public Health Institute** (page, 7 401 abonnés), post à 2 h, 0 commentaire avant le nôtre — **quota du jour PLEIN**
+
+`urn:li:activity:7502655870456217600`, page `/company/kenya-national-publichealth-institute/`. **Aujourd'hui est la Journée mondiale de l'épidémiologie de terrain** (7 septembre) : le KNPHI commémore, met en avant son programme FELTP et le rôle des épidémiologistes de terrain « *working on the frontlines to detect public health threats, investigate outbreaks, and translate data into timely action* ».
+
+**Risque identifié avant rédaction** : un post de commémoration est structurellement le même piège que le post de gratitude qui avait brûlé 5 jets chez Christianah Oki le 06/09 — aucune prise analytique qui ne se lise pas comme un déclassement de l'hommage. **Contourné par la forme 4** (« oui, et ») : nommer la trace concrète que ce travail laisse dans les documents que HWG agrège, ce qui est un hommage plus précis que le post lui-même, pas une réserve.
+
+**Texte publié :**
+
+> What reaches an international bulletin from that work is usually a revision. A probable case discarded after investigation, or a confirmed one attached back to a week that had already been reported, arrives as a line that moved rather than as an investigation. From where we aggregate those bulletins, revisions are the most legible trace field teams leave.
+
+**Page distincte de WHO Kenya** : le seul contact antérieur avec le KNPHI passait par la page `/company/whokenya/` (commentaire du 18/08 sur l'exercice de simulation 72 h de Busia). La page KNPHI elle-même n'avait **jamais** été commentée. **Blocage hebdomadaire créé jusqu'au 14/09.**
+
+`QA : mécanique PASS (357 car., en/en, 0 blocker) | aucun chiffre | relecture éditoriale : faite | statut : publié le 07/09`
+
+---
+
+### 5️⃣ 🟡 DONNÉE ÉPIDÉMIOLOGIQUE REPÉRÉE EN SESSION — Ebola/RDC, la ligne HWG a deux jours de retard sur le tableau de bord OMS
+
+Repéré dans une recherche de contenu (`Ebola Democratic Republic Congo`, 24 h), post de **IHLN — India Healthcare Leaders Network** (Dr Purvi Kachhwaha) : « *WHO's live alert dashboard now reports 6,522 confirmed cases and 3,134 confirmed deaths from the Bundibugyo Ebola outbreak in the Democratic Republic of the Congo, a 48% case-fatality ratio, as of 4 September.* »
+
+**Ligne HWG au moment du run** (registre de faits de ce run) : **6 342 cas / 3 072 décès**, `asOf` **2026-09-02**, CFR 48,4 %, source ECDC, `sourceConfirmedAt` du 07/09 09h05. L'écart est donc de **+180 cas / +62 décès sur deux jours**, cohérent avec la dynamique, pas une divergence de fond.
+
+⚠️ **Chiffres non repris dans aucun texte publié ce run** : ce sont les chiffres d'un tiers, non revérifiés contre le tableau de bord OMS lui-même. 🏷️**HORS-ROUTINE :** rafraîchissement de la ligne à voir par `morning-don-check`, pas ici — écrire en base sort du périmètre de cette routine.
+
+Contexte concordant relevé le même jour dans les notifications : **Julien Harneis** (Senior Ebola Coordinator) annonce la prolongation de six mois du scale-up humanitaire système, l'épidémie ayant franchi **3 000 décès**. Post **hors fenêtre 48 h** (le plus récent de son profil a 2 j), donc non commenté — il reste bloqué sur son angle « décompte zonal contre horizon administratif », interdit depuis le 04/09.
+
+---
+
+### 6️⃣ 🔎 Recherche de commentaires — ce qui a été instruit puis écarté
+
+- **Julien Harneis** — les deux posts pertinents (frontière RDC/Soudan du Sud, prolongation du scale-up) ont respectivement **2 j et 3-4 j**. Hors fenêtre 48 h. Non commenté.
+- **AllAfrica Global Media** (50 min, « WHO Announces New Ebola Vaccine Guidelines for the DR Congo ») — le post ne porte **aucun texte propre**, juste le titre et le lien : rien à commenter sans plaquer un angle. De plus, ce serait le 3e texte du jour sur le vaccin filovirus (§16, densité par événement).
+- **Paul Sonnier** (revue npj Digital Medicine sur 20 plateformes de surveillance IA), carry-over ⭐ du 06/09 — **`/in/paulsonnier/` renvoie 404**, profil et page d'activité inaccessibles. §16 point 2 appliqué : recherche d'un autre porteur du **même événement** plutôt que de retenter le même support. Deux porteurs trouvés, tous deux écartés : son propre post vit dans sa **newsletter/groupe « Digital Health »** (bouton « Rejoindre », commenter suppose d'adhérer au groupe — hors périmètre de la routine), et **Tengrium**, page d'entreprise inconnue au contenu manifestement généré (« ⚙️ Deployment-mechanism lens »), dont la légitimité n'est pas établie (§10). **Le carry-over doit désormais nommer l'événement, pas le profil** : la revue npj du 04/09 reste la matière, le porteur est à retrouver.
+- **Border Monitor** (1 h, statut de fournisseur Africa CDC pour Dei BioPharma) — sujet fabrication/achats groupés, hors du périmètre surveillance, et légitimité de la page non établie.
+- **KEBBA BIBANGO DANGONNE**, **Tedros** (rediffusions Live sans texte + un post sur Gaza, terrain politique exclu §3), **Africa CDC** (bloquée jusqu'au 14/09 depuis ce matin) : inchangés depuis le balayage de 9h.
+
+---
+
+### 7️⃣ 🔁 CARRY-OVER
+
+1. ⭐⭐ **Tshephang Iris Kabelo** — fil de sous-commentaire ouvert et vivant (like + réponse en 3 h). À revérifier au créneau de 17h : une nouvelle réponse de sa part serait une opportunité §14, pas un point de veille.
+2. ⭐⭐ **Événement, pas profil (§16 point 2)** : la **revue npj Digital Medicine du 04/09 sur les 20 plateformes de surveillance IA** reste la meilleure matière non traitée du corpus. Porteur à trouver hors groupe fermé et hors page non identifiée — pistes : les auteurs nommés (Getchell, Pronyk), le **Duke-NUS Centre for Outbreak Preparedness**, le **WHO Hub for Pandemic and Epidemic Intelligence**, ou une recherche de contenu sur le titre de la revue.
+3. ⭐ **Journée mondiale de l'épidémiologie de terrain (7 septembre)** — l'événement porte plusieurs comptes aujourd'hui (KNPHI commenté, **AFENET** et **Ajisefini Consulting** repérés non traités). Un 2e commentaire sur le même événement demanderait un argument réellement distinct (§16 point 1) ; le quota étant plein, la question ne se pose que si 17h trouve de la place.
+4. **Quotas en fin de run** : commentaires **7/7 (PLEIN)**, DM **6/8**, suivis **10/10 (plafond haut)**, notes de connexion **0/7 — canal bloqué par la plateforme, testé en propre ce run (voir `linkedin-contacts.md`)**.
+5. **Blocages hebdomadaires créés ce run** : **Sahar Khalid, Amref Health Africa, Kenya National Public Health Institute (14/09)**. Inchangés : Abduljalal Nadabo, Christianah Oki, page Africa CDC (14/09) ; Joseph Cephas Kyari, Robert Herriman (13/09) ; Yilkal Kebede, Tambe Elvis Akem, Keneth Mugume (12/09) ; Ifedayo Adetifa, Pete Macharia (11/09) ; Adesoye Emmanuel Tunde, Kyaw Thowai Prue Prince, Rocham Mulumbwe, Dr. Rashi Bhardwaj, Dr Fabrice KHADDY, Miriam Mbueshi (09/09) ; Dr. Jean Kaseya, page ECDC, Jacob Banda (08/09).
+
+---
+
 ## 📅 Thread hebdo — lundi 7 septembre 2026 — ✅ **PUBLIÉ EN AUTONOMIE** par l'agent (`x-hwg-content-proposal`) le 2026-09-07 — Rougeole/Amériques, le budget 7-1-7 dure exactement une génération de rougeole, donc un score parfait arrive quand même une génération trop tard
 
 **Lien du fil** : https://x.com/HWatchGlobal/status/2096862299826885020
