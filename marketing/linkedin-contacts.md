@@ -30,6 +30,8 @@ Message [6], 21h31, **manifestement coupé en plein milieu d'une phrase** (verba
 
 `QA : mécanique PASS (454 car., fr/fr, 0 blocker) | aucun chiffre | relecture éditoriale : faite | statut : envoyé le 07/09`
 
+**🔴 CORRECTION — 07/09/2026 (~21h55), David : « je pense qu'elle a juste oublié le point final ».** Lecture révisée : avec une virgule implicite plutôt qu'un point avant « À mon avis », le message [6] est une phrase complète et non coupée — « les bulletins déjà publiés cachent une partie d'originalité des messages communautaires, à mon avis » (tournure d'incise en fin de phrase, usage courant en français informel). **Ma lecture « message manifestement coupé » ci-dessus était fausse** : il manquait un point final, pas une suite de phrase. Le message envoyé à 21h51 repose donc sur une prémisse erronée (« je pense qu'il ne m'est pas arrivé en entier ») — inoffensif mais imprécis ; il n'a pas été retiré (suppression = action irréversible hors périmètre, et le contenu n'est ni faux ni nuisible pour l'interlocutrice, juste redondant avec ce qu'elle a déjà dit). **Conduite retenue : ne pas envoyer de 2e message avant sa réponse** — la relancer maintenant pour corriger un malentendu mineur serait plus intrusif que d'attendre sa réponse naturelle à la question posée, qui clarifiera d'elle-même. Sa vraie critique, maintenant comprise : le passage par un bulletin déjà publié gomme une partie de ce qu'un message communautaire porte de spécifique — à traiter comme point de fond dès sa prochaine réponse, plutôt que redemandé.
+
 ---
 
 ## 📅 Reprise interactive — 07/09/2026 (20h50, David « vérifie s'ils ont répondu ») — ✅ **2 réponses trouvées et traitées** (Miriam Mbueshi, Stéphanie Maltais) — 2 sans réponse (Gail Carson, Joseph T. Hicks, Seontae Kim)
