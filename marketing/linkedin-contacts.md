@@ -33,6 +33,14 @@ Sa propre page affiche « *En attente, cliquez pour retirer l'invitation envoyé
 
 **Conduite pour 17h et les runs suivants** : sur un blocage du bouton « Se connecter » qui résiste à une tentative de clic propre, signaler à David plutôt que de multiplier les méthodes de clic simulé — c'est lui qui peut compléter l'action, pas un changement de méthode technique.
 
+### ✅ Clôture — 07/09/2026 (14h) : les 3 slugs restants retrouvés, les 3 invitations envoyées par David
+
+Slugs recherchés et vérifiés par l'agent (intitulé, employeur, degré comparés à l'aperçu du matin avant de les transmettre) :
+- **Emmanuel Pembi** → `/in/emmanuel-pembi-2173a8b1/` (Nigéria, employeur affiché World Health Organization, 8 relations en commun)
+- **Stéphanie Maltais, PhD** → `/in/smaltaisphd/` (Université de Montréal, 16 relations en commun)
+
+David a cliqué lui-même « Se connecter » sur les trois profils (Hicks, Pembi, Maltais). **Confirmé par l'agent sur les trois pages** : chacune affiche désormais « *En attente, cliquez pour retirer l'invitation envoyée à …* ». **3 invitations envoyées, quota de notes de connexion du jour 0/7 → 3/7.**
+
 ---
 
 ## 📅 Session linkedin-hwg-followup-check — 07/09/2026 (13h, 1er des 2 créneaux après-midi) — ❌ **0 DM envoyé : aucun message entrant nouveau depuis 11h15, les 10 fils sont tous en attente de réponse de l'interlocuteur** — ✅ **4 commentaires publiés, quota du jour PLEIN 7/7** (détail dans `content-log.md`) — ✅ **connexions acceptées et nouveaux abonnés vérifiés en propre, rien à traiter** — 🔴 **une invitation est partie aujourd'hui (Elie Caleb MIMBULA) sans qu'aucune session archivée ne la revendique** — ⚠️ **capacité d'invitation testée en propre : le bouton apparaît puis disparaît, les notes personnalisées restent épuisées**
