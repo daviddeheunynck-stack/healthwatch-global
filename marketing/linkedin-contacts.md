@@ -43,6 +43,23 @@ David a cliqué lui-même « Se connecter » sur les trois profils (Hicks, Pembi
 
 ---
 
+### 🕐 4 candidats de connexion trouvés, à envoyer par David — 07/09/2026 (14h15, interactif « continue à remplir le quota de connexions »)
+
+Recherche active menée : `field epidemiology training program FETP surveillance` (nouvelle requête, pour diversifier des sources déjà épuisées ce matin). Chaque profil ouvert et vérifié sur pièce avant de le retenir.
+
+| # | Nom | Slug | Intitulé | Légitimité |
+|---|---|---|---|---|
+| 1 | **Gail Carson** | `/in/gail-carson-16435183/` | *ISARIC & systems leadership*, Royaume-Uni | Déjà suivie (26/08, `linkedin-candidates-tracker.md:110`, marquée « bon candidat connexion »), 1 976 abonnés, **12 relations en commun**, employeur ISARIC (au cœur du sujet HWG) |
+| 2 | **Armand Simisi Mbalanda** | `/in/armand-simisi-mbalanda-7b4086138/` | *Epidemiology and Surveillance Specialist*, **Kinshasa, RD Congo** | FHI 360, 817 abonnés, **14 relations en commun**, terrain directement pertinent (foyer Ebola actif) |
+| 3 | **Seontae Kim** | `/in/seontae-kim-051063184/` | *Field Epidemiologist \| Disease Surveillance \| Global Health Security* | **World Health Organization**, Timor-Leste, 893 abonnés, 11 relations en commun |
+| 4 | **Namwoo Heo** | `/in/namwoo-heo/` | *Medical Epidemiologist, Infectious Diseases* | **Korea Disease Control and Prevention Agency**, Séoul, 503 abonnés, 1 relation en commune — activité générique mais employeur institutionnel solide |
+
+Deux candidats déjà dans le tracker écartés de la sélection : **Baba Ceesay** (invitation déjà en attente depuis le 22/08) et **Rebecca H** (déjà suivie, aucun hook neuf). Deux candidats plus faibles instruits puis écartés au profit de Kim/Heo : **Jean Paul Moke** (238 abonnés, 2 relations communes, activité quasi nulle) et **Salma Afifi** (titre générique « public health consultant », posts récents en lien cassé).
+
+**Aucune invitation envoyée par l'agent** (clic simulé inopérant sur « Se connecter », `browser-click-reliability.md` §6) : les 4 profils sont prêts, bouton « Se connecter » confirmé présent sur chacun. Amène le quota à **7/7** si les 4 sont envoyées.
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check — 07/09/2026 (13h, 1er des 2 créneaux après-midi) — ❌ **0 DM envoyé : aucun message entrant nouveau depuis 11h15, les 10 fils sont tous en attente de réponse de l'interlocuteur** — ✅ **4 commentaires publiés, quota du jour PLEIN 7/7** (détail dans `content-log.md`) — ✅ **connexions acceptées et nouveaux abonnés vérifiés en propre, rien à traiter** — 🔴 **une invitation est partie aujourd'hui (Elie Caleb MIMBULA) sans qu'aucune session archivée ne la revendique** — ⚠️ **capacité d'invitation testée en propre : le bouton apparaît puis disparaît, les notes personnalisées restent épuisées**
 
 **Contexte d'ouverture** : navigateur `23c7ecdd-…` (« Browser 2 ») sélectionné directement, sans question — session planifiée. Quotas hérités du run de 9h et de la session interactive de 11h : commentaires 3/7, DM 6/8, suivis 10/10, notes de connexion 0/7. Aucun run antérieur de ce `taskId` aujourd'hui.
