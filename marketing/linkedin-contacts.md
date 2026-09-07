@@ -44,6 +44,18 @@ Message [6], 21h31, **manifestement coupé en plein milieu d'une phrase** (verba
 
 `QA : mécanique jet 1 FAIL (308 car., fr/fr — context.too-soon, faux positif confirmé) | aucun chiffre | relecture éditoriale : faite | statut : envoyé le 07/09 à 22h00`
 
+**🔴 David a supprimé les deux messages ci-dessus (21h51 et 22h00) directement dans LinkedIn — 07/09/2026 (~22h02), « j'ai supprimé tes messages, recommence ».** Les deux apparaissent désormais dans le fil comme « Ce message a été supprimé » (vérifié dans le DOM avant de reprendre). **Message final envoyé à 22h04**, rédigé comme une continuation naturelle des deux messages de Miriam (21h30 et 21h31), sans référence à une correction puisque le fil visible n'en garde plus la trace :
+
+> Miriam, ce qui ressort de votre réponse, c'est que le goulot n'est plus dans la remontée mais dans ce qui suit : deux sites recevant la même alerte au même instant ne la confirment pas forcément à la même vitesse.
+>
+> Sur les bulletins, je vous rejoins : un signalement communautaire arrive avec des détails qu'un comptage agrégé ne peut pas garder. Ceux qui disparaissent le plus souvent, ce sont lesquels ?
+
+**1er jet retravaillé une fois** : `ngram.history` a bloqué 6 séquences reprises des deux messages supprimés ci-dessus, encore présentes dans l'historique archivé de ce fichier bien qu'invisibles dans le fil LinkedIn lui-même. Reformulé pour être réellement distinct, 0 blocker au 2e jet.
+
+**Statut CTA : absent, déjà servi à 20h50 (message non supprimé, seul CTA du fil).**
+
+`QA : mécanique PASS (405 car., fr/fr, 0 blocker au 2e jet) | aucun chiffre | relecture éditoriale : faite | statut : envoyé le 07/09 à 22h04, message final de ce fil`
+
 ---
 
 ## 📅 Reprise interactive — 07/09/2026 (20h50, David « vérifie s'ils ont répondu ») — ✅ **2 réponses trouvées et traitées** (Miriam Mbueshi, Stéphanie Maltais) — 2 sans réponse (Gail Carson, Joseph T. Hicks, Seontae Kim)
