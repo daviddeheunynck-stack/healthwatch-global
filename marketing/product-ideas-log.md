@@ -4395,3 +4395,161 @@ Au démarrage du run l'arbre était propre. Une autre session a poussé
 par un `git pull --ff-only`, rien de ce travail n'a été stagé ni committé par
 ce run. Les 19 fichiers des deux commits ci-dessus ont été stagés un par un,
 jamais par `git add -A`.
+
+---
+
+## 2026-09-07 — Proposition du jour
+
+Sources relues avant d'idéer : `product-ideas-log.md` en entier (toutes les
+entrées depuis le 19/08), `product-feedback.md` (dernière entrée 31/08,
+lepapapericles5 — piste « digest allégé » mesurée et close le 02/09 ; entrée
+du 20/08, ETIENNE GUENOU, dont la 4e action « exposer le niveau de source
+dans l'interface » est **encore ouverte 18 jours après**), `ROADMAP.md` et
+ses garde-fous de sourcing, `git log --oneline -30`.
+
+**Contrôles de départ, tous verts, aucune idée à en tirer.** Les 54 crons
+enregistrés en prod sont en `ok` (deux `no_data` attendus : `sync-drc-sitrep`
+`no_sitrep_found`, `check-mpox-sitrep`). `check-wer-cholera` signale bien 4
+lignes citant encore l'édition 101-31 alors que 101-35 est parue — mécanisme
+prévu, e-mail envoyé, reprise manuelle chez David, rien de cassé.
+**Vérifié aussi avant d'écrire quoi que ce soit :** 16 lignes actives citent
+`polioeradication.org` (14), `cdc.gov.au` (1) et `ncdc.gov.ng` (1) — trois
+domaines du registre `sources-interdites.md`. Ce **n'est pas** une reprise du
+défaut ReliefWeb du 26/08 : ces trois-là sont dans `RESTRICTED_FETCH_DOMAINS`
+(interdiction d'**ingestion**, vérifiée au commit), pas dans
+`FORBIDDEN_SOURCE_DOMAINS` (interdiction de **citation**, où seul ReliefWeb
+figure avec ProMED). Les citer après vérification manuelle est exactement le
+régime décidé le 04/09. Rien à corriger, mentionné pour que le prochain run
+ne re-signale pas la même chose.
+
+### 1. 🔴 « Données au 5 septembre 2026 » sous des chiffres arrêtés au 8 mars — 113 des 114 pages pays datent leur donnée avec l'horodatage de notre dernière écriture en base
+
+**Signal.** Les pages pays et maladie affichent une étiquette qui promet la
+fraîcheur de la **donnée** — `Données au` / `Data as of` sur la page pays
+(`country/[slug]/page.tsx:452`), `Mis à jour :` / `Updated:` sur la page
+maladie (`disease/[slug]/page.tsx:606`). Les deux la calculent sur
+`updated_at`, c'est-à-dire **la date de notre dernier `UPDATE` SQL** :
+
+```ts
+// country/[slug]/page.tsx:309
+const t = (o as { updated_at?: string }).updated_at ?? o.date ?? null;
+// disease/[slug]/page.tsx:443
+if (!o.updated_at) return latest;
+```
+
+C'est le défaut déjà identifié, nommé et corrigé ailleurs. `lib/outbreaks.ts`
+le décrit noir sur blanc dans `getLastSyncCached` : « `updated_at` alone is
+the timestamp of the last DATABASE WRITE, not of the last verification […]
+any field touch (a QC edit, a locale backfill, a fix-*.mjs script) resets the
+whole site to "just now" », et conclut : « Found 2026-08-25 during the full
+audit: **this and StaleDaysBadge were the last two surfaces still on the raw
+value** ». Cette phrase est fausse : le balayage du 25/08 a couvert le
+tableau de bord, le permalien et le bandeau de synchronisation, et a manqué
+les deux pages publiques — celles où Google dépose les visiteurs.
+
+**Mesuré sur la prod ce soir** (296 lignes lues, paginées ; 121 actives) —
+écart entre l'étiquette affichée et la date d'arrêt réelle de la donnée
+(`max(date)`) :
+
+```
+pages pays concernées : 113 / 114
+   dont >=  7 jours : 92
+   dont >= 30 jours : 58
+   écart maximum    : 965 jours
+```
+
+Vérifié sur la prod déployée, pas seulement en base :
+
+```
+/fr/country/ghana         « Aucun foyer actif · Données au 23 août 2026 »
+                          sa seule ligne s'arrête au 1er janvier 2024      -> +965 j
+/fr/country/south-africa  « 1 foyer actif · Données au 5 septembre 2026 »
+                          bulletin diphtérie arrêté au 8 mars 2026         -> +181 j
+/fr/country/saudi-arabia  « 1 foyer actif · Données au 2 août 2026 »
+                          donnée arrêtée au 2 juillet 2026                 ->  +31 j
+/fr/country/cuba          « 1 foyer actif · Données au 5 septembre 2026 »
+                          bulletin NY DOH du 27 août 2026                  ->   +9 j
+```
+
+Le cas Ghana est le plus parlant : « **Aucun foyer actif · Données au 23 août
+2026** » se lit comme « nous avons regardé le 23 août et il n'y a rien ».
+C'est précisément ce que la page ne sait pas. Le 23 août est le jour où un
+script a touché une ligne archivée de 2024.
+
+**Pourquoi `lastVerifiedIso` ne suffit pas — mesuré aussi.** Le réflexe serait
+de reprendre le helper canonique du dépôt, `max(date, source_confirmed_at)`.
+Il réduit le défaut sans le supprimer : **72 pages resteraient en avance, 58
+d'au moins 7 jours, jusqu'à 197 jours.** Normal : `source_confirmed_at`
+répond à « quand a-t-on rouvert la source », pas à « de quand datent les
+chiffres ». Une étiquette qui dit *Données au* doit lire `date`, la date
+d'arrêt du bulletin — c'est déjà ce que fait le permalien juste à côté
+(`cumulativeAs(o.date, publishableSourceName(o.source))`).
+
+**Effort :** petit. Deux réducteurs, une ligne chacun, aucune requête ni
+colonne en plus (`date` est déjà dans les deux `select`).
+
+**Risque/inconnue :** un seul arbitrage, sur la page pays. Elle réduit
+aujourd'hui sur **toutes** les lignes du pays, archives comprises, alors que
+les tuiles agrégées juste en dessous ne comptent que les actives. Réduire sur
+les actives quand il y en a, et retomber sur l'ensemble sinon, garde
+l'étiquette présente partout (aucune régression visuelle) et la rend vraie
+dans les deux cas. Effet visible et voulu : Ghana passera de « Données au 23
+août 2026 » à « Données au 1er janvier 2024 » — moins flatteur, et c'est
+l'information juste.
+
+### 2. 🟠 Le seul retour produit jamais reçu d'un professionnel qui a remonté une provenance demande une chose précise, et c'est la seule surface où elle manque encore
+
+**Signal.** ETIENNE GUENOU (Laboratoire National de Santé Publique, Cameroun,
+20/08) a repéré tout seul qu'une ligne Cameroun s'appuyait sur un média
+commercial, et sa 4e action listée dans `product-feedback.md` est restée
+ouverte : « Idée produit : exposer le niveau de source dans l'interface
+(institutionnel / national / presse) ». Son argument : « media reporting
+often introduces noise […] Fixing that source pipeline would immediately
+elevate the implicit quality signal ».
+
+**Le classement existe déjà et il est bon.** `sourceStatusOf()` range chaque
+ligne en `don` / `official` / `press` / `unverified`, et `OutbreakTable` rend
+les quatre en pastilles colorées avec infobulle et lien sortant — **derrière
+la connexion**. Mesuré sur les 121 lignes actives : `official` 112, `press`
+8, `don` 1.
+
+**Mesuré sur les pages publiques**, sur la ligne Fièvre du Nil
+occidental/Grèce (source `euronews.com`, 290 cas) :
+
+```
+/fr/country/greece          occurrences de « euronews » : 0
+/fr/region/europe           occurrences de « euronews » : 0
+/fr/disease/west-nile-fever occurrences de « euronews » : 0
+   (les mêmes pages écrivent « OMS » 17 à 23 fois et « ECDC » 10 à 12 fois)
+```
+
+Ni la page pays ni la page région ne `select` la colonne `source` : le nom de
+l'éditeur ne quitte jamais la base pour ces deux familles de pages. La page
+maladie ne l'affiche pas non plus par ligne, seulement une citation
+académique neutre en bas de page.
+
+**Ce que cette idée n'est pas.** Pas un manquement de la FAQ tarifaire :
+`faq5_a` (5 langues, réécrite le 02/09) promet que « chaque fiche du site
+indique précisément d'où vient l'information », et c'est **tenu** — le
+permalien affiche bien « Source : euronews.com ↗ » là où la ligne Mpox/Grèce
+affiche « Source : WHO DON ↗ », et les pages listes lient bien vers ces
+permaliens (4 liens sur Grèce, 16 sur la page maladie, 78 sur la page
+région). Vérifié avant d'écrire, pour ne pas fabriquer une fausse promesse.
+Le défaut est plus modeste et réel : **le tri entre agence et presse ne se
+fait qu'au clic suivant**, sur les trois familles de pages qui reçoivent le
+trafic de recherche, et sous une bannière qui répète « OMS, ECDC, PAHO,
+Africa CDC ».
+
+**Effort :** petit à moyen. `sourceStatus` et `sourceName` sont déjà écrits et
+déjà traduits ; il faut ajouter `source` aux deux `select` qui ne l'ont pas,
+et rendre la pastille dans les trois listes de lignes.
+
+**Risque/inconnue :** de ton, pas de donnée — rien de masqué n'est dévoilé,
+c'est un libellé d'éditeur déjà public sur le permalien. Le vrai arbitrage :
+afficher « euronews.com » sur une page indexée peut se lire comme un aveu de
+faiblesse. L'argument de Guenou dit l'inverse, et la FAQ publique assume déjà
+la pratique par écrit. Périmètre volontairement borné aux pages
+pays / maladie / région : la page d'accueil, `/compare` et `/reports` listent
+aussi des foyers et **ne sont pas couvertes** ce soir.
+
+### Statut : PROPOSÉE — construction dans la même session, voir la mise à jour en fin d'entrée
