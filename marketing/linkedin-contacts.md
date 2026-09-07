@@ -1,5 +1,51 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
+## 📅 Reprise interactive — 07/09/2026 (20h50, David « vérifie s'ils ont répondu ») — ✅ **2 réponses trouvées et traitées** (Miriam Mbueshi, Stéphanie Maltais) — 2 sans réponse (Gail Carson, Joseph T. Hicks, Seontae Kim)
+
+**Contexte** : vérification demandée après les 4 DM de bienvenue de 18h20 et la réponse à Oke Ikpekpe de 17h40. Messagerie relue en entier (8 premiers fils).
+
+### 1️⃣ ✅ Miriam Mbueshi — 2e réponse en fil actif, `inboundCount` 1 → 2, **CTA dû et envoyé**
+
+Elle a répondu à 19h49 (verbatim complet dans `linkedin-contacts.md`, fil archivé) : distingue la vitesse de transmission (comprimée par l'application) de la vitesse d'analyse/traitement en aval (dépendante de la disponibilité des validateurs, du tri, de la qualité de l'info, de la capacité de vérification terrain).
+
+**Réponse envoyée à 20h50 :**
+
+> Miriam, la distinction est nette : le numérique comprime le premier délai, l'organisation gouverne le second, et vous listez plusieurs facteurs sans en isoler un seul, disponibilité des validateurs, tri, qualité de l'information, capacité de vérification terrain.
+>
+> Je fais quelque chose d'apparenté de mon côté avec HealthWatch Global, sauf que j'agrège des bulletins déjà publiés plutôt que des alertes brutes : la structuration dont vous parlez arrive chez moi une étape plus tard. On peut le vérifier soi-même sur healthwatch-global.com : sept jours de version Pro, gratuits, sans carte à saisir.
+>
+> Parmi les quatre facteurs que vous citez, lequel varie le plus d'un site à l'autre sur le terrain ?
+
+**Statut CTA : présent, motif — 2e interaction atteinte** (spécification DM du 06/09, point 4). Pont amené depuis un point réel du fil (sa propre distinction transmission/structuration vs traitement). Aucun CTA envoyé plus tôt dans ce fil, donc pas de répétition.
+
+**5 jets nécessaires sur le seul segment CTA** — cas de figure explicitement prévu par la règle des deux essais version 05/09 : chaque jet corrigeait un défaut nommé distinct (`ngram.history` sur des séquences différentes à chaque fois, la fenêtre de formulations disponibles autour de « healthwatch-global.com » + « 7 jours » s'étant réduite après les 2 CTA en 7 jours déjà servis aujourd'hui). Convergé au 5e jet, 0 blocker. Le corps du message (1er et 3e paragraphe) était PASS dès le 1er jet.
+
+`QA : mécanique PASS (706 car., fr/fr, 0 blocker au 5e jet, uniquement sur la formule CTA) | chiffre 7 sourcé (pricing.faq4_a) | relecture éditoriale : faite | statut : envoyé le 07/09`
+
+### 2️⃣ ✅ Stéphanie Maltais, PhD — 1re réponse, `inboundCount` 0 → 1, pas de CTA
+
+Elle a répondu à 18h46 (verbatim complet dans `linkedin-contacts.md`) : détaille les 3 composantes de DOPERAUS (évaluation NEOH, 3 études mixtes qual/quant, renforcement de gouvernance) et note que le volet sciences sociales était plus visible dans la composante 2 (dimension socio-anthropologique, communautés impliquées) que dans les composantes 1 et 3.
+
+**Réponse envoyée à 20h51 :**
+
+> La composante 2 se distingue nettement des deux autres par sa dimension communautaire directe. Qu'est-ce qui, dans la composante 1 (l'évaluation NEOH) ou la composante 3 (renforcement de gouvernance), faisait que le volet social y restait moins visible aux yeux de l'équipe et des partenaires ?
+
+**Statut CTA : absent, motif admis n° 1 — `inboundCount` = 1, seuil de 2 non atteint.** Question ouverte sur un mécanisme (pourquoi la visibilité différait), pas de jugement d'adéquation sur son projet.
+
+**1er jet retravaillé une fois** : `ngram.history` a bloqué « la contribution des sciences sociales », déjà utilisé dans le DM de bienvenue envoyé à la même personne 2h plus tôt dans ce même fil. Reformulé (« le volet social »), 0 blocker au 2e jet.
+
+`QA : mécanique PASS (294 car., fr/fr, 0 blocker au 2e jet) | 3 chiffres (1, 2, 3) tous venant du fil, pas de la base | relecture éditoriale : faite | statut : envoyé le 07/09`
+
+### 3️⃣ ⏸️ Sans réponse — Gail Carson, Joseph T. Hicks, Seontae Kim
+
+Les 3 autres DM de bienvenue envoyés à 18h24, 18h28 et 18h31 n'ont pas encore de réponse. Rien à faire, pas de relance (bienvenues récentes, moins de 3h).
+
+### 4️⃣ Vérification d'envoi
+
+Pour les deux réponses : en-tête du composeur relu avant saisie (nom exact), texte comparé caractère pour caractère au brouillon validé dans le même appel JS que le clic, fil rouvert après envoi (compteur de messages passé de 4→5 pour Miriam, 2→3 pour Stéphanie).
+
+---
+
 ## 📅 Reprise interactive — 07/09/2026 (18h20, David « Envoie les messages de bienvenue aux nouvelles connexions ») — ✅ **4 DM de bienvenue envoyés, sur ordre explicite de David**
 
 **Contexte** : le carry-over du run de 17h laissait 4 messages de bienvenue dus (Gail Carson, Joseph T. Hicks, Seontae Kim, Stéphanie Maltais — connexions acceptées le 07/09, quota DM 8/8 plein). David a demandé explicitement en session de les envoyer maintenant — validation explicite (`report-conventions.md`), qui prime sur le quota de pacing.
