@@ -1,6 +1,125 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
 
+## 📅 Session linkedin-hwg-followup-check-2 — 07/09/2026 (17h, 2e des 2 créneaux après-midi) — ✅ **2 DM envoyés en autonomie** (James Schlitt, réponse en fil actif ; Armand Simisi Mbalanda, bienvenue après acceptation) — **quota DM 6/8 → 8/8 PLEIN** — ✅ **5 connexions acceptées vérifiées en propre**, 4 restent sans message de bienvenue faute de quota
+
+**Contexte d'ouverture** : navigateur `23c7ecdd-…` (« Browser 2 ») sélectionné directement, sans question — session planifiée. Aucun run antérieur de ce `taskId` aujourd'hui (`report-conventions.md`, convention double déclenchement). Quotas hérités des runs de 9h, 13h et des deux séquences interactives de 11h et 14h : commentaires **7/7 (PLEIN)**, DM **6/8**, suivis **10/10 (plafond haut)**, notes de connexion **7/7 (PLEIN)**.
+
+**Dispositif QA de ce run** : registre de faits (`npm run qa:facts`, 232 faits citables) + registre produit (`npm run qa:claims`, 90 nombres citables, 7 claims manuelles) + contrôle mécanique (`scripts/check-outreach-message.mjs`, canal `linkedin-dm`). **Aucun relecteur** — retiré définitivement le 06/09 sur décision de David. Relecture éditoriale (point 8) faite par le rédacteur, `_shared/burned-templates.md` relu avant rédaction des deux textes.
+
+---
+
+### 1️⃣ ✅ DM 7/8 — **James Schlitt, PhD, MPH**, réponse en fil actif (le contact le plus engagé du portefeuille)
+
+**Message reçu aujourd'hui à 16h41** (verbatim) :
+
+> I wouldn't consider it arguing, that's never my goal. We are both hunting in the same forest for different game. There are likely some viable tips and perspectives to share, and the net opportunities and effects of interference are unclear. I was genuinely curious if you had explored narrative alignment per consistent error patterns in early reporting - the sort of thing that might progress from a recurring frustration to a quantitive opportunity given enough iterations.
+
+**Fil relu en entier ce run** (16 messages, du 03/09 09h59 au 07/09 16h41, remontée jusqu'au premier message par scroll forcé). `inboundCount` très au-dessus du seuil de 2. Langue du fil = **en**, langue du brouillon = **en**.
+
+**Texte envoyé à 17h18 :**
+
+> No apology needed, "arguing" was my own word and a poor one for what this has been.
+>
+> To your question: no narrative alignment here, though there is something adjacent. I keep a short list of per-source failure signatures, and one of them has moved from irritation to something I can encode. The Weekly Epidemiological Record at WHO ships every Friday, while the multi-country cholera update inside it refreshes monthly, so most editions are newer documents carrying the same numbers. I once read a rising edition number as freshness and briefly concluded that a batch of live cholera rows had gone stale. They had not.
+>
+> That error belongs to the source rather than to the event, so it stays put while everything it describes moves. That is why it can be encoded at all. It is much narrower than what you are after, since it only characterises publishers with a fixed calendar, and the reporting you want to catch has none.
+>
+> One correction to Friday's message: the free Pro window is seven days now, not two weeks. It changed over the weekend.
+>
+> What has to happen in your corpus before an error pattern becomes stable enough to model?
+
+**Statut CTA : absent, motif admis n° 2 — argumentaire déjà servi plus tôt dans ce même fil** (04/09 à 23h57 : nom du produit + lien + essai). La règle anti-répétition de `hwg-social-policy.md` §3 interdit de resservir le même argumentaire commercial une 2e fois dans un fil. **Ce qui figure dans ce message n'est pas un CTA mais une correction factuelle** : l'essai annoncé « two weeks » le 04/09 était exact ce jour-là et ne l'est plus depuis le passage à **7 jours** le 05/09 (`lib/activate-trial.ts`, `TRIAL_DAYS = 7`). Laisser un chiffre faux debout dans un fil où l'interlocuteur peut encore agir dessus tombe sous « toute affirmation sur HWG doit être vraie » (§1).
+
+**Fait cité, vérifié avant envoi** : la périodicité du *Weekly Epidemiological Record* (édition hebdomadaire, mise à jour choléra mensuelle) et l'erreur de lecture du 01/09 viennent de [[reference_wer_cholera_update_is_monthly_not_weekly]]. Aucun chiffre publié.
+
+**1er jet retravaillé une fois** : `ngram.history` sur « who s weekly epidemiological record » (formule déjà servie dans le DM Gwen Eamer). Reformulé en « The Weekly Epidemiological Record at WHO », 0 blocker au 2e jet. **La thèse, elle, est distincte de celle servie à Gwen Eamer** (elle : six lignes figées sur un même document non remplacé ; ici : la cadence de publication diffère de la cadence des données, donc un numéro plus récent n'est pas une donnée plus récente).
+
+**Envoi vérifié** : en-tête du composeur relu avant le clic (« James Schlitt, PhD, MPH »), texte comparé caractère par caractère au brouillon validé avant envoi (`match: true`), éditeur vidé après coup, **1 seule occurrence** du message dans le fil, horodaté 17h18.
+
+`QA : mécanique PASS (1143 car., en/en, 0 blocker au 2e jet) | aucun chiffre épidémiologique | claim produit vérifiée (essai 7 jours, lib/activate-trial.ts) | relecture éditoriale : faite | statut : envoyé le 07/09`
+
+---
+
+### 2️⃣ ✅ DM 8/8 — **Armand Simisi Mbalanda** (`/in/armand-simisi-mbalanda-7b4086138/`), message de bienvenue après acceptation — **quota DM du jour PLEIN**
+
+*Epidemiology and Surveillance Specialist*, **FHI 360, Kinshasa, RD Congo**, 818 abonnés, 15 relations en commun. Invitation envoyée par David le 07/09 à 14h30 (candidat vetté par le run interactif), **acceptée dans l'après-midi**. Premier contact : aucun DM antérieur, 2 lignes le mentionnant dans `linkedin-contacts.md`, toutes deux de ce matin.
+
+**Hook vérifié sur son profil avant rédaction** : il a republié il y a une semaine le post de **FHI 360** sur l'évaluation des capacités de laboratoire menée en RDC dans le cadre de **STRIDES** (biosécurité, formation au prélèvement et au transport d'échantillons, appui au dépistage Ebola). Son seul post propre récent est le partage d'un article ACP sur la revue annuelle des activités de surveillance épidémiologique à Mbandaka. Activité et employeur cohérents avec le périmètre HWG, terrain du foyer Ebola actif.
+
+**Texte envoyé à 17h25 :**
+
+> Armand, votre partage sur l'évaluation des capacités de laboratoire conduite par STRIDES est la raison pour laquelle je vous écris.
+>
+> Je tiens HealthWatch Global, un suivi quotidien des flambées en cours, alimenté par les bulletins que les agences de santé rendent publics. Le foyer d'Ebola en RDC est une des lignes que je mets à jour, et la capacité de dépistage conditionne chaque chiffre qui finit par y arriver.
+>
+> Sur les sites appuyés par STRIDES, quel délai sépare aujourd'hui le prélèvement de la confirmation ?
+
+**Statut CTA : absent, motif admis n° 1 — premier contact, `inboundCount` = 0.** Le seuil de David (2 messages écrits par l'interlocuteur) n'est pas atteint, et le lien reste interdit en message de bienvenue. Clôture par une **question ouverte sur un paramètre précis**, sans qualificatif d'adéquation (`burned-templates.md`, formes qui évitent la lecture « terrain politique »).
+
+**Ouverture volontairement hors gabarit** : pas de « merci pour la connexion » ni de « ravi d'être en contact » — charpente déclarée brûlée le 07/09 au run de 9h (3 des 4 derniers DM de bienvenue l'utilisaient).
+
+**Trois reformulations, chacune sur un défaut distinct nommé par le contrôle** (règle des deux essais respectée, aucun tour en rond sur le même défaut) :
+1. `ngram.history` sur l'énumération d'agences (« oms afro de l ecdc », « paho et d africa cdc »), formule servie des dizaines de fois — l'énumération a été retirée.
+2. Reformulation intermédiaire **« Rien n'y entre qui ne vienne d'un bulletin publié par une agence de santé publique »** écartée par ma propre relecture, pas par le script : **elle est fausse**. Le registre produit et la FAQ corrigée le 02/09 disent 94 % d'agences et 6 % de presse étiquetée, donc l'exclusivité n'est pas vraie (voir [[project_faq5_sources_claim_narrower_than_reality_2026_08_26]]).
+3. `ngram.history` sur « à partir des bulletins publics » — reformulé en « alimenté par les bulletins que les agences de santé rendent publics », 0 blocker.
+
+**Envoi vérifié** : deux composeurs coexistaient dans le shadow root `#interop-outlet` (celui du fil James Schlitt et le nouveau) — le destinataire a été contrôlé **dans le même appel JS que le clic** (pastille « Armand Simisi Mbalanda » présente, « James Schlitt » absent du conteneur), conformément à `hwg-social-policy.md` §5 item 4 et à l'incident du 09/08. Fil rouvert après envoi : **1 seul message**, en-tête « Armand Simisi Mbalanda », accents intacts, aucune troncature.
+
+`QA : mécanique PASS (517 car., fr, 0 blocker au 4e jet ; context.no-thread attendu en premier contact) | aucun chiffre | claim produit reformulée pour rester vraie | relecture éditoriale : faite | statut : envoyé le 07/09`
+
+---
+
+### 3️⃣ ✅ CONNEXIONS ACCEPTÉES — vérification faite en propre (règle du 06/09), **5 acceptations depuis le créneau de 13h**
+
+`mynetwork/invite-connect/connections/` ouverte et lue ce run, tri « Ajouts récents » : **308 relations** contre 303 à 13h. Les cinq acceptations du jour, toutes postérieures au run de 13h, correspondent aux invitations envoyées par David à 14h et 14h30 :
+
+| Profil | Invitation envoyée | Message de bienvenue |
+|---|---|---|
+| **Armand Simisi Mbalanda** | 07/09 14h30 | ✅ **envoyé ce run à 17h25** (DM 8/8) |
+| **Gail Carson** (ISARIC) | 07/09 14h30 | ⏳ quota DM plein, reporté au 08/09 |
+| **Joseph T. Hicks** (Imperial, ex-CDC EIS) | 07/09 14h | ⏳ quota DM plein, reporté au 08/09 |
+| **Seontae Kim** (OMS Timor-Leste) | 07/09 14h30 | ⏳ quota DM plein, reporté au 08/09 |
+| **Stéphanie Maltais, PhD** (U. de Montréal) | 07/09 14h | ⏳ quota DM plein, reporté au 08/09 |
+
+**Motif du report, à ne pas relire comme un oubli** : le quota de 8 DM/jour est partagé entre les trois sessions LinkedIn du jour ; il était déjà à 6/8 à l'ouverture (2 réponses en fil actif à 11h, 3 bienvenues à 9h, 1 le 06/09 au soir). Les deux DM de ce run le portent à **8/8**. Les quatre bienvenues restantes sont dues et prioritaires demain matin. Namwoo Heo (4e invitation du 14h30) **n'a pas encore accepté**.
+
+### 4️⃣ ✅ NOUVEAUX ABONNÉS — aucun abonné indépendant, rien à évaluer comme candidat connexion
+
+`mynetwork/network-manager/people-follow/followers/`, onglet « Abonnés » : **424 personnes** contre 419 à 13h. Les 5 nouveaux sont **exactement les 5 relations acceptées ci-dessus**, toutes déjà marquées « Suivi » (le suivi accompagne la relation). **Aucun abonné neuf indépendant**, donc aucun follow-back dû et aucun profil neuf à évaluer comme candidat à une demande de connexion (règle du 06/09). Le quota de suivis est de toute façon à **10/10** depuis 9h, et celui des notes de connexion à **7/7** depuis 14h30.
+
+### 5️⃣ ✅ INVITATIONS REÇUES — inchangées, les 2 mêmes qu'à 9h, 11h et 13h
+
+**Zachariah G. Houdari** (services financiers, hors périmètre) et **OLAOLUWA PHILIP** (GIScientist/climat, versant santé jamais établi, prémisse retestée en détail à 11h). Laissées en attente, ni acceptées ni refusées. Prémisse non rejouée ce run, conformément à `report-conventions.md` : elle a été retestée il y a six heures.
+
+### 6️⃣ ⚠️ INCIDENT NAVIGATEUR SANS CONSÉQUENCE — extension déconnectée une fois en cours de run
+
+`mcp__claude-in-chrome` a renvoyé une fois « not connected » entre deux navigations, puis deux `Page.captureScreenshot` ont expiré. `list_connected_browsers` montrait **`23c7ecdd-…` bien présent** (renommé « David » côté extension, `a466bc2e` renommé « Chrome perso » — noms d'affichage seuls, `hwg-social-policy.md` §7 : ne se fier qu'au deviceId). Re-`select_browser` sur `23c7ecdd-…` puis reprise normale. **Ce n'est pas une perte d'appairage** (le critère de §7 est l'absence du deviceId, pas un échec ponctuel), donc **pas de notification push** — la panne était circonscrite au run et réparable par la routine elle-même.
+
+---
+
+### 7️⃣ 🔁 CARRY-OVER
+
+1. 🔴⭐⭐⭐ **Oke Ikpekpe** (`/in/oke-ikpekpe-11175416b/`, `urn:li:activity:7499051354368331776`) — **il a répondu le 04/09 et personne ne lui a répondu depuis.** Le sous-fil compte **13 réponses**, 180 impressions, et **le dernier mot est le sien** :
+   > *David Deheunynck If a preparedness check is meant to happen every month or every quarter, it is easier to know when one has been missed. There is already a schedule to follow. But if it only happens when someone asks for it, it can easily be overlooked. Having regular checks could also make accountability easier.*
+
+   Il répond à notre question sur la taille du premier cluster signalé comme preuve de la période inter-épidémique. **Non traité ce run pour un seul motif : quota commentaires 7/7 plein depuis 13h** (une réponse en sous-fil consomme le quota, politique commune §14). **À traiter en priorité au créneau de 9h le 08/09.** C'est exactement le cas d'origine de §14, et il est repassé sous le radar pendant trois jours malgré la règle — repéré ici en rouvrant le post directement, pas par les notifications, qui ne remontent plus si loin.
+2. ⭐⭐⭐ **Quatre messages de bienvenue dus** (voir §3) : **Gail Carson**, **Joseph T. Hicks**, **Seontae Kim**, **Stéphanie Maltais**. Connexions acceptées le 07/09, aucun échange encore. Premier contact, donc **pas de CTA ni de lien**, clôture en question ouverte, et **ne pas ouvrir sur « ravi d'être en contact »** (charpente brûlée le 07/09).
+3. ⭐⭐ **James Schlitt** — fil le plus engagé du portefeuille, notre réponse du jour lui pose une question directe sur la stabilité d'un motif d'erreur dans son corpus. Sa réponse arrivera probablement dans la journée de demain. **CTA déjà servi le 04/09 dans ce fil : ne pas le resservir**, la correction de la durée d'essai (7 jours) est déjà partie ce run.
+4. ⭐⭐ **Armand Simisi Mbalanda** — bienvenue envoyée ce run, `inboundCount` 0. **CTA seulement à partir de son 2e message**, pas avant.
+5. ⭐ **Adane Etore** — CTA envoyé à 11h12, `inboundCount` 2, toujours sans réponse. Ne pas relancer.
+6. ⭐ **Miriam Mbueshi** — `inboundCount` 1. À sa prochaine réponse, **le CTA devient dû** ([[feedback_cta_rule_no_exceptions_2026_09_04]]).
+7. ⭐ **Lissanework Mola**, ⭐ **Jean Claude Nshimiyimana** — bienvenues du 07/09 matin, sans réponse. ⭐ **Ofelia CAZACU** — bienvenue du 06/09, sans réponse, ne pas relancer. **Préféré Matutu Molongo** — laissé sur son « D accord » du 06/09, rien à ajouter.
+8. ⏸️ **OLAOLUWA PHILIP** — invitation reçue laissée en attente, prémisse retestée à 11h, ne pas la rejouer sans signal neuf.
+9. 🕐 **Namwoo Heo** (`/in/namwoo-heo/`, KDCPA Séoul) — invitation envoyée par David le 07/09 à 14h30, **pas encore acceptée**. À revérifier, aucune action tant qu'elle reste en attente.
+10. 🔴 **Elie Caleb MIMBULA — anomalie du 13h non résolue, non rejouée ici.** Une invitation partie aujourd'hui sans qu'aucune session ne la revendique. Rien de nouveau ce run, aucune vérification supplémentaire menée : le constat reste tel que le créneau de 13h l'a écrit. 🏷️**HORS-ROUTINE :** si David ne l'a pas envoyée lui-même, une action sortante non tracée sur ce compte mérite un regard.
+11. **Canal invitation** : le clic simulé sur « Se connecter » reste inopérant (diagnostic tranché à 13h50 : c'est la simulation que LinkedIn refuse sur cette action précise, pas un plafond). **Conduite acquise : signaler à David plutôt que multiplier les méthodes de clic.** Notes personnalisées toujours épuisées jusqu'au renouvellement mensuel.
+12. **Quotas en fin de run** : commentaires **7/7 (PLEIN)**, DM **8/8 (PLEIN)**, suivis **10/10 (plafond haut)**, notes de connexion **7/7 (PLEIN)**. **Les quatre quotas du jour sont remplis.**
+
+---
+
+
+
 ## 📅 Reprise interactive — 07/09/2026 (13h30, David « on avait des demandes de connexion à envoyer en attente ») — ❌ **0 invitation envoyée : le canal invitation est intégralement muet aujourd'hui, diagnostic affiné**
 
 **Contexte** : David a signalé qu'une file de notes de connexion en attente n'avait pas été traitée dans le bilan précédent. Reprise de la file : `Joseph T. Hicks`, `Jafar Oyugi`, `Emmanuel Pembi` (slug non capturé), `Stéphanie Maltais` (slug non capturé).

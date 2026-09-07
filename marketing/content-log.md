@@ -2,6 +2,46 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session linkedin-hwg-followup-check-2 — 07/09/2026 (17h, 2e des 2 créneaux après-midi) — ⏹️ **0 commentaire publié : quota du jour déjà PLEIN (7/7) depuis le créneau de 13h** — 🔴 **un sous-fil actif retrouvé sans réponse depuis 3 jours (Oke Ikpekpe)** — ✅ **2 DM envoyés** (détail dans `linkedin-contacts.md`)
+
+**Contexte d'ouverture** : quotas hérités des runs de 9h, 13h et des séquences interactives de 11h et 14h : commentaires **7/7 (PLEIN)**, DM 6/8, suivis 10/10 (plafond haut), notes de connexion 7/7 (PLEIN). Aucun run antérieur de ce `taskId` aujourd'hui. **Trois des quatre quotas étaient déjà pleins à l'ouverture** ; le seul canal restant ouvert était le DM, et il a été rempli (8/8, voir `linkedin-contacts.md`).
+
+**§15 (verrouillage par cible) et §16 (suivi de l'événement)** : `content-log.md` et `linkedin-contacts.md` relus à l'ouverture et de nouveau avant chaque action sortante. Aucune autre session LinkedIn en cours (`list_sessions` : toutes les sessions du jour sont terminées).
+
+---
+
+### 1️⃣ 🔴 SUIVI DES ACTIONS PRÉCÉDENTES — un sous-fil actif retrouvé sans réponse depuis 3 jours
+
+**Commentaires du jour (7 publiés, 9h et 13h)** : la page de notifications a été parcourue en entier sur ~8 heures. **Une seule retombée**, déjà traitée au créneau de 13h : **Tshephang Iris Kabelo** a aimé puis répondu à notre commentaire sous le post d'Abduljalal Nadabo, et notre réponse de 13h est partie. Post rouvert ce run (`urn:li:activity:7502451418935730176`) : **le sous-fil s'arrête sur notre réponse**, aucune nouvelle intervention de sa part. Aucune réaction ni réponse sur les six autres commentaires du jour (Africa CDC, Christianah Oki, Sahar Khalid, Amref Health Africa, Kenya National Public Health Institute, Abduljalal Nadabo).
+
+**🔴 Au-delà du jour même (politique commune §14) — le fil Oke Ikpekpe a un retard de 3 jours.** Post `urn:li:activity:7499051354368331776`, sous-fil à **13 réponses** et 180 impressions : **le dernier mot est le sien, daté du 04/09**, et aucune session ne lui a répondu depuis. Verbatim complet et conduite à tenir dans le carry-over de `linkedin-contacts.md` (point 1). Non traité ce run **uniquement** parce que le quota de commentaires était plein — une réponse en sous-fil le consomme.
+
+**Ce que ça dit du dispositif** : c'est le fil qui a motivé l'écriture de §14 le 30/08, et il est quand même repassé sous le radar pendant trois jours. Il n'a pas été retrouvé par les notifications (qui ne remontent plus si loin) mais en **rouvrant le post directement**, ce que §14 demande explicitement. 🏷️**HORS-ROUTINE :** la liste des sous-fils encore ouverts n'est portée par aucun fichier — chaque session doit la reconstituer à la main depuis l'archive, ce qui explique qu'elle se perde. Un point à trancher hors routine : soit une ligne dédiée dans le carry-over de chaque run, soit un fichier de suivi des sous-fils ouverts.
+
+### 2️⃣ ⏹️ COMMENTAIRES — aucun publié, quota plein, aucune recherche de candidats menée
+
+Quota **7/7 atteint à 13h**. Conformément à la ligne 41 du SKILL (jamais de commentaire forcé) et au point 8 (remplir les quotas plutôt que clore tôt), **il n'y avait rien à remplir : le quota du jour est atteint, pas partiel.** Aucune recherche active de nouveaux candidats n'a donc été lancée — elle n'aurait produit que du travail non publiable, et un candidat instruit puis laissé en attente perd sa fenêtre 48 h de toute façon.
+
+**Blocages hebdomadaires inchangés par ce run** (aucun commentaire publié, donc aucun nouveau blocage créé) : Sahar Khalid, Amref Health Africa, Kenya National Public Health Institute, Abduljalal Nadabo, Christianah Oki, page Africa CDC (14/09) ; Joseph Cephas Kyari, Robert Herriman (13/09) ; Yilkal Kebede, Tambe Elvis Akem, Keneth Mugume (12/09) ; Ifedayo Adetifa, Pete Macharia (11/09) ; Adesoye Emmanuel Tunde, Kyaw Thowai Prue Prince, Rocham Mulumbwe, Dr. Rashi Bhardwaj, Dr Fabrice KHADDY, Miriam Mbueshi (09/09) ; Dr. Jean Kaseya, page ECDC, Jacob Banda (08/09).
+
+### 3️⃣ 📌 MATIÈRE NOTÉE POUR DE FUTURS POSTS (veille, aucune action)
+
+- **Nouvelles orientations OMS sur le vaccin Ebola en RDC** — annoncées dans la newsletter *Health For All* de l'OMS du jour (« Ebola vaccine guidance ») et reprises par AllAfrica ce matin. **À croiser avec l'angle déjà publié le 07/09 chez Abduljalal Nadabo** (Ervebo licencié pour la souche Zaire, foyer actif Bundibugyo) : si la nouvelle orientation touche à la question de souche, c'est la suite naturelle de cet argument, et le premier vrai porteur institutionnel du sujet. **Événement à suivre, pas un support précis (§16 point 2).**
+- **Julien Harneis** (Senior Ebola Coordinator) — prolongation de six mois du scale-up humanitaire, l'épidémie ayant franchi **3 000 décès signalés**. Post à 6 h ce run mais publié il y a plus de 48 h côté profil, **25 réactions et 2 commentaires**. Déjà relevé à 13h, non commenté : hors fenêtre, et son profil reste bloqué sur l'angle « décompte zonal contre horizon administratif » interdit depuis le 04/09.
+- **Tedros — 79e Comité régional OMS pour l'Asie du Sud-Est** (en direct aujourd'hui). Aucun texte propre exploitable dans les rediffusions, comme au balayage de 9h. À surveiller si un communiqué de fin de comité paraît.
+- **Anne Thuret (Santé publique France) — Odissé Dataviz Challenge**, inscriptions ouvertes, restitution aux Rencontres de Santé publique France le 9 novembre 2026. Trois défis (santé mentale, impacts de la chaleur, inégalités sociales et territoriales). **Hors périmètre surveillance des flambées**, mais un signal utile sur l'audience francophone data/santé publique.
+- **Notre propre post du jour** (le dénominateur du CFR, Marburg à un cas contre Ebola/RDC) : **271 impressions et 2 vues de profil** relevées dans les notifications. 369 vues de profil et 518 impressions cumulées affichées sur la colonne de gauche.
+
+### 4️⃣ 🔁 CARRY-OVER (commentaires)
+
+1. 🔴⭐⭐⭐ **Oke Ikpekpe** — réponse du 04/09 restée sans suite, sous-fil vivant (13 réponses). **Première cible du créneau de 9h le 08/09**, avant toute recherche de candidat neuf.
+2. ⭐⭐ **Événement, pas profil (§16)** : la **revue npj Digital Medicine du 04/09 sur les 20 plateformes de surveillance IA** reste non traitée, porteur toujours à trouver (Paul Sonnier en 404, groupe fermé, page Tengrium écartée). Pistes inchangées : auteurs nommés (Getchell, Pronyk), Duke-NUS Centre for Outbreak Preparedness, WHO Hub for Pandemic and Epidemic Intelligence.
+3. ⭐⭐ **Orientations vaccinales OMS pour la RDC** (voir §3) — événement neuf du jour, porteur institutionnel à identifier demain matin, dans la fenêtre 48 h.
+4. ⭐ **Journée mondiale de l'épidémiologie de terrain (7 septembre)** — AFENET et Ajisefini Consulting repérés à 13h, non traités. **La fenêtre se referme le 09/09** et un 2e commentaire sur cet événement exigerait un argument réellement distinct de celui servi au KNPHI (§16 point 1).
+5. ⭐⭐ **Marieta Braks** (`/in/marieta-braks-2bba401/`, RIVM) — **son post West Nile sort de la fenêtre 48 h ce soir**, le candidat n'a jamais pu être traité (page `wnv-weekly.ecdc.europa.eu` injoignable les 06 et 07/09). **À considérer comme perdu sur ce post** ; le profil reste libre et sans blocage pour un post futur.
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check — 07/09/2026 (13h, 1er des 2 créneaux après-midi) — ✅ **4 commentaires publiés, quota du jour porté de 3/7 à 7/7 (PLEIN)** — Tshephang Iris Kabelo (réponse en sous-fil), Sahar Khalid (carry-over ⭐⭐ débloqué au 1er jet après 4 jets brûlés hier), Amref Health Africa, Kenya National Public Health Institute — 🟡 **écart de données Ebola/RDC repéré sur une source tierce** — 🔴 **une invitation partie aujourd'hui sans qu'aucune session ne la revendique**
 
 **Contexte d'ouverture** : navigateur `23c7ecdd-…` (« Browser 2 ») sélectionné directement, sans question — session planifiée, David absent par construction. Quotas à l'ouverture, après le run de 9h et la session interactive de 11h : commentaires **3/7**, DM **6/8**, suivis **10/10 (plafond haut)**, notes de connexion **0/7**. Aucun run de ce `taskId` plus tôt aujourd'hui (vérifié : `report-conventions.md`, convention double déclenchement).
