@@ -4818,3 +4818,108 @@ Balayage (`-in:sent -in:draft`, mots-clés HealthWatch/outbreak/epidemic/brotes/
 2. **🟢 Africa CDC mérite une 2e tentative rapide.** Boîte pleine = bounce transitoire, exactement comme EPHI Éthiopie le 12/08. `africacdc@africa-union.org` est une boîte institutionnelle relevée en direct hier sur le pied de page des pages RCC ; rien n'indique une adresse morte. **Non retenté par ce run** (hors périmètre : cette routine ne renvoie pas d'original). Rappel de la règle du 17/08 : un re-bounce sur ce contact **n'ajouterait ni un bounce ni un délivré en moins**, il figure déjà à la liste nominative.
 3. **🟡 Malte et Georgetown : les deux points d'usage sont partis hier soir, les deux sont silencieux.** HSOC a renvoyé son accusé automatique à 24 h ; Malte n'a rien renvoyé. L'accès Pro maltais expire le **2 octobre**. Rien à faire aujourd'hui — c'est un délai d'un jour, pas un silence. À reprendre si rien n'arrive d'ici la fin de semaine.
 4. **Aucun incident technique.** `list_drafts` stable (1 appel, 17 brouillons cohérents avec les horodatages du run de prospection), aucun brouillon créé, aucune recréation, aucun doublon. Arbre de travail **propre** en début de run ; aucun fichier étranger à cette routine n'a été touché. Le run de prospection du 07/09 n'avait pas encore écrit son entrée dans ce journal au moment de la rédaction de celle-ci — ses 17 brouillons sont donc décrits ici depuis Gmail, pas depuis le journal.
+
+---
+
+## 🆕 Nouveaux contacts trouvés — 2026-09-07, run automatique `daily-institutional-prospecting-healthwatch`
+
+**Résultat : 17 contacts nets sur 20, 17 brouillons créés, aucun envoyé.** Le manque à 20 s'explique par **deux plafonds réellement atteints** (OMS 12/12, PAHO 4/4) **et** par l'épuisement mesuré du vivier hors OMS/PAHO — sur ~30 pistes neuves testées en direct ce run, **une seule** a produit une adresse retenable. Détail des deux causes plus bas.
+
+### 🚦 Frein de file — 0 brouillon en entrée
+
+`list_drafts` appelé **deux fois** (vue métadonnées puis vue complète, consigne du 16/08) : **`{}` sur les deux appels**, conclusion croisée avec `search_threads`. Les 10 brouillons créés hier matin sont **tous partis** : envoyés par David le **2026-09-06 entre 19:52:08 et 19:53:22 UTC**, en séquence continue. Écart création (06:17) → envoi (19:52) ≈ **13 h 35** : profil « relecture humaine », **pas** la signature « même seconde » du bug d'envoi instantané du connecteur (discriminant du 16/08). Consigné sans alerte. Le frein de file n'a joué aucun rôle ce run.
+
+### Contacts retenus
+
+| Institution | Pays/Région | Segment | Contact | Email | Source (lue en direct ce jour, HTTP 200) | Vérifié | Brouillon Gmail |
+|---|---|---|---|---|---|---|---|
+| OMS — bureau pays Albanie | Albanie / EURO | Gouvernement/OMS | — (boîte du bureau pays) | `eurowhoalb@who.int` | who.int/albania/about-us | Oui | oui — `r-3913356187135142695` |
+| OMS — bureau pays Macédoine du Nord | Macédoine du Nord / EURO | Gouvernement/OMS | — (boîte du bureau pays) | `eurowhomkd@who.int` | who.int/north-macedonia/about-us | Oui | oui — `r-7816695751790022435` |
+| OMS — bureau pays Bosnie-Herzégovine | Bosnie-Herzégovine / EURO | Gouvernement/OMS | — (boîte du bureau pays) | `eurowhobih@who.int` | who.int/bosnia-and-herzegovina/about-us | Oui | oui — `r-2658409028899275574` |
+| OMS — bureau pays Monténégro | Monténégro / EURO | Gouvernement/OMS | — (boîte du bureau pays) | `eurowhomne@who.int` | who.int/montenegro/about-us | Oui | oui — `r8449608185418841098` |
+| OMS — bureau pays Biélorussie | Biélorussie / EURO | Gouvernement/OMS | — (boîte du bureau pays) | `eurowhoblr@who.int` | who.int/belarus/about-us | Oui | oui — `r4580665609568767058` |
+| OMS — bureau pays Bulgarie | Bulgarie / EURO | Gouvernement/OMS | — (boîte du bureau pays) | `eurowhobul@who.int` | who.int/bulgaria/about-us | Oui | oui — `r3579143677266743350` |
+| OMS — bureau pays Croatie | Croatie / EURO | Gouvernement/OMS | — (boîte du bureau pays) | `eurowhocro@who.int` | who.int/croatia/about-us | Oui | oui — `r1707631197050399514` |
+| OMS — bureau pays Chypre | Chypre / EURO | Gouvernement/OMS | — (boîte du bureau pays) | `who_cyprus@who.int` | who.int/cyprus/about-us | Oui | oui — `r4964952365212879408` |
+| OMS — bureau pays Tchéquie | Tchéquie / EURO | Gouvernement/OMS | — (boîte du bureau pays) | `eurowhocz@who.int` | who.int/czechia/about-us | Oui | oui — `r908107260775684556` |
+| OMS — bureau pays Estonie | Estonie / EURO | Gouvernement/OMS | — (boîte du bureau pays) | `eurowhoest@who.int` | who.int/estonia/about-us | Oui | oui — `r2040951002603679407` |
+| OMS — bureau pays Grèce | Grèce / EURO | Gouvernement/OMS | — (boîte du bureau pays) | `eurowhogre@who.int` | who.int/greece/about-us | Oui | oui — `r-3207359144817094636` |
+| OMS — bureau pays Hongrie | Hongrie / EURO | Gouvernement/OMS | — (boîte du bureau pays) | `eurowhohun@who.int` | who.int/hungary/about-us | Oui | oui — `r-8250743400555567019` |
+| OPS/PAHO — Bureau pays Haïti (FR) | Haïti / AMRO | Gouvernement/OMS | — (contact média/correspondance du bureau) | `Roussettri@paho.org` | paho.org/en/paho-country-office-media-contacts | Oui | oui — `r430416051109841055` |
+| OPS/PAHO — Bureau pays Mexique (ES) | Mexique / AMRO | Gouvernement/OMS | — (boîte d'office) | `email.mex@paho.org` | idem | Oui | oui — `r-5652893061445287755` |
+| OPS/PAHO — Bureau pays Colombie (ES) | Colombie / AMRO | Gouvernement/OMS | — (boîte de correspondance) | `correscol@paho.org` | idem | Oui | oui — `r1132386959950037723` |
+| OPS/PAHO — PANAFTOSA (zoonoses / santé publique vétérinaire, ES) | Brésil (Rio) / AMRO | Gouvernement/OMS | — (centre spécialisé) | `peraltaana@paho.org` | idem | Oui | oui — `r1472238488037518541` |
+| Institut Pasteur de Montevideo (ES) | Uruguay / AMRO | Académique/recherche | — (boîte de réception, seule publiée) | `recepcion@pasteur.edu.uy` | pasteur.uy — **page d'accueil**, HTTP 200, adresse dans le bloc contact du pied de page | Oui | oui — `r6011513760459436527` |
+
+### 🔎 Anti-doublon (grep par domaine ET par nom d'organisation, contact par contact)
+
+**Les 12 boîtes OMS** : `eurowhoalb` / `eurowhomkd` / `eurowhobih` / `eurowhomne` / `eurowhoblr` / `eurowhogre` → **2 occurrences chacune**, `eurowhobul` / `eurowhocro` / `who_cyprus` / `eurowhocz` / `eurowhoest` / `eurowhohun` → **1 occurrence chacune** — **toutes des mentions de réserve** (l. 4564, 4570-4584, 4591, 4649), contexte relu ligne à ligne. Grep ciblé `bureau pays (Albanie|Macédoine|Bosnie|Monténégro|Biélorussie|Bulgarie|Croatie|Chypre|Tchéquie|Estonie|Grèce|Hongrie)` → **0 ligne** : aucun bureau pays OMS n'existait au journal pour ces 12 pays. Les noms de pays ressortent 7 à 24 fois chacun, mais sur d'**autres** organisations (ISHP Albanie, HZJZ Croatie, NCIPD Bulgarie, EODY Grèce, IPH Macédoine du Nord, IJZCG Monténégro…), organisations faîtières distinctes.
+
+**Les 4 boîtes PAHO** : `Roussettri` → 3, `peraltaana` → 2, `email.mex` → 1, `correscol` → 1 — **toutes des mentions de réserve** des compléments des 30/08 (l. 2936-2944) et 05/09 (l. 4502-4506), jamais une ligne de contact.
+
+**Pasteur Montevideo** : `pasteur.edu.uy` → 1 occurrence, l. 4452 (liste des écarts du 06/09) — voir la levée d'écart motivée ci-dessous. `pasteur.uy` et « Institut Pasteur de Montevideo » → **0**.
+
+**Croisement `linkedin-contacts.md`** : 0 occurrence pour les 17 boîtes et les 17 organisations.
+
+### 🔓 Une seule levée d'écart, motivée — Institut Pasteur de Montevideo
+
+Le run du 06/09 avait écarté `recepcion@pasteur.edu.uy` au motif précis « **adresse présente mais page en soft-404** » (l. 4452). Vérification de ce jour répondant **à ce motif exact** (leçon PAHO Jamaïque du 06/09 : *un écart posé pour un motif précis ne se lève que par une vérification qui répond à ce motif*) : `pasteur.uy/contacto/`, `/institucional/contacto/` et `/en/contact/` rendent effectivement **404** — mais la **page d'accueil** `pasteur.uy` rend **HTTP 200**, titre réel « Institut Pasteur | », et publie l'adresse dans son bloc contact de pied de page (confirmé en lecture rendue, pas seulement au grep HTML). L'adresse est donc publiée sur une page authentique du domaine officiel de l'institution. Écart levé. **MX** : `pasteur.edu.uy` → Google Workspace (ASPMX.L.GOOGLE.COM), valide — rappel de la leçon du 02/09 : un MX valide n'atteste pas de l'existence de la boîte.
+
+**Deux écarts NON levés, à ne pas relire comme des oublis :**
+- **SZÚ Tchéquie** `zdravust@szu.gov.cz` — trouvé et vérifié en direct ce run (page contacts officielle, HTTP 200), puis **rejeté au grep par domaine** : la boîte est **déjà au journal, l. 420**. C'est exactement le cas que la règle de grep par domaine du 23/08 existe pour attraper (cas HZJZ). Le run avait par ailleurs failli retenir `podatelna@szu.gov.cz`, déjà écartée le 04/09 pour le même motif.
+- **Institut Pasteur de la Guyane** `satisfaction@pasteur-cayenne.fr` — écartée le 11/08 au motif « boîte réclamations, hors sujet » (l. 576). Page contact relue ce jour, HTTP 200 : c'est **toujours la seule adresse publiée**, le profil de boîte est **inchangé**. Le motif de l'écart n'est pas levé, donc l'écart tient. (Même raisonnement que Montevideo, appliqué dans l'autre sens.)
+
+### 🔴 Deux plafonds réellement atteints — puis un vivier réellement épuisé
+
+**Plafond OMS bureaux pays : 12/12.** Première application du relèvement 8→12 tranché par David hier. Les 12 viennent tous de la réserve EURO relevée le 05/09, **re-vérifiées en direct ce run** (12 requêtes, HTTP 200 sur 12, adresse relue dans le HTML, terminaison `@who.int` contrôlée sur chacune). **5 bureaux pays EURO restent en réserve, inutilisables aujourd'hui** : Lettonie `eurowholva@who.int`, Lituanie `eurowholtu@who.int`, Russie `eurusco@who.int`, Slovaquie `eurowhosvk@who.int`, Slovénie `eurowhosvn@who.int` (non re-vérifiés ce run, à relire en direct avant usage).
+
+**Plafond PAHO générique : 4/4.** Page `paho.org/en/paho-country-office-media-contacts` **relue en direct ce jour, HTTP 200** (elle rendait 403 hier), 33 boîtes extraites du DOM. **4 boîtes restent en réserve** : Trinité-et-Tobago `e-mailtto@paho.org`, Coordination sous-régionale Caraïbes `spc-crb@paho.org`, Panama `pane-mail@paho.org`, Nicaragua `nic-email@paho.org`.
+
+**Les 3 contacts manquants ne sont pas un effet de plafond : le vivier hors OMS/PAHO est mesurément épuisé.** ~30 pistes neuves testées, **1 seule retenue** (Montevideo). Écartées ce run, par motif :
+- **Déjà au journal, détectés au grep avant rédaction (13)** : IRC/`rescue.org`, Institut Pasteur de Dakar, ICMR-NIE Inde, NIH Islamabad, EDCD Népal, Centre Pasteur du Cameroun, Institut Pasteur de Nouvelle-Calédonie, Institut Pasteur de Tunis, INSP Algérie, SZÚ Tchéquie, Amref, Last Mile Health, NMIMR Noguchi.
+- **Déjà testées et écartées par un run antérieur, profil inchangé (9)** : WOAH et IHME (formulaire seul), FAO EMPRES-AH (adresse masquée Cloudflare — 200 mais `email-protection`), Institut Pasteur de la Guyane, KEMRI, EcoHealth Alliance, APHA, WFPHA, Society for Epidemiologic Research.
+- **404 / DNS / TLS / connexion impossible (8)** : SEAMEO TROPMED (404 sur 2 chemins ; accueil 200 mais **aucune adresse publiée**, confirmé en lecture rendue), CIDEIM Colombie (404 ; accueil 200, **aucune adresse**), Institute for Disease Modeling (404), China CDC (404 sur les 2 pages contact officielles ; `weekly@chinacdc.cn` vu en **snippet moteur seulement** → critère « index seul », écarté), Institut Pasteur de Montevideo `/contacto/` (404, contourné par l'accueil), Institut Pasteur du Laos (404 ; accueil 200 mais adresse postale et téléphone uniquement), Institut Pasteur de Madagascar (000), ANLIS/INEI Argentine (404).
+- **Page 200 mais adresse rendue en JavaScript, illisible (1)** : Institut Louis Malardé, Polynésie française (`ilm.pf/nous-contacter/` ne renvoie qu'un « En cours de chargement »).
+- **Profil de boîte hors périmètre (3)** : KCRI Tanzanie (`kcriadmin@`, seule boîte publiée, profil administratif/web), Institut Pasteur de Lille (`bilan-sante@` service de bilans grand public et `communication@` — même rejet que le `communications@` d'Africa CDC RCC le 06/09), Institut Pasteur de Guyane (ci-dessus).
+- **Balayage sans candidat neuf** : 60+ organisations grepées avant tout test (TEPHINET, AFENET, IANPHI, CARPHA, Swiss TPH, ITM Anvers, BNITM, LSHTM, ALIMA, Malaria Consortium, ISID, NICD, icddr,b, Aga Khan, MBDS, CORDS, SACIDS, SEAOHUN, ECSA-HC, EMPHNET, IGAD, Sightsavers, Cordaid, Malteser, Johanniter, Medair, Vital Strategies, Sabin, Karolinska, Heidelberg, Doherty, Kirby, Saw Swee Hock, Chulalongkorn, Peking, Fudan, SNU, Imperial MRC GIDA, Oxford BDI, epid.gov.lk, ncdc.ge, Batut, NCIPD, EODY, SPKC, NIJZ, Terviseamet, NIPH Kosovo, IPH Macédoine du Nord, IJZCG, ZZJZ FBiH, ins.gov.mz, ilm.pf…) — **toutes déjà au journal ou déjà écartées**.
+
+### 📊 Compteurs
+
+- **Lot du 06/09 : 10 préparés, 10 envoyés, 2 bounces → 8 délivrés.** Envoi vérifié en direct ce run (`search_threads`, `in:sent`, corbeille incluse).
+- **Prospectés cumulés depuis le 02/08 : 393** = 383 (état du 06/09) **+ 10** (lot du 06/09, envoi confirmé ce run). **Envoyés : 393.** Les 17 brouillons de ce jour ne sont pas comptés tant qu'ils ne sont pas partis.
+- **Profondeur de file en fin de run : 17 brouillons** (0 en entrée + 17 créés). Très en dessous du seuil de ~40.
+- **Bounces du jour, nominativement** — pas de total cumulé ici, il a un porteur unique, `daily-relance-check-healthwatch` (règle du 16/08) :
+  - **Africa CDC** `africacdc@africa-union.org` (envoyé 06/09 19:52:08, NDR Gmail à 19:52:23) — « **Boîte de réception du destinataire pleine** ». Bounce **mou**, l'adresse existe et route : retentable plus tard.
+  - **OPS/PAHO Bahamas & Turks-et-Caicos** `mcfalltan@paho.org` (envoyé 06/09 19:52:55, NDR Office 365 à 19:53:11) — « **Your message is too large to send** » sur un message de **~2,4 Ko**.
+- **Conformité mécanique des 17 brouillons** (`list_drafts` en vue `DRAFT_VIEW_FULL`, les 17 relus après création) : `labelIds` = `["DRAFT"]` pour les 17, **aucune balise `<a>`** (le `htmlBody` généré par le connecteur ne contient que des `<br/>`), **aucun domaine avec `.` littéral**, signature « Find us at healthwatch » (EN) / « Retrouvez-nous sur healthwatch » (FR) / « Estamos en healthwatch » (ES) — **mot nu**, conforme à la règle du 04/09. Objets tous **≤ 60 caractères** après correction d'un objet à 63 (Montevideo, ramené à 56 par `update_draft`). Chaque corps se termine par une question explicite. Langues : **EN** ×12, **ES** ×4, **FR** ×1.
+
+### ⚠️ Signalements à David
+
+1. **🔴 « Message too large » sur PAHO : 2 boîtes en 3 jours, sur des messages de ~2,4 Ko. Ce n'est probablement plus un cas isolé.** `andradeest@paho.org` (Équateur, 05/09) puis `mcfalltan@paho.org` (Bahamas, 06/09) ont toutes deux renvoyé le même NDR Office 365. Sur un message de 2,4 Ko, aucun plafond de taille réel n'est en cause : c'est une règle de remise côté destinataire (quota de boîte saturé, ou politique de tenant mal réglée). **4 brouillons `@paho.org` sont en file aujourd'hui** (Haïti, Mexique, Colombie, PANAFTOSA) : les adresses sont vérifiées et vivantes sur la page officielle, mais le même NDR peut se reproduire. Aucune action prise — les brouillons sont conservés tels quels, la décision revient à David.
+2. **🟡 Le plafond OMS 12/12 a été atteint dès son premier jour d'application.** Le relèvement 8→12 d'hier a immédiatement servi, et la réserve EURO est passée de 18 à **5 bureaux pays**. Au rythme actuel, ce vivier tient **un seul lot de plus**. Après quoi, sans nouvelle piste hors OMS/PAHO, le lot quotidien retombera mécaniquement bien en dessous de 20 — l'arbitrage n'est plus un plafond mais l'absence de vivier.
+3. **⚖️ Déséquilibre de segments assumé : 16 gouvernement/OMS, 1 académique, 0 ONG.** L'Étape 2 demande une répartition entre les trois segments ; elle n'est pas tenue ce run. Cause directe : les seuls viviers encore productifs (bureaux pays OMS, bureaux PAHO) sont tous dans le segment gouvernemental, et les 22 pistes académiques/ONG testées ce run n'ont rendu qu'une adresse. Signalé plutôt que corrigé en réduisant le lot — réduire le volume n'aurait rien ajouté côté ONG.
+4. **Aucun incident technique.** `list_drafts` stable (2 appels concordants en entrée, 1 en sortie), aucun doublon créé, aucune recréation. Arbre de travail propre en début de run ; seul `marketing/institutional-prospects-log.md` a été modifié et commité par cette routine.
+
+### 🔗 Suggestions de destination pour le lien « healthwatch » (rapport seulement — le brouillon ne contient que le mot nu)
+
+| Contact | Page suggérée |
+|---|---|
+| OMS Albanie | `/en/country/albania` |
+| OMS Macédoine du Nord | `/en/country/north-macedonia` |
+| OMS Bosnie-Herzégovine | `/en/country/bosnia-and-herzegovina` |
+| OMS Monténégro | `/en/country/montenegro` |
+| OMS Biélorussie | `/en/country/belarus` |
+| OMS Bulgarie | `/en/country/bulgaria` |
+| OMS Croatie | `/en/country/croatia` |
+| OMS Chypre | `/en/country/cyprus` |
+| OMS Tchéquie | `/en/country/czechia` |
+| OMS Estonie | `/en/country/estonia` |
+| OMS Grèce | `/en/country/greece` |
+| OMS Hongrie | `/en/country/hungary` |
+| OPS Haïti | `/fr/country/haiti` |
+| OPS Mexique | `/es/country/mexico` |
+| OPS Colombie | `/es/country/colombia` |
+| PANAFTOSA | `/es/country/brazil` (siège à Rio ; une fiche maladie zoonotique conviendrait aussi) |
+| IP Montevideo | `/es/country/uruguay` |
+
+⚠️ Slugs calculés avec `countryToSlug` (`lib/country-utils.ts`) à partir du nom anglais usuel. Si la valeur `country_en` en base diffère (« Czech Republic » plutôt que « Czechia », « Republic of Moldova » plutôt que « Moldova »…), le slug diffère d'autant — à vérifier au moment de poser le lien.
