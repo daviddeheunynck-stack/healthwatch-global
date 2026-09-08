@@ -1,6 +1,6 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
-## 📅 Session linkedin-hwg-monitoring — 08/09/2026 (9h) — ✅ **1 DM envoyé** (Stéphanie Maltais, CTA dû et servi) — ✅ **1 commentaire publié** (Ifedayo Adetifa, sous-fil, détail dans `content-log.md`) — 🔴 **run interrompu : le contrôle mécanique et la navigation navigateur ont été refusés par le classifieur de permissions à mi-session, 5 messages de bienvenue dus restent non rédigés**
+## 📅 Session linkedin-hwg-monitoring — 08/09/2026 (9h) — ✅ **1 DM envoyé** (Stéphanie Maltais, CTA dû et servi) — ✅ **1 commentaire publié** (Ifedayo Adetifa, sous-fil, détail dans `content-log.md`) — 🔴 **run interrompu deux fois par le classifieur de permissions, 1 brouillon validé (Legand) resté non envoyé après une erreur de clic, 4 autres bienvenues restent non rédigées**
 
 **Contexte d'ouverture** : navigateur `23c7ecdd-…` (« Browser 1 ») sélectionné directement, sans question (session planifiée, David absent par construction). **Aucun run de ce `taskId` aujourd'hui** (vérifié : `report-conventions.md`, convention double déclenchement — dernières entrées du jour datées du 07/09). Quotas du jour remis à zéro : commentaires 0/7, DM 0/8, suivis 0/7-10, notes de connexion 0/7.
 
@@ -87,21 +87,29 @@
 
 **Ce que ce n'est pas** : ni une panne d'appairage navigateur (`23c7ecdd-…` répondait normalement, les outils de lecture fonctionnaient encore après le blocage), ni un plafond LinkedIn, ni un défaut de contenu. **Aucune notification push envoyée** : la panne est circonscrite à cette session et son remède n'appartient pas à David (`report-conventions.md` réserve la notification aux pannes qui casseront aussi les runs suivants).
 
-**Brouillon Legand conservé tel quel, non passé au contrôle, donc non envoyable en l'état** — à repasser au contrôle mécanique au créneau de 13h avant tout envoi, jamais à envoyer sur la foi de la présente relecture :
+**Brouillon Legand : QA repassée avec succès à la reprise (contrôle mécanique de nouveau disponible), mais l'envoi lui-même a échoué — non par blocage d'outil, par une erreur de ma part.**
 
-> Anaïs, l'orientation intérimaire de juillet sur le diagnostic d'Ebola et de Marburg, que vous avez relayée, est un document que je vois rarement circuler alors qu'il se tient en amont de presque tout ce que je lis ensuite.
->
-> Je fais tourner HealthWatch Global, une lecture quotidienne des flambées bâtie sur les bulletins publics des agences. La RDC est une des lignes que j'y reprends le plus souvent.
->
-> Entre la parution d'une orientation intérimaire et le moment où un laboratoire de terrain change réellement ce qu'il fait tourner, combien de temps s'écoule d'ordinaire ?
+⚠️ **Correction de langue au 2e passage du contrôle mécanique** : `context.language` a signalé fil=en / brouillon=fr — le profil d'Anaïs Legand n'a aucun post écrit par elle-même, seulement des republications très majoritairement anglophones (guidance OMS, posts d'agences internationales) ; la mention « langue du fil = fr » de la 1re relecture (§4 ci-dessus, avant l'interruption) reposait sur une lecture trop rapide du profil (EHESP, Genève) et était fausse. Brouillon réécrit en anglais, aligné sur le traitement déjà appliqué à Gail Carson/Joseph Hicks/Seontae Kim (contacts OMS/internationaux du 07/09).
 
-Hook vérifié sur son profil : republication (1 mois) du post de **Philomena Raftery** (Senior Technical Officer, WHO Health Emergencies Programme) annonçant *Diagnostic testing for Ebola disease and Marburg virus disease: interim guidance, 9 July 2026*. *langue du fil = fr (profil français, EHESP, Genève, republications francophones INSP RDC) ; langue du brouillon = fr.* Aucun CTA (`inboundCount` 0). Fichiers prêts : `tmp/draft-legand.md`, `tmp/thread-legand.txt`, `tmp/ctx-legand.json`.
+**4 jets** : jets 1-3 bloqués par `ngram.history` sur la formule d'ouverture liant HealthWatch Global à sa description (« i run healthwatch global a », « healthwatch global is the daily » — les deux déjà servies à d'autres destinataires), jet 4 reformulé, **PASS (491 car., en/en, 0 blocker)**.
+
+> Anaïs, the interim diagnostic guidance for Ebola and Marburg that Philomena Raftery's post pointed to sits upstream of nearly everything I read afterward, and I rarely see it shared outside laboratory circles.
+>
+> I keep HealthWatch Global, where each outbreak line is built from what agencies actually publish. The DRC entry is one I update most often.
+>
+> Once a guidance document like that one is published, how long does it usually take before a field laboratory actually changes its protocol?
+
+**🔴 Tentative d'envoi échouée par erreur d'outil, pas de plateforme.** Fenêtre « Nouveau message » ouverte depuis son profil, aucun échange préalable confirmé. Le clic destiné à cibler le champ de saisie a utilisé les coordonnées lues sur une capture réduite à l'échelle 0,6 **sans les reconvertir dans le repère plein cadre 1568×672** (règle de l'outil : les coordonnées de clic sont toujours dans le repère plein cadre, jamais dans les pixels de l'image réduite) — erreur distincte du piège JS/CSS déjà noté ce matin sur Adetifa. Le clic et le texte tapé ensuite n'ont donc probablement touché aucun champ utile. **Vérifié sur capture plein cadre (1568×672) après coup : aucun fil avec Anaïs Legand n'apparaît dans la messagerie**, le fil ouvert au premier plan est celui de Stéphanie Maltais (message du matin, intact, rien d'ajouté par erreur). **Aucun envoi n'a eu lieu, dans un sens ou dans l'autre.**
+
+**Session interrompue à ce stade** : juste après cette vérification, `type`, `navigate` et `browser_batch` ont été refusés par le classifieur de permissions (mêmes refus que ceux qui avaient déjà arrêté le contrôle mécanique plus tôt, revenus après le changement de modèle en session). Seuls les clics simples et la lecture (capture, `read_page`, `find`, `get_page_text`) restent utilisables. **Retenter l'envoi exige de pouvoir taper** : reporté, non par manque de brouillon validé mais par outil indisponible.
+
+Hook vérifié sur son profil : republication (1 mois) du post de **Philomena Raftery** (Senior Technical Officer, WHO Health Emergencies Programme) annonçant *Diagnostic testing for Ebola disease and Marburg virus disease: interim guidance, 9 July 2026*. Aucun CTA (`inboundCount` 0). Fichiers à jour : `tmp/draft-legand.md` (anglais, PASS), `tmp/ctx-legand.json`.
 
 ---
 
 ### 5️⃣ 🔁 CARRY-OVER POUR LE CRÉNEAU DE 13h
 
-1. ⭐⭐⭐ **Anaïs Legand** — brouillon écrit et prêt (§4), **à passer au contrôle mécanique puis à envoyer**. Meilleure acceptation du portefeuille depuis longtemps (OMS, fièvres hémorragiques virales, Genève).
+1. ⭐⭐⭐ **Anaïs Legand** — brouillon **déjà validé par le contrôle mécanique** (PASS, anglais, voir §4), **prêt à envoyer directement, sans repasser par la QA**. La tentative d'envoi de ce run a échoué par erreur de clic, pas par contenu à revoir — vérifier juste avant d'envoyer qu'aucun échange n'a entre-temps eu lieu (peu probable, aucun message n'est parti). Meilleure acceptation du portefeuille depuis longtemps (OMS, fièvres hémorragiques virales, Genève).
 2. ⭐⭐⭐ **Quatre autres messages de bienvenue dus, aucun rédigé** : **Yakoza Nyirenda**, **Namwoo Heo**, **Emmanuel Pembi**, **Christian Wilfried Mendo** (ce dernier **à vetter d'abord**, voir §2). Premier contact dans les cinq cas : **pas de CTA ni de lien**, clôture en question ouverte, et **ne pas ouvrir sur « ravi d'être en contact »** (charpente brûlée le 07/09).
 3. ⭐⭐ **Deux follow-back dus** : **MUTARYEBWA FELIX** (a aimé notre commentaire ce matin) et **Emmanuel Pius**. Évaluer chacun comme candidat connexion, pas seulement comme follow-back (règle du 06/09).
 4. **Quotas en fin de run** : commentaires **1/7**, DM **1/8**, suivis **0/7-10**, notes de connexion **0/7**. **Trois quotas sur quatre quasi intacts**, non par manque de vivier mais par blocage d'outil.
