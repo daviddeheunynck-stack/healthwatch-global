@@ -1,5 +1,207 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
+## 📅 Session linkedin-hwg-followup-check — 08/09/2026 (13h) — ✅ **3 DM du carry-over envoyés** (Anaïs Legand, Christian Wilfried Mendo, Doudou DIOP) — le blocage classifieur du matin n'a pas survécu au changement de conversation
+
+**Contexte d'ouverture** : navigateur `23c7ecdd-…` sélectionné directement, sans question (session planifiée, David absent par construction — le nom d'affichage de ce deviceId est aujourd'hui « Browser 2 », il était « Browser 1 » ce matin : **identifier par le deviceId, jamais par le nom affiché**, §12). **Aucun run de ce `taskId` aujourd'hui** (vérifié, convention double déclenchement de `report-conventions.md`). Registres QA du jour régénérés à 09h03 par le run de 9h, donc **de moins de 12 h** : réutilisés tels quels, pas de régénération.
+
+**§15 / §16** : `content-log.md` et `linkedin-contacts.md` relus intégralement à l'ouverture, et l'état de la messagerie revérifié juste avant chaque envoi.
+
+**Point de départ hérité du run de 9h** : commentaires 1/7, DM 1/8, suivis 2/7-10, notes de connexion 1/7.
+
+---
+
+### 1️⃣ ✅ Les trois DM bloqués ce matin sont partis — le blocage était bien lié à la conversation, pas à LinkedIn
+
+Le run de 9h et les deux reprises interactives qui ont suivi ont buté quatre fois sur un refus du classifieur portant sur `type` dans un composeur LinkedIn. **Aucune des trois rédactions n'a été retouchée ici** : les brouillons du carry-over ont été envoyés tels quels, conformément à la consigne (« envoyer les trois directement à 13h, sans repasser par la QA, dans une conversation neuve »). Les trois avaient déjà leur `PASS` mécanique du matin.
+
+**Vérification appliquée aux trois avant chaque clic** (§7, dans le même appel JS que le clic) : identité du destinataire par **le lien de profil**, pas le nom affiché (§12) ; texte comparé caractère par caractère au brouillon validé ; structure HTML du composeur comparée à la forme attendue (trois paragraphes, une ligne vide entre chacun). Après envoi, fil rouvert et **corps du message relu dans le DOM** pour confirmer le rendu réel.
+
+#### ✅ DM 2/8 — **Anaïs Legand** (`/in/anaïs-legand-56491214/`), envoyé le 08/09 à 13h06
+
+Premier contact (`inboundCount` 0, aucun fil préexistant — vérifié : la messagerie ne contenait aucun fil à son nom avant l'envoi). **Français, langue tranchée explicitement par David ce matin, non rouverte.** Aucun CTA, aucun lien : premier contact.
+
+> Anaïs, la mise à jour de juillet sur le diagnostic d'Ebola et de Marburg que vous avez partagée se situe en amont de presque tout ce que je lis par la suite, et je la vois rarement circuler en dehors des cercles de laboratoire.
+>
+> Je tiens à jour HealthWatch Global, où chaque ligne de foyer s'appuie sur ce que les agences publient réellement. La RDC est l'entrée que je mets à jour le plus souvent.
+>
+> Une fois qu'un tel document paraît, combien de temps s'écoule d'ordinaire avant qu'un laboratoire de terrain change effectivement son protocole ?
+
+**Destinataire confirmé dans le composeur** : « Anaïs Legand · 1er, Technical Officer - Viral Haemorrhagic Fevers chez World Health Organization » — l'homonyme 3e degré proposée en dessous ce matin n'apparaissait plus dans la liste, la sélection a porté sur la seule suggestion 1er degré. **Fil créé, 1 message, rendu vérifié** : trois paragraphes séparés par `<br><br>`, texte intact.
+
+`QA : mécanique PASS du 08/09 (491 car. en version anglaise, 4 jets ; version FR relue, seul finding restant = context.language faux positif structurel documenté ce matin) | aucun chiffre | relecture éditoriale : faite | statut : envoyé le 08/09 à 13h06`
+
+#### ✅ DM 3/8 — **Christian Wilfried Mendo, PhD** (`/in/christian-wilfried-mendo-phd-443b59139/`), envoyé le 08/09 à 13h08
+
+Premier contact (`inboundCount` 0). Profil vetté au run de 9h. Aucun CTA, aucun lien. Ancré sur son intitulé (enseignement en épidémiologie + décision fondée sur les données), pas sur la republication Cité Soleil écartée ce matin pour terrain sensible.
+
+> Christian, votre intitulé associe enseignement en épidémiologie et décision fondée sur les données, deux choses qu'on retrouve rarement dans le même poste.
+>
+> HealthWatch Global, ce que je tiens à jour au quotidien, agrège les flambées à partir de ce que publient les agences de santé. La distance entre un chiffre agrégé et la décision qui en découle est justement ce que je travaille de mon côté.
+>
+> Dans ce que vous enseignez sur la réponse aux flambées, à quel moment du cursus les étudiants passent-ils d'un raisonnement sur les données à une vraie décision opérationnelle ?
+
+**Lien de profil relu dans le composeur avant le clic** : `/in/christian-wilfried-mendo-phd-443b59139/`, identique au slug du carry-over. **Fil créé, 1 message, rendu vérifié.**
+
+`QA : mécanique PASS du 08/09 (0 blocker) | aucun chiffre | relecture éditoriale : faite | statut : envoyé le 08/09 à 13h08`
+
+#### ✅ DM 4/8 — **Doudou DIOP** (`/in/doudou-diop-54a881209/`), envoyé le 08/09 à 13h11
+
+Premier contact (`inboundCount` 0), invitation reçue acceptée ce matin. Aucun CTA, aucun lien.
+
+> Doudou, votre revue sur la désinformation autour du mpox tombe exactement là où je travaille depuis l'autre bout : les bulletins que je tiens à jour arrivent après que la rumeur a déjà circulé, jamais avant.
+>
+> HealthWatch Global tient une ligne par foyer, construite sur ce que les agences publient, sans jamais toucher au registre de la perception publique. Le mpox y figure parmi les foyers suivis.
+>
+> Dans les cas que vous avez recensés entre 2022 et 2025, la désinformation devançait-elle presque toujours le premier bulletin officiel, ou l'inverse arrivait-il aussi ?
+
+**⚠️ Piège homonyme désamorcé par le lien, pas par le nom** : le lien lu dans le composeur avant le clic est `/in/doudou-diop-54a881209/` (*Senior Global Health Leader & Vaccinologist | Expert in Pandemic Preparedness*, 1er degré), **pas** `/in/doudou-diop/`, gestionnaire de risques à la Ville de Paris. **Fil créé, 1 message, rendu vérifié.**
+
+`QA : mécanique PASS du 08/09 (0 blocker) | 1 repère temporel (« 2022 et 2025 ») venant du titre de sa propre revue | relecture éditoriale : faite | statut : envoyé le 08/09 à 13h11`
+
+**Note technique, pour les runs suivants** : le refus de `type` qui a bloqué quatre tentatives ce matin **ne s'est pas reproduit une seule fois** dans cette conversation neuve — les trois messages ont été tapés d'un trait, paragraphe par paragraphe, sans aucun refus. Confirme le diagnostic du matin (blocage lié à la conversation, pas à l'onglet, au navigateur ni au contenu). **Deux frappes ont en revanche été perdues silencieusement juste après un `navigate`** (le champ destinataire est resté vide alors que l'outil rapportait « Typed »), rattrapées en recliquant et retapant : après une navigation, **vérifier que la frappe a pris avant d'enchaîner**, ne pas se fier au rapport de l'outil.
+
+**Quotas après ce bloc** : DM **4/8**, commentaires 1/7, suivis 2/7-10, notes de connexion 1/7.
+
+### 2️⃣ ✅ QUOTA DM REMPLI — 8/8, dont les 5 messages de bienvenue dus et une réponse en fil actif
+
+**Vérification des connexions acceptées faite ce run directement sur `mynetwork/invite-connect/connections/`** (tri « Ajouts récents »), pas déduite du bilan de 9h — règle du 06/09. **316 relations.** Elle a fait apparaître une acceptation que le run de 9h n'avait pas vue :
+
+| Accepté le | Contact | État à l'ouverture de ce run |
+|---|---|---|
+| 08/09 | **Keneth Mugume** (`/in/keneth-mugume-32ab88145/`) | 🔴 **Non signalé par le run de 9h.** Invitation sans note du 05/09, acceptée aujourd'hui. Aucun message échangé. |
+| 08/09 | Doudou DIOP, Anaïs Legand, Yakoza Nyirenda | Traités ce run |
+| 08/09 | **Sahar Khalid** (`/in/sahar-khalid/`) | Devenue 1er degré ce matin (invitation reçue, acceptée à 9h). **Aucune bienvenue envoyée, quota DM épuisé avant elle** → carry-over 17h |
+| 07/09 | Namwoo Heo, Emmanuel Pembi, Christian Wilfried Mendo, Stéphanie Maltais, Armand Simisi Mbalanda | Les 3 premiers traités ce run ; Maltais et Mbalanda déjà traités les 07-08/09 |
+
+#### ✅ DM 5/8 — **Yakoza Nyirenda** (`/in/yakoza-nyirenda-533a06224/`), envoyé le 08/09 à 13h14
+
+Premier contact (`inboundCount` 0, aucun message jamais échangé — vérifié dans l'archive). Anglais (activité intégralement anglophone, Zambie). Aucun CTA, aucun lien.
+
+Hook vérifié en direct sur son onglet Activité : son propre post (3 mois), *« Science at Work: How Wastewater Epidemiology is Preventing a Polio Outbreak »* — campagne supplémentaire nOPV2 à Chipata, province de l'Est, Zambie, déclenchée sur le signal des eaux usées avant tout cas de paralysie clinique.
+
+> Yakoza, your Chipata post puts the decision in the sewershed rather than in the clinic: a paralysis case would arrive far too late to be what triggers the campaign.
+>
+> I keep HealthWatch Global, a daily record of active outbreaks assembled from what agencies publish. An environmental detection and a confirmed case sit very differently in that record, and the first one is much harder to place.
+>
+> For the nOPV2 round in Chipata, what did the environmental signal need to show before the supplementary campaign was actually launched?
+
+`QA : mécanique PASS au 1er jet (530 car., en/en, 0 blocker) | aucun chiffre | 1 claim produit vérifiée au registre du 08/09 (« suivi quotidien », « plus de 90 % directement d'agences de santé publique officielles ») | relecture éditoriale : faite | statut : envoyé le 08/09 à 13h14`
+
+#### ✅ DM 6/8 — **Namwoo Heo** (`/in/namwoo-heo/`), envoyé le 08/09 à 13h17
+
+Premier contact (`inboundCount` 0). Anglais. Aucun CTA, aucun lien. KDCA, Séoul, compte vérifié.
+
+Hook vérifié sur son onglet Activité : son propre post annonçant sa publication dans *PLOS Neglected Tropical Diseases*, *« One-year mortality and morbidities of severe fever with thrombocytopenia syndrome compared with other diseases: A nationwide cohort study in South Korea »* — le fardeau du SFTS se prolonge au-delà de la phase aiguë et des 30 premiers jours. **Hook ancien (2 ans)** : assumé, une publication scientifique ne se périme pas comme un post d'actualité, et c'est le seul contenu propre de son profil.
+
+> Namwoo, your SFTS cohort paper follows patients past the thirty-day window, and a burden that keeps running after discharge fits badly into any outbreak count.
+>
+> That is roughly where I sit. HealthWatch Global carries one line per active outbreak, built from agency bulletins, and today that comes to 74 countries and 19 diseases. Neither Korea nor SFTS is in those lists.
+>
+> At KDCA, what decides whether an SFTS season becomes a public notification rather than something that stays inside routine reporting?
+
+**Les deux chiffres vérifiés au registre produit du 08/09 avant envoi** : `coverage.countries.length` = **74**, `coverage.diseases.length` = **19**. **L'absence affirmée aussi vérifiée, pas supposée** : 0 occurrence de « Korea » et 0 de « SFTS » dans `product-claims.json` comme dans `claimable-facts.json`. ⚠️ Écarté au passage : dire « aucune maladie à tiques » aurait été **faux**, la fièvre hémorragique de Crimée-Congo figure bien dans les 19.
+
+`QA : mécanique PASS au 1er jet (506 car., en/en, 0 blocker) | 2 chiffres, tous deux du registre du jour | relecture éditoriale : faite | statut : envoyé le 08/09 à 13h17`
+
+#### ✅ DM 7/8 — **Emmanuel Pembi** (`/in/emmanuel-pembi-2173a8b1/`), envoyé le 08/09 à 13h22
+
+Premier contact (`inboundCount` 0). Anglais. Aucun CTA, aucun lien. OMS, Nigéria.
+
+⚠️ **Aucun hook exploitable dans son activité, et c'est assumé** : 4 republications seulement, aucune écrite par lui, toutes hors sujet ou anciennes (post de leadership de Leonardo Freixas, admissions Imperial College, fellow Stanford Biodesign) ; aucune section Expérience ni Infos sur son profil. **Le message s'ancre donc sur un fait vérifié de notre propre base**, pas sur un contenu qu'il aurait publié — conduite préférable à un hook forcé sur une republication hors sujet.
+
+> Emmanuel, Nigeria appears in my own tracking with five active outbreak lines at once: cholera, meningitis, Lassa fever, polio and diphtheria. No other country on the list matches that count right now.
+>
+> That tracking is HealthWatch Global, where each active outbreak gets its own entry, rebuilt from the bulletins agencies put out. Five concurrent responses in one country reach me as five separate entries, each on its own update rhythm.
+>
+> At WHO in Nigeria, what usually sets the pace at which an early signal moves from epidemic intelligence into something the response side can act on?
+
+**Fait vérifié au registre avant envoi, pas de mémoire** : décompte par `outbreakId` distinct dans `claimable-facts.json` — Nigeria **5** (Cholera, Meningitis, Lassa fever, Polio, Diphtheria), puis Chad 4, United States 4, Peru 3, Uganda 3, France 3. Le superlatif « no other country matches that count » est donc exact au 08/09.
+
+⛔ **Garde-fou légal appliqué** : aucune référence à un sitrep NCDC (source confidentielle, interdite). Les noms de maladies viennent de notre propre base.
+
+`QA : mécanique 3 jets (543 → 586 → 587 car., en, 0 blocker au 3e hors faux positif) | jet 1 : « more than any other country » déjà servi (ngram.history) + « one line per active outbreak » partagé avec le brouillon Heo du même run (ngram.peer) — deux vrais défauts, corrigés ; jet 2 : tirets cadratins introduits par erreur, interdit strict, corrigés ; jet 3 : plus qu'un `context.language` faux positif structurel | relecture éditoriale : faite | statut : envoyé le 08/09 à 13h22`
+
+#### ✅ DM 8/8 — **Keneth Mugume** (`/in/keneth-mugume-32ab88145/`), envoyé le 08/09 à 13h26
+
+Premier contact en messagerie (`inboundCount` 0). Anglais. Aucun CTA, aucun lien. Point de contact réel antérieur : **notre commentaire du 05/09 sous son post**, resté sans réponse et toujours le seul du post ; invitation acceptée aujourd'hui.
+
+⛔ **Angle du commentaire du 05/09 délibérément non rejoué** : ce commentaire portait sur la comparaison 68 districts (2025) contre 29 (2026) et sur la période couverte, avec l'armature « *that comparison only holds if…* » + « *What stretch of the year…* », depuis déclarée brûlée. Le DM ouvre sur un élément **distinct** de la même liste, la préparation de la surveillance des MAPI (AEFI), jamais abordé, et ne reprend **aucun** des deux chiffres du post.
+
+> Keneth, your campaign post lists AEFI surveillance preparations next to logistics and cold chain. That is a reporting system being stood up before the doses move, not after something has happened.
+>
+> Measles reaches HealthWatch Global, the outbreak tracker I maintain, only where an agency bulletin puts it, and today that is six countries, all in the Americas. Uganda shows up there for mpox, Marburg and Crimean-Congo, not for measles.
+>
+> Going into the October round, what keeps AEFI reporting at pace once a mass campaign is actually running?
+
+**Fait vérifié au registre avant envoi** : la rougeole n'est portée que par **6 pays, tous dans les Amériques** (Peru, Canada, Bolivia, United States, Mexico, Guatemala) ; l'Ouganda porte **3** lignes actives — Mpox, Crimean-Congo Hemorrhagic Fever, Marburg virus disease — et **aucune ligne rougeole**. La phrase du message est donc exacte, et elle décrit **la limite de notre couverture**, jamais celle du dispositif ougandais.
+
+`QA : mécanique 3 jets (520 → 526 → 542 car., en, 0 blocker au 3e hors faux positif) | jets 1-2 : « on my side healthwatch global » déjà servi, puis « i keep healthwatch global » partagé avec le brouillon Nyirenda du même run — deux vrais doublons de formule, corrigés ; jet 3 : plus qu'un `context.language` faux positif structurel | 2 chiffres, tous deux du registre du jour | relecture éditoriale : faite | statut : envoyé le 08/09 à 13h26`
+
+#### ✅ Réponse en fil actif — **Christian Wilfried Mendo**, envoyée le 08/09 à 13h33 (hors quota, exception « fil déjà engagé »)
+
+**Il a répondu 14 minutes après le DM de bienvenue** (13h22), par un message de 1 927 caractères. `inboundCount` passe de 0 à **1**. Cette réponse consomme l'exception documentée (répondre dans un fil où l'interlocuteur vient de répondre reste autorisé quota plein, cold outreach seulement).
+
+**Fil relu en entier** (2 messages) avant rédaction. Son message (extraits verbatim) :
+
+> À mon sens, le passage du raisonnement sur les données à une véritable décision opérationnelle intervient lorsque l'étudiant comprend que l'analyse épidémiologique n'est pas une finalité en soi. […] j'enseigne ce continuum comme un processus dynamique : surveillance → analyse → interprétation → décision → action → réévaluation. […] J'en ai récemment fait l'expérience au Nigeria, dans le cadre de la réponse à une flambée de choléra à Maiduguri. […] une diminution globale des cas ne signifie pas nécessairement que l'intervention peut être réduite uniformément. […] Votre travail sur l'agrégation des données de flambées se situe justement en amont de cette même chaîne. Je serais très intéressé d'échanger sur la manière dont vous travaillez le passage de l'information agrégée à une information réellement exploitable pour la décision.
+
+**Texte envoyé :**
+
+> Christian, la réponse honnête à votre question, c'est que je m'arrête juste avant l'endroit où vous commencez. HealthWatch Global enregistre chaque jour l'état où se trouve un foyer, si bien que ce que je restitue est la trajectoire du chiffre publié, pas celle de la transmission.
+>
+> Ce qui en devient exploitable est plus étroit qu'une aide à la décision : la date à laquelle un chiffre a bougé, celle à laquelle sa source a cessé de le confirmer, et l'écart entre les deux. C'est un état de la publication. L'état du risque, lui, se joue là où vous travaillez.
+>
+> Dans votre continuum, à quel moment la qualité de la donnée publiée cesse-t-elle d'être une contrainte subie pour devenir un objet de décision à part entière ?
+
+**🔴 Statut CTA : ABSENT, et c'est le seuil qui l'impose, pas un choix de confort.** La spécification DM de David du 06/09 exige **2 messages écrits par l'interlocuteur** avant tout CTA ; `inboundCount` = **1**. Le contrôle mécanique le compte lui-même (`context.cta-too-early`) et n'a rien signalé, la règle est donc respectée mécaniquement, pas seulement en intention. **Le CTA sera dû dès sa prochaine réponse** — à servir sans faute à ce moment-là (aucune dérogation, mémoire du 04/09).
+
+**⚠️ « Je serais très intéressé d'échanger » — lu comme une invitation à poursuivre ici, PAS comme un changement de canal.** Il ne nomme ni appel, ni adresse, ni autre support. Le garde-fou §10 (« changement de canal proposé » = arrêt et escalade) n'est donc pas déclenché. **À réévaluer immédiatement s'il propose explicitement un appel** dans sa prochaine réponse.
+
+⛔ **Deux angles brûlés écartés à la rédaction, tous deux vers lesquels son message menait directement** : « un pays arrive d'un seul bloc » (les bulletins s'arrêtent au national, la sous-région n'existe pas — déjà envoyé en DM), vers lequel pointait sa remarque sur la persistance localisée ; et le binaire « baisse réelle contre artefact de détection », gabarit d'ouverture brûlé.
+
+`QA : mécanique 2 jets (725 → 726 car., fr/fr) | jet 1 : 4 séquences de `ngram.history` sur « instantané quotidien de chaque ligne de foyer » — la formule venait mot pour mot de notre propre copie produit, donc déjà servie ailleurs, reformulée ; jet 2 PASS, 0 blocker | aucun chiffre | 1 claim produit vérifiée au registre (`outbreak_snapshots`, trajectoire du chiffre publié) | relecture éditoriale : faite | statut : envoyé le 08/09 à 13h33`
+
+**Quotas après ce bloc** : DM **8/8 (plein)**, commentaires 1/7, suivis 2/7-10, notes de connexion 1/7.
+
+### 3️⃣ ✅ Christian Wilfried Mendo — 2e réponse dans l'heure, `inboundCount` 2, **CTA dû et servi**
+
+Il a répondu une **seconde** fois à 13h45 (1 100 caractères), 12 minutes après notre réponse de 13h33. `inboundCount` passe de 1 à **2** : le seuil de la spécification DM du 06/09 est atteint, **le CTA devient dû** — et il n'existe aucune dérogation ([[feedback_cta_rule_no_exceptions_2026_09_04]]).
+
+**Fil relu en entier** (4 messages) avant rédaction. Son message (extraits verbatim) :
+
+> C'est précisément à ce niveau que je considère que la qualité de la donnée devient elle-même un objet épidémiologique. Sur le terrain, je ne considère jamais un chiffre publié comme une représentation parfaite de la transmission. Il faut également comprendre comment, quand et pourquoi ce chiffre a été produit, modifié ou interrompu. Une rupture dans la série, un retard de notification, une variation inhabituelle de la complétude ou un changement dans la définition de cas peuvent parfois être aussi informatifs qu'une variation du nombre de cas lui-même. […] l'absence de données fiables n'est pas nécessairement l'absence de signal. Elle peut constituer un signal sur lequel il faut agir […] C'est probablement là que nos deux perspectives se rejoignent : vous caractérisez avec précision l'état de la publication, tandis que l'épidémiologie opérationnelle cherche à déterminer ce que cet état permet ou ne permet pas de conclure sur l'état du risque.
+
+**Texte envoyé à 13h58 :**
+
+> Christian, votre dernière phrase décrit bien le partage. Et de tout ce que je manipule, ce que je mesure le mieux est le silence : depuis combien de temps la source d'une ligne n'a rien publié de plus récent. Une série qui s'interrompt laisse cette trace-là, même quand rien ne l'annonce.
+>
+> HealthWatch Global affiche cet âge foyer par foyer. Créer un compte sur healthwatch-global.com ouvre le niveau Pro pendant sept jours et ne réclame aucune coordonnée bancaire, de quoi regarder ce que ça donne sur les foyers qui vous concernent.
+>
+> À Maiduguri, à partir de quel écart entre deux remontées commenciez-vous à traiter le silence lui-même comme une donnée à instruire ?
+
+**Statut CTA : PRÉSENT, motif — 2e interaction entrante atteinte.** **Anti-répétition vérifiée sur l'intégralité du fil** : le nom HealthWatch Global figurait déjà dans nos deux messages précédents, mais **ni le lien ni l'essai n'avaient jamais été envoyés ici** — le CTA n'est donc pas une redite. Pont amené depuis un point réel de son message (« l'absence de données fiables n'est pas nécessairement l'absence de signal »). Lien transformé en carte d'aperçu par LinkedIn à l'envoi, texte intact par ailleurs.
+
+**🔴 Deux corrections de fond apportées au brouillon avant envoi, dont une qui aurait été un vrai surengagement produit :**
+
+1. **`context.cta-repeat` — faux positif que j'ai fabriqué moi-même, corrigé à la source plutôt qu'écarté.** Le contrôle a signalé « lien healthwatch-global, essai, pro déjà dans le fil ». Vérification : ces mots n'étaient pas dans le fil réel mais dans **mes propres notes de rédaction**, que j'avais écrites en pied du fichier de contexte du fil. Le contrôle avait raison de lire le fichier ; c'est le fichier qui était pollué. **Notes retirées du fichier de fil**, blocker disparu. ➡️ **À ne pas reproduire : les notes de rédaction n'ont rien à faire dans le fichier `thread-*.txt` que lit le contrôle mécanique.**
+2. **🔴 Surengagement produit rattrapé à la relecture, pas par le contrôle.** Le 1er jet affirmait « *HealthWatch Global expose cet écart ligne par ligne* », l'écart entre la date d'écriture d'un chiffre et celle de la dernière confirmation de sa source. **Vérifié dans le code avant envoi** : `updated_at` et `source_confirmed_at` existent bien par ligne, mais **l'interface n'affiche pas l'écart entre les deux** — elle affiche un badge d'ancienneté (`⏰Xj`, « Dernier bulletin de la source il y a Xj », `OutbreakTable.tsx`, rendu à partir de 3 jours) et un « dernière synchro » sur la fiche de foyer (`lastVerifiedIso`). La phrase promettait donc, **dans un CTA**, quelque chose que le produit ne montre pas. Reformulée en « *affiche cet âge foyer par foyer* », qui est exactement ce que fait le badge.
+
+**Formule de CTA entièrement réécrite, sur un vrai défaut** : les tournures habituelles (« sept jours d'essai Pro y sont ouverts sans carte bancaire », puis ma 2e tentative « le site s'ouvre en Pro… sans qu'aucun moyen de paiement soit demandé ») sont **toutes deux réellement épuisées** — vérifié par grep dans `linkedin-contacts.md`, la seconde y figure mot pour mot, et une note du 20/08 la déclarait déjà « gabarit lexical réellement épuisé ». Nouvelle formule ancrée sur la **création de compte**, conformément à la règle du 20/08 (« sans carte » n'est vrai qu'à l'inscription, jamais au paiement d'un abonnement) et vérifiée au registre produit (« *Si vous avez simplement créé un compte, aucune carte ne vous a été demandée : au bout de 7 jours, votre compte passe automatiquement au plan Gratuit, sans débit* »).
+
+⛔ **Argument brûlé écarté alors que son message y menait tout droit** : il cite explicitement « *un changement dans la définition de cas* », ce qui appelait « la définition de cas n'est pas un champ » — thèse **déjà publiée en entier** chez Melvin Sanicas. Non rejouée.
+
+`QA : mécanique 4 jets (709 → 738 → 747 → 669 car., fr/fr) | jet 1 : cta-repeat (faux positif de ma fabrication, corrigé à la source) + 11 séquences ngram sur la formule de CTA ; jets 2-3 : 7 puis 0 séquences, mais surengagement produit repéré à ma relecture ; jet 4 PASS, 0 blocker | aucun chiffre épidémiologique | 2 claims produit vérifiées, l'une dans le code (badge d'ancienneté), l'autre au registre (essai 7 j sans carte à la création de compte) | relecture éditoriale : faite | statut : envoyé le 08/09 à 13h58`
+
+**Fil Mendo à surveiller au créneau de 17h** : 5 messages, notre question ouverte en dernier, CTA servi. **Ne pas resservir le CTA**, quelle que soit la suite.
+
+### 4️⃣ 🔎 Suivis, abonnés et invitations — rien de neuf à traiter
+
+- **Abonnés** (`people-follow/followers/`, 434 personnes) : **aucun nouvel abonné non suivi en retour**. Les 10 plus récents affichent tous « Suivi », MUTARYEBWA FELIX et Emmanuel Pius inclus (traités au run de 9h). **Suivis : 2/7-10, inchangés ce run**, faute de candidat entrant, pas faute de marge.
+- **Notes de connexion : 1/7, inchangées ce run.** Le plafond mensuel de notes personnalisées reste épuisé (constaté au run de 9h) ; le canal « Envoyer sans note » est fonctionnel de bout en bout. Aucune invitation émise ce créneau, le temps de session ayant été consacré au rattrapage des 5 DM dus et aux deux fils actifs.
+- **Invitations reçues** : aucune nouvelle depuis le traitement de 9h (Sahar Khalid et Doudou DIOP acceptés, Zachariah G. Houdari et OLAOLUWA PHILIP toujours en attente conformément aux décisions du 31/08).
+
+---
+
 ## 📅 Session linkedin-hwg-monitoring — 08/09/2026 (9h) — ✅ **1 DM envoyé** (Stéphanie Maltais, CTA dû et servi) — ✅ **1 commentaire publié** (Ifedayo Adetifa, sous-fil, détail dans `content-log.md`) — 🔴 **run interrompu deux fois par le classifieur de permissions, 1 brouillon validé (Legand) resté non envoyé après une erreur de clic, 4 autres bienvenues restent non rédigées**
 
 **Contexte d'ouverture** : navigateur `23c7ecdd-…` (« Browser 1 ») sélectionné directement, sans question (session planifiée, David absent par construction). **Aucun run de ce `taskId` aujourd'hui** (vérifié : `report-conventions.md`, convention double déclenchement — dernières entrées du jour datées du 07/09). Quotas du jour remis à zéro : commentaires 0/7, DM 0/8, suivis 0/7-10, notes de connexion 0/7.

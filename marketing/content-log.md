@@ -2,6 +2,64 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session linkedin-hwg-followup-check — 08/09/2026 (13h) — ✅ **1 commentaire publié** (Sahar Khalid, sous-fil) — ✅ **5 DM + 2 réponses en fil actif** (détail dans `linkedin-contacts.md`) — quota DM **plein 8/8**
+
+**Contexte d'ouverture** : navigateur `23c7ecdd-…`, session planifiée. Aucun run de ce `taskId` aujourd'hui. Registres QA du 08/09 09h03 réutilisés (moins de 12 h). `content-log.md` et `linkedin-contacts.md` relus à l'ouverture **et de nouveau juste avant le clic de publication** (§15) : aucune entrée concurrente sur la cible.
+
+### 1️⃣ ✅ COMMENTAIRE 2/7 — **Sahar Khalid**, réponse en sous-fil, elle nous avait mentionnés
+
+`urn:li:activity:7502321747258482689`, post NHIC Rwanda du 06/09. **Elle a répondu à notre commentaire du 07/09 ce matin (~4 h avant ce run) en mentionnant David nommément** — repéré dans les notifications, sous le libellé « *Sahar Khalid vous mentionne dans un commentaire* », qui **n'apparaît pas** sous la forme « a répondu » et se serait perdu dans un balayage cherchant seulement des réponses. ⚠️ Point de méthode à retenir : **une réponse à notre commentaire peut arriver dans les notifications libellée « vous mentionne »**, pas « a répondu ».
+
+**Son verbatim :**
+
+> David Deheunynck You explained it well! what fascinated me more is their use of AI to automate this process. Additionally, the federal minister of the health office is in the health intelligence center itself, meaning his decisions are made in close proximity to the evidence created by the center and its recommendations.
+
+**Angle retenu** : traiter **le second** de ses deux points (le ministre installé dans le centre lui-même) plutôt que de survoler les deux, et en tirer une conséquence sur la **forme** de l'analyse — quand le décideur est dans le même bâtiment, un résultat n'a jamais à être mis en forme pour un lecteur absent ; le format bulletin existe précisément parce que ce lecteur l'est d'ordinaire. Forme conforme à ce qui évite une lecture « terrain politique » : la localisation d'un responsable est traitée comme un fait d'organisation, aucun jugement porté sur lui ni sur le dispositif rwandais.
+
+**Texte publié :**
+
+> Sahar, your second point has a consequence for the analysis itself: when the person deciding sits in the same building, a finding never has to be packaged for an absent reader. The bulletin format exists because that reader usually is absent.
+>
+> By the time such a document reaches an outside reader like me, the packaged form stands alone, and the discussion behind it was never part of what got published.
+>
+> What does an analysis written for someone upstairs keep that a published version has to drop?
+
+⛔ **Aucun des six axes interdits sur elle n'est rejoué** (4 jets brûlés les 06-07/09) : rien du dispositif rwandais ne lui est attribué, aucune mention du Soudan, aucune clause de suffisance ou de manque, ni « ce qui vient après le test », ni la charnière « travels through », ni l'angle du résultat négatif.
+
+**Publication confirmée** : commentaires du post passés de 2 à 3, **une seule occurrence** du texte dans la page (vérifiée par comptage sur `document.body.innerText`, pas seulement sur le nombre d'éléments — un commentaire parent contient son sous-fil et se compte deux fois si on ne le fait pas), éditeurs vidés, texte relu dans le DOM après publication avec ses sauts de paragraphe.
+
+⚠️ **Piège de mention évité** : le clic sur « Répondre » pré-remplit l'éditeur d'une mention — **et la première tentative a pré-rempli « David Deheunynck », c'est-à-dire nous-mêmes**, parce que le bouton atteint appartenait à notre propre commentaire parent. Éditeur vidé, bouton « Répondre » de **son** commentaire à elle utilisé ensuite, puis mentions retirées entièrement (le texte s'ouvre déjà sur son prénom).
+
+**Aucun nouveau blocage hebdomadaire créé** : une réponse en sous-fil n'en crée pas (§14), et Sahar Khalid est de toute façon bloquée en top-level jusqu'au **14/09** depuis le commentaire du 07/09.
+
+`QA : mécanique 3 jets (427 → 461 → 500 car., en/en) | jets 1-2 : « i only ever see the », puis « far end of the chain » et « arrives at the far end » — trois formules réellement déjà servies, reformulées ; jet 3 PASS, 0 blocker | aucun chiffre | relecture éditoriale : faite | statut : publié le 08/09 à 13h50`
+
+### 2️⃣ 📌 NOTIFICATIONS ET VEILLE — parcourues intégralement, une seule action à en tirer
+
+**Aucune autre réponse à un commentaire HWG**, aucune mention neuve hors celle de Sahar Khalid. Le reste :
+
+- ⭐ **Amref Health Africa (la page, 322 878 abonnés) a réagi à notre commentaire** du 07/09 sous son post Ebola/Ouganda (`urn:li:activity:7502678781325762560`). **Signal de traction institutionnelle** au sens de la politique commune §13 : notification push envoyée à David dans la session, pas seulement archivée ici. Aucune réponse écrite de leur part, rien à traiter en sous-fil.
+- **Betty Lanyero Ajok et 1 autre personne** ont réagi à notre commentaire sous le post de **Julien Harneis** (Ebola/RDC, « *more than 2 500 people have died […] half of them in just 20 days* »). Réactions, pas réponses.
+- **Harvey Basivikidi** a réagi à **notre post** du jour (West Nile/France, les deux comptes européens divergents).
+- **Statistiques** : 495 impressions sur les posts la semaine passée ; 371 vues de profil et 529 impressions cumulées affichées en colonne de gauche. **Namwoo Heo a consulté le profil de David** — le jour même où il reçoit son DM de bienvenue.
+- **MUTARYEBWA FELIX et Emmanuel Pius** signalés comme nouveaux abonnés : déjà suivis en retour au run de 9h, rien à faire.
+
+**Aucune donnée épidémiologique neuve à verser en base repérée ce run.**
+
+### 3️⃣ 🔁 CARRY-OVER POUR LE CRÉNEAU DE 17h
+
+1. 🔴⭐⭐⭐ **Fil Christian Wilfried Mendo — le plus vivant du portefeuille, 5 messages en 50 minutes.** Notre question ouverte est en dernier, **CTA déjà servi à 13h58 : ne jamais le resservir**. S'il répond, traiter comme fil actif (hors quota). ⚠️ **Réévaluer le garde-fou §10 s'il propose explicitement un appel ou un autre canal** — son message de 13h22 disait seulement « je serais très intéressé d'échanger », lu ici comme une invitation à poursuivre dans le fil.
+2. ⭐⭐⭐ **Sahar Khalid — DM de bienvenue TOUJOURS DÛ**, et c'est le seul manque assumé de ce run : devenue relation de 1er degré ce matin (invitation reçue), **le quota de 8 DM était épuisé avant elle**. Elle vient par ailleurs de répondre à notre commentaire, le contact est chaud. **Première cible DM du créneau de 17h.**
+3. ⭐⭐ **Fil Sahar Khalid en sous-fil** : notre réponse de 13h50 est la dernière, à revérifier à 17h.
+4. **Quotas à la clôture de ce run** : commentaires **2/7**, DM **8/8 (plein)**, suivis **2/7-10**, notes de connexion **1/7**. Les trois quotas non pleins sont ouverts pour 17h ; le vivier d'abonnés entrants est en revanche épuisé (aucun nouvel abonné non suivi), donc les suivis restants passeront par la découverte active.
+5. **Blocages hebdomadaires inchangés par ce run** (le seul texte publié est une réponse en sous-fil, qui ne crée pas de blocage top-level) : Sahar Khalid, Amref Health Africa, Kenya National Public Health Institute, Abduljalal Nadabo, Christianah Oki, page Africa CDC (14/09) ; Joseph Cephas Kyari, Robert Herriman (13/09) ; Yilkal Kebede, Tambe Elvis Akem, Keneth Mugume (12/09) ; Ifedayo Adetifa, Pete Macharia (11/09) ; Adesoye Emmanuel Tunde, Kyaw Thowai Prue Prince, Rocham Mulumbwe, Dr. Rashi Bhardwaj, Dr Fabrice KHADDY, Miriam Mbueshi (09/09) ; Dr. Jean Kaseya, page ECDC, Jacob Banda (**libres depuis aujourd'hui**).
+6. 🗓️ **LIGNE D'ÉVÉNEMENT (§16)** : **Ebola/RDC reste le sujet le plus porté du réseau** — le post de **Julien Harneis** (plus de 2 500 décès, moitié en 20 jours) a recueilli une réaction sur notre commentaire ce jour. **Dr. Jean Kaseya est libre depuis aujourd'hui**, après un blocage arrivé à terme : c'est le porteur institutionnel le plus fort du sujet et il n'a pas été réévalué depuis. **À instruire en priorité à 17h**, avec les autres porteurs (page Africa CDC bloquée jusqu'au 14/09, Prof. Mohamed Janabi libre).
+7. 🔴 **Elie Caleb MIMBULA** — 🏷️**HORS-ROUTINE :** anomalie du 07/09 toujours non résolue (une invitation partie sans qu'aucune session ne la revendique), non rejouée ce run.
+8. ⏸️ **OLAOLUWA PHILIP** et **Zachariah G. Houdari** — invitations reçues laissées en attente, aucun signal neuf.
+9. ⚠️ **Point de méthode outillage, à connaître avant le prochain run** : le refus de `type` par le classifieur qui a bloqué quatre tentatives le 08/09 au matin **ne s'est pas reproduit une seule fois** dans cette conversation neuve. En revanche, deux défauts distincts sont apparus : (a) **une frappe perdue silencieusement juste après un `navigate`** (l'outil rapporte « Typed », le champ reste vide) — vérifier après chaque navigation avant d'enchaîner ; (b) **deux `Input.dispatchKeyEvent` en timeout CDP à 30 s alors que la frappe avait bien abouti** — ne pas retaper sur un timeout sans avoir lu le DOM d'abord, sous peine de doubler le texte.
+
+---
+
 ## 📅 Session linkedin-hwg-monitoring — 08/09/2026 (9h) — ✅ **1 commentaire publié** (Ifedayo Adetifa, réponse en sous-fil, 7e tour) — 🔴 **run interrompu à 09h35 : contrôle mécanique puis navigation refusés par le classifieur, aucun autre candidat instruit**
 
 **Contexte d'ouverture** : navigateur `23c7ecdd-…` (« Browser 1 »), sélection directe. Aucun run de ce `taskId` aujourd'hui. Quotas remis à zéro (commentaires 0/7, DM 0/8, suivis 0/7-10, notes 0/7). Registres régénérés à l'ouverture (`qa:facts` 232 faits, `qa:claims` 90 nombres citables), `burned-templates.md` relu avant rédaction, aucun relecteur (retiré le 06/09).
