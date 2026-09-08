@@ -4688,3 +4688,157 @@ sonde datés créés pendant le run (`scripts/probe-*-2026-09-07.mjs`,
 restent sur le disque de David et n'entrent pas dans l'historique.
 
 ### Statut final : idée 1 CONSTRUITE (`8225cf84`) · idée 2 CONSTRUITE (`8225cf84`)
+
+---
+
+## 2026-09-08 — Proposition du jour
+
+Sources relues : `product-ideas-log.md` en entier (dernière entrée 07/09,
+deux idées construites et vérifiées en prod : étiquette « Données au » et
+pastille de provenance), `product-feedback.md` (dernière entrée 31/08,
+lepapapericles5), `ROADMAP.md` et son garde-fou de due-diligence de source,
+`git log -25`.
+
+**Contrôle d'exploitation préalable, sans suite.** Les 54 crons suivis dans
+`site_config` ont tous tourné dans leur fenêtre ; deux sont en `no_data`
+(`check-mpox-sitrep`, `sync-drc-sitrep`), c'est-à-dire dans l'état que le
+correctif du 31/08 a précisément créé pour distinguer « vérifié, rien de
+neuf » de « cassé ». Rien à signaler de ce côté ce soir.
+
+Les deux idées ci-dessous sortent du même endroit : les **trois pages index**
+du site (`/countries`, `/diseases`, `/regions`), les seules surfaces
+publiques que les balayages du 06/09 (mur payant) et du 07/09 (provenance,
+datation) n'ont pas ouvertes. Elles y portent deux défauts distincts et
+indépendants — l'un sur *qui* a le droit de voir le chiffre, l'autre sur
+*ce que le chiffre veut dire*.
+
+### 1. 🔴 Les trois pages index publient en clair les 132 agrégats que les fiches, à un clic de là, masquent — et le JSON-LD annonce le total mondial aux moteurs
+
+**Signal.** Le 06/09, huit commits `fix(paywall)` ont porté le masquage par
+bandes qualitatives aux pages maladie / pays / région, au permalien, à
+`/compare` et aux routes d'API. Le balayage s'est fait **surface par
+surface**, et il a manqué les trois pages qui listent ces surfaces.
+
+**Mesuré en direct sur la production, sans compte ni cookie :**
+
+```
+/fr/countries   HTTP 200 · pastilles masquées : 0 · chiffres exacts rendus : 109
+/fr/diseases    HTTP 200 · pastilles masquées : 0 · chiffres exacts rendus :  18
+/fr/regions     HTTP 200 · pastilles masquées : 0 · chiffres exacts rendus :   5
+```
+
+Soit **132 agrégats exacts**, et pas une seule pastille de masquage sur les
+trois pages réunies. Les mêmes agrégats, sur les fiches vers lesquelles ces
+cartes pointent :
+
+```
+/fr/diseases        « Choléra · 19 foyers actifs · 256 280 cas signalés »
+/fr/disease/cholera « Ampleur 5/5 — chiffres exacts réservés aux abonnés Pro »  (27 pastilles)
+
+/fr/regions         « Afrique · 43 pays · 169 549 469 cas »
+/fr/region/africa   « Ampleur 5/5 — chiffres exacts réservés aux abonnés Pro »
+```
+
+Croisement systématique sur les 40 pays les plus gros, chaque fiche pays
+étant relue dans le HTML servi par la prod :
+
+```
+fiches pays rendant une bande qualitative : 37 / 40
+fiches pays rendant un chiffre (vitrines) :  3 / 40   (Colombie, Équateur, Samoa)
+```
+
+**37 pays sur 40** sont donc traités en bande sur leur propre fiche et en
+chiffre exact sur l'index qui y mène. Le JSON-LD `Dataset` de `/countries`
+**et** de `/regions` ajoute le total mondial, destiné aux moteurs de
+recherche :
+
+```
+"size":"173,795,608 confirmed cases tracked"
+```
+
+**Balayage de contrôle, pour ne pas sur-déclarer le trou.** Les autres
+surfaces publiques ont été relues dans le même passage et sont **propres** :
+`/fr` (3 pastilles, aucun chiffre à 4 chiffres ou plus), `/fr/reports`
+(5 pastilles), `/fr/compare`, `/fr/sitrep` (rien rendu à un visiteur
+anonyme). Ce sont bien les trois index, et eux seuls, qui restent ouverts.
+
+**Effort :** petit à moyen. Rien à inventer : `aggregateNeedsMasking`,
+`magnitudeBand`, `MagnitudeDots`, `RealStatsProvider` et `AggregateStat`
+existent, sont traduits dans les 5 locales et servent déjà exactement à ça
+sur les trois familles de fiches. Il manque un variant **inline** de
+`AggregateStat` (celui existant rend un `<p>`, et ces chiffres vivent à
+l'intérieur d'un `<p>`/`<span>` dans une carte déjà enveloppée d'un `<Link>`
+— même piège d'imbrication HTML que celui contourné hier pour `SourceBadge`).
+
+**Risque/inconnue :** le seul vrai arbitrage porte sur l'abonné payant. Les
+fiches lui rendent ses chiffres via une requête client (`RealStatsProvider`
+→ `/api/outbreak-stats`, plafonné à 200 identifiants) ; l'appliquer aux
+index tient dans ce plafond aujourd'hui (121 lignes actives), mais c'est un
+plafond qui pourrait être atteint plus tard. Sans ce mécanisme, un abonné Pro
+verrait des points gris sur l'index et ses chiffres un clic plus loin — une
+régression pour le client payant, pas seulement pour le visiteur.
+
+### 2. 🔴 Le chiffre que ces index publient n'est pas un chiffre de foyers : Ghana affiche « 6 739 843 cas » sous « aucun foyer actif »
+
+**Signal.** En vérifiant le point 1, les ordres de grandeur ne collaient
+pas. Nigeria annonce **68 568 789 cas** sur `/fr/countries` quand la somme de
+ses lignes actives vaut **81 137**.
+
+**Cause, lue ligne par ligne en base prod :** les trois index somment `cases`
+sur **toutes** les lignes du pays / de la maladie / de la région, archives
+comprises, et le stock d'archives contient des lignes de **référence
+endémique** annuelles qui écrasent tout le reste.
+
+```
+Nigeria — ce que /fr/countries additionne
+  archivée   68 466 353 cas   Malaria        01/01/2024   is_seed   ← 99,85 % du total affiché
+  ACTIVE         65 690 cas   Cholera        17/08/2026
+  archivée       21 270 cas   Measles        01/01/2025   is_seed
+  ACTIVE         12 977 cas   Diphtheria     09/08/2026
+  ACTIVE          1 390 cas   Meningitis     28/06/2026
+  ACTIVE          1 035 cas   Lassa fever    16/08/2026
+  ACTIVE             45 cas   Polio          02/09/2026
+  archivée           29 cas   Yellow fever   01/01/2025   is_seed
+```
+
+Le cas le plus net est le Ghana, dont la carte se lit littéralement :
+
+```
+Ghana · 1 foyer au total · 6 739 843 cas · aucun foyer actif
+```
+
+Une seule ligne en base, archivée, *Malaria au 1er janvier 2024*. La carte
+affiche près de 7 millions de cas juste à côté de la mention « aucun foyer
+actif ».
+
+**Le total annoncé aux moteurs de recherche a la même origine.** Le
+`"size":"173,795,608 confirmed cases tracked"` du JSON-LD `Dataset` se
+décompose ainsi :
+
+```
+toutes lignes confondues        173 795 608
+dont 81 lignes is_seed          170 963 486   (98,4 %)
+lignes actives seules             1 823 416   (1,05 %)
+```
+
+HWG déclare donc à Google, dans un bloc `Dataset` qui porte par ailleurs sa
+licence et son créateur, suivre 173 millions de cas confirmés — pour une base
+dont les foyers réellement en cours pèsent 1,8 million.
+
+**⚠️ Le discriminant évident est le mauvais.** Exclure `is_seed` semble
+naturel et serait faux : la ligne **Choléra / RD Congo, active, 41 279 cas**
+porte `is_seed = true`. Le bon périmètre est `active` — celui qu'utilisent
+déjà les tuiles agrégées des trois familles de fiches, et celui auquel le
+correctif d'hier a aligné l'étiquette « Données au » de la page pays. Le
+compteur de lignes (« N foyers au total »), lui, reste juste et ne bouge pas.
+
+**Effort :** petit. Trois fichiers, la même correction de périmètre dans
+chacun, plus les deux blocs JSON-LD.
+
+**Risque/inconnue :** effet visible et voulu, exactement comme hier sur
+« Données au ». Le Ghana perdra son chiffre (0 ligne active) et n'affichera
+plus que « 1 foyer au total · aucun foyer actif » ; le total mondial du
+JSON-LD cesse d'être une promesse de volume. Moins flatteur, et c'est
+l'information juste — et c'est aussi la seule version du chiffre qui puisse
+être masquée de façon cohérente avec l'idée 1, puisque le masque ne sait
+raisonner que sur des lignes actives.
