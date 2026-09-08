@@ -2,7 +2,7 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
-## 📅 Session linkedin-hwg-followup-check — 08/09/2026 (13h) — ✅ **2 commentaires publiés** (Sahar Khalid en sous-fil, Prof. Mohamed Janabi en top-level) — ✅ **5 DM + 2 réponses en fil actif + 1 DM de bienvenue hors quota sur ordre explicite de David** (Sahar Khalid) — détail dans `linkedin-contacts.md`
+## 📅 Session linkedin-hwg-followup-check — 08/09/2026 (13h) — ✅ **2 commentaires publiés** (Sahar Khalid en sous-fil, Prof. Mohamed Janabi en top-level) — ✅ **5 DM + 5 réponses en fil actif + 1 DM de bienvenue hors quota**, tous sur ordre explicite de David (Sahar Khalid, puis Mendo/Mugume/Doudou DIOP) — détail dans `linkedin-contacts.md`
 
 **Contexte d'ouverture** : navigateur `23c7ecdd-…`, session planifiée. Aucun run de ce `taskId` aujourd'hui. Registres QA du 08/09 09h03 réutilisés (moins de 12 h). `content-log.md` et `linkedin-contacts.md` relus à l'ouverture **et de nouveau juste avant le clic de publication** (§15) : aucune entrée concurrente sur la cible.
 
@@ -78,8 +78,10 @@ Archive de tout le contenu créé. Mise à jour à chaque session.
 
 ### 3️⃣ 🔁 CARRY-OVER POUR LE CRÉNEAU DE 17h
 
-1. 🔴⭐⭐⭐ **Fil Christian Wilfried Mendo — le plus vivant du portefeuille, 5 messages en 50 minutes.** Notre question ouverte est en dernier, **CTA déjà servi à 13h58 : ne jamais le resservir**. S'il répond, traiter comme fil actif (hors quota). ⚠️ **Réévaluer le garde-fou §10 s'il propose explicitement un appel ou un autre canal** — son message de 13h22 disait seulement « je serais très intéressé d'échanger », lu ici comme une invitation à poursuivre dans le fil.
-2. ✅ **Sahar Khalid — DM de bienvenue ENVOYÉ à 14h32, sur ordre explicite de David tapé en session interactive** (« envoie le DM de bienvenue à Sahar Khalid maintenant »), hors quota (8/8 déjà atteint). Texte et détail complet dans `linkedin-contacts.md`. **À surveiller à 17h pour une éventuelle réponse.**
+1. 🔴⭐⭐⭐ **Fil Christian Wilfried Mendo — 7 messages, le plus vivant du portefeuille.** Il a répondu une 3e fois après le CTA (`inboundCount` 3), traité en session interactive sur ordre de David (« traite les trois ») : réponse envoyée à 14h22, **CTA non resservi** (déjà servi à 13h58). **Ne jamais le resservir** quoi qu'il réponde à 17h. ⚠️ **Réévaluer le garde-fou §10 s'il propose explicitement un appel ou un autre canal.**
+2. ✅ **Sahar Khalid — DM de bienvenue ENVOYÉ à 14h32, sur ordre explicite de David** (« envoie le DM de bienvenue à Sahar Khalid maintenant »), hors quota (8/8 déjà atteint). **À surveiller à 17h.**
+3. ✅ **Keneth Mugume — malentendu corrigé à 14h27, sur ordre explicite de David** (« traite les trois ») : il avait mal lu le DM de bienvenue comme une critique de son post et proposait de le retirer. Réponse rassurante envoyée. **Vérifier à 17h que le malentendu est bien levé.**
+4. ✅ **Doudou DIOP — 1re réponse traitée à 14h30, sur ordre explicite de David.** `inboundCount` 1, CTA non dû, pas encore servi. **CTA dû dès sa prochaine réponse si elle porte le fil à 2 messages de sa part.**
 3. ⭐⭐ **Fil Sahar Khalid en sous-fil** : notre réponse de 13h50 est la dernière, à revérifier à 17h.
 4. **Quotas à la clôture de ce run** : commentaires **3/7**, DM **8/8 (plein)**, suivis **2/7-10**, notes de connexion **1/7**. Les trois quotas non pleins sont ouverts pour 17h ; le vivier d'abonnés entrants est en revanche épuisé (aucun nouvel abonné non suivi), donc les suivis restants passeront par la découverte active.
 5. **Blocages hebdomadaires — un seul créé ce run : Prof. Mohamed Janabi (15/09)**, le commentaire chez Sahar Khalid étant une réponse en sous-fil qui n'en crée pas. Inchangés : Sahar Khalid, Amref Health Africa, Kenya National Public Health Institute, Abduljalal Nadabo, Christianah Oki, page Africa CDC (14/09) ; Joseph Cephas Kyari, Robert Herriman (13/09) ; Yilkal Kebede, Tambe Elvis Akem, Keneth Mugume (12/09) ; Ifedayo Adetifa, Pete Macharia (11/09) ; Adesoye Emmanuel Tunde, Kyaw Thowai Prue Prince, Rocham Mulumbwe, Dr. Rashi Bhardwaj, Dr Fabrice KHADDY, Miriam Mbueshi (09/09) ; Dr. Jean Kaseya, page ECDC, Jacob Banda (**libres depuis aujourd'hui**).

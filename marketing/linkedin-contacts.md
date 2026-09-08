@@ -226,6 +226,66 @@ Devenue relation de 1er degré ce matin (invitation qu'elle avait elle-même env
 
 **Quota DM : hors compte — exception « ordre explicite de David tapé en session », qui prime sur le quota (`report-conventions.md`), le quota du jour (8/8) étant déjà atteint avant cet envoi.**
 
+### 6️⃣ ✅ Trois fils actifs traités, sur ordre explicite de David (« oui, traite les trois ») — hors quota, DM déjà plein (8/8)
+
+Repérés en fin de bilan (14h) : Doudou DIOP, Keneth Mugume et Christian Wilfried Mendo avaient tous répondu après le rattrapage précédent. Traités dans cet ordre, quota déjà dépassé volontairement (exception « fils déjà engagés » + validation explicite tapée en session).
+
+#### ✅ Christian Wilfried Mendo — 3e réponse, `inboundCount` 3
+
+Il a répondu une **3e fois**, à propos du seuil de silence évoqué dans le CTA de 13h58, avec une réponse de fond (le silence devient signal quand le délai dépasse le rythme attendu ; à Maiduguri, instruit surtout quand un retard se combinait à une évolution inhabituelle des cas/positivité/distribution géographique ; distingue absence de transmission / de détection / de notification).
+
+**Texte envoyé :**
+
+> Christian, la répartition en trois branches que vous faites, pas de transmission, pas de détection, pas de notification, est une question que je n'ai jamais à trancher de mon côté. Le temps qu'un bulletin reprenne ou se taise pour de bon, cette question a déjà été réglée en amont, et seul le résultat m'arrive.
+>
+> Ce que j'enregistre, moi, c'est seulement si le chiffre qui reprend, une fois publié, continue la même courbe ou la casse.
+>
+> À Maiduguri, une fois qu'un retard comme celui-là déclenchait une recherche, qu'est-ce qu'elle trouvait le plus souvent ?
+
+**Statut CTA : absent, motif — déjà servi le 08/09 à 13h58 dans ce même fil.** Pas de répétition. Clôture en question ouverte sans alternative nommée (le trio transmission/détection/notification n'est pas repris comme choix fermé).
+
+`QA : mécanique PASS au 1er jet (558 car., fr/fr, 0 blocker) | aucun chiffre | relecture éditoriale : faite | statut : envoyé le 08/09 à 14h22`
+
+**Fil Mendo, 7 messages au total — le plus dense du portefeuille du jour.** À revérifier au créneau de 17h, sans CTA à resservir quoi qu'il réponde.
+
+#### ✅ Keneth Mugume — malentendu identifié et corrigé, réponse rassurante
+
+Sa réaction a été inattendue : il a lu la 1re phrase du DM de bienvenue (« *that is a reporting system being stood up before the doses move, not after something has happened* ») comme une critique implicite ou un signalement de problème sur son post, allant jusqu'à proposer de le **retirer ou de le modifier** (« *If the post is raising some concerns...I can remove it immediately...or edit it with your guidance* »).
+
+**Verbatim complet de sa série de messages** (5 messages courts, comptés `inboundCount`) : « Hi David » / « I am glad to be in touch » / « Perhaps...I may need your assistance to clarify on your concern my brother 🙏🏼... However...AEFI surveillance systems involve reporting using Vigimobile and many other reporting systems or platforms in country. » / (citation de notre propre message, suivie de) « Kindly clarify 🙏🏼 » / « If the post is raising some concerns...I can remove it immediately...or edit it with your guidance. 🙏🏼 ».
+
+**Aucun garde-fou §10 déclenché** : simple malentendu de formulation, pas une légitimité incertaine ni un hook non vérifiable. Priorité donnée à la clarté et à la bienveillance plutôt qu'à un CTA (hors de propos ici, quel qu'ait été le compte de messages).
+
+**Texte envoyé :**
+
+> Keneth, nothing to edit or remove, I'm sorry the wording read that way. I meant it as recognition: getting AEFI monitoring set up alongside logistics before a campaign even starts is exactly the kind of preparation that usually goes unnoticed.
+>
+> My question was simply this: once the campaign is under way and doses are moving, what keeps that same reporting running at the same pace?
+
+⚠️ **Avertissement mécanique non bloquant** : `context.inbound-mismatch` (5 déclaré vs 1 compté) — le fichier de fil regroupait ses 5 messages courts sous un seul en-tête au lieu d'un par message. Sans conséquence ici (aucun CTA prévu, seuil non pertinent pour cette réponse), mais point de vigilance pour la prochaine fois : **un en-tête par message dans le fichier de fil**, pas un bloc groupé.
+
+`QA : mécanique WARN au 1er jet (383 car., en/en, 0 blocker, 1 warn documenté et sans conséquence) | aucun chiffre | relecture éditoriale : faite | statut : envoyé le 08/09 à 14h27`
+
+**À surveiller à 17h** : confirmer que le malentendu est levé, pas de nouvelle inquiétude de sa part.
+
+#### ✅ Doudou DIOP — 1re réponse, `inboundCount` 1
+
+Sa réponse à notre question sur le timing désinformation/bulletin officiel (mpox 2022-2025) : « *Dans les cas que nous avons recensés c'était dans les deux sens : avant le premier bulletin officiel et après celui-ci !* »
+
+**Texte envoyé :**
+
+> Doudou, les deux sens ensemble, c'est le résultat le moins confortable à publier : ça veut dire qu'aucun ordre fixe ne protège d'avance de la désinformation, ni avant ni après le bulletin.
+>
+> De mon côté, un foyer suivi retient une seule date, celle du bulletin lui-même. Tout ce qui circule autour, dans un sens comme dans l'autre, reste hors de ce que j'enregistre.
+>
+> Dans les cas où la désinformation arrivait après le bulletin, qu'est-ce qui la déclenchait le plus souvent ?
+
+**Statut CTA : absent, motif — seuil non atteint (`inboundCount` 1, 1 seul message de sa part).** Clôture en question ouverte, sans alternative nommée.
+
+`QA : mécanique 2 jets (487 → 475 car., fr/fr) | jet 1 : « n a qu une seule » déjà servi (ngram.history), reformulé ; jet 2 PASS, 0 blocker | aucun chiffre | relecture éditoriale : faite | statut : envoyé le 08/09 à 14h30`
+
+**Quotas inchangés par ce bloc** : DM **8/8 (plein)** — les 4 messages de ce bloc (Sahar Khalid + 3 réponses en fil actif) sont hors quota par exception documentée, ne le rouvrent pas. Commentaires 3/7, suivis 2/7-10, notes de connexion 1/7. **12 messages sortants au total sur ce run** (8 quota + 4 hors quota).
+
 ---
 
 ## 📅 Session linkedin-hwg-monitoring — 08/09/2026 (9h) — ✅ **1 DM envoyé** (Stéphanie Maltais, CTA dû et servi) — ✅ **1 commentaire publié** (Ifedayo Adetifa, sous-fil, détail dans `content-log.md`) — 🔴 **run interrompu deux fois par le classifieur de permissions, 1 brouillon validé (Legand) resté non envoyé après une erreur de clic, 4 autres bienvenues restent non rédigées**
