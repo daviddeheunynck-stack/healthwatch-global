@@ -443,7 +443,14 @@ const CLUSTER_EDITION_CHECKED = {
   // tableau multi-pays. Rien à écrire.
   // ⚠️ Rappel de méthode : l'update est MENSUEL, un numéro plus récent n'est pas une donnée plus
   // récente — vérifier le marqueur dans l'édition, jamais le seul numéro.
-  Cholera: "2026-09-02",
+  // WER 101-35 (semaine épi. 35, 24-30/08, données au 26/07/2026) trouvé le 08/09 : porte bien
+  // l'update mensuel, un mois plus frais que le 101-31. Appliqué le même jour aux 3 pays où il
+  // dépassait la base — Congo 767/49→881/49, Soudan du Sud 10526/111→12649/118, Soudan
+  // 847/117→2042/170 — sur arbitrage explicite de David (le SKILL avait signalé l'écart sans
+  // écrire, conformément à la section 4 bis). RD Congo volontairement NON touchée : le WER 101-35
+  // (36514/1090) est inférieur et plus ancien que les 41279/1214 au 16/08 déjà en base (ONU
+  // Info/OMS) — le garde-fou anti-régression a joué.
+  Cholera: "2026-09-08",
   // MERS-CoV : DON591 toujours le dernier ; revérifié le 17/08 sur la page « MERS-CoV worldwide
   // overview » de l'ECDC, dont l'arrêté est passé au 03/08/2026 — toujours 2 cas / 1 décès en
   // Arabie saoudite depuis le 1er janvier 2026, et toujours 2 649 cas / 960 décès dans le monde
