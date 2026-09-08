@@ -192,7 +192,11 @@ export default async function DiseasesPage({
       cases:  masked ? 0 : total,
       masked,
       band:   masked ? magnitudeBand(total) : null,
-      ids:    masked ? rows.map((o) => o.id) : [],
+      // Left empty when the masked total is 0, so the card renders nothing
+      // at all rather than the dash MagnitudeDots shows for a null band —
+      // `cases > 0` used to be the guard, and it cannot be one any more now
+      // that a masked entry deliberately carries 0 there.
+      ids:    masked && total > 0 ? rows.map((o) => o.id) : [],
     });
   }
   const paidUnlockIds = [...byDisease.values()].flatMap((s) => s.ids);
