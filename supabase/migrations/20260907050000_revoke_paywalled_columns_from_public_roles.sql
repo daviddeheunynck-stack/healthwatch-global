@@ -1,8 +1,7 @@
--- ⚠️ MIGRATION PRÊTE, NON APPLIQUÉE — à appliquer par David. Voir le README de
--- ce dossier. Elle est volontairement HORS de supabase/migrations/ : le hook de
--- pre-push (scripts/check-migrations-applied.mjs) lit ce répertoire sur le
--- DISQUE et refuse tout push tant qu'un fichier y est absent de la base — elle
--- y bloquerait donc les pushs de toutes les autres routines du dépôt.
+-- ✅ APPLIQUÉE le 2026-09-07 (vérifié en production le 2026-09-08 par
+-- daily-security-audit-healthwatch : la clé publiable reçoit HTTP 401 sur
+-- select=cases,deaths,description, les colonnes publiques restent lisibles).
+-- Voir docs/migrations-en-attente/README.md pour l'historique.
 --
 -- ---------------------------------------------------------------------------
 --
