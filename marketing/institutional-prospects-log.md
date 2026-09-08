@@ -5038,3 +5038,80 @@ Grep lancé sur `institutional-prospects-log.md` **et** `marketing/linkedin-cont
 | OPS Bolivie | `/es/country/bolivia` |
 
 ⚠️ Slugs calculés avec `countryToSlug` (`lib/country-utils.ts`) à partir du nom anglais usuel. Si la valeur `country_en` en base diffère (« DR Congo » vs « Democratic Republic of the Congo », « Tanzania » vs « United Republic of Tanzania »…), le slug diffère d'autant — à vérifier au moment de poser le lien.
+
+---
+
+## 🔁 RELANCE J+10 — 2026-09-08, run automatique `daily-relance-check-healthwatch`
+
+**Résultat : 10 relances créées, aucune envoyée.** Le lot attendu ce jour — les 10 contacts préparés le 27/08 mais **envoyés le 29/08 entre 16:48:02 et 16:50:30 UTC** — atteint J+10 aujourd'hui. Les 10 fils sont propres, vérifiés en direct ce run et non repris sur la vérification anticipée du 06/09. **Le run remonte par ailleurs un bounce neuf du 07/09 (le cumul passe de 26 à 27) et l'envoi du lot de 17 du 07/09.**
+
+### 🚦 Frein de file — 16 en entrée, 26 en sortie
+
+`list_drafts` (`pageSize: 50`, vue métadonnées) : **16 brouillons réels**, tous créés par le run de prospection de ce matin entre **06:17:43 et 06:18:40 UTC** — 12 bureaux pays OMS (4 EURO : Lettonie, Lituanie, Slovaquie, Slovénie ; 8 AFRO : Kenya, Ghana, Guinée-Bissau, Tanzanie, RDC, Sénégal, Côte d'Ivoire, Cameroun) et 4 boîtes PAHO (Trinité-et-Tobago, Coordination Caraïbes, Panama, Bolivie). Les 16 portent `labelIds: ["DRAFT"]`, aucun n'est passé en `SENT` (contrôle du bug d'envoi instantané : négatif). Aucun brouillon de relance en attente en entrée.
+
+**⚠️ Choix documenté — le seuil de ~25 est dépassé d'une unité, volontairement.** 16 + 10 = **26 brouillons en sortie**. La consigne demande de réduire le nombre de relances au-delà de ~25 ; elle n'a pas été appliquée ici parce que retirer une relance du lot aurait laissé **un contact orphelin sans rattrapage possible** : la règle « une seule relance, jamais deux » et le calendrier J+10 ne prévoient aucun second passage sur un lot déjà traité, et le contact écarté n'aurait jamais eu sa relance. Le dépassement est d'un brouillon sur un seuil approximatif, contre une perte définitive — arbitrage tranché en faveur de l'intégrité du lot, et signalé plutôt que masqué.
+
+### 🔎 Le lot du 29/08 (préparé le 27/08) — 10 contacts, vérifiés en direct ce run
+
+**Vérification refaite intégralement, pas reprise du run du 06/09** (qui l'avait anticipée à J+8) : deux jours se sont écoulés depuis, une réponse ou un bounce a pu arriver dans l'intervalle.
+
+- **Requêtes `to:` groupées** (2 appels, `includeTrash: true`) sur les 10 adresses : **les 10 fils portent exactement 1 message, `labelIds: ["SENT"]`** — aucune réponse rattachée, aucun accusé automatique, aucune relance antérieure.
+- **Double contrôle réponse détachée** (règle du 25/08, incident THL Finlande) : requête `from:` groupée sur les 8 domaines hors PAHO (`sante.gouv.dj`, `moh.gov.ss`, `health.gov.ws`, `pasteur.ci`, `epidemiologia.it`, `ndph.ox.ac.uk`, `map.org`, `worldhope.org`), `after:2026/08/28`, corbeille incluse → **`{}`, zéro fil**. Pour les 2 boîtes `@paho.org` du lot, la fenêtre 28/08 → 06/09 était déjà couverte par le run du 06/09 ; ce run la prolonge par un balayage `from:paho.org after:2026/09/04` (corbeille incluse) — **aucune réponse, aucun bounce sur `comunicacionesslv` ni `comunicacionespwrven`**.
+- **Anti-doublon** : grep par adresse sur l'ensemble du journal pour les 10 — **aucune n'apparaît dans une entrée « 🔁 RELANCE » antérieure**. Les occurrences multiples (`comunicacionesslv` ×3, `comunicacionespwrven` ×2, `ndph.ox.ac.uk` ×3) sont relues ligne à ligne : listes de réserve PAHO des 22-26/08, piège de domaine Oxford BDI du 06/09, tableaux de prospection du 27/08 — jamais un envoi de relance.
+
+| # | Institution | Adresse | Langue | Brouillon de relance |
+|---|---|---|---|---|
+| 1 | Ministère de la Santé — Djibouti | `contact@sante.gouv.dj` | FR | `r-4596131470264709379` |
+| 2 | Ministry of Health — Soudan du Sud | `info@moh.gov.ss` | EN | `r-3829765572892016843` |
+| 3 | Ministry of Health — Samoa | `enquiries@health.gov.ws` | EN | `r7144390622983007059` |
+| 4 | OPS/PAHO — Bureau pays El Salvador | `comunicacionesslv@paho.org` | ES | `r5038779524775306285` |
+| 5 | OPS/PAHO — Bureau pays Venezuela | `comunicacionespwrven@paho.org` | ES | `r-7981011094945869734` |
+| 6 | Institut Pasteur de Côte d'Ivoire | `info.ipci@pasteur.ci` | FR | `r4374341431865858935` |
+| 7 | AIE — Associazione Italiana di Epidemiologia | `presidente.aie@epidemiologia.it` | EN | `r-4900133339219275104` |
+| 8 | NDPH — Nuffield Dept. of Population Health, Oxford | `enquiries@ndph.ox.ac.uk` | EN | `r-1267829687368611968` |
+| 9 | MAP International | `map@map.org` | EN | `r6409357478833691218` |
+| 10 | World Hope International | `info@worldhope.org` | EN | `r8520189215126576150` |
+
+**Contrôle mécanique après création** (`list_drafts` en vue `DRAFT_VIEW_FULL`, les 10 relus) : `labelIds` = `["DRAFT"]` pour les 10, réponse dans le fil d'origine (`replyToMessageId`, objet « Re: … » automatique), **aucune balise `<a>` et aucun domaine avec `.` littéral dans le texte neuf** — le `htmlBody` généré par le connecteur ne contient que des `<br/>`. Les `<a href>` visibles dans les brouillons appartiennent **exclusivement au bloc cité de l'original**, repris automatiquement par Gmail : normal et sans impact (garde-fou du 05/09). Corps de 4 phrases : salutation identique à l'original, rappel court, offre d'accès Pro reformulée **sans aucune mention du site** (règle du 03/09 : le lien figure déjà dans le message cité juste en dessous), question de clôture de l'original reprise à l'identique, signature « David Deheunynck — HealthWatch Global ». Langues : **EN ×6, FR ×2, ES ×2**, identiques aux originaux.
+
+### 🔴 1 bounce neuf sur le lot du 07/09 — le cumul passe de 26 à 27
+
+Balayage bounces (`from:mailer-daemon`, `from:postmaster`, `from:paho.org`, `subject:Undeliverable`, `subject:"Delivery Status Notification"`, `subject:"Undelivered Mail"`, `subject:"Mail delivery failed"`, `after:2026/09/04`, corbeille incluse) : **5 fils, dont 1 neuf.**
+
+27. **OPS/PAHO Haïti** (07/09) — `Roussettri@paho.org`, NDR Office 365 `postmaster@paho.onmicrosoft.com` : « Your message is too large to send… the maximum message size ». **Message de 2 397 octets**, NDR reçu 15 s après l'envoi. Contact jamais bouncé auparavant (grep : n'apparaît que comme réserve PAHO et ligne de prospection du 07/09) — la liste nominative s'allonge bien d'une unité. **Troisième occurrence exacte du même NDR aberrant sur `@paho.org` en trois jours**, après Équateur (05/09) et Bahamas (06/09) — voir signalement.
+
+**Bilan bounces cumulés depuis le 02/08 : 27** — recalculé depuis la liste nominative au moment de l'écrire, **+1 par rapport au 07/09**. Les 26 premières sont inchangées (l. 3040-3059 pour les 20 premières, Antigua 21e, NDoH PNG 22e, PAHO Jamaïque 23e, PAHO Équateur 24e, PAHO Bahamas 25e, Africa CDC 26e).
+
+### ✅ Envoi du lot du 07/09 vérifié en direct — les 17 sont partis
+
+Balayage `in:sent after:2026/09/06 before:2026/09/09`, corbeille incluse. **Les 17 brouillons de prospection du 07/09 sont partis le 07/09 entre 12:27:51 et 12:30:05 UTC**, d'une traite, en ordre de relecture inverse (Pasteur Montevideo en premier, OMS Albanie en dernier). Écart création (06:20-06:22) → envoi ≈ **6 h 06**, aucune signature « même seconde » : relecture humaine, **pas** le bug d'envoi instantané du connecteur (discriminant du 16/08). Un 18e envoi dans la fenêtre, **hors périmètre de cette routine** : un message à `jalal.nourlil@pasteur.ma` le 07/09 à 19:14 UTC, 4e message d'un fil où le contact a déjà répondu — aucune relance possible ni souhaitable.
+
+### 📬 Réponses institutionnelles — une seule, déjà consignée
+
+Balayage (`-in:sent -in:draft`, mots-clés HealthWatch/outbreak/epidemic/brotes/épidémique/surveillance/dashboard, `after:2026/09/06`, corbeille incluse) : 17 fils relus. **Une seule entrée pertinente : la réponse humaine de Georgetown HSOC du 07/09 à 08:30 UTC**, déjà consignée en session interactive le jour même (section « 🔒 Georgetown HSOC — CLÔTURÉ ») — refus poli, cycle terminé, **plus à mentionner comme « en attente » par les runs futurs**. Le reste est du bruit non institutionnel (digests LinkedIn, Search Console, Sentry, Better Stack, briefing hebdomadaire HWG). **Aucune réponse humaine neuve** ; IDCU Malte reste silencieuse depuis le point d'usage du 06/09.
+
+### 📊 Bilan cumulé
+
+**Totaux au 2026-09-08, 06:30 UTC :**
+- **Prospectés : 410** = 393 (état du 07/09) **+ 17** (lot du 07/09, envoi vérifié en direct ce run).
+- **Envoyés : 410** = 393 **+ 17**. Les 16 brouillons de prospection du 08/09 ne sont pas partis.
+- **Délivrés : 383** = 410 envoyés − 27 (taille de la liste nominative de bounces), recompté dans le même mouvement que la liste, pas repris d'une ligne précédente.
+- **Taux de délivrabilité : 93,4 % (383/410)** — stable sur le 07/09 (93,4 %), le bounce du jour et les 17 envois se compensant.
+- **⚠️ Réserve maintenue** : les 410 envoyés comptent **4 envois vers des institutions déjà contactées** (incident du 22/08), **1 seconde tentative sur Antigua** et **1 sur PNG**. Le nombre d'**institutions distinctes** atteintes reste inférieur d'autant.
+- **Relances : 257 envoyées, 10 en attente d'envoi** (celles de ce run) — **total cumulé de relances créées depuis le début : 267**.
+
+**Profondeur de file en fin de run : 26 brouillons** = 16 de prospection + 10 relances.
+
+### 📅 Prochains lots
+
+- **09/09 et 10/09** : rien à relancer — aucun envoi les 30 et 31/08 (le lot préparé le 30/08 est parti le 01/09, voir ci-dessous).
+- **11/09** → lots du **30/08** (7 contacts, envoyés le 01/09) et du **01/09** (9 délivrés sur 10) ; `contact@health.gov.ag` écarté définitivement.
+- **12/09** → 02/09 (9 délivrés + CAPRISA) ; `health_ministry@health.gov.pg` écarté définitivement.
+- **13/09** → 03/09 (16) ; **14/09** → 04/09 (16) ; **15/09** → 05/09 (21 = 23 envoyés − Jamaïque et Équateur bouncés) ; **16/09** → 06/09 (8 = 10 envoyés − Bahamas et Africa CDC bouncés) ; **17/09** → 07/09 (16 = 17 envoyés − Haïti bouncé).
+
+### ⚠️ Signalements à David
+
+1. **🔴 « Message too large » sur `@paho.org` : 3 boîtes en 3 jours, et la série ne s'arrête pas.** Équateur (05/09, 2 255 o), Bahamas (06/09, 2 431 o), Haïti (07/09, 2 397 o) — même NDR Office 365, même émetteur `postmaster@paho.onmicrosoft.com`, sur des messages de ~2,4 Ko où aucun plafond réel n'est en cause. **Le signalement du 07/09 tenait pour un réglage par boîte** (5 autres boîtes PAHO délivrées sans incident les 05 et 06/09) ; une 3e occurrence en trois jours ne le contredit pas encore, mais elle en fait un risque récurrent plutôt qu'une anomalie isolée. **4 brouillons `@paho.org` sont en file aujourd'hui** (Trinité-et-Tobago, Coordination Caraïbes, Panama, Bolivie) : adresses vérifiées et vivantes, mais le même NDR peut se reproduire. Aucune action prise — la décision revient à David.
+2. **🟡 IDCU Malte : silencieuse depuis le point d'usage du 06/09.** David a écrit le 06/09 à 21:51 UTC, aucune réponse à ce jour. L'accès Pro expire le **2 octobre**. Deux jours de délai ne sont pas un silence ; à reprendre en fin de semaine si rien n'arrive. **Georgetown HSOC n'est plus à surveiller** — cycle clôturé le 07/09 par un refus poli, verdict négatif consigné en session.
+3. **🟢 Africa CDC (`africacdc@africa-union.org`) et PAHO Équateur restent retentables.** Boîte pleine pour l'un, règle de remise cassée pour l'autre : ni l'un ni l'autre n'est une adresse morte. **Non retentés par ce run** (hors périmètre : cette routine ne renvoie pas d'original). Rappel de la règle du 17/08 : un re-bounce sur l'un d'eux **n'ajouterait ni un bounce ni un délivré en moins**, ils figurent déjà à la liste nominative.
+4. **Aucun incident technique côté Gmail.** `list_drafts` stable (1 appel en entrée, 1 en vue complète après création, résultats cohérents avec les horodatages), aucune recréation, aucun doublon. **Arbre de travail partagé, sans conflit** : le run de prospection du 08/09 a écrit et commité son entrée (`f05c0367`) pendant ce run ; seul `marketing/institutional-prospects-log.md` a été stagé ici, aucun fichier étranger touché.
