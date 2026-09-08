@@ -6,7 +6,7 @@ import { createClient } from "@supabase/supabase-js";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { allDiseases, diseaseToSlug, normalizeDisease } from "@/lib/disease-data";
-import { getLocalizedDisease, getOutbreaks, pickFeaturedDiseases, aggregateNeedsMasking, magnitudeBand } from "@/lib/outbreaks";
+import { getLocalizedDisease, getOutbreaks, pickFeaturedDiseases, aggregateNeedsMasking, magnitudeBand, filterDisplayActive } from "@/lib/outbreaks";
 import type { Outbreak } from "@/lib/outbreaks";
 import EmailCapture from "@/components/EmailCapture";
 import RealStatsProvider from "@/components/RealStatsProvider";
@@ -134,11 +134,16 @@ async function fetchActiveOutbreaks(): Promise<Outbreak[]> {
     clean(process.env.NEXT_PUBLIC_SUPABASE_URL),
     clean(process.env.SUPABASE_SERVICE_ROLE_KEY)
   );
+  // Not `.eq("active", true)`: the detail pages show a slightly different
+  // set (filterDisplayActive below) — a row closed days ago with no
+  // successor still counts, an endemic-baseline `is_seed` row never does —
+  // and an index that groups a different set than the page it links to is
+  // exactly how this page ended up publishing a figure its own disease page
+  // banded. The extra columns are the ones that decision reads.
   const { data } = await supabase
     .from("outbreaks")
-    .select("id, disease, disease_en, disease_ar, cases, active, region")
-    .eq("active", true);
-  return (data ?? []) as Outbreak[];
+    .select("id, disease, disease_en, disease_ar, cases, active, region, country, country_en, is_seed, date, source_priority, updated_at, response_phase");
+  return filterDisplayActive((data ?? []) as Outbreak[]);
 }
 
 const FILTER_LABELS: Record<Locale, { all: string; activeOnly: string }> = {

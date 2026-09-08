@@ -7,7 +7,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { countryToSlug, getLocalizedCountryName } from "@/lib/country-utils";
 import type { Outbreak } from "@/lib/outbreaks";
-import { getOutbreaks, pickFeaturedDiseases, aggregateNeedsMasking, magnitudeBand } from "@/lib/outbreaks";
+import { getOutbreaks, pickFeaturedDiseases, aggregateNeedsMasking, magnitudeBand, filterDisplayActive } from "@/lib/outbreaks";
 import EmailCapture from "@/components/EmailCapture";
 import RealStatsProvider from "@/components/RealStatsProvider";
 import { AggregateCasesInline } from "@/components/CasesDisplay";
@@ -160,6 +160,14 @@ export async function generateMetadata({
 // them and hand their ids to the paid-unlock fetch.
 type ActiveRow = Pick<Outbreak, "id" | "region" | "disease" | "disease_en" | "cases">;
 
+// What the query above selects: the card's own fields, plus the ones
+// filterDisplayActive() needs to decide whether a row still counts as shown.
+type FetchedRow = Pick<
+  Outbreak,
+  "id" | "country_en" | "country" | "country_ar" | "region" | "active" | "cases"
+  | "disease" | "disease_en" | "is_seed" | "date" | "source_priority" | "updated_at" | "response_phase"
+>;
+
 interface CountryStats {
   country_en: string;
   country:    string;
@@ -167,7 +175,7 @@ interface CountryStats {
   region:     string;
   activeCount: number;
   totalCount:  number;
-  // Sum over ACTIVE rows only. Was a sum over every row of the country,
+  // Sum over the rows shown as active only. Was a sum over every row of the country,
   // archives included — which made this figure something other than an
   // outbreak count: Ghana read "1 foyer au total · 6 739 843 cas · aucun
   // foyer actif", that 6.7M being one archived Malaria endemic-baseline row
@@ -188,21 +196,34 @@ async function fetchCountryStats(): Promise<CountryStats[]> {
 
   const { data } = await supabase
     .from("outbreaks")
-    .select("id, country_en, country, country_ar, region, active, cases, disease, disease_en")
+    .select("id, country_en, country, country_ar, region, active, cases, disease, disease_en, is_seed, date, source_priority, updated_at, response_phase")
     .not("country_en", "is", null);
 
   if (!data) return [];
 
+  const rows = data as FetchedRow[];
+  // The product's single definition of "shown as active", the same one the
+  // country/disease/region detail pages use. Raw `active` is NOT equivalent:
+  // it excludes rows the detail pages still display (a row closed days ago
+  // with no successor) and includes endemic-baseline `is_seed` rows the
+  // detail pages deliberately drop. Using anything else here re-opens the
+  // gap this page was fixed for — measured on /fr/country/eu-eea, whose
+  // figure was banded on the fiche and in clear on this index for exactly
+  // that reason. Keyed by disease+country, so running it once over every
+  // row gives each country the same set its own page computes.
+  const displayActiveIds = new Set(filterDisplayActive(rows).map((o) => o.id));
+
   const map = new Map<string, CountryStats>();
-  for (const o of data as (Pick<Outbreak, "country_en" | "country" | "country_ar" | "region" | "active" | "cases"> & ActiveRow)[]) {
+  for (const o of rows) {
     if (!o.country_en) continue;
     // `region` is passed through untouched (not coerced to "") so the
     // featured-disease lookup keys exactly as it does on the detail pages.
     const row: ActiveRow = { id: o.id, region: o.region, disease: o.disease, disease_en: o.disease_en, cases: o.cases ?? 0 };
+    const shown = displayActiveIds.has(o.id);
     const existing = map.get(o.country_en);
     if (existing) {
       existing.totalCount++;
-      if (o.active) {
+      if (shown) {
         existing.activeCount++;
         existing.activeCases += o.cases ?? 0;
         existing.activeRows.push(row);
@@ -213,10 +234,10 @@ async function fetchCountryStats(): Promise<CountryStats[]> {
         country:     o.country ?? o.country_en,
         country_ar:  o.country_ar ?? null,
         region:      o.region ?? "",
-        activeCount: o.active ? 1 : 0,
+        activeCount: shown ? 1 : 0,
         totalCount:  1,
-        activeCases: o.active ? (o.cases ?? 0) : 0,
-        activeRows:  o.active ? [row] : [],
+        activeCases: shown ? (o.cases ?? 0) : 0,
+        activeRows:  shown ? [row] : [],
       });
     }
   }

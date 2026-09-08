@@ -6,7 +6,7 @@ import { createClient } from "@supabase/supabase-js";
 import Link from "next/link";
 import type { Metadata } from "next";
 import type { Outbreak } from "@/lib/outbreaks";
-import { getOutbreaks, pickFeaturedDiseases, aggregateNeedsMasking, magnitudeBand } from "@/lib/outbreaks";
+import { getOutbreaks, pickFeaturedDiseases, aggregateNeedsMasking, magnitudeBand, filterDisplayActive } from "@/lib/outbreaks";
 import EmailCapture from "@/components/EmailCapture";
 import RealStatsProvider from "@/components/RealStatsProvider";
 import { AggregateCasesInline } from "@/components/CasesDisplay";
@@ -187,6 +187,14 @@ export async function generateMetadata({
 // paid-unlock fetch.
 type ActiveRow = Pick<Outbreak, "id" | "region" | "disease" | "disease_en" | "cases">;
 
+// What the query below selects: the card's own fields, plus the ones
+// filterDisplayActive() needs to decide whether a row still counts as shown.
+type FetchedRow = Pick<
+  Outbreak,
+  "id" | "region" | "active" | "cases" | "country_en" | "country"
+  | "disease" | "disease_en" | "is_seed" | "date" | "source_priority" | "updated_at" | "response_phase"
+>;
+
 interface RegionStats {
   slug:        RegionSlug;
   activeCount: number;
@@ -204,27 +212,33 @@ async function fetchRegionStats(): Promise<RegionStats[]> {
 
   const { data } = await supabase
     .from("outbreaks")
-    .select("id, region, active, cases, country_en, disease, disease_en")
+    .select("id, region, active, cases, country_en, country, disease, disease_en, is_seed, date, source_priority, updated_at, response_phase")
     .not("region", "is", null);
 
   if (!data) return REGION_SLUGS.map((slug) => ({ slug, activeCount: 0, totalCount: 0, activeCases: 0, activeRows: [], countryCount: 0 }));
+
+  const rows = data as FetchedRow[];
+  // Same shared "shown as active" definition as the region detail pages —
+  // see the countries index for why raw `active` is not equivalent.
+  const displayActiveIds = new Set(filterDisplayActive(rows).map((o) => o.id));
 
   const map = new Map<RegionSlug, { active: number; total: number; cases: number; rows: ActiveRow[]; countries: Set<string> }>();
   for (const slug of REGION_SLUGS) {
     map.set(slug, { active: 0, total: 0, cases: 0, rows: [], countries: new Set() });
   }
 
-  for (const o of data as (Pick<Outbreak, "region" | "active" | "cases" | "country_en"> & ActiveRow)[]) {
+  for (const o of rows) {
     if (!o.region) continue;
     const slug = o.region.toLowerCase().replace(/\s+/g, "-") as RegionSlug;
     const bucket = map.get(slug);
     if (!bucket) continue;
     bucket.total++;
-    // Cases counted over ACTIVE rows only — see the countries index for the
-    // same correction and why `is_seed` is the wrong discriminant. Africa
-    // used to read "169 549 469 cas" here, almost entirely archived endemic
-    // baselines, next to a region page that bands the same aggregate.
-    if (o.active) {
+    // Cases counted over the displayed-active rows only — see the countries
+    // index for the same correction and why `is_seed` is the wrong
+    // discriminant to reach for. Africa used to read "169 549 469 cas" here,
+    // almost entirely archived endemic baselines, next to a region page that
+    // bands the same aggregate.
+    if (displayActiveIds.has(o.id)) {
       bucket.active++;
       bucket.cases += o.cases ?? 0;
       bucket.rows.push({ id: o.id, region: o.region, disease: o.disease, disease_en: o.disease_en, cases: o.cases ?? 0 });
