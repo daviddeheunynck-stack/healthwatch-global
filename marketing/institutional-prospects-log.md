@@ -4935,3 +4935,106 @@ Le point d'usage envoyé par David le 06/09 à 21:51 UTC (« the 35-day period r
 **Lecture : refus net, sans demande de prolongation ni de passage payant.** Motif donné : chevauchement de sources avec ce qu'ils utilisent déjà, angle produit pas assez différenciant pour leurs utilisateurs. Aucune question ouverte de leur part, rien à répondre côté David — accusé de réception suffisant si besoin, aucune relance à prévoir.
 
 **Ferme le fil ouvert depuis le 24/08** (accès Pro accordé le jour même, silence prolongé, deux points d'usage relayés dans ce journal les 04-05/09 l. 4753 et 06/09 l. 4794/4819). **Les runs futurs de prospection/relance ne doivent plus mentionner Georgetown HSOC comme « en attente » ou « silencieux » — c'est un cycle terminé, verdict négatif.** Pas un échec de process : c'est la première réponse honnête sur le fit produit reçue depuis la réouverture du canal le 02/08, à mettre en regard des 2 conversions Pro (IDCU Malte, HSOC lui-même à l'origine) plutôt qu'à charge contre le ciblage académique en général — un seul point de données.
+
+---
+
+## 🆕 Nouveaux contacts trouvés — 2026-09-08, run automatique `daily-institutional-prospecting-healthwatch`
+
+**Résultat : 16 contacts nets sur 20, 16 brouillons créés, aucun envoyé.** Le manque à 20 s'explique par **deux plafonds réellement atteints** (OMS bureaux pays 12/12, PAHO 4/4) et par l'épuisement mesuré du vivier hors OMS/PAHO. **Fait marquant du run : le vivier OMS n'était pas épuisé, il était juste inexploré** — voir plus bas.
+
+### 🚦 Frein de file — 0 brouillon en entrée
+
+`list_drafts` appelé **deux fois** (métadonnées puis vue complète, consigne du 16/08) : **`{}` sur les deux appels**, conclusion croisée avec `search_threads` (`in:sent newer_than:2d`, corbeille incluse). Les 17 brouillons du 07/09 sont **tous partis**, envoyés par David le **2026-09-07 entre 12:27:51 et 12:30:05 UTC**, en séquence continue de ~2 min 15 dans l'ordre de relecture. Profil « lot entier / relecture humaine », **pas** la signature « même seconde » du bug d'envoi instantané du connecteur (discriminant du 16/08). Consigné sans alerte. Le frein n'a joué aucun rôle ce run.
+
+### 🔓 Déblocage du run : les bureaux pays OMS d'AFRO n'avaient jamais été touchés
+
+Les 65 adresses `@who.int` du journal sont **toutes** EURO, SEARO, WPRO ou siège — **aucune AFRO, aucune EMRO**. Cause probable : les pages `who.int/<pays>/about-us` (motif utilisé pour EURO) rendent **404** pour les pays d'AFRO et d'EMRO ; les bureaux pays africains publient leur adresse sur `afro.who.int/countries/<pays>`, un motif d'URL différent jamais essayé. Vérifié ce run : les adresses y sont publiées en clair (écrites `nom [at] who.int`, lisibles — ce n'est **pas** un masquage type Cloudflare `[email protected]`), toutes bien en `@who.int`, et les formats varient d'un pays à l'autre (`afkeninfo`, `afwcocd`, `afcougwrsec`, `afwcociwr` — aucun pattern déductible, chacune relue sur sa page). **47 pays AFRO potentiellement disponibles sur ce motif**, dont 8 seulement consommés aujourd'hui à cause du plafond. Le constat du 07/09 (« ce vivier tient un seul lot de plus ») est donc **caduc**.
+
+### Contacts retenus
+
+| Institution | Pays/Région | Segment | Contact | Email | Source (lue en direct ce jour, HTTP 200) | Vérifié | Brouillon Gmail |
+|---|---|---|---|---|---|---|---|
+| OMS — bureau pays Lettonie | Lettonie / EURO | Gouvernement/OMS | — (boîte du bureau pays) | `eurowholva@who.int` | who.int/latvia/about-us | Oui | oui — `r4196999395128875183` |
+| OMS — bureau pays Lituanie | Lituanie / EURO | Gouvernement/OMS | — (boîte du bureau pays) | `eurowholtu@who.int` | who.int/lithuania/about-us | Oui | oui — `r-4382975885061589256` |
+| OMS — bureau pays Slovaquie | Slovaquie / EURO | Gouvernement/OMS | — (boîte du bureau pays) | `eurowhosvk@who.int` | who.int/slovakia/about-us | Oui | oui — `r7329432923680850911` |
+| OMS — bureau pays Slovénie | Slovénie / EURO | Gouvernement/OMS | — (boîte du bureau pays) | `eurowhosvn@who.int` | who.int/slovenia/about-us | Oui | oui — `r-7549385516932787742` |
+| OMS — bureau pays Kenya | Kenya / AFRO | Gouvernement/OMS | — (boîte « info » du bureau) | `afkeninfo@who.int` | afro.who.int/countries/kenya | Oui | oui — `r-8101264287233872743` |
+| OMS — bureau pays RD Congo | RD Congo / AFRO | Gouvernement/OMS | — (boîte du bureau pays) | `afwcocd@who.int` | afro.who.int/countries/democratic-republic-congo | Oui | oui — `r7661841644262943009` |
+| OMS — bureau pays Ghana | Ghana / AFRO | Gouvernement/OMS | — (boîte du bureau pays) | `afwcogh@who.int` | afro.who.int/countries/ghana | Oui | oui — `r7001794286210555670` |
+| OMS — bureau pays Ouganda | Ouganda / AFRO | Gouvernement/OMS | — (secrétariat du bureau, boîte fonctionnelle) | `afcougwrsec@who.int` | afro.who.int/countries/uganda | Oui | oui — `r-8365900615332738859` |
+| OMS — bureau pays Sénégal | Sénégal / AFRO | Gouvernement/OMS | — (boîte du bureau pays) | `afwcosn@who.int` | afro.who.int/countries/senegal | Oui | oui — `r-1613396789619018727` |
+| OMS — bureau pays Côte d'Ivoire | Côte d'Ivoire / AFRO | Gouvernement/OMS | — (boîte du bureau pays) | `afwcociwr@who.int` | afro.who.int/countries/cote-divoire | Oui | oui — `r542172258847537295` |
+| OMS — bureau pays Cameroun | Cameroun / AFRO | Gouvernement/OMS | — (boîte du bureau pays) | `afwcocm@who.int` | afro.who.int/countries/cameroon | Oui | oui — `r2792378856660932343` |
+| OMS — bureau pays Tanzanie | Tanzanie / AFRO | Gouvernement/OMS | — (boîte du bureau pays) | `afwcotz@who.int` | afro.who.int/countries/united-republic-tanzania | Oui | oui — `r-6147352721871953417` |
+| OPS/PAHO — Bureau pays Trinité-et-Tobago | Trinité-et-Tobago / AMRO | Gouvernement/OMS | — (boîte de correspondance du bureau) | `e-mailtto@paho.org` | paho.org/en/paho-country-office-media-contacts | Oui | oui — `r-2210478253969004126` |
+| OPS/PAHO — Coordination sous-régionale Caraïbes | Caraïbes / AMRO | Gouvernement/OMS | — (boîte de coordination sous-régionale) | `spc-crb@paho.org` | idem | Oui | oui — `r6217765994546705336` |
+| OPS/PAHO — Bureau pays Panama (ES) | Panama / AMRO | Gouvernement/OMS | — (boîte d'office) | `pane-mail@paho.org` | idem | Oui | oui — `r-9064952328029525028` |
+| OPS/PAHO — Bureau pays Bolivie (ES) | Bolivie / AMRO | Gouvernement/OMS | — (boîte de correspondance) | `correspondencia@paho.org` | idem | Oui | oui — `r3117656655864369445` |
+
+### 🔎 Anti-doublon (grep par adresse ET par organisation, contact par contact)
+
+Grep lancé sur `institutional-prospects-log.md` **et** `marketing/linkedin-contacts.md` — **0 occurrence dans LinkedIn pour les 16.**
+
+**Les 8 boîtes AFRO** : `afkeninfo`, `afwcocd`, `afwcogh`, `afcougwrsec`, `afwcosn`, `afwcociwr`, `afwcocm`, `afwcotz` → **0 occurrence chacune**. Grep complémentaire `bureau pays.*(Kenya|Congo|Ghana|Ouganda|Sénégal|Côte d'Ivoire|Cameroun|Tanzanie)` → **1 seule ligne**, sans rapport (une note de méthode). Les pays eux-mêmes ressortent, mais toujours sur d'**autres** organisations (ESP Kinshasa, Institut Pasteur de Dakar, INSP Côte d'Ivoire, Noguchi Ghana, UNITID Nairobi…), faîtières distinctes.
+
+**Les 4 boîtes EURO** : `eurowholva`, `eurowholtu`, `eurowhosvk`, `eurowhosvn` → **2 occurrences chacune**, toutes des **mentions de réserve** (entrées des 05/09 et 07/09), jamais une ligne de contact. Ré-ouvertes en direct ce jour sur `who.int/<pays>/about-us`, HTTP 200, adresse relue dans la page, terminaison `@who.int` contrôlée sur chacune.
+
+**Les 4 boîtes PAHO** : `e-mailtto` → 2, `spc-crb` → 2, `pane-mail` → 5, `correspondencia@paho` → 1 — **toutes des mentions de réserve ou de page-source**, aucune ligne de contact. Page `paho.org/en/paho-country-office-media-contacts` **relue en direct ce jour, HTTP 200**, 33 boîtes extraites.
+
+### 🔴 Doublon rattrapé au grep : PAHO Nicaragua était présenté à tort comme une réserve
+
+**`nic-email@paho.org` (bureau pays PAHO Nicaragua) a été écarté de ce lot : il est déjà au journal comme contact envoyé, ligne 3102** (entrée du 30/08, ligne de tableau complète avec source, « Vérifié : Oui » et brouillon). Il figurait pourtant dans la liste des « 4 boîtes PAHO restant en réserve » du rapport du 07/09 — **cette mention était fausse**, et l'aurait été aussi le 05/09 (« 3 mentions de réserve »). L'erreur vient d'un grep antérieur qui a lu les occurrences comme des mentions sans ouvrir la ligne 3102 elle-même. Rattrapé ici par la relecture ligne à ligne de chaque occurrence, pas par le seul compteur. **Remplacé par `correspondencia@paho.org` (bureau pays PAHO Bolivie)**, vérifié neuf sur la même page. Réserve PAHO réelle après ce run : **aucune boîte de bureau pays non journalisée et hors profil « comunicaciones »** — les restantes de la page sont soit déjà contactées, soit des boîtes de communication déjà écartées par profil.
+
+### 🔴 Deux plafonds réellement atteints, et ce qu'ils laissent de côté
+
+**Plafond OMS bureaux pays : 12/12.** Laissés de côté alors qu'ils étaient **vérifiés en direct ce run** : **Mozambique** `afwcomz@who.int`, **Angola** `afwcoaowr@who.int`, **Zambie** `afwcozmregistry@who.int`, **Éthiopie** `afwcoet@who.int` (4 boîtes utilisables immédiatement, sans nouvelle recherche), plus **Russie** `eurusco@who.int` (EURO, **non re-vérifiable ce run** : `who.int/russia/about-us` rend 404, motif d'URL à retrouver avant usage). Et surtout, **~39 autres pays AFRO** non encore testés sur le motif `afro.who.int/countries/<pays>`.
+
+**Plafond PAHO générique : 4/4.** Aucune réserve de bureau pays PAHO ne subsiste (voir ci-dessus).
+
+**Les 4 contacts manquants ne sont pas un effet de plafond : le vivier hors OMS/PAHO est mesurément épuisé.** ~45 pistes examinées, **aucune retenue**. Détail par motif :
+- **Écartées au grep avant tout test, organisation déjà au journal (~60)** : Fiocruz, Task Force for Global Health, PATH, Mahidol, ANLIS/Malbrán, INS Colombie, Robert Koch, Santé publique France, ISS Italie, ISCIII, Statens Serum, Folkhälsomyndigheten, THL, FHI Norvège, NIID, KDCA, Sciensano, EUPHA, The Union, Carter Center, Partners In Health, BRAC, PSI, Jhpiego, FHI 360, Evidence Action, GOAL, Tearfund, CBM, Muso, Living Goods, Direct Relief, Project HOPE, Relief International, Terre des hommes, Handicap International, MENTOR Initiative, INSPQ, NCCID Canada, PHF Science NZ, Landlæknir Islande, WAHO/OOAS, SPC, CARPHA, SAARC, EMPHNET, IANPHI, TEPHINET, AFENET, IGAD, SADC, ZNPHI, RBC Rwanda, NPHIL Liberia, Bénin, Kazakhstan, Mongolie, Bhoutan, Maldives, Brunei, Cambodge, Myanmar, Laos, Arménie, Azerbaïdjan, Géorgie, Tadjikistan, Turkménistan, Kirghizistan.
+- **Testées en direct, déjà au journal (doublons rattrapés au grep, 4)** : **FSP-USP Brésil** (`fsp@usp.br`, l. 1437), **FKM Universitas Indonesia** (`fkmui@ui.ac.id`, l. 120), **UPCH Pérou** (l. 1568 et l. 211), **Gulf Health Council** (`info@ghc.sa`, l. 2049 — page relue HTTP 200, adresse identique).
+- **Page 200 mais aucune adresse publiée (5)** : Escuela de Salud Pública Universidad de Chile (téléphones seuls), Instituto Evandro Chagas (`gov.br/iec`), MSF international (`msf.org/contact-us`, carte des bureaux sans adresse), IOM Migration Health (`iom.int/migration-health`), NTI (formulaire seul).
+- **403 anti-bot, y compris avec User-Agent navigateur (6)** : **UNICEF** — 4 bureaux régionaux testés (WCA, ESA, ROSA, EAP), 403 en WebFetch **et** en curl avec UA Chrome, ce n'est donc pas le filtrage d'UA de la leçon EMRO ; **RBM Partnership** (`endmalaria.org`), **Stop TB Partnership**.
+- **404 / TLS / connexion impossible (6)** : `who.int/kenya|egypt|russia/about-us` (motif EURO inapplicable hors EURO — c'est ce 404 qui a mené à la découverte du motif AFRO), MISAU Mozambique (**certificat auto-signé**, écarté), INS Pérou (ECONNRESET ×2), UGM Center for Tropical Medicine (502), Institut Pasteur d'Iran (404), ISDS (404).
+- **Adresse masquée ou hors périmètre (3)** : **MSF France** (page contact 200 mais **toutes** les adresses rendues en `[email protected]`, masquage type Cloudflare — écartée par la règle du 18/08), **MSF Belgique** (`donateurs@msf.be`, seule boîte publiée, service donateurs — hors périmètre, même motif que le `communications@` d'Africa CDC RCC), **The Union** (page 200 ne publiant que `email@email.com`, placeholder de formulaire).
+
+### 📊 Compteurs
+
+- **Lot du 07/09 : 17 préparés, 17 envoyés, 1 bounce → 16 délivrés.** Envoi vérifié en direct ce run (`search_threads`, `in:sent`, corbeille incluse).
+- **Prospectés cumulés depuis le 02/08 : 410** = 393 (état du 07/09) **+ 17** (lot du 07/09, envoi confirmé ce run). **Envoyés : 410.** Les 16 brouillons de ce jour ne sont pas comptés tant qu'ils ne sont pas partis.
+- **Profondeur de file en fin de run : 16 brouillons** (0 en entrée + 16 créés). Très en dessous du seuil de ~40.
+- **Bounces du jour, nominativement** — pas de total cumulé ici, il a un porteur unique, `daily-relance-check-healthwatch` (règle du 16/08) :
+  - **OPS/PAHO Haïti** `Roussettri@paho.org` (envoyé 07/09 12:28:31, NDR Office 365 `postmaster@paho.onmicrosoft.com` à 12:28:46) — « **Your message is too large to send** » sur un message de **~2,4 Ko**. **Troisième NDR identique sur `@paho.org` en trois jours** (Équateur 05/09, Bahamas 06/09, Haïti 07/09).
+- **Conformité mécanique des 16 brouillons** (`list_drafts` en `DRAFT_VIEW_FULL`, les 16 relus après création) : `labelIds` = `["DRAFT"]` pour les 16, **aucune balise `<a>`** (le `htmlBody` généré par le connecteur ne contient que des `<br/>` et un `<div dir="auto">`), **aucun domaine avec `.` littéral**, signature « Find us at healthwatch » (EN) / « Retrouvez-nous sur healthwatch » (FR) / « Estamos en healthwatch » (ES) — **mot nu**, conforme à la règle du 04/09. Objets tous **≤ 60 caractères** (le plus long : « HealthWatch Global — veille epidemique, OMS Cote d'Ivoire », 57). Chaque corps se termine par une question explicite. Langues : **EN** ×10, **FR** ×4, **ES** ×2.
+
+### ⚠️ Signalements à David
+
+1. **🟢 Le vivier OMS est bien plus large qu'annoncé hier — le motif d'URL AFRO était le point aveugle.** Le rapport du 07/09 concluait que la réserve OMS « tient un seul lot de plus ». C'est faux : ~39 pays AFRO restent testables sur `afro.who.int/countries/<pays>`, plus l'EMRO dont le motif n'a pas encore été trouvé. **Conséquence pratique : le plafond de 12 bureaux pays, et non l'épuisement, sera le facteur limitant des prochains runs OMS.**
+2. **🔴 « Message too large » sur PAHO : 3 NDR en 3 jours, sur des messages de ~2,4 Ko.** Équateur (05/09), Bahamas (06/09), Haïti (07/09), tous avec le même NDR Office 365. Aucun plafond de taille réel n'est en cause à 2,4 Ko : c'est une règle de remise côté destinataire. **4 brouillons `@paho.org` sont en file aujourd'hui** (Trinité, Caraïbes, Panama, Bolivie) — adresses vérifiées et vivantes sur la page officielle, mais le même NDR peut se reproduire. Aucune action prise, la décision revient à David.
+3. **🔴 Un doublon PAHO Nicaragua a survécu à deux runs avant d'être rattrapé** (voir section dédiée). La leçon n'est pas « faire un grep » — il était fait — mais **ouvrir chaque occurrence** avant de la qualifier de « mention de réserve » : un compteur d'occurrences ne distingue pas une note d'une ligne de contact.
+4. **⚖️ Déséquilibre de segments assumé : 16 gouvernement/OMS, 0 académique, 0 ONG.** L'Étape 2 demande une répartition sur les trois segments ; elle n'est pas tenue, pour le 2e run consécutif et plus nettement encore qu'hier. Cause directe : sur ~45 pistes académiques/ONG examinées, **aucune** n'a rendu une adresse retenable et neuve. Signalé plutôt que corrigé en réduisant le lot.
+5. **Aucun incident technique.** `list_drafts` stable (2 appels concordants en entrée, 1 en sortie rendant exactement les 16 brouillons du run), aucun doublon créé, aucune recréation. Arbre de travail **propre** en début de run, branche `master` ; seul `marketing/institutional-prospects-log.md` a été modifié et commité par cette routine.
+
+### 🔗 Suggestions de destination pour le lien « healthwatch » (rapport seulement — le brouillon ne contient que le mot nu)
+
+| Contact | Page suggérée |
+|---|---|
+| OMS Lettonie | `/en/country/latvia` |
+| OMS Lituanie | `/en/country/lithuania` |
+| OMS Slovaquie | `/en/country/slovakia` |
+| OMS Slovénie | `/en/country/slovenia` |
+| OMS Kenya | `/en/country/kenya` |
+| OMS RD Congo | `/fr/country/dr-congo` |
+| OMS Ghana | `/en/country/ghana` |
+| OMS Ouganda | `/en/country/uganda` |
+| OMS Sénégal | `/fr/country/senegal` |
+| OMS Côte d'Ivoire | `/fr/country/cote-d-ivoire` |
+| OMS Cameroun | `/fr/country/cameroon` |
+| OMS Tanzanie | `/en/country/tanzania` |
+| OPS Trinité-et-Tobago | `/en/country/trinidad-and-tobago` |
+| OPS Caraïbes (sous-régional) | pas de fiche pays unique — préférer une fiche maladie, `/en/disease/dengue` ou `/en/disease/cholera` |
+| OPS Panama | `/es/country/panama` |
+| OPS Bolivie | `/es/country/bolivia` |
+
+⚠️ Slugs calculés avec `countryToSlug` (`lib/country-utils.ts`) à partir du nom anglais usuel. Si la valeur `country_en` en base diffère (« DR Congo » vs « Democratic Republic of the Congo », « Tanzania » vs « United Republic of Tanzania »…), le slug diffère d'autant — à vérifier au moment de poser le lien.
