@@ -2,7 +2,7 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
-## 📅 Session linkedin-hwg-followup-check — 08/09/2026 (13h) — ✅ **1 commentaire publié** (Sahar Khalid, sous-fil) — ✅ **5 DM + 2 réponses en fil actif** (détail dans `linkedin-contacts.md`) — quota DM **plein 8/8**
+## 📅 Session linkedin-hwg-followup-check — 08/09/2026 (13h) — ✅ **2 commentaires publiés** (Sahar Khalid en sous-fil, Prof. Mohamed Janabi en top-level) — ✅ **5 DM + 2 réponses en fil actif** (détail dans `linkedin-contacts.md`) — quota DM **plein 8/8**
 
 **Contexte d'ouverture** : navigateur `23c7ecdd-…`, session planifiée. Aucun run de ce `taskId` aujourd'hui. Registres QA du 08/09 09h03 réutilisés (moins de 12 h). `content-log.md` et `linkedin-contacts.md` relus à l'ouverture **et de nouveau juste avant le clic de publication** (§15) : aucune entrée concurrente sur la cible.
 
@@ -34,6 +34,36 @@ Archive de tout le contenu créé. Mise à jour à chaque session.
 
 `QA : mécanique 3 jets (427 → 461 → 500 car., en/en) | jets 1-2 : « i only ever see the », puis « far end of the chain » et « arrives at the far end » — trois formules réellement déjà servies, reformulées ; jet 3 PASS, 0 blocker | aucun chiffre | relecture éditoriale : faite | statut : publié le 08/09 à 13h50`
 
+### 1️⃣bis ✅ COMMENTAIRE 3/7 — **Prof. Mohamed Janabi**, Directeur régional OMS pour l'Afrique, publié au 1er jet
+
+`urn:li:activity:7502687543214129152`, post d'**1 jour** (fenêtre 48 h ouverte), **206 réactions, 11 commentaires avant le nôtre**. Profil **libre de tout blocage** (vérifié dans les listes de blocage : il y figure comme libre depuis plusieurs semaines, jamais commenté). **Premier commentaire HWG chez lui.**
+
+**Comment il a été trouvé — la ligne d'événement, pas la cible (§16).** Le carry-over désignait Ebola/RDC comme sujet vivant et **Dr. Jean Kaseya comme porteur libre depuis aujourd'hui**. Son profil rouvert en premier : ses trois derniers posts sont un message de condoléances (1 j), la feuille de route santé maternelle de l'UA (2 j), et son post Ebola/RDC (**2 j, hors fenêtre 48 h**). **Aucun support exploitable chez lui**, donc passage au porteur suivant plutôt qu'abandon du créneau — exactement la conduite prescrite par §16 point 2.
+
+**Le post retenu chez Janabi ne porte pas sur Ebola** : c'est la remise du *Information and Data Distribution Award* de la World Federation of Public Health Associations à la région Afrique de l'OMS, pour le **Preparedness Data Exchange (PDX)**, développé au WHO Nairobi Emergency Hub — « *transforming fragmented information into a unified risk picture, enabling our 47 Member States to identify emerging threats and turn early warning into early action* ».
+
+**11 commentaires existants lus en entier avant rédaction** (politique commune §5, premier paragraphe) : essentiellement des félicitations, plus un commentaire de fond d'Ewaleifoh Nicholas Asibor (« *the hard work starts now with embedding this into daily workflows* »). **Aucun ne prend l'angle du tempo de publication**, le nôtre n'est donc pas redondant.
+
+**Risque identifié avant rédaction** : un post de remise de prix est le même piège structurel que le post de commémoration du KNPHI (07/09) et le post de gratitude de Christianah Oki (06/09) — aucune prise analytique qui ne se lise comme un déclassement de l'honneur. **Contourné par la forme 1** (question sur un paramètre précis, sans qualifier son adéquation) plutôt que par une réserve.
+
+**Texte publié :**
+
+> Congratulations. The published side runs on a different tempo: a risk picture inside an exchange moves continuously, while outside, a country's situation changes only on the days a bulletin appears and holds still between two of them, however much moved in the field.
+>
+> What sets the rhythm at which a member state refreshes what it puts into PDX?
+
+⛔ **Deux angles brûlés écartés en cours de rédaction, tous deux à portée immédiate du sujet** : « un pays arrive d'un seul bloc » (les bulletins s'arrêtent au niveau national) et « ce que le document public ne laisse pas voir » (servi à Nirmal Kandel) — le second était même formulé dans un jet intermédiaire avant d'être retiré.
+
+**Publication confirmée** : commentaires du post passés de 11 à **12**, compteur affiché à 12, **une seule occurrence** du texte dans la page, éditeur vidé.
+
+⚠️ **Incident de clic, sans conséquence, vérifié plutôt que supposé.** Le premier clic visait le champ de commentaire à des coordonnées calculées par `getBoundingClientRect()` ; la page avait défilé entre le calcul et le clic, qui a atterri **sur la barre de réactions** et ouvert le sélecteur d'émojis. **Vérifié immédiatement avant de continuer** : `aria-pressed` du bouton « J'aime » à **`false`**, compteur de réactions inchangé à 206 — **aucune réaction n'est partie**. Le texte tapé dans la foulée n'a atteint aucun champ (éditeur vérifié vide). Clic refait sur les coordonnées lues sur capture plein cadre.
+
+**Nouveau blocage hebdomadaire créé : Prof. Mohamed Janabi jusqu'au 15/09.**
+
+`QA : mécanique PASS au 1er jet (346 car., en/en, 0 blocker) | aucun chiffre | relecture éditoriale : faite | statut : publié le 08/09 à 14h20`
+
+**📌 Repéré au passage, pour le portefeuille** : **Isaias Fernandes Co** commente ce post en tant que *Project Innovations, AI & Technologies Officer @ WHO | Machine Learning for health security & outbreak forecasting across 47 African Member States* — il travaille donc directement sur PDX. Il est déjà au portefeuille avec la consigne « rien avant la semaine du 14/09 », **qui reste valable** : ne pas la contourner au prétexte de cette découverte.
+
 ### 2️⃣ 📌 NOTIFICATIONS ET VEILLE — parcourues intégralement, une seule action à en tirer
 
 **Aucune autre réponse à un commentaire HWG**, aucune mention neuve hors celle de Sahar Khalid. Le reste :
@@ -51,9 +81,9 @@ Archive de tout le contenu créé. Mise à jour à chaque session.
 1. 🔴⭐⭐⭐ **Fil Christian Wilfried Mendo — le plus vivant du portefeuille, 5 messages en 50 minutes.** Notre question ouverte est en dernier, **CTA déjà servi à 13h58 : ne jamais le resservir**. S'il répond, traiter comme fil actif (hors quota). ⚠️ **Réévaluer le garde-fou §10 s'il propose explicitement un appel ou un autre canal** — son message de 13h22 disait seulement « je serais très intéressé d'échanger », lu ici comme une invitation à poursuivre dans le fil.
 2. ⭐⭐⭐ **Sahar Khalid — DM de bienvenue TOUJOURS DÛ**, et c'est le seul manque assumé de ce run : devenue relation de 1er degré ce matin (invitation reçue), **le quota de 8 DM était épuisé avant elle**. Elle vient par ailleurs de répondre à notre commentaire, le contact est chaud. **Première cible DM du créneau de 17h.**
 3. ⭐⭐ **Fil Sahar Khalid en sous-fil** : notre réponse de 13h50 est la dernière, à revérifier à 17h.
-4. **Quotas à la clôture de ce run** : commentaires **2/7**, DM **8/8 (plein)**, suivis **2/7-10**, notes de connexion **1/7**. Les trois quotas non pleins sont ouverts pour 17h ; le vivier d'abonnés entrants est en revanche épuisé (aucun nouvel abonné non suivi), donc les suivis restants passeront par la découverte active.
-5. **Blocages hebdomadaires inchangés par ce run** (le seul texte publié est une réponse en sous-fil, qui ne crée pas de blocage top-level) : Sahar Khalid, Amref Health Africa, Kenya National Public Health Institute, Abduljalal Nadabo, Christianah Oki, page Africa CDC (14/09) ; Joseph Cephas Kyari, Robert Herriman (13/09) ; Yilkal Kebede, Tambe Elvis Akem, Keneth Mugume (12/09) ; Ifedayo Adetifa, Pete Macharia (11/09) ; Adesoye Emmanuel Tunde, Kyaw Thowai Prue Prince, Rocham Mulumbwe, Dr. Rashi Bhardwaj, Dr Fabrice KHADDY, Miriam Mbueshi (09/09) ; Dr. Jean Kaseya, page ECDC, Jacob Banda (**libres depuis aujourd'hui**).
-6. 🗓️ **LIGNE D'ÉVÉNEMENT (§16)** : **Ebola/RDC reste le sujet le plus porté du réseau** — le post de **Julien Harneis** (plus de 2 500 décès, moitié en 20 jours) a recueilli une réaction sur notre commentaire ce jour. **Dr. Jean Kaseya est libre depuis aujourd'hui**, après un blocage arrivé à terme : c'est le porteur institutionnel le plus fort du sujet et il n'a pas été réévalué depuis. **À instruire en priorité à 17h**, avec les autres porteurs (page Africa CDC bloquée jusqu'au 14/09, Prof. Mohamed Janabi libre).
+4. **Quotas à la clôture de ce run** : commentaires **3/7**, DM **8/8 (plein)**, suivis **2/7-10**, notes de connexion **1/7**. Les trois quotas non pleins sont ouverts pour 17h ; le vivier d'abonnés entrants est en revanche épuisé (aucun nouvel abonné non suivi), donc les suivis restants passeront par la découverte active.
+5. **Blocages hebdomadaires — un seul créé ce run : Prof. Mohamed Janabi (15/09)**, le commentaire chez Sahar Khalid étant une réponse en sous-fil qui n'en crée pas. Inchangés : Sahar Khalid, Amref Health Africa, Kenya National Public Health Institute, Abduljalal Nadabo, Christianah Oki, page Africa CDC (14/09) ; Joseph Cephas Kyari, Robert Herriman (13/09) ; Yilkal Kebede, Tambe Elvis Akem, Keneth Mugume (12/09) ; Ifedayo Adetifa, Pete Macharia (11/09) ; Adesoye Emmanuel Tunde, Kyaw Thowai Prue Prince, Rocham Mulumbwe, Dr. Rashi Bhardwaj, Dr Fabrice KHADDY, Miriam Mbueshi (09/09) ; Dr. Jean Kaseya, page ECDC, Jacob Banda (**libres depuis aujourd'hui**).
+6. 🗓️ **LIGNE D'ÉVÉNEMENT (§16)** : **Ebola/RDC reste le sujet le plus porté du réseau** — le post de **Julien Harneis** (plus de 2 500 décès, moitié en 20 jours) a recueilli une réaction sur notre commentaire ce jour. **Dr. Jean Kaseya, libre depuis aujourd'hui, a été instruit ce run et écarté** : ses trois derniers posts sont des condoléances (1 j), la feuille de route santé maternelle de l'UA (2 j) et son post Ebola/RDC **à 2 jours, donc hors fenêtre 48 h**. À revérifier à 17h **seulement s'il publie du neuf**, ne pas rouvrir les mêmes trois posts. Porteurs restants : page Africa CDC (bloquée jusqu'au 14/09), **Prof. Mohamed Janabi désormais bloqué jusqu'au 15/09** après le commentaire de ce run.
 7. 🔴 **Elie Caleb MIMBULA** — 🏷️**HORS-ROUTINE :** anomalie du 07/09 toujours non résolue (une invitation partie sans qu'aucune session ne la revendique), non rejouée ce run.
 8. ⏸️ **OLAOLUWA PHILIP** et **Zachariah G. Houdari** — invitations reçues laissées en attente, aucun signal neuf.
 9. ⚠️ **Point de méthode outillage, à connaître avant le prochain run** : le refus de `type` par le classifieur qui a bloqué quatre tentatives le 08/09 au matin **ne s'est pas reproduit une seule fois** dans cette conversation neuve. En revanche, deux défauts distincts sont apparus : (a) **une frappe perdue silencieusement juste après un `navigate`** (l'outil rapporte « Typed », le champ reste vide) — vérifier après chaque navigation avant d'enchaîner ; (b) **deux `Input.dispatchKeyEvent` en timeout CDP à 30 s alors que la frappe avait bien abouti** — ne pas retaper sur un timeout sans avoir lu le DOM d'abord, sous peine de doubler le texte.
