@@ -262,7 +262,20 @@ const FROZEN_ROW_CHECKED = {
   // l'accueil au n°69, aucun n°70. ⚠️ Ne pas deviner les URL : le gabarit varie
   // (« issue-no-67-1.pdf », « issue-no.34.pdf »), les six URL candidates n°70-72 testées en
   // 2026/08 et 2026/09 renvoient toutes 404. Rien à écrire.
-  "c0094fae-5b55-485a-ac92-9ad0362d8901": "2026-08-29",
+  // Revérifié le 08/09 via l'API SPC/PPHSN, qui relaie le sitrep samoan : « Situation Report #71
+  // for EpiWeek 34 (17–23 August 2026) » — 20 193 cas diagnostiqués cliniquement et 5 537 confirmés
+  // en laboratoire depuis le 1er janvier 2025, 9 décès. La ligne porte volontairement la seule
+  // composante clinique (20 193), qui est exactement ce qui est en base : rien à écrire. ⚠️ Ne pas
+  // écrire le 25 730 affiché par le champ `cases` de la SPC — c'est la somme clinique + confirmés,
+  // un cadrage différent de celui de la ligne (garde-fou 1 de la section 5 du SKILL.md).
+  "c0094fae-5b55-485a-ac92-9ad0362d8901": "2026-09-08",
+  // Dengue/Samoa américaines et Dengue/Wallis-et-Futuna : vérifiées le 08/09 sur l'API SPC/PPHSN,
+  // les deux à jour (1 044 c au 11/08 ; 70 c au 21/08). ⚠️ Les deux étaient datées dans
+  // MANUAL_ROW_CHECKED mais ABSENTES d'ici, donc la section 4d les sortait « 8j — À VÉRIFIER »
+  // pendant que la section 5 les voyait à jour — même défaut que Crimée-Congo/Ouganda (07/09) et
+  // Choléra/RCA. Une ligne suivie par les deux filets doit être datée dans les deux maps.
+  "43c4c769-17e6-45c4-9f83-5c8d30104ff1": "2026-09-08",
+  "2e91ffe2-25aa-4268-b5ef-3c591f369956": "2026-09-08",
   // Dengue/Guatemala : re-sourcee le 28/08 (matin, en session) — voir la note dans
   // STALE_CRON_ROW_CHECKED (section 4e) pour l'historique complet. Verrouillee a source_priority=10
   // sur 19 364 cas (MSPAS 10 335 + IGSS 9 029), arrete SE-30/01-08-2026, source
@@ -332,7 +345,13 @@ const FROZEN_ROW_CHECKED = {
   // veille choléra de l'ECDC note explicitement qu'« aucune mise à jour n'a été rapportée par la
   // Tanzanie depuis le 27 juillet 2026 ». Le WER 101-31 (arrêté 28/06, en base) reste donc la
   // donnée la plus fraîche existante — la ligne n'est pas en retard, la source l'est.
-  "5db4495e-0615-434d-b5ca-5af99de2e5e8": "2026-09-05",
+  // Choléra/Tanzanie : DÉBLOQUÉ le 08/09. Le WER 101-35 (semaine épi 35, 24-30/08) porte l'update
+  // choléra mensuel, données arrêtées au 26/07 — soit un mois de plus que le 101-31 (28/06) que
+  // citait la ligne. Table 1, République-Unie de Tanzanie : 113 cas / 2 décès, CFR 1,8 % —
+  // chiffres IDENTIQUES à ceux en base. Cas nominal de la section 4 sexies : seules la date
+  // d'arrêté, la source (wer101-35) et les 5 descriptions ont été réalignées, jamais les
+  // compteurs. Le constat du 05/09 (« aucune source plus fraîche n'existe ») est donc levé.
+  "5db4495e-0615-434d-b5ca-5af99de2e5e8": "2026-09-08",
   // Choléra/Somalie : ✅ ÉCART RÉSOLU LE 03/09 — ligne corrigée de 233/0 à 2 657 cas / 1 décès
   // (arrêté 09/08/2026), re-sourcée vers l'aperçu mensuel choléra de l'ECDC. NE PAS ROUVRIR.
   // Rappel de l'énigme : le WER 101-31 donnait 233 cas / 0 décès (cumul au 28/06) avec « aucun cas
@@ -723,7 +742,8 @@ const MANUAL_ROWS = {
   // Source : mesvaccins.net (point de situation Pacifique), qui cite l'Agence de santé —
   // pas de série OMS numérotée donnant un compte confirmé pour ce territoire, donc aucun
   // cron possible en l'état. Détail dans scripts/add-wallis-futuna-dengue-2026-08-11.mjs.
-  "2e91ffe2-25aa-4268-b5ef-3c591f369956": "Dengue/Wallis-et-Futuna",
+  // ⚠️ RETIRÉE de MANUAL_ROWS le 2026-09-08 : un cron la couvre désormais, la définition de la
+  // section 5 (« aucun cron de sync ») ne s'applique plus. Voir le bloc de retrait plus bas.
   // Ajoutée le 2026-08-11, même passage que Wallis-et-Futuna : audit des 14 PICT restants
   // absents de COUNTRIES a aussi trouvé American Samoa — urgence de santé publique
   // déclarée par le territoire le 08/07/2025, 782 cas confirmés au 17/02/2026 (DOH,
@@ -733,7 +753,19 @@ const MANUAL_ROWS = {
   // Situation Update #740 et #750) — remonte ses propres chiffres via son DOH/CDC, pas
   // via cette série OMS, donc pas de cron possible en l'état. Détail dans
   // scripts/add-american-samoa-dengue-2026-08-11.mjs.
-  "43c4c769-17e6-45c4-9f83-5c8d30104ff1": "Dengue/American Samoa",
+  // ⚠️ RETRAIT DU 2026-09-08 — Dengue/Samoa américaines ET Dengue/Wallis-et-Futuna sortent toutes
+  // deux de MANUAL_ROWS. `sync-spc-pacific-dengue` (quotidien 06h10, commit acf1793c du 03/09) les
+  // alimente depuis l'API de la carte d'alertes SPC/PPHSN, avec Vanuatu et les îles Marshall — les
+  // quatre lignes ont donc un cron, ce qui est exactement la condition qui les excluait de la
+  // section 5. Elles restent verrouillées à source_priority=10 et donc suivies par la section 4d
+  // (seuil 7 j, FROZEN_ROW_CHECKED), qui est le bon filet pour une ligne alimentée par un cron :
+  // il vérifie que le cron fait effectivement son travail, sans imposer la vérification manuelle
+  // hebdomadaire de la section 5. Trouvé par la section 0 ter du SKILL.md (nouvelle couverture de
+  // données non rattachée à un filet) : les trois vérifications manuelles du 08/09 ont confirmé
+  // des chiffres que le cron avait déjà écrits — double travail, pas un défaut de données.
+  // ⚠️ Samoa (pays indépendant) et Kiribati ne sont PAS dans les cibles de ce cron, et ne doivent
+  // pas y être ajoutés : leur champ `cases` SPC agrège un cadrage différent de celui de leur ligne
+  // (garde-fou 1 de la section 5 du SKILL.md). Vérifié dans TARGETS le 08/09.
   // Ajoutée le 2026-08-15 : trouvée par le contrôle qualité du même jour, mono-sourcée sur un
   // hash PDF NCDC (pas de série numérotée avec URL stable) et non couverte par sync-ncdc (qui
   // ne couvre pas le NCDC nigérian malgré le nom identique — acronyme homonyme, cf. la ligne
@@ -1052,7 +1084,6 @@ const MANUAL_ROW_CHECKED = {
   // « DLI Surveillance », pas de compte confirmé/probable chiffré. La 1ère (fil dengue
   // Wallis-et-Futuna) n'a rien de plus récent que le 18/06. mesvaccins.net, l'Agence de santé et
   // Outremers360 n'ont rien de nouveau. Toujours 47 cas / 0 décès au 17/07, rien à écrire.
-  "2e91ffe2-25aa-4268-b5ef-3c591f369956": "2026-08-14",
   // Dengue/American Samoa : vérifié le 14/08, même déclencheur (178j de péremption — normal,
   // la donnée source datait déjà de ~6 mois à la création de la ligne le 11/08). Archive complète
   // du tag dengue-fever de Samoa News passée en revue : rien de plus récent que l'article du
@@ -1068,7 +1099,9 @@ const MANUAL_ROW_CHECKED = {
   // Fidji/DLI ce jour-là). 782 -> 1 036 cas au 21/07/2026 (486 en 2026 + 550 en 2025, DENV-1/
   // DENV-2), toujours 0 décès. Constaté ici après coup, en synchronisant cette trace sur l'état
   // réel de la ligne plutôt qu'en la revérifiant une 2e fois inutilement.
-  "43c4c769-17e6-45c4-9f83-5c8d30104ff1": "2026-08-19",
+  // Dengue/Samoa américaines et Dengue/Wallis-et-Futuna : entrées retirées le 2026-09-08 en même
+  // temps que leur sortie de MANUAL_ROWS (voir le bloc de retrait plus haut). Elles sont désormais
+  // datées dans FROZEN_ROW_CHECKED, le filet qui les suit réellement.
   // Fièvre de Lassa/Nigéria : vérifié le 15/08. Le listing NCDC filtré sur ce type de sitrep
   // (ncdc.gov.ng/diseases/sitreps/?cat=5&name=...) confirme que "Week 30" est bien la plus
   // récente entrée, ET que son PDF est EXACTEMENT celui déjà cité en base (même hash de fichier)
