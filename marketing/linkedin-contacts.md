@@ -200,6 +200,32 @@ Il a répondu une **seconde** fois à 13h45 (1 100 caractères), 12 minutes apr�
 - **Notes de connexion : 1/7, inchangées ce run.** Le plafond mensuel de notes personnalisées reste épuisé (constaté au run de 9h) ; le canal « Envoyer sans note » est fonctionnel de bout en bout. Aucune invitation émise ce créneau, le temps de session ayant été consacré au rattrapage des 5 DM dus et aux deux fils actifs.
 - **Invitations reçues** : aucune nouvelle depuis le traitement de 9h (Sahar Khalid et Doudou DIOP acceptés, Zachariah G. Houdari et OLAOLUWA PHILIP toujours en attente conformément aux décisions du 31/08).
 
+### 5️⃣ ✅ DM de bienvenue — **Sahar Khalid**, envoyé le 08/09 à 14h32, sur ordre explicite de David en session interactive (« envoie le DM de bienvenue à Sahar Khalid maintenant »)
+
+Devenue relation de 1er degré ce matin (invitation qu'elle avait elle-même envoyée, acceptée au run de 9h). **Premier contact par le canal DM** (`inboundCount` 0) — le contact réel préexistant est le fil de commentaire actif sous son post NHIC Rwanda, pas un échange en messagerie.
+
+**Vérifié avant rédaction, aucun fil DM préexistant** : composeur « Nouveau message » ouvert sur son nom, aucun historique affiché.
+
+⛔ **Contraintes cumulées respectées** : aucun sujet politique (son post du 03/09 sur la guerre au Soudan non évoqué) ; aucun des axes interdits sur elle rejoué (rien du dispositif rwandais ne lui est attribué, aucune clause de suffisance/manque, ni « ce qui vient après le test », ni « travels through », ni l'angle du résultat négatif) ; **l'angle du commentaire déjà publié n'est pas repris** — ce DM ouvre sur un point distinct et inédit de son profil (reviewer Springer Nature), jamais utilisé.
+
+**Texte envoyé :**
+
+> Sahar, good timing to connect properly, right in the middle of the thread under your NHIC post.
+>
+> HealthWatch Global, the site I run, only ever sees a bulletin once its authors have finished arguing over it. Reviewing for Springer Nature puts you a step earlier than that, in the room where the arguing still happens.
+>
+> What makes a submitted paper on community health system design worth publishing, in your view as a reviewer?
+
+**Statut CTA : absent, premier contact — motif admis n°1.** Aucun lien, aucune mention de l'essai. Clôture en question ouverte, sans oui/non ni alternative nommée.
+
+⚠️ **`context.language` blocker, faux positif structurel identique au cas Legand du matin même** : premier contact réel (`inboundCount` 0), le fichier de contexte est rédigé en français (mes propres notes) et fait détecter à tort « fil = fr ». Son activité réelle sur LinkedIn est **entièrement en anglais** — vérifié sur ses deux réponses dans le fil de commentaire (« *You explained it well!…* »). Anglais retenu en connaissance de cause, conformément au jugement du rédacteur sur un fil sans échange réel préexistant.
+
+⛔ **Gabarit évité en cours de rédaction** : la charpente « X et Y, deux choses rarement réunies dans le même rôle », déjà employée aujourd'hui dans le DM à Christian Wilfried Mendo, a été écartée dès le 1er jet pour ne pas la répéter dans le même run.
+
+`QA : mécanique 2 jets (395 → 426 car., en) | jet 1 : 2 séquences ngram.history réelles (« i keep healthwatch global where », « has already decided to publish »), reformulées ; jet 2 PASS hors context.language (faux positif documenté) | aucun chiffre | 1 claim produit (méthodologie d'agrégation depuis des bulletins déjà publiés, cohérente avec le registre : « plus de 90 % […] provient directement d'agences de santé publique officielles ») | relecture éditoriale : faite | statut : envoyé le 08/09 à 14h32`
+
+**Quota DM : hors compte — exception « ordre explicite de David tapé en session », qui prime sur le quota (`report-conventions.md`), le quota du jour (8/8) étant déjà atteint avant cet envoi.**
+
 ---
 
 ## 📅 Session linkedin-hwg-monitoring — 08/09/2026 (9h) — ✅ **1 DM envoyé** (Stéphanie Maltais, CTA dû et servi) — ✅ **1 commentaire publié** (Ifedayo Adetifa, sous-fil, détail dans `content-log.md`) — 🔴 **run interrompu deux fois par le classifieur de permissions, 1 brouillon validé (Legand) resté non envoyé après une erreur de clic, 4 autres bienvenues restent non rédigées**

@@ -2,7 +2,7 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
-## 📅 Session linkedin-hwg-followup-check — 08/09/2026 (13h) — ✅ **2 commentaires publiés** (Sahar Khalid en sous-fil, Prof. Mohamed Janabi en top-level) — ✅ **5 DM + 2 réponses en fil actif** (détail dans `linkedin-contacts.md`) — quota DM **plein 8/8**
+## 📅 Session linkedin-hwg-followup-check — 08/09/2026 (13h) — ✅ **2 commentaires publiés** (Sahar Khalid en sous-fil, Prof. Mohamed Janabi en top-level) — ✅ **5 DM + 2 réponses en fil actif + 1 DM de bienvenue hors quota sur ordre explicite de David** (Sahar Khalid) — détail dans `linkedin-contacts.md`
 
 **Contexte d'ouverture** : navigateur `23c7ecdd-…`, session planifiée. Aucun run de ce `taskId` aujourd'hui. Registres QA du 08/09 09h03 réutilisés (moins de 12 h). `content-log.md` et `linkedin-contacts.md` relus à l'ouverture **et de nouveau juste avant le clic de publication** (§15) : aucune entrée concurrente sur la cible.
 
@@ -79,7 +79,7 @@ Archive de tout le contenu créé. Mise à jour à chaque session.
 ### 3️⃣ 🔁 CARRY-OVER POUR LE CRÉNEAU DE 17h
 
 1. 🔴⭐⭐⭐ **Fil Christian Wilfried Mendo — le plus vivant du portefeuille, 5 messages en 50 minutes.** Notre question ouverte est en dernier, **CTA déjà servi à 13h58 : ne jamais le resservir**. S'il répond, traiter comme fil actif (hors quota). ⚠️ **Réévaluer le garde-fou §10 s'il propose explicitement un appel ou un autre canal** — son message de 13h22 disait seulement « je serais très intéressé d'échanger », lu ici comme une invitation à poursuivre dans le fil.
-2. ⭐⭐⭐ **Sahar Khalid — DM de bienvenue TOUJOURS DÛ**, et c'est le seul manque assumé de ce run : devenue relation de 1er degré ce matin (invitation reçue), **le quota de 8 DM était épuisé avant elle**. Elle vient par ailleurs de répondre à notre commentaire, le contact est chaud. **Première cible DM du créneau de 17h.**
+2. ✅ **Sahar Khalid — DM de bienvenue ENVOYÉ à 14h32, sur ordre explicite de David tapé en session interactive** (« envoie le DM de bienvenue à Sahar Khalid maintenant »), hors quota (8/8 déjà atteint). Texte et détail complet dans `linkedin-contacts.md`. **À surveiller à 17h pour une éventuelle réponse.**
 3. ⭐⭐ **Fil Sahar Khalid en sous-fil** : notre réponse de 13h50 est la dernière, à revérifier à 17h.
 4. **Quotas à la clôture de ce run** : commentaires **3/7**, DM **8/8 (plein)**, suivis **2/7-10**, notes de connexion **1/7**. Les trois quotas non pleins sont ouverts pour 17h ; le vivier d'abonnés entrants est en revanche épuisé (aucun nouvel abonné non suivi), donc les suivis restants passeront par la découverte active.
 5. **Blocages hebdomadaires — un seul créé ce run : Prof. Mohamed Janabi (15/09)**, le commentaire chez Sahar Khalid étant une réponse en sous-fil qui n'en crée pas. Inchangés : Sahar Khalid, Amref Health Africa, Kenya National Public Health Institute, Abduljalal Nadabo, Christianah Oki, page Africa CDC (14/09) ; Joseph Cephas Kyari, Robert Herriman (13/09) ; Yilkal Kebede, Tambe Elvis Akem, Keneth Mugume (12/09) ; Ifedayo Adetifa, Pete Macharia (11/09) ; Adesoye Emmanuel Tunde, Kyaw Thowai Prue Prince, Rocham Mulumbwe, Dr. Rashi Bhardwaj, Dr Fabrice KHADDY, Miriam Mbueshi (09/09) ; Dr. Jean Kaseya, page ECDC, Jacob Banda (**libres depuis aujourd'hui**).
