@@ -4,8 +4,14 @@ import { useState, useMemo } from "react";
 import Link from "next/link";
 import type { DiseaseInfo, TransmissionMode } from "@/lib/disease-data";
 import { diseaseToSlug } from "@/lib/disease-data";
+import { AggregateCasesInline } from "@/components/CasesDisplay";
 
-type DiseaseStats = { count: number; cases: number };
+// `cases` is the disease's real active total ONLY when `masked` is false —
+// when masked it is 0 and `band` carries the magnitude instead, so the real
+// figure never crosses the Server→Client boundary as a prop (same rule as
+// maskOutbreakRow, see lib/outbreaks.ts). `ids` lets a confirmed-paid viewer
+// recover the total client-side through RealStatsProvider.
+type DiseaseStats = { count: number; cases: number; masked: boolean; band: number | null; ids: string[] };
 type Locale = "en" | "fr" | "es" | "ar" | "id";
 
 const LOCALES: Locale[] = ["en", "fr", "es", "ar", "id"];
@@ -231,9 +237,17 @@ export default function DiseasesGrid({
               >
                 {hasActive ? ACTIVE_LABEL[l](stats!.count) : NO_ACTIVE[l]}
               </p>
-              {hasActive && stats!.cases > 0 && (
+              {hasActive && (stats!.masked ? stats!.ids.length > 0 : stats!.cases > 0) && (
                 <p className="text-xs text-gray-500">
-                  {stats!.cases.toLocaleString(numLocale)} {CASES_LABEL[l]}
+                  {stats!.masked
+                    ? <AggregateCasesInline
+                        ids={stats!.ids}
+                        band={stats!.band}
+                        numLocale={numLocale}
+                        locale={l}
+                        unitLabel={CASES_LABEL[l]}
+                      />
+                    : `${stats!.cases.toLocaleString(numLocale)} ${CASES_LABEL[l]}`}
                 </p>
               )}
             </Link>

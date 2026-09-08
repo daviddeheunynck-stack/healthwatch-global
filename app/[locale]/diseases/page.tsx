@@ -6,9 +6,10 @@ import { createClient } from "@supabase/supabase-js";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { allDiseases, diseaseToSlug, normalizeDisease } from "@/lib/disease-data";
-import { getLocalizedDisease } from "@/lib/outbreaks";
+import { getLocalizedDisease, getOutbreaks, pickFeaturedDiseases, aggregateNeedsMasking, magnitudeBand } from "@/lib/outbreaks";
 import type { Outbreak } from "@/lib/outbreaks";
 import EmailCapture from "@/components/EmailCapture";
+import RealStatsProvider from "@/components/RealStatsProvider";
 import DiseasesGrid from "./DiseasesGrid";
 import { jsonLdHtml } from "@/lib/json-ld";
 
@@ -135,7 +136,7 @@ async function fetchActiveOutbreaks(): Promise<Outbreak[]> {
   );
   const { data } = await supabase
     .from("outbreaks")
-    .select("id, disease, disease_en, disease_ar, cases, active")
+    .select("id, disease, disease_en, disease_ar, cases, active, region")
     .eq("active", true);
   return (data ?? []) as Outbreak[];
 }
@@ -166,13 +167,35 @@ export default async function DiseasesPage({
 
   const active = await fetchActiveOutbreaks();
 
-  // Group active outbreaks by canonical disease name_en
-  const byDisease = new Map<string, { count: number; cases: number }>();
+  // Group active outbreaks by canonical disease name_en.
+  // Same free-showcase map as the disease detail pages — derived from
+  // getOutbreaks() rather than from this page's own query, so a row cannot
+  // be a region's free disease here and a masked one one click later.
+  const featuredDiseaseByRegion = pickFeaturedDiseases((await getOutbreaks()).filter((o) => o.active));
+  const rowsByDisease = new Map<string, Outbreak[]>();
   for (const o of active) {
     const key = normalizeDisease(o.disease_en || o.disease).name_en;
-    const cur = byDisease.get(key) ?? { count: 0, cases: 0 };
-    byDisease.set(key, { count: cur.count + 1, cases: cur.cases + (o.cases || 0) });
+    const rows = rowsByDisease.get(key) ?? [];
+    rows.push(o);
+    rowsByDisease.set(key, rows);
   }
+  // A masked entry carries its band and its row ids, never its real total:
+  // the exact figure was public here while the disease's own page banded it
+  // (Cholera read "256 280 cas signalés" on this page against "Ampleur 5/5 —
+  // chiffres exacts réservés aux abonnés Pro" on /disease/cholera).
+  const byDisease = new Map<string, { count: number; cases: number; masked: boolean; band: number | null; ids: string[] }>();
+  for (const [key, rows] of rowsByDisease) {
+    const total  = rows.reduce((s, o) => s + (o.cases || 0), 0);
+    const masked = aggregateNeedsMasking(rows, featuredDiseaseByRegion);
+    byDisease.set(key, {
+      count:  rows.length,
+      cases:  masked ? 0 : total,
+      masked,
+      band:   masked ? magnitudeBand(total) : null,
+      ids:    masked ? rows.map((o) => o.id) : [],
+    });
+  }
+  const paidUnlockIds = [...byDisease.values()].flatMap((s) => s.ids);
 
   const diseases = allDiseases();
 
@@ -272,11 +295,13 @@ export default async function DiseasesPage({
       </div>
 
       {/* Grid */}
-      <DiseasesGrid
-        locale={l}
-        diseases={filterActive ? sorted.filter((d) => (byDisease.get(d.name_en)?.count ?? 0) > 0) : sorted}
-        byDisease={Object.fromEntries(byDisease)}
-      />
+      <RealStatsProvider ids={paidUnlockIds}>
+        <DiseasesGrid
+          locale={l}
+          diseases={filterActive ? sorted.filter((d) => (byDisease.get(d.name_en)?.count ?? 0) > 0) : sorted}
+          byDisease={Object.fromEntries(byDisease)}
+        />
+      </RealStatsProvider>
 
       {/* CTA */}
       <EmailCapture

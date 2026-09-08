@@ -6,7 +6,10 @@ import { createClient } from "@supabase/supabase-js";
 import Link from "next/link";
 import type { Metadata } from "next";
 import type { Outbreak } from "@/lib/outbreaks";
+import { getOutbreaks, pickFeaturedDiseases, aggregateNeedsMasking, magnitudeBand } from "@/lib/outbreaks";
 import EmailCapture from "@/components/EmailCapture";
+import RealStatsProvider from "@/components/RealStatsProvider";
+import { AggregateCasesInline } from "@/components/CasesDisplay";
 import { jsonLdHtml } from "@/lib/json-ld";
 
 export const revalidate = 3600;
@@ -179,11 +182,17 @@ export async function generateMetadata({
 
 // ── Data ──────────────────────────────────────────────────────────────────────
 
+// The rows a region's case figure is allowed to describe: the active ones,
+// carried so the page can both sum them and hand their ids to the
+// paid-unlock fetch.
+type ActiveRow = Pick<Outbreak, "id" | "region" | "disease" | "disease_en" | "cases">;
+
 interface RegionStats {
   slug:        RegionSlug;
   activeCount: number;
   totalCount:  number;
-  totalCases:  number;
+  activeCases: number;
+  activeRows:  ActiveRow[];
   countryCount: number;
 }
 
@@ -195,30 +204,37 @@ async function fetchRegionStats(): Promise<RegionStats[]> {
 
   const { data } = await supabase
     .from("outbreaks")
-    .select("region, active, cases, country_en")
+    .select("id, region, active, cases, country_en, disease, disease_en")
     .not("region", "is", null);
 
-  if (!data) return REGION_SLUGS.map((slug) => ({ slug, activeCount: 0, totalCount: 0, totalCases: 0, countryCount: 0 }));
+  if (!data) return REGION_SLUGS.map((slug) => ({ slug, activeCount: 0, totalCount: 0, activeCases: 0, activeRows: [], countryCount: 0 }));
 
-  const map = new Map<RegionSlug, { active: number; total: number; cases: number; countries: Set<string> }>();
+  const map = new Map<RegionSlug, { active: number; total: number; cases: number; rows: ActiveRow[]; countries: Set<string> }>();
   for (const slug of REGION_SLUGS) {
-    map.set(slug, { active: 0, total: 0, cases: 0, countries: new Set() });
+    map.set(slug, { active: 0, total: 0, cases: 0, rows: [], countries: new Set() });
   }
 
-  for (const o of data as Pick<Outbreak, "region" | "active" | "cases" | "country_en">[]) {
+  for (const o of data as (Pick<Outbreak, "region" | "active" | "cases" | "country_en"> & ActiveRow)[]) {
     if (!o.region) continue;
     const slug = o.region.toLowerCase().replace(/\s+/g, "-") as RegionSlug;
     const bucket = map.get(slug);
     if (!bucket) continue;
     bucket.total++;
-    bucket.cases += o.cases ?? 0;
-    if (o.active) bucket.active++;
+    // Cases counted over ACTIVE rows only — see the countries index for the
+    // same correction and why `is_seed` is the wrong discriminant. Africa
+    // used to read "169 549 469 cas" here, almost entirely archived endemic
+    // baselines, next to a region page that bands the same aggregate.
+    if (o.active) {
+      bucket.active++;
+      bucket.cases += o.cases ?? 0;
+      bucket.rows.push({ id: o.id, region: o.region, disease: o.disease, disease_en: o.disease_en, cases: o.cases ?? 0 });
+    }
     if (o.country_en) bucket.countries.add(o.country_en);
   }
 
   return REGION_SLUGS.map((slug) => {
     const b = map.get(slug)!;
-    return { slug, activeCount: b.active, totalCount: b.total, totalCases: b.cases, countryCount: b.countries.size };
+    return { slug, activeCount: b.active, totalCount: b.total, activeCases: b.cases, activeRows: b.rows, countryCount: b.countries.size };
   });
 }
 
@@ -235,9 +251,19 @@ export default async function RegionsPage({
   const isRtl = l === "ar";
 
   const regions = await fetchRegionStats();
-  const totalActive = regions.reduce((s, r) => s + r.activeCount, 0);
-  const totalCases  = regions.reduce((s, r) => s + r.totalCases, 0);
-  const numLocale   = l === "ar" ? "ar-SA" : l;
+  const totalActive  = regions.reduce((s, r) => s + r.activeCount, 0);
+  const totalRecords = regions.reduce((s, r) => s + r.totalCount, 0);
+  const numLocale    = l === "ar" ? "ar-SA" : l;
+
+  // Same free-showcase map as the region detail pages — from getOutbreaks(),
+  // not from this page's own query, so the two cannot disagree on which
+  // disease is a region's free one.
+  const featuredDiseaseByRegion = pickFeaturedDiseases((await getOutbreaks()).filter((o) => o.active));
+  const maskOf = new Map<RegionSlug, boolean>();
+  for (const r of regions) maskOf.set(r.slug, aggregateNeedsMasking(r.activeRows, featuredDiseaseByRegion));
+  const paidUnlockIds = regions
+    .filter((r) => maskOf.get(r.slug))
+    .flatMap((r) => r.activeRows.map((row) => row.id));
 
   const jsonLd = [
     {
@@ -252,7 +278,11 @@ export default async function RegionsPage({
       // rather than an open-data license.
       license: `${BASE_URL}/${l}/legal`,
       ...(totalActive > 0 && { measurementTechnique: `${totalActive} active outbreak${totalActive === 1 ? "" : "s"} across WHO regions` }),
-      ...(totalCases > 0 && { size: `${totalCases.toLocaleString("en")} confirmed cases tracked` }),
+      // Was the same dataset-wide `confirmed cases tracked` figure as the
+      // countries index (173,795,608, 98.4% of it endemic baselines) — the
+      // one aggregate here that per-card masking cannot cover. A record
+      // count is true and leaks nothing.
+      ...(totalRecords > 0 && { size: `${totalRecords.toLocaleString("en")} outbreak records tracked` }),
     },
     {
       "@context": "https://schema.org",
@@ -296,6 +326,7 @@ export default async function RegionsPage({
       </div>
 
       {/* Region cards */}
+      <RealStatsProvider ids={paidUnlockIds}>
       <div className="grid sm:grid-cols-2 gap-4">
         {regions.map((r) => {
           const name = REGION_NAME[l][r.slug];
@@ -344,10 +375,18 @@ export default async function RegionsPage({
                     {lb.countries}
                   </span>
                 )}
-                {r.totalCases > 0 && (
+                {r.activeCases > 0 && (
                   <span>
-                    <span className="font-semibold text-gray-300">{r.totalCases.toLocaleString(numLocale)}</span>{" "}
-                    {lb.cases}
+                    {maskOf.get(r.slug)
+                      ? <AggregateCasesInline
+                          ids={r.activeRows.map((row) => row.id)}
+                          band={magnitudeBand(r.activeCases)}
+                          numLocale={numLocale}
+                          locale={l}
+                          unitLabel={lb.cases}
+                          className="font-semibold text-gray-300"
+                        />
+                      : <><span className="font-semibold text-gray-300">{r.activeCases.toLocaleString(numLocale)}</span>{" "}{lb.cases}</>}
                   </span>
                 )}
               </div>
@@ -355,6 +394,7 @@ export default async function RegionsPage({
           );
         })}
       </div>
+      </RealStatsProvider>
 
       {/* CTA */}
       <EmailCapture

@@ -7,7 +7,10 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { countryToSlug, getLocalizedCountryName } from "@/lib/country-utils";
 import type { Outbreak } from "@/lib/outbreaks";
+import { getOutbreaks, pickFeaturedDiseases, aggregateNeedsMasking, magnitudeBand } from "@/lib/outbreaks";
 import EmailCapture from "@/components/EmailCapture";
+import RealStatsProvider from "@/components/RealStatsProvider";
+import { AggregateCasesInline } from "@/components/CasesDisplay";
 import { jsonLdHtml } from "@/lib/json-ld";
 
 export const revalidate = 3600;
@@ -152,6 +155,11 @@ export async function generateMetadata({
 
 // ── Data ──────────────────────────────────────────────────────────────────────
 
+// The rows of a country that its case figure is allowed to describe: the
+// active ones, and only those. Carried per country so the page can both sum
+// them and hand their ids to the paid-unlock fetch.
+type ActiveRow = Pick<Outbreak, "id" | "region" | "disease" | "disease_en" | "cases">;
+
 interface CountryStats {
   country_en: string;
   country:    string;
@@ -159,7 +167,17 @@ interface CountryStats {
   region:     string;
   activeCount: number;
   totalCount:  number;
-  totalCases:  number;
+  // Sum over ACTIVE rows only. Was a sum over every row of the country,
+  // archives included — which made this figure something other than an
+  // outbreak count: Ghana read "1 foyer au total · 6 739 843 cas · aucun
+  // foyer actif", that 6.7M being one archived Malaria endemic-baseline row
+  // dated 2024-01-01, and Nigeria's 68,568,789 was 99.85% the same kind of
+  // row. `is_seed` is NOT the discriminant to use here (the live
+  // Cholera/DR Congo row, 41,279 cases, carries is_seed = true); `active`
+  // is, and it is also the scope the country/disease/region detail pages
+  // already use for their own aggregate tiles.
+  activeCases: number;
+  activeRows:  ActiveRow[];
 }
 
 async function fetchCountryStats(): Promise<CountryStats[]> {
@@ -170,19 +188,25 @@ async function fetchCountryStats(): Promise<CountryStats[]> {
 
   const { data } = await supabase
     .from("outbreaks")
-    .select("country_en, country, country_ar, region, active, cases")
+    .select("id, country_en, country, country_ar, region, active, cases, disease, disease_en")
     .not("country_en", "is", null);
 
   if (!data) return [];
 
   const map = new Map<string, CountryStats>();
-  for (const o of data as Pick<Outbreak, "country_en" | "country" | "country_ar" | "region" | "active" | "cases">[]) {
+  for (const o of data as (Pick<Outbreak, "country_en" | "country" | "country_ar" | "region" | "active" | "cases"> & ActiveRow)[]) {
     if (!o.country_en) continue;
+    // `region` is passed through untouched (not coerced to "") so the
+    // featured-disease lookup keys exactly as it does on the detail pages.
+    const row: ActiveRow = { id: o.id, region: o.region, disease: o.disease, disease_en: o.disease_en, cases: o.cases ?? 0 };
     const existing = map.get(o.country_en);
     if (existing) {
-      if (o.active) existing.activeCount++;
       existing.totalCount++;
-      existing.totalCases += o.cases ?? 0;
+      if (o.active) {
+        existing.activeCount++;
+        existing.activeCases += o.cases ?? 0;
+        existing.activeRows.push(row);
+      }
     } else {
       map.set(o.country_en, {
         country_en:  o.country_en,
@@ -191,7 +215,8 @@ async function fetchCountryStats(): Promise<CountryStats[]> {
         region:      o.region ?? "",
         activeCount: o.active ? 1 : 0,
         totalCount:  1,
-        totalCases:  o.cases ?? 0,
+        activeCases: o.active ? (o.cases ?? 0) : 0,
+        activeRows:  o.active ? [row] : [],
       });
     }
   }
@@ -220,8 +245,19 @@ export default async function CountriesPage({
 
   const countries = await fetchCountryStats();
   const activeCount = countries.filter((c) => c.activeCount > 0).length;
-  const totalCases  = countries.reduce((s, c) => s + c.totalCases, 0);
+  const totalRecords = countries.reduce((s, c) => s + c.totalCount, 0);
   const numLocale   = l === "ar" ? "ar-SA" : l;
+
+  // Same free-showcase map as the disease/country/region detail pages —
+  // derived from getOutbreaks() rather than from this page's own query, so a
+  // row cannot be the region's free disease here and a masked one there.
+  const featuredDiseaseByRegion = pickFeaturedDiseases((await getOutbreaks()).filter((o) => o.active));
+  const maskOf = new Map<string, boolean>();
+  for (const c of countries) maskOf.set(c.country_en, aggregateNeedsMasking(c.activeRows, featuredDiseaseByRegion));
+  // One shared paid-unlock fetch for every masked card on the page.
+  const paidUnlockIds = countries
+    .filter((c) => maskOf.get(c.country_en))
+    .flatMap((c) => c.activeRows.map((r) => r.id));
 
   const regionGroups = new Map<string, CountryStats[]>();
   for (const c of countries) {
@@ -245,7 +281,14 @@ export default async function CountriesPage({
       // rather than an open-data license.
       license: `${BASE_URL}/${l}/legal`,
       ...(activeCount > 0 && { measurementTechnique: `${activeCount} countr${activeCount === 1 ? "y" : "ies"} with active outbreaks` }),
-      ...(totalCases > 0 && { size: `${totalCases.toLocaleString("en")} confirmed cases tracked` }),
+      // Was `${totalCases} confirmed cases tracked`, summed over every row of
+      // every country: it announced "173,795,608 confirmed cases tracked" to
+      // search engines, of which 170,963,486 (98.4%) came from 81 endemic
+      // -baseline rows, against 1,823,416 across the actually-active
+      // outbreaks. It was also the one aggregate figure on this page that no
+      // amount of per-card masking could cover, since it is the whole
+      // dataset's total. A record count says something true and leaks nothing.
+      ...(totalRecords > 0 && { size: `${totalRecords.toLocaleString("en")} outbreak records tracked` }),
     },
     {
       "@context": "https://schema.org",
@@ -313,6 +356,7 @@ export default async function CountriesPage({
       </div>
 
       {/* Countries by region */}
+      <RealStatsProvider ids={paidUnlockIds}>
       {REGION_ORDER.map((region) => {
         const raw   = regionGroups.get(region) ?? [];
         const group = filterActive ? raw.filter((c) => c.activeCount > 0) : raw;
@@ -347,7 +391,20 @@ export default async function CountriesPage({
                       </p>
                       <p className="text-xs text-gray-500 mt-0.5">
                         {c.totalCount} {lb.total}
-                        {c.totalCases > 0 && ` · ${c.totalCases.toLocaleString(numLocale)} ${lb.cases}`}
+                        {c.activeCases > 0 && (
+                          <>
+                            {" · "}
+                            {maskOf.get(c.country_en)
+                              ? <AggregateCasesInline
+                                  ids={c.activeRows.map((r) => r.id)}
+                                  band={magnitudeBand(c.activeCases)}
+                                  numLocale={numLocale}
+                                  locale={l}
+                                  unitLabel={lb.cases}
+                                />
+                              : `${c.activeCases.toLocaleString(numLocale)} ${lb.cases}`}
+                          </>
+                        )}
                       </p>
                     </div>
                     <div className="shrink-0">
@@ -367,6 +424,7 @@ export default async function CountriesPage({
           </section>
         );
       })}
+      </RealStatsProvider>
 
       {/* CTA */}
       <EmailCapture

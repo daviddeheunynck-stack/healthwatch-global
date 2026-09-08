@@ -112,3 +112,35 @@ export function AggregateStat({
   const cfr = totalCases > 0 ? (totalDeaths / totalCases * 100).toFixed(1) + "%" : noDataLabel;
   return <p className={className}>{cfr}</p>;
 }
+
+// Inline sibling of AggregateStat, for the three index pages (/countries,
+// /diseases, /regions). Same rule — the real total exists only once the
+// paid-gated fetch resolves, never as a prop — but rendered as a <span>:
+// on those pages the figure sits inside a <p>/<span> in a card that is
+// itself wrapped in a <Link>, and AggregateStat's <p> would be invalid
+// markup in both positions.
+//
+// Fails closed by design: `complete` requires every id of the bucket to be
+// present in the fetched map, so if /api/outbreak-stats' 200-id cap ever
+// truncated the page's request, the buckets left out keep showing their
+// band instead of a total silently computed from a partial set.
+export function AggregateCasesInline({
+  ids, band, numLocale, locale, unitLabel, className = "",
+}: {
+  ids: string[];
+  band: number | null;
+  numLocale: string;
+  locale: string;
+  unitLabel: string;
+  className?: string;
+}) {
+  const real = useRealStats();
+  const rows = real ? ids.map((id) => real.get(id)).filter((r): r is { cases: number; deaths: number | null } => !!r) : null;
+  const complete = rows !== null && rows.length === ids.length;
+
+  if (!complete) return <MagnitudeDots band={band} locale={locale} className={className} />;
+
+  const total = rows!.reduce((s, r) => s + (r.cases ?? 0), 0);
+  if (total <= 0) return null;
+  return <span className={className}>{total.toLocaleString(numLocale)} {unitLabel}</span>;
+}
