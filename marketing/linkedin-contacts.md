@@ -1,5 +1,178 @@
 > 📦 **Archive** : le détail du 24 juin au 16 juillet 2026 a été déplacé dans [linkedin-contacts-archive-avant17juillet.md](linkedin-contacts-archive-avant17juillet.md) le 23/07 pour garder ce fichier léger.
 
+## 📅 Session linkedin-hwg-followup-check-2 — 08/09/2026 (17h) — ✅ **4 DM de réponse envoyés en fils actifs** (hors quota, DM 8/8 déjà plein) — ✅ **6 invitations envoyées, quota notes de connexion 7/7 PLEIN** — 🔴 **1 DM non envoyé, garde-fou changement de canal (Emmanuel Pembi)**
+
+**Contexte d'ouverture** : aucun run antérieur de ce `taskId` aujourd'hui. Registres QA régénérés à 17h09. Quotas hérités : DM **8/8 (PLEIN)**, commentaires 3/7, suivis 2/7-10, notes de connexion 1/7. **Les 4 DM de ce run sont tous des réponses dans des fils où l'interlocuteur venait d'écrire** — exception « fil déjà engagé » documentée, ils ne rouvrent pas le quota de cold outreach.
+
+**Six fils avec du nouveau depuis 14h30**, tous relus **en entier** avant rédaction (politique commune §4) : Christianah Oki, Sahar Khalid, Doudou DIOP, Emmanuel Pembi, Keneth Mugume, Christian Wilfried Mendo (celui-ci sans réponse neuve, notre message de 14h22 reste le dernier).
+
+---
+
+### 1️⃣ ✅ DM — **Sahar Khalid** (`/in/sahar-khalid/`), envoyé le 08/09 à 17h21 — **`inboundCount` 2, CTA DÛ et SERVI**
+
+Elle répond au DM de bienvenue de 14h32 par **deux messages** :
+
+> [15h05] Hi David good to hear from you
+>
+> [15h07] Community health has become an emerging trend. New evidence from different contexts is important, community based surveillance and it's role in early detection of control of pandamics is important in addition to CHS contribution to health system strengthening
+
+**Seuil de la spécification DM du 06/09 atteint** : 2 messages écrits par elle dans ce fil (l'accusé de réception de 15h05 compte, c'est un décompte et non une évaluation de substance). **Le CTA devient dû, et il n'existe aucune dérogation** ([[feedback_cta_rule_no_exceptions_2026_09_04]]).
+
+**Anti-répétition vérifiée sur le fil entier** : le DM de bienvenue de 14h32 nommait HealthWatch Global mais **n'a jamais transmis ni le lien ni l'essai**. L'argumentaire commercial n'a donc pas déjà été servi ici, et le CTA complet est légitime — ce n'est pas une 2e occurrence.
+
+**Texte envoyé :**
+
+> Sahar, early detection is the piece that stays with me there, because community based surveillance settles much of what it picks up without any of it ever becoming a national bulletin. Whatever gets closed at that level never reaches an outside reader at all.
+>
+> The site I run, HealthWatch Global, tracks outbreaks that are still open, and each one is put together from documents an agency has already released. Signing up at healthwatch-global.com opens seven days of Pro access without a card, if you want to see what that published layer looks like from outside a health system.
+>
+> When a community level signal does reach the national level, what usually makes it cross that step?
+
+**Statut CTA : présent.** Pont construit depuis son propre point (la surveillance communautaire en détection précoce), pas plaqué. Clôture en question ouverte, sans oui/non ni alternative nommée.
+
+⛔ **Contraintes cumulées sur elle respectées** : aucun sujet politique (rien sur le Soudan), rien du dispositif rwandais ne lui est attribué, **aucune clause de suffisance ou de manque** (le 1er jet disait « most of what it picks up », corrigé en « much of » pour ne pas avancer une proportion non sourçable), ni « ce qui vient après le test », ni la charnière « travels through », ni l'angle du résultat négatif.
+
+**Envoi vérifié** : en-tête du composeur relu à « Sahar Khalid » **avant** le clic (politique commune §5 item 4), messages du fil passés de 3 à 4, éditeur vidé, HTML relu après saisie (`<p>…</p><p><br></p><p>…</p>`, trois paragraphes intacts).
+
+`QA : mécanique 2 jets (690 → 685 car., en/en) | jet 1 : « all the way up to » et « the part i keep turning over » (ngram.history, famille déclarée saturée dans burned-templates), + « at healthwatch global com » partagé avec le brouillon Mugume du même run (ngram.peer) — trois vrais défauts, corrigés ; jet 2 PASS, 0 blocker | aucun chiffre | 2 claims produit confrontées au registre du 08/09 (agrégation depuis des bulletins déjà publiés ; essai 7 j sans carte à la création de compte) | relecture éditoriale : faite | statut : envoyé le 08/09 à 17h21`
+
+---
+
+### 2️⃣ ✅ DM — **Doudou DIOP** (`/in/doudou-diop-54a881209/`), envoyé le 08/09 à 17h23 — **`inboundCount` 2, CTA DÛ et SERVI**
+
+Sa 2e réponse, à notre question de 14h30 sur ce qui déclenche la désinformation *après* le bulletin :
+
+> [14h57] Dans le contexte Africain la désinformation est justement multiforme. Il faut aussi considérer que le taux d'analphabétisme est très élevé dans beaucoup de pays africains.
+
+`inboundCount` passe de 1 à **2** : CTA dû, jamais servi dans ce fil (le DM d'ouverture nommait HWG sans lien ni essai).
+
+**Texte envoyé :**
+
+> Doudou, l'analphabétisme change la nature même de l'objet : un bulletin est un document écrit, et si une partie de son public ne le lit pas, ce qui se transmet ensuite est un récit oral dont le bulletin n'est plus que le point de départ.
+>
+> C'est aussi la limite de mon propre travail. HealthWatch Global garde une entrée par foyer actif, reconstruite sur les publications des agences, et le relais parlé ne laisse aucune trace que je puisse dater. Le site lui-même, healthwatch-global.com, ouvre sept jours au niveau Pro dès la création du compte, sans coordonnée bancaire, si cette couche écrite vous intéresse.
+>
+> Dans les cas que vous avez recensés, qu'est-ce qui faisait qu'un message repris à l'oral finissait par s'éloigner du bulletin d'origine ?
+
+**Statut CTA : présent.** Vouvoiement conforme au fil. Aucun sujet politique : le taux d'analphabétisme est traité comme un fait de contexte qu'il a lui-même introduit, sans jugement sur aucun pays ni aucune politique.
+
+⛔ **Formule reprise de notre propre message de 14h30 écartée** : « un foyer suivi retient une seule date » et « tout ce qui circule autour » n'ont pas été rejouées.
+
+`QA : mécanique 3 jets (773 → 723 → 754 car., fr/fr) | jet 1 : « niveau pro pendant sept jours » et « voulez voir à quoi ressemble » déjà servis ; jet 2 : « inscription sur healthwatch global com » et « sur healthwatch global com ouvre » — la formule de CTA butait sur celle envoyée à Christian Wilfried Mendo à 13h58, réécrite en déplaçant le domaine en tête de proposition ; jet 3 PASS, 0 blocker | aucun chiffre | 2 claims produit confrontées au registre | relecture éditoriale : faite | statut : envoyé le 08/09 à 17h23`
+
+---
+
+### 3️⃣ ✅ DM — **Keneth Mugume** (`/in/keneth-mugume-32ab88145/`), envoyé le 08/09 à 17h25 — **malentendu levé, CTA DÛ et SERVI**
+
+**Le malentendu du midi est confirmé résolu** (point de vérification demandé par le carry-over de 13h) — il ne parle plus de retirer son post :
+
+> [14h53] Owwwh.... THANK YOU Sir!!!! There are parallel systems and different staff involved. AEFI monitoring runs independent of logistics and cold chain
+>
+> [14h54] Both are coordinated from the center and the schedules are aligned in a way that they move seamlessly.
+
+`inboundCount` très au-delà du seuil (7 messages de lui dans le fil), **CTA dû et jamais servi** : le DM d'ouverture nommait HWG et citait des chiffres, sans lien ni essai.
+
+**Texte envoyé :**
+
+> Keneth, thank you, that is a clearer picture than I usually get. Two teams with their own staff, meeting only at the coordination level, also explains why a round reaches somebody outside the programme as one number rather than two.
+>
+> What I maintain is a running list of open outbreaks, each one assembled from the bulletins that describe it, so an immunisation round shows up there only through whatever the national bulletin carries. Seven days at the Pro level come with any account on healthwatch-global.com, and no payment details are asked for, in case you want to look at how Uganda reads from that side.
+>
+> You describe the two schedules as aligned from the center. What does that alignment actually run on once a round is moving?
+
+**Statut CTA : présent.** Ton volontairement chaleureux, dans la continuité de la réparation de 14h27.
+
+⛔ **Piège de fond évité** : le 1er brouillon de la clôture demandait « *when the two schedules do slip out of alignment, what brings them back together?* » — présupposé qu'elles dérapent, alors qu'il vient d'affirmer l'inverse. Reformulé en **forme 2** (`burned-templates.md`) : créditer le choix délibéré et en demander le mécanisme, sans qualifier son adéquation.
+
+**Fait produit vérifié au registre du 08/09 avant envoi** : « how Uganda reads from that side » ne cite aucun chiffre ; contrôle fait tout de même sur `claimable-facts.json` — l'Ouganda y porte bien 3 lignes (Mpox, Marburg, Crimean-Congo Hemorrhagic Fever), cohérent avec le DM d'ouverture.
+
+`QA : mécanique 2 jets (736 car., en/en) | jet 1 : « at healthwatch global com » partagé avec le brouillon Sahar Khalid du même run (ngram.peer) — corrigé en déplaçant le domaine (« any account on healthwatch-global.com ») ; jet 2 PASS, 0 blocker | aucun chiffre | 2 claims produit confrontées au registre | relecture éditoriale : faite | statut : envoyé le 08/09 à 17h25`
+
+---
+
+### 4️⃣ ✅ DM — **Christianah Oki** (`/in/christianahoki/`), envoyé le 08/09 à 17h28 — **elle nous écrit la première, `inboundCount` 1, CTA NON DÛ**
+
+**Fil neuf, ouvert par elle** (aucun DM HWG antérieur, vérifié : le fil ne contient qu'un message). Elle a été commentée le 07/09 (post *readiness* / fièvre de la vallée du Rift) et nous avait remerciés en sous-fil.
+
+> [16h18] Hello David,
+> I hope this message finds you well.
+
+**Message d'ouverture sans contenu**, très probablement l'amorce d'une demande. Réponse chaleureuse et courte qui **laisse la place à ce qu'elle voulait dire** tout en ouvrant une piste de fond.
+
+**Texte envoyé :**
+
+> Christianah, hello, and thank you for writing. I enjoyed the exchange under your readiness post, and the question you opened it with has not left me since.
+>
+> In the One Health work you do, what usually reaches you first when something is starting?
+
+**Statut CTA : absent, motif — seuil non atteint (`inboundCount` 1).** C'est l'un des trois seuls motifs d'omission admis. Clôture en question ouverte, sans alternative nommée (le 1er jet demandait « the animal side or the human side ? », alternative nommée, retiré avant contrôle).
+
+⛔ **L'angle du commentaire du 07/09 n'est pas rejoué** : ce DM ne reprend ni le signal animal en amont de la courbe humaine, ni la connexion des deux lignes de remontée.
+
+`QA : mécanique 2 jets (253 → 246 car., en/en) | jet 1 : « one i keep coming back to » (ngram.history, famille « the part I keep coming back to » déclarée saturée à 18 occurrences dans burned-templates) — reformulé en « has not left me since » ; jet 2 PASS, 0 blocker | aucun chiffre | aucune claim produit | relecture éditoriale : faite | statut : envoyé le 08/09 à 17h28`
+
+---
+
+### 5️⃣ 🔴 DM **NON ENVOYÉ** — **Emmanuel Pembi** (`/in/emmanuel-pembi-2173a8b1/`) — garde-fou « changement de canal proposé », escalade vers David
+
+Il répond à notre DM de 13h22 :
+
+> [14h54] Hi David, thank you for reaching out. Would you reach out on my watsApp +2347068115161 via call later, about an hour. Am currently on a task
+
+**Motif d'arrêt.** `CLAUDE.md` (§ « Exception autonome », exigence 2 de David du 05/09) range explicitement le **changement de canal proposé** parmi les garde-fous §10, « motif d'arrêt complet et d'escalade, pas d'automatisation à tout prix ». Rien n'a donc été envoyé, et **aucune coordonnée personnelle de David n'a été partagée** (politique commune §3).
+
+**Brouillon prêt, à valider ou corriger par David (rien n'en est parti) :**
+
+> Emmanuel, thank you, and no rush at all, please stay with your task. I would rather keep this here on LinkedIn if that is alright with you, it suits the kind of exchange I can be useful in.
+>
+> Your question about pace is what I was really after: at WHO in Nigeria, what usually decides that an early signal has enough behind it to move to the response side?
+
+**Statut CTA du brouillon : absent, motif — seuil non atteint (`inboundCount` 1).**
+
+⚠️ **Contradiction documentaire à trancher, signalée telle quelle sans être résolue seule.** `_shared/hwg-social-policy.md` §3 (dernier paragraphe) dit le contraire de `CLAUDE.md` : « *Rester sur la plateforme et rediriger sur le fond plutôt que décliner frontalement. Toute demande de contact hors plateforme doit être signalée explicitement dans le bilan de fin de session, **même quand la réponse reste autonome**.* » — ce qui autorise l'envoi. `CLAUDE.md` fait foi (clause de hiérarchie de §5), donc arrêt ; mais l'un des deux fichiers porte une règle périmée et devrait être corrigé par une décision de David, pas par une routine.
+
+`QA : non soumis au contrôle mécanique — le brouillon n'est pas destiné à partir en l'état, il attend l'arbitrage de David`
+
+---
+
+### 6️⃣ ✅ SIX INVITATIONS DE CONNEXION ENVOYÉES — **quota 7/7 PLEIN** (avec MUTARYEBWA FELIX du run de 9h)
+
+**Plafond de notes personnalisées : RETESTÉ ce run, toujours épuisé** (report-conventions : un carry-over reporté deux fois se reteste, ne se recopie pas). Clic sur « Ajouter une note » → modale « *Envoyez un nombre illimité d'invitations personnalisées avec Premium — vos messages d'invitation personnalisés gratuits sont épuisés* ». **Les six invitations sont donc parties sans note**, canal fonctionnel de bout en bout.
+
+**Capacité d'invitation : le blocage du 07/09 n'existe plus.** Le gestionnaire affiche **87 invitations en attente** (contre **99 sur 100** relevées le 07/09, ce qui avait fait conclure à une capacité bloquée). Les acceptations du jour ont libéré des places. ➡️ **Ne pas recopier « capacité bloquée » depuis les carry-over antérieurs : c'est faux depuis aujourd'hui.**
+
+**Vivier : la grappe INRB / RDC / ALIMA**, atteinte de proche en proche depuis Antoine Nkuba Ndaye (carry-over du 08/08, statut « à traiter » jamais soldé) puis par les panneaux « Profils semblables ». Recoupe directement la ligne d'événement Ebola/RDC.
+
+| # | Profil | Intitulé vérifié sur le profil | Pourquoi retenu |
+|---|---|---|---|
+| 2/7 | **Antoine Nkuba Ndaye** `/in/antoine-nkuba-ndaye-763a4511a/` | *MD, MPH, PhD*, University of Kinshasa, Montpellier, 1 656 abonnés, **12 mutuels** | Carry-over « à traiter » depuis le 08/08, déjà suivi. Travaux mpox clade Ib (INRB/IRD/UNIKIN) |
+| 3/7 | **Emmanuel Hasivirwe Vakaniaki** `/in/emmanuel-hasivirwe-vakaniaki-639a5952/` | *MD, MSc, PhD researcher, **INRB**, Kinshasa and KU Leuven*, 158 abonnés, 4 mutuels | Source primaire du terrain RDC. ⚠️ **§12** : un homonyme existe (`emmanuel-hasivirwe-vakaniaki-481933320`), identité levée par l'intitulé INRB/KU Leuven, pas par le nom |
+| 4/7 | **Daniel Mukadi-Bamuleka** `/in/daniel-mukadi-bamuleka-16795366/` | *MD, Medical-Microbiologist, PhD; **Directeur (BSL-3/2 Rodolphe Mérieux INRB Goma)**; Associate Professor UNIKIN; Senior Researcher (Virology, INRB); **chef des laboratoires épidémiques INRB dans l'est de la RDC*** | ⭐ **La meilleure prise du run.** Il dirige les laboratoires d'où sortent les confirmations de la flambée Ebola que HWG suit. 394 abonnés, 5 mutuels |
+| 5/7 | **Guilavogui Jean-Paul MD,PGD,Msc,MPH** `/in/guilavogui-jean-paul-md-pgd-msc-mph-870908138/` | *Country Research Coordinator chez **ALIMA***, Conakry, ISPED, 2 157 abonnés, **20+ mutuels** | ALIMA opère les centres de traitement Ebola/Lassa. Profil actif |
+| 6/7 | **Anani Badje MD, PhD** `/in/anani-badje-md-phd-3a20891a8/` | *Medical Epidemiologist - Specialist in Infectious and Tropical Diseases*, France, U. de Bordeaux / U. Félix Houphouët-Boigny, 640 abonnés, 9 mutuels | Épidémiologiste maladies infectieuses et tropicales, cohérent au corpus |
+| 7/7 | **Ibca Camara** `/in/ibca-camara-871657122/` | *Epidemiologist chez **ALIMA***, Guinée, ULB, 1 131 abonnés, **32 mutuels** | Second point d'entrée ALIMA, très fort taux de mutuels |
+
+**Chaque envoi vérifié individuellement** : modale relue pour confirmer qu'elle nommait bien la bonne personne **avant** le clic (piège des boutons « Se connecter » de barre latérale, tracker 27/08), puis bouton du profil recontrôlé à « En attente » **après**. Pour Antoine Nkuba Ndaye, l'extension Chrome s'est déconnectée entre le clic et la vérification : l'état a été constaté en rouvrant le profil, **pas en recliquant**.
+
+❌ **Un candidat écarté, légitimité non établie (politique commune §10)** : **meris matondo** `/in/meris-matondo-3aa725165/`, *MD, Virologist, Head of the Emerging Viruses Laboratory ai, Cliniques universitaires de Kinshasa/UNIKIN* — intitulé très senior sur un compte de **21 relations, 28 abonnés, aucun post**. L'écart entre la fonction revendiquée et l'empreinte du compte n'a pas pu être levé. **Ne pas reproposer sans élément neuf.**
+
+⏭️ **Déjà « En attente », aucune action possible** (statuts de tracker à corriger) : **Patrick Masenga** `/in/patrick-masenga/` et **Kasonde Mwinga** `/in/kasonde-mwinga-585315247/`, tous deux listés « excellent candidat connexion dès réouverture du quota » depuis le 19/08 — l'invitation était en réalité déjà partie. **PLACIDE (Kingebeni) MBALA** `/in/placide-mbala-47896262/` (*Head of Epidemiology and Global Health, INRB*), également « En attente ».
+
+⭐ **Repérés au passage, pour le prochain run** : **Dr Benido Impouma** (*Director, Health Promotion, Disease Prevention and Control Cluster, WHO*) — profil décideur de premier plan, jamais au corpus ; **Olivier Marcy** (*Research Director DR2 at IRD*) ; **Malam Mamadou Boulama** (*MD, Infectious Diseases*) ; **Tavia Bodisa** (*MD, MPH*).
+
+---
+
+### 7️⃣ 🔎 Abonnés, connexions acceptées et invitations reçues
+
+- **Abonnés** (`people-follow/followers/`, **434 personnes**) : **aucun nouvel abonné non suivi en retour.** Les 10 plus récents affichent tous « Suivi ». **Suivis : 2/7-10 en clics explicites, inchangés ce run** — faute de candidat entrant, pas faute de marge ; les 6 invitations ci-dessus entraînent un suivi implicite non comptabilisé comme tel.
+- **Connexions acceptées** — vérification faite **soi-même** sur `mynetwork/invite-connect/connections/` trié « Ajouts récents », jamais déduite d'un bilan précédent (règle du 06/09). **6 acceptations datées du 08/09** : MUTARYEBWA FELIX, Keneth Mugume, Doudou DIOP, Sahar Khalid, Anaïs Legand, Yakoza Nyirenda ; **4 du 07/09** : Namwoo Heo, Emmanuel Pembi, Christian Wilfried Mendo, Stéphanie Maltais. **Tous ont reçu un DM HWG aujourd'hui ou avant, sauf un : MUTARYEBWA FELIX**, sans aucun message échangé → **DM de bienvenue dû, non envoyé, quota 8/8 plein** (carry-over en tête pour 9h demain).
+- **Invitations reçues** : aucune nouvelle depuis le traitement de 9h. OLAOLUWA PHILIP et Zachariah G. Houdari toujours en attente délibérée (décisions du 31/08).
+- **Invitations envoyées, contrôle de cohérence** : 87 en attente, dont **Elie Caleb MIMBULA « Envoyé hier »** — 🏷️**HORS-ROUTINE :** confirmation matérielle de l'anomalie du 07/09 (invitation partie sans qu'aucune session ne la revendique). Toujours sans explication, à trancher hors routine.
+
+**Quotas à la clôture** : DM **8/8 (PLEIN)** — les 4 envois de ce run sont hors quota par exception « fil déjà engagé » et ne le rouvrent pas ; commentaires **4/7** ; notes de connexion **7/7 (PLEIN)** ; suivis **2/7-10**. **11 actions sortantes sur ce run** (4 DM + 1 commentaire + 6 invitations).
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check — 08/09/2026 (13h) — ✅ **3 DM du carry-over envoyés** (Anaïs Legand, Christian Wilfried Mendo, Doudou DIOP) — le blocage classifieur du matin n'a pas survécu au changement de conversation
 
 **Contexte d'ouverture** : navigateur `23c7ecdd-…` sélectionné directement, sans question (session planifiée, David absent par construction — le nom d'affichage de ce deviceId est aujourd'hui « Browser 2 », il était « Browser 1 » ce matin : **identifier par le deviceId, jamais par le nom affiché**, §12). **Aucun run de ce `taskId` aujourd'hui** (vérifié, convention double déclenchement de `report-conventions.md`). Registres QA du jour régénérés à 09h03 par le run de 9h, donc **de moins de 12 h** : réutilisés tels quels, pas de régénération.

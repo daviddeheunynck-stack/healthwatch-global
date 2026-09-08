@@ -2,6 +2,71 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session linkedin-hwg-followup-check-2 — 08/09/2026 (17h) — ✅ **1 commentaire publié** (Jalal NOURLIL, biosécurité de laboratoire) — ✅ **6 invitations de connexion envoyées, quota 7/7 PLEIN** — ✅ **4 DM de réponse envoyés en fils actifs** (détail dans `linkedin-contacts.md`) — 🔴 **1 demande de changement de canal remontée à David (Emmanuel Pembi)**
+
+**Contexte d'ouverture** : navigateur `23c7ecdd-…`, session planifiée, **aucun run antérieur de ce `taskId` aujourd'hui** (`content-log.md` ne porte que les entrées 9h et 13h). Registres QA **régénérés à 17h09** (`npm run qa:facts` : 232 faits sur 106 lignes ; `npm run qa:claims` : 110 foyers, 74 pays, 19 maladies) plutôt que réutilisés, bien que ceux de 09h03 fussent encore sous les 12 h.
+
+**§15 (verrouillage par cible) et §16 (suivi de l'événement)** : `content-log.md` et `linkedin-contacts.md` relus à l'ouverture **et revérifiés juste avant la première publication** — `mtime` des deux fichiers inchangé depuis 14h32, `git log` sur `dc5901b7`, aucune session concurrente. Aucune entrée du jour ne visait Jalal NOURLIL.
+
+**Quotas hérités des runs de 9h et 13h** : commentaires **3/7**, DM **8/8 (PLEIN)**, suivis **2/7-10**, notes de connexion **1/7**.
+
+---
+
+### 1️⃣ ✅ COMMENTAIRE 4/7 — **Jalal NOURLIL MD.**, publié au 2e jet, premier commentaire HWG chez lui
+
+`urn:li:activity:7503068937744687104`, post de **2 h** (fenêtre 48 h largement ouverte), **2 réactions, 0 commentaire avant le nôtre**. Profil **libre de tout blocage**, déjà relation de 1er degré (tracker, 17/08 : *Medical Virologist & Laboratory Director, Casablanca*, IFBA Certified for Biorisk Management). Repéré dans les notifications, pas par une recherche active.
+
+**Son post (verbatim, FR)** : « *Une remise en question bienvenue d'une pratique de laboratoire longtemps considérée comme acquise : la flamme du bec Bunsen ne protège pas nécessairement la zone de travail des contaminations aériennes et pourrait même les aggraver dans certaines conditions. Cet article rappelle l'importance de fonder nos procédures de biosécurité sur des données expérimentales actualisées, plutôt que sur des habitudes historiques.* » (lien vers *Nature*, « Bunsen burners' reputation for sterilizing workplaces flames out »).
+
+**Comment le candidat a été traité malgré un sujet éloigné du cœur HWG.** La biosécurité de paillasse n'est pas la surveillance épidémiologique, et l'angle produit aurait été forcé. Conformément à l'exigence 3 de David du 05/09 (un bon candidat ne se refuse pas faute d'angle), l'angle a été cherché **hors HWG** : un commentaire n'a ni CTA ni obligation de parler du produit. Retenu : le **mécanisme qui explique la survie de la pratique**, à savoir que son échec n'a pas de signature attribuable.
+
+**Forme employée** : forme 2/3 de `_shared/burned-templates.md` (fait qui complète silencieusement le post, parallèle qui prolonge la thèse du destinataire), **sans question de clôture** — le moule « constat + question » a été volontairement évité, et rien ici ne se lit comme un jugement d'adéquation (le texte crédite explicitement le travail expérimental qu'il cite).
+
+**Texte publié :**
+
+> Ce qui protège une pratique comme celle-là, c'est que son échec n'a pas de signature propre : une contamination retrouvée sur une gélose se présente de la même façon qu'elle vienne de l'air, des mains ou du milieu lui-même. Le bec Bunsen n'a donc jamais pu être mis en cause par le résultat.
+>
+> Les gestes qui traversent le mieux les décennies sont souvent ceux dont on ne peut pas attribuer les ratés. C'est ce qui rend le travail expérimental que vous citez précieux : il mesure l'effet directement, sans qu'un incident ait besoin de le désigner.
+
+**Publication confirmée** : compteur passé de **0 à 1 commentaire**, **une seule occurrence** du texte dans la page (comptage sur `document.body.innerText`), éditeur vidé, sauts de paragraphe intacts dans le DOM.
+
+⚠️ **Deux frappes perdues avant celle-ci, aucune conséquence.** Le premier clic sur le champ de commentaire est passé par un `ref` de `find` : `document.activeElement` est resté sur `body`, et les deux paragraphes tapés dans la foulée n'ont atteint aucun champ (vérifié : 0 commentaire, éditeur vide). Clic refait aux coordonnées lues sur capture plein cadre, `activeElement` vérifié à `ql-editor` **avant** de retaper. ➡️ **Méthode retenue pour la suite : après tout clic destiné à saisir du texte, lire `document.activeElement` avant de taper** — c'est le seul contrôle qui distingue un clic réussi d'un clic absorbé.
+
+**Nouveau blocage hebdomadaire créé : Jalal NOURLIL MD. jusqu'au 15/09.**
+
+`QA : mécanique 2 jets (545 → 548 car., fr/fr) | jet 1 : « au lieu d attendre qu » déjà servi (ngram.history), reformulé ; jet 2 PASS, 0 blocker | aucun chiffre | relecture éditoriale : faite | statut : publié le 08/09 à 17h47`
+
+---
+
+### 2️⃣ 📌 NOTIFICATIONS ET VEILLE — parcourues intégralement, une seule action à en tirer
+
+**Aucune réponse neuve à un commentaire HWG, aucune mention neuve** depuis le relevé de 13h. Le seul élément nouveau de la page est le post de Jalal NOURLIL, traité ci-dessus. Le reste, sans action :
+
+- **Betty Lanyero Ajok et 1 autre personne** ont réagi à notre commentaire sous le post de **Julien Harneis** (Ebola/RDC, « *more than 2 500 people have died […] half of them in just 20 days* ») — déjà relevé à 13h, réactions et non réponses.
+- **Amref Health Africa** (page, 322 878 abonnés) a réagi à notre commentaire Ebola/Ouganda — déjà relevé et notifié à David au créneau de 13h, rien de neuf.
+- **Harvey Basivikidi** a réagi à notre post West Nile/France du jour.
+- **Statistiques** : 495 impressions sur la semaine passée ; **373 vues de profil, 556 impressions cumulées** (contre 371/529 à 13h). Notre post West Nile est à **139 impressions**.
+- **Yakoza Nyirenda et 3 autres personnes ont consulté le profil de David** (il y a 56 min) — Yakoza a reçu son DM à 13h14.
+- ⭐ **Signal de veille trouvé de façon incidente, dans la modale Premium d'invitation** : la liste des visiteurs récents non identifiés cite **« une personne chez Ministry of Health of Zambia »**, **« une personne chez Federal Ministry Of Health - Sudan »** et **« une personne chez Korea Disease Control and Prevention Agency »**. La 3e recoupe le DM envoyé à **Namwoo Heo** (KDCA) ce midi. Ces trois lignes ne sont pas des interactions publiques et **ne relèvent pas de §13** (aucun compte identifié, aucun like/follow/réponse) : notées en veille, pas de notification.
+
+**Aucune donnée épidémiologique neuve à verser en base repérée ce run.**
+
+---
+
+### 3️⃣ 🔁 CARRY-OVER POUR LE CRÉNEAU DE 9h (09/09)
+
+1. 🔴⭐⭐⭐ **Emmanuel Pembi (OMS Nigeria) — demande de changement de canal, brouillon prêt, RIEN ENVOYÉ.** Il répond à notre DM de 13h22 par : « *Hi David, thank you for reaching out. Would you reach out on my watsApp +234… via call later, about an hour. Am currently on a task* ». `CLAUDE.md` (§ « Exception autonome », exigence 2) classe le **changement de canal proposé** parmi les motifs d'**arrêt complet et d'escalade**. Texte complet du brouillon dans `linkedin-contacts.md` et dans le bilan de session. ⚠️ **Tension documentaire à trancher par David** : `hwg-social-policy.md` §3 (dernier paragraphe) autorise au contraire une réponse autonome qui reste sur la plateforme, à condition de la signaler dans le bilan (« *même quand la réponse reste autonome* »). `CLAUDE.md` fait foi, donc rien n'a été envoyé — mais les deux fichiers se contredisent et l'un des deux doit être corrigé.
+2. 🔴 **MUTARYEBWA FELIX** (`Public Health Scientist`) — **connexion acceptée aujourd'hui, aucun DM de bienvenue envoyé, quota DM plein (8/8) avant ce run.** Vérification faite sur `mynetwork/invite-connect/connections/` trié « Ajouts récents », pas supposée depuis un bilan précédent (règle du 06/09). **Premier DM du créneau de 9h demain.**
+3. ⭐⭐ **Fils DM actifs à revérifier** : Sahar Khalid (`inboundCount` 2, CTA servi à 17h21 — ne plus le resservir), Doudou DIOP (`inboundCount` 2, CTA servi à 17h23 — idem), Keneth Mugume (CTA servi à 17h25 — idem), Christianah Oki (`inboundCount` 1, CTA non dû, **dû dès sa prochaine réponse**), Christian Wilfried Mendo (7 messages, notre question de 14h22 en dernier, CTA déjà servi à 13h58 — ne jamais le resservir).
+4. **Quotas à la clôture** : commentaires **4/7**, notes de connexion **7/7 (PLEIN)**, DM **8/8 (PLEIN)**, suivis **2/7-10** en clics explicites (les 6 invitations de ce run entraînent un suivi implicite, non compté comme tel).
+5. **Blocages hebdomadaires — un seul créé ce run : Jalal NOURLIL MD. (15/09).** Inchangés : Prof. Mohamed Janabi (15/09) ; Sahar Khalid, Amref Health Africa, Kenya National Public Health Institute, Abduljalal Nadabo, Christianah Oki, page Africa CDC (14/09) ; Joseph Cephas Kyari, Robert Herriman (13/09) ; Yilkal Kebede, Tambe Elvis Akem, Keneth Mugume (12/09) ; Ifedayo Adetifa, Pete Macharia (11/09) ; Adesoye Emmanuel Tunde, Kyaw Thowai Prue Prince, Rocham Mulumbwe, Dr. Rashi Bhardwaj, Dr Fabrice KHADDY, Miriam Mbueshi (09/09). **Libres depuis aujourd'hui** : Dr. Jean Kaseya, page ECDC, Jacob Banda.
+6. 🗓️ **LIGNE D'ÉVÉNEMENT (§16) — Ebola/RDC reste ouvert, aucun support consommé ce run.** Porteurs restants : page Africa CDC (bloquée jusqu'au 14/09), Prof. Mohamed Janabi (bloqué jusqu'au 15/09), **Dr. Jean Kaseya (libre depuis aujourd'hui, mais ses trois derniers posts étaient hors fenêtre ou hors sujet au relevé de 13h — ne rouvrir que s'il publie du neuf)**, Julien Harneis (notre commentaire y a recueilli 2 réactions aujourd'hui). ⭐ **Porteurs neufs identifiés ce run, invitations envoyées** : Daniel Mukadi-Bamuleka (Directeur du laboratoire BSL-3/2 Rodolphe Mérieux INRB Goma, **chef des laboratoires épidémiques INRB dans l'est de la RDC**) et Emmanuel Hasivirwe Vakaniaki (INRB Kinshasa / KU Leuven) — deux sources primaires du terrain Ebola, à surveiller dès acceptation.
+7. 🔴 **Elie Caleb MIMBULA** — 🏷️**HORS-ROUTINE :** l'anomalie du 07/09 est **confirmée matériellement ce run**, pas seulement reportée : le gestionnaire d'invitations envoyées porte bien son nom avec la mention « **Envoyé hier** » (07/09), alors qu'aucune session ne revendique cet envoi. Toujours sans explication.
+8. ⏸️ **OLAOLUWA PHILIP** et **Zachariah G. Houdari** — invitations reçues laissées en attente, conformément aux décisions du 31/08, aucun signal neuf.
+9. ⚠️ **Point de méthode outillage** — trois défauts distincts rencontrés ce run, tous contournés : (a) **frappe perdue silencieusement après un `navigate`** (déjà signalé à 13h, reproduit **trois fois** ici — le remède qui marche est de vérifier `document.activeElement` avant de taper, pas d'attendre plus longtemps) ; (b) **`Page.captureScreenshot` en timeout CDP à 30 s**, deux fois, sur une page pourtant réactive ; (c) **extension Chrome déconnectée deux fois en cours de batch**, dont une **entre le clic « Envoyer sans note » et sa vérification** — l'invitation était bien partie, constaté en rouvrant le profil (« En attente ») plutôt qu'en recliquant. Le deviceId a dû être resélectionné (`23c7ecdd-…`, renommé « David » entre-temps).
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check — 08/09/2026 (13h) — ✅ **2 commentaires publiés** (Sahar Khalid en sous-fil, Prof. Mohamed Janabi en top-level) — ✅ **5 DM + 5 réponses en fil actif + 1 DM de bienvenue hors quota**, tous sur ordre explicite de David (Sahar Khalid, puis Mendo/Mugume/Doudou DIOP) — détail dans `linkedin-contacts.md`
 
 **Contexte d'ouverture** : navigateur `23c7ecdd-…`, session planifiée. Aucun run de ce `taskId` aujourd'hui. Registres QA du 08/09 09h03 réutilisés (moins de 12 h). `content-log.md` et `linkedin-contacts.md` relus à l'ouverture **et de nouveau juste avant le clic de publication** (§15) : aucune entrée concurrente sur la cible.
