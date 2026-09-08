@@ -2,6 +2,66 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session linkedin-hwg-monitoring — 08/09/2026 (9h) — ✅ **1 commentaire publié** (Ifedayo Adetifa, réponse en sous-fil, 7e tour) — 🔴 **run interrompu à 09h35 : contrôle mécanique puis navigation refusés par le classifieur, aucun autre candidat instruit**
+
+**Contexte d'ouverture** : navigateur `23c7ecdd-…` (« Browser 1 »), sélection directe. Aucun run de ce `taskId` aujourd'hui. Quotas remis à zéro (commentaires 0/7, DM 0/8, suivis 0/7-10, notes 0/7). Registres régénérés à l'ouverture (`qa:facts` 232 faits, `qa:claims` 90 nombres citables), `burned-templates.md` relu avant rédaction, aucun relecteur (retiré le 06/09).
+
+---
+
+### 1️⃣ ✅ COMMENTAIRE 1/7 — **Ifedayo Adetifa**, réponse en sous-fil, 7e tour
+
+`urn:li:activity:7502860650994368512` (le même post que `7502444502809427968` — **deux URN mènent au même post, et seule la seconde forme charge notre sous-fil en entier** ; le premier chargement, fait sur l'autre URN, affichait 4 tours au lieu de 6 et donnait à croire que sa réponse du jour n'existait pas. À retenir : quand un sous-fil connu semble amputé, essayer l'URN porté par la notification elle-même avant de conclure).
+
+**Il a répondu ce matin (8 h avant le run), en nous nommant.** Verbatim :
+
+> David Deheunynck As one who previously led an NPHI, as part of preparedness, I had to ensure we had capacity to test for Marburg and other threats even in the absence of cases. This meant we still tracked stocks and expiry dates for these central laboratory tests. For PoCs, I believe we need multiplex solutions as part of investigation of undifferentiated fevers. A test that will include Lassa fever in Nigeria, and other targets that apply according to local epidemiology. The cost of missing a case and having to respond to a full outbreak exceeds the cost of these peacetime investments.
+
+**Blocage hebdomadaire écarté par arbitrage** (Adetifa bloqué en top-level jusqu'au 11/09) : sous-fil actif, interpellation nominale datée du jour, même arbitrage que le 26/08. Aucun commentaire top-level publié chez lui.
+
+**Angle retenu** : sa proposition de panel multiplex répond exactement à l'objection que notre message du 06/09 posait (rien à compter entre deux flambées). Forme 4 de `burned-templates.md` (« oui, et ») : prolonger sa proposition en montrant le mécanisme qu'elle enclenche, sans question de clôture. Le Lassa qu'il nomme lui-même est le porteur : une cible endémique et saisonnière fait tourner la cartouche, la cible rare hérite de sa rotation.
+
+**Texte publié :**
+
+> A multiplex panel solves it from a direction a single target test cannot. Lassa sits in the differential often enough in Nigeria to move stock every season, so a filovirus target on the same cartridge cycles through procurement and expiry alongside it. The rare target inherits the routine of the common one, and the stock and expiry tracking you had to run centrally becomes something the facility does anyway.
+
+**1er jet retravaillé une fois** : `ngram.history` a bloqué « by product of ordinary use » — **ma propre formule du 06/09 dans ce même fil**, pas un gabarit venu d'un autre destinataire. Reformulée, **0 blocker, 0 warn, 0 review au 2e jet**.
+
+**Aucun chiffre publié** : l'argument tient sans donnée chiffrée, donc rien à confronter au registre. Aucun CTA, aucun lien (règle des commentaires publics).
+
+**§16 (densité par événement)** : 3e texte du corpus sur le diagnostic filovirus (Adetifa 06/09, Nadabo 07/09), mais **c'est une réponse dans le sous-fil qui a produit les deux autres**, pas un 3e commentaire chez un tiers sur le même sujet. Rien de publié ailleurs sur ce thème aujourd'hui.
+
+**Publication vérifiée** : texte relu dans l'éditeur **avant** le clic, bouton « Répondre » identifié dans le `<form>` contenant l'éditeur de réponse (jamais au niveau document — piège du 06/09 chez Kyari, qui aurait posté en top-level chez quelqu'un de bloqué). Après publication : **1 seule occurrence** du texte dans la page, éditeur vidé.
+
+⚠️ **Piège de coordonnées reconstaté (et résolu)** : `getBoundingClientRect()` rend des pixels CSS (viewport 1283x550) alors que le repère des captures est 1568x672, soit un facteur **1,222**. Deux clics ont été perdus avant de convertir. Multiplier les coordonnées JS par ce facteur, ou lire la position sur la capture.
+
+`QA : mécanique PASS (411 car., en/en, 0 blocker au 2e jet) | aucun chiffre | relecture éditoriale : faite | statut : publié le 08/09 à 09h27`
+
+---
+
+### 2️⃣ 📌 MATIÈRE REPÉRÉE, AUCUNE ACTION (veille)
+
+Relevé sur la page de notifications avant le blocage. **Aucun candidat instruit** : le run s'est arrêté avant la phase de recherche active.
+
+- **Africa CDC / AMR** — post relayant que **97,8 %** des États membres de l'UA ont un plan d'action national contre l'antibiorésistance mais que **32,6 %** seulement sont chiffrés, budgétés et suivis (réunion de Mombasa, cadre UA AMR 2026-2030). Notre commentaire du 07/09 y a récolté un « j'aime » de **MUTARYEBWA FELIX** ce matin. Fil clos de notre côté.
+- **Christianah Oki** a répondu à notre commentaire du 07/09 : « *So true. It really can't be said better than that. Thank you so much for this thoughtful comment.* » **Remerciement sans contenu neuf** : y répondre produirait un accusé de réception habillé (item 8 des huit exigences). **Écarté délibérément, pas oublié.**
+- **Tshephang Iris Kabelo** a trouvé notre commentaire « instructif » (post African STARS semaine 5, diagnostic filovirus). Aucune nouvelle réponse dans le sous-fil.
+- **John Omari Baso** a aimé notre commentaire sous le post Amref (fin de flambée en Ouganda contre risque transfrontalier persistant).
+- **Anne Thuret (Santé publique France)** — relance des inscriptions à l'Odissé Dataviz Challenge (restitution le 9 novembre 2026). Hors périmètre surveillance des flambées, déjà noté le 07/09.
+- **Larbi BAASSI** élu au conseil d'administration de l'**African Society for Laboratory Medicine (ASLM)** — 128 réactions, 68 commentaires. Post d'annonce personnelle, pas d'angle analytique, mais l'ASLM est co-auteure du papier *Nature Medicine* cité par Adetifa. **À garder comme porteur possible sur le dossier diagnostics.**
+
+### 3️⃣ 🔁 CARRY-OVER (commentaires)
+
+1. ⭐⭐ **Événement, pas profil (§16)** : la **revue npj Digital Medicine du 04/09 sur les 20 plateformes de surveillance IA** reste non traitée, porteur toujours à trouver (Paul Sonnier en 404, groupe fermé, page Tengrium écartée). Pistes inchangées : auteurs nommés (Getchell, Pronyk), Duke-NUS Centre for Outbreak Preparedness, WHO Hub for Pandemic and Epidemic Intelligence.
+2. ⭐⭐ **Orientations vaccinales OMS pour la RDC** (relevées le 07/09 à 17h) — **la fenêtre 48 h se referme aujourd'hui**, porteur institutionnel toujours à identifier. Dernier créneau utile : 13h.
+3. ⭐ **Journée mondiale de l'épidémiologie de terrain (7 septembre)** — AFENET et Ajisefini Consulting repérés le 07/09, non traités. **Fenêtre jusqu'au 09/09** ; un 2e commentaire sur cet événement exigerait un argument réellement distinct de celui servi au KNPHI (§16 point 1).
+4. ⭐ **Larbi BAASSI / ASLM** — voir §2, porteur possible sur le dossier diagnostics, jamais commenté.
+5. ➖ **Christianah Oki** — sous-fil clos par un remerciement, ne pas y revenir sans élément neuf (§2).
+6. **Blocages hebdomadaires inchangés par ce run** (le seul texte publié est une réponse en sous-fil, qui ne crée pas de blocage top-level) : Sahar Khalid, Amref Health Africa, Kenya National Public Health Institute, Abduljalal Nadabo, Christianah Oki, page Africa CDC (14/09) ; Joseph Cephas Kyari, Robert Herriman (13/09) ; Yilkal Kebede, Tambe Elvis Akem, Keneth Mugume (12/09) ; **Ifedayo Adetifa**, Pete Macharia (11/09) ; Adesoye Emmanuel Tunde, Kyaw Thowai Prue Prince, Rocham Mulumbwe, Dr. Rashi Bhardwaj, Dr Fabrice KHADDY, Miriam Mbueshi (09/09) ; Dr. Jean Kaseya, page ECDC, Jacob Banda (**libres à partir d'aujourd'hui**).
+7. 🔴 **Cause de l'arrêt** : contrôle mécanique puis `navigate` refusés par le classifieur de permissions à partir de ~09h35, refus annoncé comme persistant jusqu'à la fin de la session. Détail complet et brouillon conservé dans `linkedin-contacts.md` §4.
+
+
+---
+
 ## 📅 Reprise interactive — 07/09/2026 (17h40, David « réponds à Oke Ikpekpe maintenant ») — ✅ **1 réponse publiée en sous-fil, sur ordre explicite de David**
 
 **Contexte** : le carry-over du run de 17h signalait le sous-fil Oke Ikpekpe (`urn:li:activity:7499051354368331776`) comme non traité, quota commentaires plein (7/7). David a demandé explicitement en session de répondre maintenant — validation explicite (`report-conventions.md`), qui prime sur le quota du jour (le quota est un dispositif de pacing autonome, pas un plafond opposable à une instruction directe de David).
