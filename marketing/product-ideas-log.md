@@ -4842,3 +4842,166 @@ JSON-LD cesse d'être une promesse de volume. Moins flatteur, et c'est
 l'information juste — et c'est aussi la seule version du chiffre qui puisse
 être masquée de façon cohérente avec l'idée 1, puisque le masque ne sait
 raisonner que sur des lignes actives.
+
+### Construction — les deux idées sont livrées (`3f922ed7`)
+
+Verrou de code partagé acquis avant la première édition et relâché après le
+push, puis repris et relâché pour chacun des deux correctifs de suite
+ci-dessous — chacun étant une écriture de code à part entière. Les deux idées
+passent les quatre garde-fous : effort petit / petit à moyen, aucune migration
+ni DDL, aucun e-mail / paiement / envoi externe touché, aucune source de
+données externe nouvelle — rien de ce run ne lit quoi que ce soit hors du
+dépôt, de la base et des pages déjà publiées par HWG lui-même.
+
+Les deux idées portant sur les trois mêmes fichiers, et la seconde étant la
+condition de la première (le masque ne sait raisonner que sur des lignes
+actives), elles partent dans **un seul commit** dont le message sépare
+explicitement les deux défauts.
+
+**Idée 1.** Nouveau `AggregateCasesInline` dans `components/CasesDisplay.tsx`,
+variant **inline** d'`AggregateStat` — ce dernier rend un `<p>`, invalide dans
+le `<p>` d'une carte elle-même enveloppée d'un `<Link>` : même piège
+d'imbrication HTML que celui contourné hier pour `SourceBadge`. Il suit la
+règle du module sans exception : pour un agrégat masqué, seuls la **bande** et
+les **identifiants de lignes** traversent la frontière Serveur→Client, jamais
+le total réel, que seul le `fetch` payant de `RealStatsProvider` reconstitue.
+Il **échoue fermé** : le total ne s'affiche que si *toutes* les lignes du
+bucket sont revenues du `fetch`, donc si le plafond de 200 identifiants
+d'`/api/outbreak-stats` tronquait un jour la requête, les buckets laissés de
+côté garderaient leur bande au lieu d'afficher un total calculé sur un
+sous-ensemble.
+
+Les trois pages calculent leur carte de maladies vitrines avec
+`pickFeaturedDiseases((await getOutbreaks()).filter(o => o.active))` — donc
+depuis la **même** population que les fiches, et non depuis leur propre
+requête : une ligne ne peut pas être la vitrine gratuite d'une région ici et
+une ligne masquée un clic plus loin.
+
+**Idée 2.** Le périmètre du chiffre passe des lignes *toutes confondues* aux
+lignes actives, dans les trois fichiers. Le compteur de lignes (« N foyers au
+total ») ne bouge pas : il était juste. Les deux blocs JSON-LD `Dataset`
+échangent leur `size` de cas contre un compte d'enregistrements.
+
+`npx tsc --noEmit`, `npx eslint` et un `npm run build` complet propres avant
+chaque commit ; hooks de pré-commit et de pré-push passés
+(`check-restricted-fetch` : aucune URL non déclarée ; `check-migrations` :
+90 migrations toutes appliquées).
+
+### Vérification en production, après déploiement
+
+Le balayage qui a servi à écrire les deux idées, rejoué sur la prod déployée :
+
+```
+                     pastilles masquées      chiffres exacts rendus
+/fr/countries          0  →  66                109  →  14
+/fr/diseases           0  →  16                 18  →   2
+/fr/regions            0  →   5                  5  →   0
+JSON-LD size   "173,795,608 confirmed cases tracked" → "296 outbreak records tracked"
+```
+
+La carte témoin, lue dans le HTML servi :
+
+```
+avant : Ghana · 1 foyer au total · 6 739 843 cas · Aucun foyer actif
+après : Ghana · 1 foyer au total ·                 Aucun foyer actif
+```
+
+**Les 16 chiffres restés en clair sont exactement les vitrines gratuites**, et
+c'est vérifié, pas supposé. Sur `/fr/diseases` il reste Ebola (6 604) et la
+Shigellose (2 300), une ligne active chacune ; sur `/fr/countries` il reste 14
+pays dont toutes les lignes actives sont la maladie vitrine de leur région
+(Palestine, Colombie, Équateur, Nicaragua, Paraguay, Venezuela, UE/EEE, et les
+sept territoires du Pacifique).
+
+**Invariant vérifié dans les deux sens** (`scripts/verify-index-invariant-…`,
+`scripts/verify-index-figures-…`, ignorés par git comme tous les scripts
+datés) : sur 114 cartes lues, un échantillon de 29 pays — les 14 en clair plus
+15 en bande — a été relu fiche par fiche.
+
+```
+accord index / tuile agrégée de la fiche : 29 · écarts : 0
+mêmes CHIFFRES sur les 14 pays en clair  : 14 · écarts : 0
+```
+
+Contrôle de non-régression sur les surfaces déjà propres : `/fr` (3
+pastilles), `/fr/reports` (5), `/fr/compare` et `/fr/sitrep` (rien rendu à un
+visiteur anonyme) — inchangées.
+
+### Correctif de suite (a) — `de38dceb`, trouvé à la relecture
+
+Le garde de la carte maladie était `cases > 0`, et `cases` vaut désormais 0
+pour une entrée masquée ; le garde de repli restait donc vrai à total nul, et
+`MagnitudeDots` rend un tiret pour une bande nulle là où la carte n'affichait
+rien auparavant. Corrigé avant qu'aucune donnée ne le déclenche.
+
+### ⚠️ Correctif de suite (b) — `2985c25b` : poussé sur un diagnostic faux, gardé pour une autre raison
+
+**Ce que j'ai cru voir.** La première version du script d'invariant détectait
+« la fiche masque-t-elle ? » par la présence d'une pastille **n'importe où**
+sur la page. Elle a signalé un écart sur `eu-eea` : index en clair, fiche
+« en bande ». J'ai conclu que les index groupaient sur le brut `active` et les
+fiches sur `filterDisplayActive()`, et j'ai poussé l'alignement sur l'helper
+partagé.
+
+**Ce qui était réellement le cas.** `/fr/country/eu-eea` affiche
+« Cas confirmés 2 300 » **en clair** dans sa tuile agrégée. Son unique
+pastille est sur une ligne Hantavirus **archivée**, dans la section
+Historique — sans rapport avec le traitement du total. L'index et la fiche
+étaient d'accord depuis le début ; c'est mon détecteur qui était trop grossier.
+
+**Le changement est-il quand même bon ?** Mesuré, pas supposé :
+
+```
+lignes en base                      : 296
+active = true                       : 121
+inactives mais affichées comme actives :   0     ← l'écart entre les deux définitions
+```
+
+**Zéro.** Sur les données d'aujourd'hui, `active` et `filterDisplayActive`
+donnent le même ensemble : `2985c25b` **ne corrige aucun défaut observable**
+et ne change aucun chiffre affiché. Il est gardé pour une raison de couplage,
+pas pour un correctif : il n'y a plus qu'**une seule** définition de « foyer
+affiché comme actif » dans le produit, au lieu d'une seconde recopiée à la
+main sur trois pages. Les deux ensembles peuvent diverger dès demain — une
+ligne close il y a peu et sans successeur est affichée par les fiches, une
+ligne `is_seed` de référence endémique ne l'est jamais — et c'est exactement
+le mode de panne que ce dépôt collectionne : la règle existait, simplement pas
+là où quelqu'un construisait.
+
+Le message de commit de `2985c25b`, lui, invoque l'écart `eu-eea` comme
+motif. **Il est faux et reste dans l'historique** ; c'est cette entrée qui fait
+foi.
+
+### Périmètre volontairement laissé de côté
+
+- **Le compteur « N foyers au total »** de chaque carte continue de compter
+  toutes les lignes, archives comprises. C'est juste — c'est un compte de
+  lignes, pas de cas — mais une carte peut désormais lire « 1 foyer au
+  total · Aucun foyer actif » sans aucun chiffre, ce qui est plus austère
+  qu'avant. Assumé : c'est l'information vraie.
+- **Le total mondial** n'est plus publié nulle part, sous aucune forme. Le
+  remplacer par le total des lignes actives (1 823 416) aurait été exact mais
+  serait resté un agrégat que le masquage par carte ne peut pas couvrir.
+- **Les pages `/fr/regions` et `/fr/countries` ne portent pas encore la
+  pastille de provenance** livrée hier sur les fiches — extension mécanique,
+  distincte de ce chantier, toujours en attente de l'avis de David sur les
+  trois premières surfaces.
+
+### Constat annexe, aucune action prise
+
+Le libellé « N foyers au total » se traduit mal au singulier en français :
+la carte du Ghana lit « 1 foyer**s** au total ». Faute d'accord préexistante,
+sur les cinq locales, indépendante de ce chantier — pas corrigée ici pour ne
+pas mélanger un correctif d'i18n à un correctif de masquage, et notée pour
+David.
+
+### Fichiers modifiés par d'autres, laissés intacts (AGENTS.md)
+
+Aucun : l'arbre était propre au démarrage et l'est resté. Les fichiers ont été
+stagés un par un, jamais par `git add -A`. Les sondes datées créées pendant le
+run (`scripts/probe-*-2026-09-08.mjs`, `scripts/verify-*-2026-09-08.mjs`) sont
+couvertes par la règle `scripts/*-20[0-9][0-9]-[0-9][0-9]-[0-9][0-9].mjs` du
+`.gitignore` : elles restent sur le disque de David et n'entrent pas dans
+l'historique.
+
+### Statut final : idée 1 CONSTRUITE (`3f922ed7`) · idée 2 CONSTRUITE (`3f922ed7`) · 2 correctifs de suite (`de38dceb`, `2985c25b`, ce dernier sans effet mesurable)
