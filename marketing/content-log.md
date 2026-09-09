@@ -2,6 +2,97 @@
 
 Archive de tout le contenu créé. Mise à jour à chaque session.
 
+## 📅 Session linkedin-hwg-content-proposal — 09/09/2026 (mercredi MWF, 8h35) — 🟡 **PRÊT — en attente de publication** — Tanzanie, le jarida hebdomadaire de la Wizara ya Afya compte les morsures de serpent et de chien à côté de la rougeole et du rotavirus, et chaque section se termine par des consignes adressées au lecteur
+
+**Étape 0 — aucun brouillon en attente.** Dernier post de marque LinkedIn : **07/09** (West Nile/Europe, tableau ECDC et sécurité transfusionnelle), publié par David lui-même le jour même. Le 08/09 (mardi) est hors MWF. Aucun statut `PRÊT` résiduel frais : le plus récent, Dengue/Taïwan, a été retiré le 31/08. Rédaction entièrement neuve.
+
+**Étape 0 bis — contenu X des 7 derniers jours, texte publié lu, pas seulement les titres :**
+
+| Date | Canal | Angle publié | Verdict pour ce run |
+|---|---|---|---|
+| **07/09** | X, publié en autonomie | Rougeole/Amériques, le budget 7-1-7 (15 jours) tient dans une génération de rougeole, donc un score parfait arrive une génération trop tard | 🚫 Rougeole/Amériques, PAHO sitrep #10 et 7-1-7 entièrement écartés |
+| **07/09** | LinkedIn, publié | West Nile/Europe, l'aperçu hebdomadaire de l'ECDC est bâti pour les établissements de transfusion | 🚫 West Nile, ECDC et **la charpente « deux documents ne mesurent pas la même chose »** écartés, y compris comme mécanique reformulée |
+| **04/09** | LinkedIn, publié | Diphtérie/Niger, l'antitoxine est le seul intrant qui se rationne | 🚫 Terrain diphtérie écarté |
+| **02/09** | LinkedIn, publié | Ebola/RDC, l'essai PARTNERS recrute dans une flambée à 48,1 % de létalité | 🚫 Terrain Ebola/RDC écarté (porté aussi par le thread X du 31/08) |
+
+⚠️ **Une version antérieure de l'angle de ce run a été écartée pour ce motif précis.** Le premier réflexe sur ce bulletin était « ce jarida est en réalité un instrument d'approvisionnement (antivenin, vaccin antirabique), pas un décompte épidémiologique » : c'est **exactement la charpente du post du 07/09** sur l'ECDC, à deux jours d'écart, avec d'autres mots. Abandonnée avant rédaction. La ligne antivenin subsiste dans le texte comme **fait sourcé du bulletin**, pas comme thèse du post ; la thèse retenue est ailleurs (l'unité du bulletin est le lecteur, pas le pathogène).
+
+**Angles instruits puis écartés en cours de run** (traçabilité) :
+
+1. ❌ **Chikungunya/France, 46 cas autochtones sur 8 épisodes (1 à 27 cas par épisode) au 30/08 pour 126 cas importés sur la saison.** Matière solide et ligne fraîche (`ageDays` 2). Écarté : même continent, même saison arbovirale et **même bulletin source** (le bulletin SpF est commun chikungunya/dengue/Zika/West Nile) que le post publié il y a 2 jours. Aurait aussi imposé le passage au français. **À garder en réserve pour un créneau ultérieur, l'angle « taux de conversion importation → épisode local » n'a jamais été servi.**
+2. ❌ **Létalité comparée entre foyers de choléra concomitants** (Afghanistan 97 965/50 contre RCA 447/36). Déjà le thread de marque du 27/07, et déjà écarté pour ce motif par le run X du 07/09.
+3. ❌ **Dengue Pacifique, Samoa 20 193 cas dans un pays de ~220 000 habitants.** Charpente « le compteur brut ne dit rien du taux d'attaque » trop voisine de la famille brûlée « X on its own tells you A and nothing about B » (`_shared/burned-templates.md`).
+4. ❌ **Marburg/Ouganda, 1 cas et 1 décès datés du 16/07, ligne toujours active.** Écarté comme sujet : la règle « ne jamais publier une date calculée » ([[reference_uganda_ebola_42day_countdown_dates]]) interdit de bâtir un post sur un décompte de 42 jours reconstitué à la main. **Signalé plus bas comme point de données, pas comme angle.**
+
+**Angle retenu, et pourquoi il tient** : le bulletin communautaire hebdomadaire du ministère tanzanien de la Santé (*Jarida la Taarifa ya Magonjwa Kwa Jamii*), semaine 35, est écrit en swahili **pour le grand public**, et ses sept sections mélangent des infections (rotavirus, rougeole, dengue, respiratoire) et deux rubriques qui ne sont pas des infections du tout (morsures de chien/chat, morsures de serpent), avec pour chacune un décompte hebdomadaire, une comparaison à la semaine précédente, un classement par région et une liste de consignes adressées au lecteur. Le critère de regroupement n'est pas le pathogène, c'est ce sur quoi un foyer peut agir dans la semaine. **Observation de système de surveillance, sans jugement d'adéquation, sur une source qu'aucun autre compte n'a relayée** — et HWG porte déjà une ligne issue de ce bulletin (le foyer de rotavirus de Mafinga).
+
+### TEXTE — statut : 🟡 **PRÊT — en attente de la validation explicite de David avant qu'il ne publie lui-même** (règle de non-publication autonome du contenu de marque LinkedIn, [[feedback_no_self_publishing]]). David non présent au moment du run.
+
+```
+Tanzania's Ministry of Health publishes a weekly disease bulletin written for the public, in Swahili, with a free 24 hour number for reporting a rumour or a health event. Week 35 covers 24 to 30 August 2026.
+
+It has seven sections. Two of them are not about an infection.
+
+One reports people bitten by dogs and cats: 510 that week, down 4.5 percent from 534 the week before, no deaths. The other reports snakebites: 224, down 10.4 percent from 250, no deaths, listed by region. Njombe 24, Songwe 23, Tanga 21.
+
+Under the snakebite figures the bulletin says plainly what the reports are used for. Keeping antivenom available. Under the animal bites, strengthening access to human rabies vaccine sits in the list of measures underway.
+
+The other five sections read the way you would expect. A rotavirus outbreak in Mafinga Town Council, Iringa Region, reported since 14 August, 89 cases in total and 30 in that week alone. Four measles positive samples out of 84, stated as below outbreak level with surveillance continuing. Fourteen dengue cases in Dar es Salaam and Pwani, against nine the week before.
+
+Then each section closes with instructions addressed to the reader rather than to a health authority. Sleep on a raised bed. Wear boots. Wash an animal bite with soap and plenty of water and leave it uncovered. After a snakebite, no traditional remedies and nothing tied around the wound, go to a facility now.
+
+The seven sections do not share a pathogen. They share a reader who can act on each of them this week, and the figures sit on the page next to the advice.
+
+HealthWatch Global carries the Mafinga cluster as an active outbreak line, sourced to this bulletin.
+
+https://healthwatch-global.com/en/disease/rotavirus-infection
+```
+
+### Source primaire, lue page par page ce run
+
+⭐ **Wizara ya Afya (ministère de la Santé, Tanzanie), Idara ya Kinga / Sehemu ya Epidemiolojia na Udhibiti wa Magonjwa — *Jarida la Taarifa ya Magonjwa Kwa Jamii*, WIKI 35 · 2026, 24-30 Agosti 2026** (`moh.go.tz/storage/app/uploads/public/6a9/74b/503/6a974b503acb0400724052.pdf`). PDF de 9 pages, **WebFetch ne rend que du binaire** : téléchargé puis **lu page par page en image**, comme pour les sitreps PAHO. Verbatim retenus, avec la traduction utilisée :
+
+- Morsures de serpent (p. 6) : « *Jumla ya watu 224 wametolewa taarifa ya kung'atwa na Nyoka bila kifo katika wiki ya 35. Idadi hii imepungua kwa asilimia 10.4 ikilinganishwa na matukio ya kung'atwa na Nyoka 250 ya wiki ya 34.* » Régions : Njombe 24, Songwe 23, Tanga 21, Mwanza 17, Morogoro 14.
+- ⭐ La phrase qui porte la 4e ligne du post (p. 6) : « *Taarifa hizi zinatumika kuhakikisha upatikanaji wa dawa kinga dhidi ya sumu ya nyoka (anti-venoms).* » → ces informations sont utilisées pour assurer la disponibilité de l'antivenin.
+- Morsures de chien/chat (p. 5) : « *Matukio ya watu 510 … bila kifo yametolewa taarifa wiki hii ya 35. Idadi hii imepungua kwa asilimia 4.5 ikilinganishwa na matukio ya watu 534 … wiki ya 34.* » Mesure en cours : « *Kuimarisha upatikanaji wa chanjo ya Kichaa cha Mbwa kwa binadamu.* » → **formulé comme une mesure en cours, pas comme l'usage déclaré du décompte** ; le post fait cette distinction mot pour mot (« says plainly what the reports are used for » pour le serpent, « sits in the list of measures underway » pour le chien).
+- Rotavirus (p. 8) : « *Mlipuko wa virusi vya Rota umeripotiwa katika Halmashauri ya Mji wa Mafinga, Mkoa wa Iringa tangu tarehe 14 Agosti 2026, ukifikia jumla ya wagonjwa 89. Kwa wiki hii wagonjwa 30 wametolewa taarifa, ambapo mpaka sasa hamna vifo vilivyotolewa taarifa.* »
+- Rougeole (p. 4) : « *Sampuli 4 kati ya 84 (4.8%) zilionesha uwepo wa vimelea vya Surua wiki hii. Idadi hii haijafikia kiwango cha mlipuko, lakini uangalizi unaendelea.* »
+- Dengue (p. 7) : 14 malades semaine 35 (Dar es Salaam et Pwani), contre 9 la semaine précédente, 0 décès. **Le corps du texte swahili dit « wagonjwa 14 kutoka Dar es Salaam na mgonjwa mmoja Mkoa wa Pwani », le compteur de la page et la une donnent 14 au total** : le post écrit « Fourteen dengue cases in Dar es Salaam and Pwani », formulation vraie dans les deux lectures, aucun total recalculé.
+- Consignes citées dans le post : « *Lala Katika Kitanda Kilicho Juu* » (dormir dans un lit surélevé), « *Vaa Mabuti/Glavu* » (bottes/gants), « *Osha jeraha kwa sabuni na maji mengi … usifunge jeraha* » (laver la morsure au savon et à grande eau, ne pas la bander), « *Usitumie dawa za kienyeji wala kubana mshipa wa damu kwenye jeraha* » (ni remèdes traditionnels, ni garrot).
+- Ligne de signalement (une et p. 9) : « *Piga simu 199 (bure) kutoa taarifa ya tukio lolote la kiafya katika jamii* » et « *Una tetesi au tukio la kiafya? Piga simu bure: 199. Huduma hii ni ya bure saa 24.* » → **le numéro lui-même n'est pas publié dans le post** (une ligne d'appel étrangère n'a rien à faire dans un post de marque), seule sa nature l'est.
+
+**Sources interdites** : aucune. `moh.go.tz` ne figure ni au tableau rouge ni au tableau orange de `_shared/sources-interdites.md`. Pas de ProMED, pas de ReliefWeb, pas de polioeradication.org, pas de NCDC. **Aucun témoignage, aucune citation de personne** : les seules citations sont celles d'un document institutionnel public, attribué au ministère dans le texte.
+
+### QA (dispositif à deux étages depuis le 06/09, relecteur retiré)
+
+1. **Registre de faits** — `npm run qa:facts` relancé en début de run : **232 faits citables sur 106 lignes affichées**, 81 lignes `is_seed` exclues. La ligne Rotavirus/Tanzanie y figure (`8fb296e1`, 89 cas, `asOf` 2026-08-30, `ageDays` 1, `stale: false`, source = ce PDF). `npm run qa:claims` relancé : **805 chaînes de copie publique, 7 claims manuelles, couverture citable 110 foyers / 74 pays / 19 maladies**.
+2. **Contrôle mécanique** — `qa:check`, canal `linkedin-post`, source primaire passée en `threadFile` (`tmp/thread-tz-week35.txt`, uniquement le contenu du bulletin, aucune annotation, règle du 27/08). **1 735 caractères, 9 paragraphes, langue `en`, 0 tiret cadratin, 0 avertissement de forme.**
+   - Tous les nombres du texte (24, 30, 35, 510, 4.5, 534, 224, 10.4, 250, 24, 23, 21, 14, 89, 84, 4) résolus en `facts.from-thread` : ils viennent du document lu ce run, aucun d'une mémoire.
+   - `hwg.claim` sur « *HealthWatch Global carries the Mafinga cluster as an active outbreak line, sourced to this bulletin* » : **conforme**, la ligne est `active: true`, affichée (elle est au registre des faits citables) et sourcée à ce PDF. Aucune affirmation de couverture, d'antériorité, de traction ni de partenariat.
+   - ✅ **1 vrai gabarit attrapé et corrigé** : le 1er jet finissait sur « *one of the lines we track at HealthWatch Global* », formule déjà servie dans une note de connexion (« *exactly the field reality we track at HealthWatch Global* », `content-log.md`, note de connexion à Henri). Clôture réécrite. Le contrôle a fait son travail.
+   - 🔴 **2 bloquants restants, tous deux faux positifs documentés** (détail ci-dessous).
+3. **Relecture éditoriale finale** (point 8 de la grille, seule relecture depuis le retrait du relecteur) : passage en revue de `_shared/burned-templates.md` charpente par charpente. Aucune famille brûlée employée. **Un jet intermédiaire écarté par cette relecture** : « *What the seven sections share is not a pathogen list. It is that…* » — relative libre + copule de saillance, famille explicitement brûlée ; remplacé par deux déclaratives plates (« *The seven sections do not share a pathogen. They share a reader who…* »), le remède que le fichier prescrit. Aucune question de clôture, aucun « what gets counted », aucun « downstream », aucun « X is the one that ».
+
+### 🔴 Les 2 bloquants du contrôle mécanique, et pourquoi ils ne bloquent pas
+
+- **`context.language` : « fil = fr, brouillon = en ».** Le `threadFile` est **en swahili** ; le détecteur ne connaît que fr/en et l'a classé « fr ». Paire de langues écrite explicitement comme l'exige l'item 1 : **langue de la source = sw, langue du brouillon = en**. L'anglais est la langue par défaut du contenu de marque ([[feedback_linkedin_brand_posts_in_english]]) et le sujet n'est pas francophone, donc la règle de bascule FR ne s'applique pas. **Nouvelle classe de faux positif, jamais rencontrée jusqu'ici** (première source non fr/en de cette routine) : à connaître, aucun correctif proposé ici, `scripts/` n'appartient à aucune routine documentaire.
+- **`ngram.history` : « https healthwatch global com en » et « healthwatch global com en disease ».** Les deux moitiés de l'URL de fiche maladie, **3e occurrence du faux positif structurel déjà remonté deux fois à David le 07/09** (par cette routine puis par `x-hwg-content-proposal`). La cible précise, elle, est neuve : `disease/rotavirus-infection` a **0 occurrence** dans tout `marketing/`. Rien d'autre ne collisionne : la prose ne partage aucune séquence de 5 mots avec l'historique.
+
+### Vérifications avant publication
+
+- **Fiche maladie liée** : `https://healthwatch-global.com/en/disease/rotavirus-infection` répond **HTTP 200**, la Tanzanie y figure (11 occurrences dans le HTML) ainsi que le chiffre 89. Le CTA ne renvoie pas vers une page vide (piège du 15/07, Guatemala).
+- **Pays cités présents en base** : Tanzanie (rotavirus `8fb296e1`, et choléra 113/2 non cité). Aucun pays cité qui n'existerait pas sur le site.
+- **Hook structurel, pas événementiel** : aucune date butoir, aucun événement daté. Le post reste vrai s'il est publié plus tard dans la semaine ; seuls les chiffres vieilliront au bulletin de la semaine 36. Le texte est déjà daté (« Week 35 covers 24 to 30 August 2026 »), il vieillit donc proprement.
+- **Mise en forme** : 9 paragraphes séparés par des lignes vides, aucun bloc dense, aucun tiret cadratin, guillemets droits.
+
+### 🟡 Signalements repérés en passant, hors périmètre de cette routine
+
+- **Marburg/Ouganda (`b17d4fda`) : 1 cas, 1 décès, `date` du 16/07/2026, ligne toujours `active: true` au 09/09.** Soit 55 jours, très au-delà de la fenêtre de 42 jours qui suit un dernier cas. La ligne n'a pas été utilisée ni citée ce run. **À vérifier par `morning-don-check` contre une source primaire OMS/Ouganda** : soit la flambée a été déclarée close et la ligne doit passer `active: false`, soit il y a eu des cas depuis et c'est la date qui est périmée. Décision à David, aucune écriture faite ici.
+- **Le bulletin tanzanien porte aussi une section internationale**, avec Ebola/RDC à 5 863 cas et 2 824 décès et le choléra/RDC à 39 483 cas suspects et 1 173 décès. Ces chiffres sont **inférieurs aux lignes HWG** (Ebola/RDC 6 604/3 175 au 05/09 via ECDC ; choléra/RDC 41 279/1 214, ligne `is_seed`), ce qui est **cohérent avec la coupure du bulletin au 30 août**, pas une divergence. Noté pour qu'une session future ne le relise pas comme un écart.
+- **Diphtérie/Australie** : le bulletin décrit les 538 cas comme « *kiwango cha juu zaidi tangu kumbukumbu zilipoanza* » (le niveau le plus élevé depuis le début des enregistrements). Concorde avec la ligne HWG (538/1, source `cdc.gov.au`). Aucune action.
+
+---
+
 ## 📅 Session linkedin-hwg-followup-check-2 — 08/09/2026 (17h) — ✅ **2 commentaires publiés** (Jalal NOURLIL, biosécurité de laboratoire ; INRB, essai EBO-PEP) — ✅ **6 invitations de connexion envoyées, quota 7/7 PLEIN** — ✅ **6 DM de réponse envoyés en fils actifs** (détail dans `linkedin-contacts.md`) — 🔴 **1 demande de changement de canal remontée à David (Emmanuel Pembi)**
 
 **Contexte d'ouverture** : navigateur `23c7ecdd-…`, session planifiée, **aucun run antérieur de ce `taskId` aujourd'hui** (`content-log.md` ne porte que les entrées 9h et 13h). Registres QA **régénérés à 17h09** (`npm run qa:facts` : 232 faits sur 106 lignes ; `npm run qa:claims` : 110 foyers, 74 pays, 19 maladies) plutôt que réutilisés, bien que ceux de 09h03 fussent encore sous les 12 h.
