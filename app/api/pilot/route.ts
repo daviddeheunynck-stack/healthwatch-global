@@ -26,7 +26,18 @@ const BOM = String.fromCharCode(65279);
 const clean = (val: string | undefined) =>
   (val || "").replace(new RegExp("^" + BOM), "").trim();
 
+// David's decision 2026-09-09: wind down the product, shutting down 2026-09-12. Same flag
+// as app/[locale]/pilot/page.tsx's PILOT_CLOSED — this is the defense-in-depth half (the
+// page hides the form, this rejects a direct POST bypassing it, same as SIGNUPS_CLOSED did
+// not need on /signup since that form calls Supabase's own signUp() directly, uninterceptable
+// from here).
+const PILOT_CLOSED = true;
+
 export async function POST(req: NextRequest) {
+  if (PILOT_CLOSED) {
+    return NextResponse.json({ error: "Pilot applications are closed — HealthWatch Global is shutting down." }, { status: 410 });
+  }
+
   const ip = getClientIp(req);
   const rl = await rateLimit(`pilot:${ip}`, { limit: 3, windowMs: 10 * 60 * 1000 });
   if (!rl.allowed) {

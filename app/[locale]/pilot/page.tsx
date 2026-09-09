@@ -296,6 +296,19 @@ const INCLUDE_ICONS = {
   message:  MessageSquare,
 };
 
+// David's decision 2026-09-09: wind down the product (see app/[locale]/signup/page.tsx's
+// SIGNUPS_CLOSED comment for the shutdown itself). The pilot program is a new-signup path
+// too — closed the same way, and app/api/pilot/route.ts rejects POSTs server-side as well.
+const PILOT_CLOSED = true;
+
+const PILOT_CLOSED_MESSAGE: Record<string, string> = {
+  en: "HealthWatch Global is shutting down on September 12, 2026. We're no longer accepting new pilot applications.",
+  fr: "HealthWatch Global ferme le 12 septembre 2026. Nous n'acceptons plus de nouvelles candidatures au programme pilote.",
+  es: "HealthWatch Global cierra el 12 de septiembre de 2026. Ya no aceptamos nuevas solicitudes de piloto.",
+  ar: "ستُغلق منصة HealthWatch Global في 12 سبتمبر 2026. لم نعد نقبل طلبات جديدة للبرنامج التجريبي.",
+  id: "HealthWatch Global akan ditutup pada 12 September 2026. Kami tidak lagi menerima aplikasi pilot baru.",
+};
+
 export default function PilotPage() {
   const locale = useLocale() as keyof typeof COPY;
   const c = COPY[locale] ?? COPY.en;
@@ -308,6 +321,25 @@ export default function PilotPage() {
   const [error, setError] = useState("");
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const faq = FAQ_COPY[locale] ?? FAQ_COPY.en;
+
+  if (PILOT_CLOSED) {
+    return (
+      <div className="min-h-[50vh] flex items-center justify-center py-8 px-4">
+        <div className="max-w-md text-center space-y-4" dir={isRtl ? "rtl" : undefined}>
+          <div className="flex items-center justify-center gap-2.5">
+            <FlaskConical className="text-red-500 w-7 h-7 shrink-0" />
+            <span className="font-bold text-white text-xl">HealthWatch Global</span>
+          </div>
+          <p className="text-gray-400 text-sm leading-relaxed">
+            {PILOT_CLOSED_MESSAGE[locale] ?? PILOT_CLOSED_MESSAGE.en}
+          </p>
+          <Link href={`/${locale}/pricing`} className="text-red-400 hover:text-red-300 text-sm inline-block">
+            {c.backLink}
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
