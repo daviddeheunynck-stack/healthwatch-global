@@ -33,33 +33,34 @@ const TRIAL_START_NOTE: Record<string, string> = {
   id: "Uji coba Pro 7 hari Anda dimulai segera setelah mengkonfirmasi email.",
 };
 
-// HealthWatch Global is shutting down (decided 2026-09-09, effective 2026-09-18
-// — see project_hwg_shutdown_2026_09_09 memory). New signups closed immediately
-// so nobody starts a trial that will be cut short within days. Existing accounts
-// are untouched: this only gates the signup form, not login (app/[locale]/login),
-// so current users can still sign in and export their data before shutdown.
+// HealthWatch Global is shutting down (decided 2026-09-09, effective 2026-09-12
+// — see project_hwg_shutdown_2026_09_09 memory; date moved up from the original
+// 2026-09-18 the same day). New signups closed immediately so nobody starts a
+// trial that will be cut short within days. Existing accounts are untouched:
+// this only gates the signup form, not login (app/[locale]/login), so current
+// users can still sign in and export their data before shutdown.
 const SIGNUPS_CLOSED = true;
 
 const SIGNUPS_CLOSED_MESSAGE: Record<string, { title: string; body: string }> = {
   en: {
     title: "New sign-ups are closed",
-    body: "HealthWatch Global is shutting down on September 18, 2026. We're no longer opening new trials. If you already have an account, you can still log in and export your data until then.",
+    body: "HealthWatch Global is shutting down on September 12, 2026. We're no longer opening new trials. If you already have an account, you can still log in and export your data until then.",
   },
   fr: {
     title: "Les inscriptions sont fermées",
-    body: "HealthWatch Global ferme le 18 septembre 2026. Nous n'ouvrons plus de nouveaux essais. Si vous avez déjà un compte, vous pouvez toujours vous connecter et exporter vos données d'ici là.",
+    body: "HealthWatch Global ferme le 12 septembre 2026. Nous n'ouvrons plus de nouveaux essais. Si vous avez déjà un compte, vous pouvez toujours vous connecter et exporter vos données d'ici là.",
   },
   es: {
     title: "Las inscripciones están cerradas",
-    body: "HealthWatch Global cierra el 18 de septiembre de 2026. Ya no abrimos nuevas pruebas. Si ya tiene una cuenta, todavía puede iniciar sesión y exportar sus datos hasta entonces.",
+    body: "HealthWatch Global cierra el 12 de septiembre de 2026. Ya no abrimos nuevas pruebas. Si ya tiene una cuenta, todavía puede iniciar sesión y exportar sus datos hasta entonces.",
   },
   ar: {
     title: "التسجيل مغلق حالياً",
-    body: "ستُغلق منصة HealthWatch Global في 18 سبتمبر 2026. لم نعد نفتح تجارب جديدة. إذا كان لديك حساب بالفعل، لا يزال بإمكانك تسجيل الدخول وتصدير بياناتك حتى ذلك الحين.",
+    body: "ستُغلق منصة HealthWatch Global في 12 سبتمبر 2026. لم نعد نفتح تجارب جديدة. إذا كان لديك حساب بالفعل، لا يزال بإمكانك تسجيل الدخول وتصدير بياناتك حتى ذلك الحين.",
   },
   id: {
     title: "Pendaftaran ditutup",
-    body: "HealthWatch Global akan ditutup pada 18 September 2026. Kami tidak lagi membuka uji coba baru. Jika Anda sudah memiliki akun, Anda masih dapat masuk dan mengekspor data Anda hingga saat itu.",
+    body: "HealthWatch Global akan ditutup pada 12 September 2026. Kami tidak lagi membuka uji coba baru. Jika Anda sudah memiliki akun, Anda masih dapat masuk dan mengekspor data Anda hingga saat itu.",
   },
 };
 
