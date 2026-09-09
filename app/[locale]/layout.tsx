@@ -13,9 +13,10 @@ import SentryUserIdentifier from "@/components/SentryUserIdentifier";
 import TrialBannerLoader from "@/components/TrialBannerLoader";
 import UpgradeModalAutoTrigger from "@/components/UpgradeModalAutoTrigger";
 import { Activity } from "lucide-react";
+import { isShutDown } from "@/lib/shutdown";
 import "../globals.css";
 
-// HealthWatch Global shuts down 2026-09-12 (see SIGNUPS_CLOSED in
+// HealthWatch Global shuts down at SHUTDOWN_AT (see SIGNUPS_CLOSED in
 // app/[locale]/signup/page.tsx, PILOT_CLOSED in app/[locale]/pilot/page.tsx,
 // SIGNUPS_CLOSED in app/auth/callback/route.ts and app/api/checkout/route.ts —
 // all of those only stop new customers ahead of time). This is the single
@@ -24,7 +25,8 @@ import "../globals.css";
 // every already-logged-in user, automatically, with nobody needing to be
 // in front of a keyboard to trigger it. No exceptions carved out here on
 // purpose: by this date there is nothing left to serve, including /admin.
-const SHUTDOWN_AT = "2026-09-12T00:00:00Z";
+// (SHUTDOWN_AT itself lives in lib/shutdown.ts — the ~50 Vercel crons under
+// app/api/cron/ don't pass through this layout and check it independently.)
 
 const SHUTDOWN_MESSAGE: Record<string, { title: string; body: string }> = {
   en: {
@@ -148,7 +150,7 @@ export default async function LocaleLayout({
 
   const isRTL = locale === "ar";
 
-  if (Date.now() >= Date.parse(SHUTDOWN_AT)) {
+  if (isShutDown()) {
     const m = SHUTDOWN_MESSAGE[locale] ?? SHUTDOWN_MESSAGE.en;
     return (
       <html lang={locale} dir={isRTL ? "rtl" : "ltr"}>
