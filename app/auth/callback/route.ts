@@ -7,6 +7,15 @@ import { activateTrial, ALL_REGIONS } from "@/lib/activate-trial";
 
 const VALID_LOCALES = ["en", "fr", "es", "ar", "id"];
 
+// Shutdown 2026-09-12 (see SIGNUPS_CLOSED in app/[locale]/signup/page.tsx,
+// PILOT_CLOSED in app/[locale]/pilot/page.tsx). Google OAuth auto-creates a
+// fresh Supabase auth user on first consent regardless of what our own pages
+// do — /login still renders OAuthButtons (existing OAuth users need it to
+// keep signing in), so a brand-new email can still reach this callback.
+// Closing signups here means skipping the new-account side effects below
+// (trial activation, welcome email, signup digest), not the button itself.
+const SIGNUPS_CLOSED = true;
+
 function localeFromNext(next: string): string | null {
   const parts = next.split("/").filter(Boolean);
   const first = parts[0];
@@ -117,13 +126,15 @@ export async function GET(req: NextRequest) {
         // without enrolling, which also permanently blocked enrollment afterwards
         // (activate-trial's idempotence guard treats any trial_ends_at as already handled).
         let isNewSignup = false;
-        try {
-          const result = await activateTrial(admin, user, { priorityRegion });
-          isNewSignup = result.activated;
-        } catch (err) {
-          console.error("[auth/callback] trial activation failed:", err);
-          Sentry.captureException(err, { tags: { user_id: user.id } });
-          await Sentry.flush(2000);
+        if (!SIGNUPS_CLOSED) {
+          try {
+            const result = await activateTrial(admin, user, { priorityRegion });
+            isNewSignup = result.activated;
+          } catch (err) {
+            console.error("[auth/callback] trial activation failed:", err);
+            Sentry.captureException(err, { tags: { user_id: user.id } });
+            await Sentry.flush(2000);
+          }
         }
 
         // Save locale for signups that bypass (or lose the race with) the
