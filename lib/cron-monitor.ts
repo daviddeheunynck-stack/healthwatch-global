@@ -632,6 +632,7 @@ export const CRON_WINDOWS: Record<string, number> = {
   "pilot-closing-reminder": 26,  // Schedule: 35 8 * * *
   "data-quality":      26,   // Schedule: 5 10 * * *
   // ── Billing & retention crons ────────────────────────────────────────────────
+  "cancel-subscriptions-shutdown": 26,  // daily — stops billing after SHUTDOWN_AT (lib/shutdown.ts)
   "expire-trials":       26,  // daily — monetization critical
   "onboarding-sequence": 26,  // daily — trial email sequence
   "trial-reminders":     26,  // daily — conversion critical
