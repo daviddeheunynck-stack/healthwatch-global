@@ -5220,3 +5220,64 @@ Le déséquilibre est **signalé, pas corrigé en réduisant le lot** : conform�
 4. **🟡 EMRO reste inexploré — le motif d'URL n'a pas été cherché ce run.** Le budget a été consacré à convertir le vivier AFRO en 20 contacts. `who.int/<pays>/about-us` rend 404 pour EMRO, et l'équivalent d'`afro.who.int/countries/` y reste inconnu. Piste à tester : `emro.who.int`, **avec un User-Agent navigateur** — sur ce domaine, 403 et 502 ont déjà été 6 fois un simple filtrage d'UA et non une panne.
 5. **⚖️ Déséquilibre de segments, 3e run consécutif : 20 gouvernement/OMS, 0 académique, 0 ONG.** Contrairement aux deux runs précédents, les pistes ont été **nommément réexaminées** cette fois (Makerere, Yale, IAVI, TEPHINET, SACIDS, Amref, KEMRI, ASLM, Ifakara, Pasteur Madagascar/Bangui) — voir section dédiée. Le constat est un épuisement vérifié, pas un défaut de recherche.
 6. **Aucun autre incident. Arbre de travail propre en début de run**, branche `master`, aucun fichier étranger modifié ; seul `marketing/institutional-prospects-log.md` est stagé et commité par cette routine.
+
+---
+
+## 🔁 RELANCE J+10 — 2026-09-09, run automatique `daily-relance-check-healthwatch`
+
+**Résultat : 0 relance créée — aucun lot institutionnel n'atteint J+10 aujourd'hui.** J+10 tombe sur le **30/08**, journée sans le moindre envoi institutionnel. Ce n'est pas la reprise de l'annonce du run du 08/09 (« 09/09 et 10/09 : rien à relancer ») : la journée a été **revérifiée en direct** dans Gmail, conformément à la règle « ne jamais se fier au journal seul ».
+
+### 🔎 Vérification en direct de la fenêtre 30-31/08
+
+Balayage `in:sent after:2026/08/29 before:2026/09/01`, corbeille incluse. Les seuls envois sortants de la fenêtre sont :
+
+- **29/08, 16:44-16:50 UTC** — le lot de 10 contacts (déjà relancé le 08/09, chaque fil porte bien 2 messages `SENT`) et les 14 relances du lot du 17/08, plus 3 relances d'essai utilisateur (hors périmètre).
+- **31/08, 07:09 et 10:56 UTC** — uniquement des messages d'essai utilisateur (`lepapapericles5`, `etienneg83`) et le fil Ethan Mitchell (NY State), tous **hors périmètre institutionnel**.
+- **30/08 — zéro envoi, aucun message sortant de la journée.**
+
+Deux sources concordantes : le balayage ci-dessus, et les entrées de prospection des 30/08 et 31/08 au journal, toutes deux « 🚦 FREIN DE FILE, 0 contact produit ». Le lot préparé le 30/08 est bien celui parti le **01/09** — il relève du **11/09**, pas d'aujourd'hui.
+
+### 🚦 Frein de file — 36 brouillons, dont 16 qui franchissent 24 h
+
+`list_drafts` (`pageSize: 50`) : **36 brouillons réels**, tous en `labelIds: ["DRAFT"]`, aucun passé en `SENT` (contrôle du bug d'envoi instantané : négatif).
+
+- **16 du 08/09** (06:17-06:18 UTC) — 12 bureaux pays OMS + 4 boîtes PAHO : **toujours en file, jamais envoyés**, soit plus de 24 h.
+- **20 du 09/09** (06:11-06:12 UTC) — les 20 bureaux pays OMS AFRO du run de prospection de ce matin.
+
+Sans objet pour cette routine ce run (aucune relance à créer, donc aucun arbitrage de volume à rendre), mais **le seuil de ~25 est dépassé de 11** et l'écoulement est bien le facteur limitant, comme le signalait déjà le run de prospection du jour.
+
+### 🔴 Bounces — aucun neuf, le cumul reste à 27
+
+Balayage (`from:mailer-daemon`, `from:postmaster`, `subject:Undeliverable`, `subject:"Delivery Status Notification"`, `subject:"Undelivered Mail"`, `subject:"Mail delivery failed"`, `after:2026/09/07`, corbeille incluse) : **1 seul fil, celui de PAHO Haïti du 07/09**, déjà consigné comme 27e. Aucun NDR neuf sur les 10 relances du 08/09.
+
+### 📬 Réponses institutionnelles — aucune neuve
+
+Balayage (`-in:sent -in:draft`, mots-clés HealthWatch/outbreak/epidemic/brotes/épidémique/surveillance/dashboard, `after:2026/09/07`, corbeille incluse) : 19 fils relus. Le seul fil institutionnel est celui de **Georgetown HSOC du 07/09**, déjà consigné et clôturé. Le reste est du bruit non institutionnel (digests LinkedIn, Stripe, Sentry, Better Stack, Search Console, briefing hebdomadaire HWG). **IDCU Malte reste silencieuse** depuis le point d'usage du 06/09.
+
+### 📊 Bilan cumulé
+
+**Totaux au 2026-09-09, 06:30 UTC — inchangés depuis le 08/09**, aucun envoi institutionnel n'ayant eu lieu depuis le lot du 07/09. Vérifié par balayage `in:sent after:2026/09/07` (corbeille incluse) : hors les 10 relances du 08/09 et un 4e message dans le fil Pasteur Maroc (contact ayant déjà répondu, hors périmètre), **aucun envoi sortant**.
+
+- **Prospectés : 410** — inchangé (les 36 brouillons en file ne sont pas partis).
+- **Envoyés : 410** — inchangé.
+- **Délivrés : 383** = 410 envoyés − 27 (taille de la liste nominative de bounces), recompté dans le même mouvement que la liste, pas repris de la ligne du 08/09.
+- **Taux de délivrabilité : 93,4 % (383/410)**.
+- **⚠️ Réserve maintenue** : les 410 envoyés comptent 4 envois vers des institutions déjà contactées (incident du 22/08), 1 seconde tentative sur Antigua et 1 sur PNG — le nombre d'**institutions distinctes** atteintes reste inférieur d'autant.
+- **Relances : 267 envoyées, 0 en attente d'envoi** — total cumulé de relances créées depuis le début : **267**, inchangé.
+
+**Profondeur de file en fin de run : 36 brouillons**, tous de prospection (16 du 08/09 + 20 du 09/09), **aucun brouillon de relance en file**.
+
+### 📅 Prochains lots
+
+- **10/09** : rien à relancer — aucun envoi le 31/08 (vérifié en direct ce run).
+- **11/09** → lots du **30/08** (7 contacts, envoyés le 01/09) et du **01/09** (9 délivrés sur 10) ; `contact@health.gov.ag` écarté définitivement.
+- **12/09** → 02/09 (9 délivrés + CAPRISA) ; `health_ministry@health.gov.pg` écarté définitivement.
+- **13/09** → 03/09 (16) ; **14/09** → 04/09 (16) ; **15/09** → 05/09 (21) ; **16/09** → 06/09 (8) ; **17/09** → 07/09 (16).
+
+⚠️ Ces dates supposent que les lots des 08/09 et 09/09 partent — tant qu'ils restent en brouillon, leur J+10 ne démarre pas.
+
+### ⚠️ Signalements
+
+1. **🟠 Les 16 brouillons du 08/09 ont passé la barre des 24 h** — c'est le symptôme du 04-05/08 que le SKILL de prospection demande de surveiller depuis la remontée de cadence à 20. Le seuil de 48 h tombe demain matin ; **la décision de réduire la cadence appartient à David**, cette routine ne fait que le constater une seconde fois.
+2. **🟢 Aucun incident technique** — `list_drafts` stable ce run (un seul appel, 36 items cohérents), aucun `create_draft` (aucun à créer).
+3. **Arbre de travail propre en début de run**, branche `master`, aucun fichier étranger modifié ; seul `marketing/institutional-prospects-log.md` est stagé et commité par cette routine.
