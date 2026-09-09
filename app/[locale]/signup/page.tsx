@@ -33,6 +33,36 @@ const TRIAL_START_NOTE: Record<string, string> = {
   id: "Uji coba Pro 7 hari Anda dimulai segera setelah mengkonfirmasi email.",
 };
 
+// HealthWatch Global is shutting down (decided 2026-09-09, effective 2026-09-18
+// — see project_hwg_shutdown_2026_09_09 memory). New signups closed immediately
+// so nobody starts a trial that will be cut short within days. Existing accounts
+// are untouched: this only gates the signup form, not login (app/[locale]/login),
+// so current users can still sign in and export their data before shutdown.
+const SIGNUPS_CLOSED = true;
+
+const SIGNUPS_CLOSED_MESSAGE: Record<string, { title: string; body: string }> = {
+  en: {
+    title: "New sign-ups are closed",
+    body: "HealthWatch Global is shutting down on September 18, 2026. We're no longer opening new trials. If you already have an account, you can still log in and export your data until then.",
+  },
+  fr: {
+    title: "Les inscriptions sont fermées",
+    body: "HealthWatch Global ferme le 18 septembre 2026. Nous n'ouvrons plus de nouveaux essais. Si vous avez déjà un compte, vous pouvez toujours vous connecter et exporter vos données d'ici là.",
+  },
+  es: {
+    title: "Las inscripciones están cerradas",
+    body: "HealthWatch Global cierra el 18 de septiembre de 2026. Ya no abrimos nuevas pruebas. Si ya tiene una cuenta, todavía puede iniciar sesión y exportar sus datos hasta entonces.",
+  },
+  ar: {
+    title: "التسجيل مغلق حالياً",
+    body: "ستُغلق منصة HealthWatch Global في 18 سبتمبر 2026. لم نعد نفتح تجارب جديدة. إذا كان لديك حساب بالفعل، لا يزال بإمكانك تسجيل الدخول وتصدير بياناتك حتى ذلك الحين.",
+  },
+  id: {
+    title: "Pendaftaran ditutup",
+    body: "HealthWatch Global akan ditutup pada 18 September 2026. Kami tidak lagi membuka uji coba baru. Jika Anda sudah memiliki akun, Anda masih dapat masuk dan mengekspor data Anda hingga saat itu.",
+  },
+};
+
 // Catches Gmail lookalike domains at signup — added 2026-08-19 after
 // emmabahati@429gmail.com sat in the trial cohort for 12 days with 0 sessions:
 // "429gmail.com" is a real, registered catch-all domain (MX records resolve),
@@ -316,6 +346,21 @@ export default function SignupPage() {
     }
     submitSignup();
   };
+
+  if (SIGNUPS_CLOSED) {
+    const m = SIGNUPS_CLOSED_MESSAGE[locale] ?? SIGNUPS_CLOSED_MESSAGE.en;
+    return (
+      <div className="min-h-[70vh] flex items-center justify-center py-8 px-4">
+        <div className="max-w-md text-center space-y-4" dir={isRtl ? "rtl" : undefined}>
+          <h1 className="text-2xl font-semibold text-white">{m.title}</h1>
+          <p className="text-gray-400">{m.body}</p>
+          <Link href={`/${locale}/login`} className="inline-block text-red-400 hover:text-red-300 underline">
+            {locale === "fr" ? "Se connecter" : locale === "es" ? "Iniciar sesión" : locale === "ar" ? "تسجيل الدخول" : locale === "id" ? "Masuk" : "Log in"}
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-[70vh] flex items-center justify-center py-8 px-4">
