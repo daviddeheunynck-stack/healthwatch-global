@@ -39,6 +39,20 @@ const STRIPE_LOCALES: Record<string, string> = {
   id: "id",
 };
 
+// Shutdown 2026-09-12 (see SIGNUPS_CLOSED in app/[locale]/signup/page.tsx,
+// app/auth/callback/route.ts). This route has no login requirement of its
+// own — it trusts a client-supplied email for anonymous checkout — so it
+// stayed reachable by anyone with no HealthWatch account at all, closed
+// signup pages notwithstanding.
+const SIGNUPS_CLOSED = true;
+const CHECKOUT_CLOSED_MESSAGE: Record<string, string> = {
+  en: "HealthWatch Global is shutting down on September 12, 2026. New subscriptions are no longer available.",
+  fr: "HealthWatch Global ferme le 12 septembre 2026. Les nouveaux abonnements ne sont plus disponibles.",
+  es: "HealthWatch Global cierra el 12 de septiembre de 2026. Ya no es posible crear nuevas suscripciones.",
+  ar: "ستُغلق HealthWatch Global في 12 سبتمبر 2026. لم تعد الاشتراكات الجديدة متاحة.",
+  id: "HealthWatch Global akan ditutup pada 12 September 2026. Langganan baru tidak lagi tersedia.",
+};
+
 export async function POST(req: NextRequest) {
   // ── Rate limiting: 10 checkout attempts per IP per hour ─────────────────────
   const ip = getClientIp(req);
@@ -100,6 +114,18 @@ export async function POST(req: NextRequest) {
       existingStripeCustomerId = profileData?.stripe_customer_id ?? null;
       dbTrialEndsAt = profileData?.trial_ends_at ?? null;
     }
+
+    // No Stripe customer yet means this would be a brand new subscription —
+    // exactly what closing signups is meant to stop. An existing customer
+    // changing plan, renewing, or converting an already-running trial keeps
+    // working: existingStripeCustomerId is set for them.
+    if (SIGNUPS_CLOSED && !existingStripeCustomerId) {
+      return NextResponse.json(
+        { error: CHECKOUT_CLOSED_MESSAGE[locale] ?? CHECKOUT_CLOSED_MESSAGE.en },
+        { status: 403 }
+      );
+    }
+
     const currency = getCurrency(locale ?? "fr");
     const billingPeriod = billing === "annual" ? "annual" : "monthly";
     const priceRow = PRICES[`${plan ?? ""}:${billingPeriod}`];
