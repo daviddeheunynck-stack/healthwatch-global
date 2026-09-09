@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { track } from "@vercel/analytics/react";
-import { Check, Zap, Shield, Users, RefreshCw, Sparkles, Clock, AlertTriangle, Building2 } from "lucide-react";
+import { Check, Zap, Shield, Users, RefreshCw, Clock, AlertTriangle, Building2 } from "lucide-react";
 import CheckoutButton from "@/components/CheckoutButton";
 import { createClient } from "@/lib/supabase-browser";
 import { PRICE_DISPLAY } from "@/lib/pricing";
@@ -29,7 +29,6 @@ const COPY: Record<string, {
   perMonth: string;
   perYear: string;
   billedAnnually: string;
-  trial: string;
   guarantee: string;
   starterDesc: string;
   proDesc: string;
@@ -51,7 +50,6 @@ const COPY: Record<string, {
     perMonth: "/mois",
     perYear: "/an",
     billedAnnually: "facturé annuellement",
-    trial: "7 jours gratuits · carte requise, aucun débit avant la fin de l'essai",
     guarantee: "Sans engagement · Remboursement 14 jours",
     starterDesc: "Pour découvrir la plateforme sans engagement.",
     proDesc: "Pour les professionnels de santé qui suivent l'épidémiologie mondiale.",
@@ -73,7 +71,6 @@ const COPY: Record<string, {
     perMonth: "/month",
     perYear: "/year",
     billedAnnually: "billed annually",
-    trial: "7-day free trial · card required, no charge until it ends",
     guarantee: "No commitment · 14-day refund",
     starterDesc: "Explore the platform with no commitment.",
     proDesc: "For health professionals tracking global epidemiology.",
@@ -95,7 +92,6 @@ const COPY: Record<string, {
     perMonth: "/mes",
     perYear: "/año",
     billedAnnually: "facturado anualmente",
-    trial: "7 días gratis · tarjeta requerida, sin cobro hasta que termine",
     guarantee: "Sin compromiso · Reembolso 14 días",
     starterDesc: "Explore la plataforma sin compromiso.",
     proDesc: "Para profesionales de salud que siguen la epidemiología global.",
@@ -117,7 +113,6 @@ const COPY: Record<string, {
     perMonth: "/شهر",
     perYear: "/سنة",
     billedAnnually: "يُفوتر سنوياً",
-    trial: "7 أيام مجاناً · البطاقة مطلوبة، لا خصم قبل انتهاء التجربة",
     guarantee: "بدون التزام · استرداد 14 يوماً",
     starterDesc: "استكشف المنصة دون أي التزام.",
     proDesc: "للمختصين الصحيين الذين يتابعون الأوبئة العالمية.",
@@ -139,7 +134,6 @@ const COPY: Record<string, {
     perMonth: "/bulan",
     perYear: "/tahun",
     billedAnnually: "ditagih tahunan",
-    trial: "7 hari gratis · kartu diperlukan, tidak ada tagihan sebelum berakhir",
     guarantee: "Tanpa komitmen · Pengembalian 14 hari",
     starterDesc: "Jelajahi platform tanpa komitmen.",
     proDesc: "Untuk profesional kesehatan yang memantau epidemiologi global.",
@@ -375,12 +369,7 @@ export default function PricingCards({ locale }: { locale: string }) {
                 {tc.daysLeft(trialDaysLeft)}
               </span>
             </div>
-          ) : (
-            <div className="flex items-center gap-2 bg-red-500/10 border border-red-500/20 rounded-xl p-3">
-              <Sparkles className="w-4 h-4 text-red-400 shrink-0" />
-              <span className="text-xs text-red-300 font-medium">{c.trial}</span>
-            </div>
-          )}
+          ) : null}
 
           {isProSubscribed ? (
             <div className="w-full flex items-center justify-center gap-2 bg-green-500/10 border border-green-500/25 text-green-400 font-semibold py-2.5 rounded-lg text-sm">
@@ -468,12 +457,7 @@ export default function PricingCards({ locale }: { locale: string }) {
                 {tc.daysLeft(trialDaysLeft)}
               </span>
             </div>
-          ) : (
-            <div className="flex items-center gap-2 bg-amber-500/10 border border-amber-500/20 rounded-xl p-3">
-              <Sparkles className="w-4 h-4 text-amber-400 shrink-0" />
-              <span className="text-xs text-amber-300 font-medium">{c.trial}</span>
-            </div>
-          )}
+          ) : null}
 
           {isTeamSubscribed ? (
             <div className="w-full flex items-center justify-center gap-2 bg-green-500/10 border border-green-500/25 text-green-400 font-semibold py-2.5 rounded-lg text-sm">
