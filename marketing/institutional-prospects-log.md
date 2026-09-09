@@ -5115,3 +5115,108 @@ Balayage (`-in:sent -in:draft`, mots-clés HealthWatch/outbreak/epidemic/brotes/
 2. **🟡 IDCU Malte : silencieuse depuis le point d'usage du 06/09.** David a écrit le 06/09 à 21:51 UTC, aucune réponse à ce jour. L'accès Pro expire le **2 octobre**. Deux jours de délai ne sont pas un silence ; à reprendre en fin de semaine si rien n'arrive. **Georgetown HSOC n'est plus à surveiller** — cycle clôturé le 07/09 par un refus poli, verdict négatif consigné en session.
 3. **🟢 Africa CDC (`africacdc@africa-union.org`) et PAHO Équateur restent retentables.** Boîte pleine pour l'un, règle de remise cassée pour l'autre : ni l'un ni l'autre n'est une adresse morte. **Non retentés par ce run** (hors périmètre : cette routine ne renvoie pas d'original). Rappel de la règle du 17/08 : un re-bounce sur l'un d'eux **n'ajouterait ni un bounce ni un délivré en moins**, ils figurent déjà à la liste nominative.
 4. **Aucun incident technique côté Gmail.** `list_drafts` stable (1 appel en entrée, 1 en vue complète après création, résultats cohérents avec les horodatages), aucune recréation, aucun doublon. **Arbre de travail partagé, sans conflit** : le run de prospection du 08/09 a écrit et commité son entrée (`f05c0367`) pendant ce run ; seul `marketing/institutional-prospects-log.md` a été stagé ici, aucun fichier étranger touché.
+
+---
+
+## 📇 NOUVEAUX CONTACTS TROUVÉS — 2026-09-09, run automatique `daily-institutional-prospecting-healthwatch`
+
+**Résultat : 20/20 — objectif atteint, pour la première fois depuis le 02/09.** Le lot est composé à 100 % de bureaux pays OMS de la région AFRO, ce que le plafond OMS porté à 25 le 08/09 autorise explicitement (« un lot peut désormais être composé à 100 % de bureaux pays `@who.int` si c'est ce que le vivier offre de mieux ce jour-là »). Les 20 adresses ont été **lues en direct ce run** sur `afro.who.int/countries/<pays>`, le motif d'URL découvert le 08/09.
+
+### 🚦 Frein de file — 16 en entrée, 36 en sortie
+
+`list_drafts` (`pageSize: 50`) : **16 brouillons réels en entrée**, tous du lot de prospection du 08/09 (créés entre 06:17:43 et 06:18:40 UTC), aucun de relance. Sous le seuil de ~40, donc production complète autorisée. **36 en sortie** (16 + 20) — la marge devient mince, voir signalement 2.
+
+### 🔎 Vivier AFRO — 27 adresses vérifiées, 20 retenues
+
+**27 pages `afro.who.int/countries/<pays>` lues ce run.** Adresses publiées en clair, en notation typographique `nom [at] who.int` — lisibles à l'œil, ce n'est **pas** un masquage anti-scraping type Cloudflare, donc adresses **vérifiées** au sens de la règle du 18/08. Toutes se terminent bien par `@who.int`, jamais `@afro.who.int`.
+
+| # | Institution | Pays/Région | Segment | Contact | Email | Source | Vérifié | Brouillon Gmail |
+|---|---|---|---|---|---|---|---|---|
+| 1 | OMS — bureau pays Éthiopie | Éthiopie / AFRO | Gouvernement/OMS | — (boîte fonctionnelle générale) | `afwcoet@who.int` | afro.who.int/countries/ethiopia | Oui | oui — `r3887468918883054777` |
+| 2 | OMS — bureau pays Mozambique | Mozambique / AFRO | Gouvernement/OMS | — (boîte du bureau du Représentant) | `afwcomz@who.int` | afro.who.int/countries/mozambique | Oui | oui — `r-5090311711070843327` |
+| 3 | OMS — bureau pays Angola | Angola / AFRO | Gouvernement/OMS | — (boîte du bureau du Représentant) | `afwcoaowr@who.int` | afro.who.int/countries/angola | Oui | oui — `r-3294637256572341987` |
+| 4 | OMS — bureau pays Zambie | Zambie / AFRO | Gouvernement/OMS | — (registry du bureau) | `afwcozmregistry@who.int` | afro.who.int/countries/zambia | Oui | oui — `r-2914953944800253359` |
+| 5 | OMS — bureau pays Zimbabwe | Zimbabwe / AFRO | Gouvernement/OMS | — (boîte d'information du bureau) | `afzwinfo@who.int` | afro.who.int/countries/zimbabwe | Oui | oui — `r4521164409828721594` |
+| 6 | OMS — bureau pays Rwanda | Rwanda / AFRO | Gouvernement/OMS | — (boîte du bureau du Représentant) | `afwcorw@who.int` | afro.who.int/countries/rwanda | Oui | oui — `r624016759939170958` |
+| 7 | OMS — bureau pays Malawi | Malawi / AFRO | Gouvernement/OMS | — (boîte fonctionnelle générale) | `afwcomw@who.int` | afro.who.int/countries/malawi | Oui | oui — `r4688282740472562566` |
+| 8 | OMS — bureau pays Burkina Faso | Burkina Faso / AFRO | Gouvernement/OMS | — (boîte du bureau du Représentant) | `afwcobf@who.int` | afro.who.int/countries/burkina-faso | Oui | oui — `r7167748940849975473` |
+| 9 | OMS — bureau pays Mali | Mali / AFRO | Gouvernement/OMS | — (boîte du bureau du Représentant) | `afwcoml@who.int` | afro.who.int/countries/mali | Oui | oui — `r-1069587868118734166` |
+| 10 | OMS — bureau pays Guinée | Guinée / AFRO | Gouvernement/OMS | — (boîte du bureau du Représentant) | `afwcognwr@who.int` | afro.who.int/countries/guinea | Oui | oui — `r4204619509170087792` |
+| 11 | OMS — bureau pays Madagascar | Madagascar / AFRO | Gouvernement/OMS | — (boîte fonctionnelle du bureau) | `afwcomgallstaff@who.int` | afro.who.int/countries/madagascar | Oui | oui — `r5831686768914703830` |
+| 12 | OMS — bureau pays Botswana | Botswana / AFRO | Gouvernement/OMS | — (boîte du bureau du Représentant, également SADC) | `afwcobw@who.int` | afro.who.int/countries/botswana | Oui | oui — `r5202294058434654588` |
+| 13 | OMS — bureau pays Soudan du Sud | Soudan du Sud / AFRO | Gouvernement/OMS | — (boîte du bureau du Représentant) | `afwcosswho@who.int` | afro.who.int/countries/south-sudan | Oui | oui — `r-7357072179630237207` |
+| 14 | OMS — bureau pays Namibie | Namibie / AFRO | Gouvernement/OMS | — (boîte du bureau du Représentant) | `afwcona@who.int` | afro.who.int/countries/namibia | Oui | oui — `r1090457409600367626` |
+| 15 | OMS — bureau pays Sierra Leone | Sierra Leone / AFRO | Gouvernement/OMS | — (boîte de contact général du bureau) | `afwcoslcontact@who.int` | afro.who.int/countries/sierra-leone | Oui | oui — `r5880523380884166362` |
+| 16 | OMS — bureau pays Liberia | Liberia / AFRO | Gouvernement/OMS | — (boîte du bureau du Représentant) | `wholiberia@who.int` | afro.who.int/countries/liberia | Oui | oui — `r-9040941675488832750` |
+| 17 | OMS — bureau pays Tchad | Tchad / AFRO | Gouvernement/OMS | — (boîte du bureau de la Représentante) | `aawrchad@who.int` | afro.who.int/countries/chad | Oui | oui — `r-642176679479588479` |
+| 18 | OMS — bureau pays Burundi | Burundi / AFRO | Gouvernement/OMS | — (boîte fonctionnelle « all OMS Burundi ») | `afwcobiallomsburundi@who.int` | afro.who.int/countries/burundi | Oui | oui — `r-1400448934647769805` |
+| 19 | OMS — bureau pays Congo (Brazzaville) | Congo / AFRO | Gouvernement/OMS | — (boîte du Représentant résident) | `afwcocg@who.int` | afro.who.int/countries/congo | Oui | oui — `r-7016339979157005735` |
+| 20 | OMS — bureau pays République centrafricaine | RCA / AFRO | Gouvernement/OMS | — (boîte du bureau de la Représentante) | `afwcocf@who.int` | afro.who.int/countries/central-african-republic | Oui | oui — `r3168082636451917188` |
+
+### 🔁 Anti-doublon — grep par adresse ET par organisation, contact par contact
+
+**Grep par adresse (racine locale) sur `institutional-prospects-log.md`, les 20 : `afwcoet`, `afwcomz`, `afwcoaowr`, `afwcozmregistry` → 1 occurrence chacune ; `afzwinfo`, `afwcorw`, `afwcomw`, `afwcobf`, `afwcoml`, `afwcognwr`, `afwcomgallstaff`, `afwcobw`, `afwcosswho`, `afwcona`, `afwcoslcontact`, `wholiberia`, `aawrchad`, `afwcobiallomsburundi`, `afwcocg`, `afwcocf` → 0 occurrence chacune.**
+
+⚠️ **Les 4 occurrences à 1 ont été ouvertes ligne à ligne, pas comptées** (leçon du doublon PAHO Nicaragua, 08/09 : un compteur d'occurrences ne distingue pas une note de réserve d'une ligne de contact). Les 4 — Éthiopie, Mozambique, Angola, Zambie — pointent **toutes vers la même ligne 4990**, la note de réserve du run du 08/09 : « Laissés de côté alors qu'ils étaient vérifiés en direct ce run ». Aucune n'a jamais fait l'objet d'un brouillon ni d'un envoi. Elles sont donc **neuves**, et ce run consomme exactement la réserve que le 08/09 avait constituée.
+
+**Grep par domaine** : `who.int` est évidemment massivement présent au journal (77 adresses distinctes déjà journalisées) — le grep par domaine ne discrimine rien ici, c'est le grep par **boîte locale** ci-dessus qui fait foi, chaque bureau pays étant une organisation distincte au sens du RSI. Contrôle complémentaire : les 20 boîtes ont été comparées à la liste exhaustive des 77 adresses `@who.int` extraites du journal (`grep -oiE '[a-z0-9._%+-]+@who\.int' | sort -u`) → **aucune intersection**.
+
+**Vérification `linkedin-contacts.md`** : aucune des 20 boîtes n'y figure ; les 12 occurrences de `who.int` dans ce fichier sont des affiliations de profils tiers, jamais un bureau pays en conversation active avec David.
+
+### ❌ 7 pays AFRO écartés ou sans adresse, sur les 27 pages lues
+
+- **Aucune adresse publiée sur la page officielle (3)** : **Nigeria** (adresse postale d'Abuja seule), **Gabon** (téléphone seul), **Lesotho** (téléphone seul).
+- **Sous-domaine non conforme (1)** : **Bénin** — `whobenin@listserv.who.int`. Écartée par le garde-fou strict « ne jamais retenir une adresse OMS ne se terminant pas par `@who.int` » : `listserv.who.int` est un sous-domaine, exactement le motif qui a bouncé sur `nakagawaj@wpro.who.int` le 02/08. **Aucune autre adresse publiée pour le Bénin.**
+- **Boîte nominative sans adresse fonctionnelle publiée (2)** : **Eswatini** (`thwalat@who.int`, seul contact du bureau) et **Cabo Verde** (`tavaresdalombav@who.int`, secrétaire, et `epereira@who.int`, chargée de communication). Écartées par la règle du 19/08 — l'exception du 04/09 rouvre les boîtes nominatives de **chercheurs**, pas celles de personnels administratifs ou de communication.
+- **404 (1)** : `afro.who.int/countries/niger`.
+
+### 🗂️ Réserve constituée pour le prochain run — 7 boîtes vérifiées, non consommées
+
+Toutes lues en direct ce run, **utilisables immédiatement sans nouvelle recherche** : **Togo** `afwcotg@who.int`, **Gambie** `afgawco@who.int`, **Mauritanie** `afwcomr@who.int`, **Érythrée** `afwcoer@who.int`, **Comores** `afwcokmofficial@who.int`, **Afrique du Sud** `afwcozawr@who.int`, **Algérie** `afwcoalg@who.int`. Non retenues ce run uniquement parce que le lot était complet à 20 — **aucun plafond n'a été touché**.
+
+**Restent non testés** : ~20 pays AFRO (Bénin épuisé, Niger 404, Nigeria/Gabon/Lesotho sans adresse ; Côte d'Ivoire, Cameroun, Ghana, Kenya, Ouganda, RDC, Sénégal, Tanzanie, Guinée-Bissau déjà consommés le 08/09). Et **toute la région EMRO**, dont le motif d'URL reste introuvable (voir signalement 4).
+
+### 🔍 Segments académique et ONG — vivier vérifié épuisé, pas simplement non cherché
+
+**3e run consécutif à 0 académique / 0 ONG.** Pistes réexaminées ce run, avec le résultat de chacune :
+- **Makerere MakSPH** (rouverte par l'assouplissement du 04/09) — `musph.mak.ac.ug/contact-us` échoue sur **certificat TLS** (le certificat sert `wp.maiahost.com`, pas le domaine demandé). L'autre hôte, `musph.ac.ug`, avait déjà été identifié le 05/09 comme servant sa page d'accueil pour **toute** URL. Fermée.
+- **Yale SPH** — annuaires rendus en JavaScript, aucune adresse de chercheur dans le HTML (constat du 05/09, inchangé). Fermée.
+- **IAVI** — déjà contactée le 04/09 (`info@iavi.org`, l. 4402). Fermée.
+- **TEPHINET, SACIDS, Amref, KEMRI, ASLM, Ifakara/IHI, Institut Pasteur de Madagascar, Institut Pasteur de Bangui** — toutes présentes au journal (14, 10, 3, 3, 1, 4, 1 et 3 occurrences respectivement). Fermées.
+
+Le déséquilibre est **signalé, pas corrigé en réduisant le lot** : conformément à l'arbitrage du 05/09, un lot à 20 tenu sur un seul segment vaut mieux qu'un lot amputé au nom d'une répartition que le vivier ne permet plus.
+
+### 📊 Compteurs
+
+- **Lot du 09/09 : 20 préparés, 0 envoyé** (brouillons uniquement, comme toujours). Aucun bounce possible à ce stade.
+- **Prospectés cumulés depuis le 02/08 : 410** — **inchangé**. Le lot de 16 du 08/09 **n'est pas parti** (les 16 brouillons sont toujours en file, `labelIds: ["DRAFT"]`), et les 20 de ce jour non plus. **Envoyés : 410.**
+- **Profondeur de file en fin de run : 36 brouillons** (16 du 08/09 + 20 du 09/09). Seuil de ~40 **non franchi**, mais approché.
+- **Bounces du jour : aucun** — aucun envoi ce run. Pas de total cumulé ici, il a un porteur unique, `daily-relance-check-healthwatch` (règle du 16/08).
+- **Conformité mécanique des 20 brouillons** — contrôle **outillé**, pas déclaratif : `list_drafts` en `DRAFT_VIEW_FULL` (36 brouillons rendus), les 20 nouveaux relus par script sur le contenu réellement stocké. `labelIds` = `["DRAFT"]` pour les 36 (contrôle du bug d'envoi instantané du 15/08 : **négatif**). **Balises présentes dans les `htmlBody` générés par le connecteur : `html`, `body`, `div`, `br` — aucune balise `<a>`.** **Aucun domaine avec `.` littéral** (regex `[A-Za-z0-9-]+\.(com|org|int|net|fr|eu)` sur les 20 corps → 0 correspondance). Signature du site : « Find us at healthwatch » ×12 (EN) et « Retrouvez-nous sur healthwatch » ×8 (FR) — **mot nu**, conforme à la règle du 04/09, aucune occurrence de « dot com »/« point com ». Objets : **tous ≤ 60 caractères** (le plus long, Sierra Leone, 58). Corps de 111 à 125 mots, tous < 150. Chaque corps se termine par une question explicite avant la signature. Langues : **EN ×12, FR ×8**.
+- **Incident technique mineur, sans conséquence** : le 1er appel `create_draft` pour le Burkina Faso a échoué (« The service is currently unavailable »). **Deux requêtes `list_drafts` indépendantes** (`to:afwcobf@who.int`, puis recherche plein texte `afwcobf`) ont rendu `{}` avant toute recréation — conformément à la consigne du 16/08 de ne jamais conclure « brouillon absent » sur un seul appel. Le brouillon a ensuite été créé une seule fois (`r7167748940849975473`). **Aucun doublon** : le décompte final de 36 le confirme arithmétiquement (16 + 20).
+
+### 🔗 Suggestions de destination pour le lien « healthwatch » (rapport seulement — le brouillon ne contient que le mot nu)
+
+| Contact | Page suggérée | Contact | Page suggérée |
+|---|---|---|---|
+| OMS Éthiopie | `/en/country/ethiopia` | OMS Botswana | `/en/country/botswana` |
+| OMS Mozambique | `/en/country/mozambique` | OMS Soudan du Sud | `/en/country/south-sudan` |
+| OMS Angola | `/en/country/angola` | OMS Namibie | `/en/country/namibia` |
+| OMS Zambie | `/en/country/zambia` | OMS Sierra Leone | `/en/country/sierra-leone` |
+| OMS Zimbabwe | `/en/country/zimbabwe` | OMS Liberia | `/en/country/liberia` |
+| OMS Rwanda | `/en/country/rwanda` | OMS Tchad | `/fr/country/chad` |
+| OMS Malawi | `/en/country/malawi` | OMS Burundi | `/fr/country/burundi` |
+| OMS Burkina Faso | `/fr/country/burkina-faso` | OMS Congo | `/fr/country/congo` |
+| OMS Mali | `/fr/country/mali` | OMS Centrafrique | `/fr/country/central-african-republic` |
+| OMS Guinée | `/fr/country/guinea` | OMS Madagascar | `/fr/country/madagascar` |
+
+⚠️ Slugs calculés avec `countryToSlug` (`lib/country-utils.ts`) à partir du nom anglais usuel. Si la valeur `country_en` en base diffère (« Central African Republic » vs « CAR », « Congo » vs « Republic of the Congo »…), le slug diffère d'autant — à vérifier au moment de poser le lien.
+
+### ⚠️ Signalements à David
+
+1. **🟠 Le lot du 08/09 n'est pas parti — 16 brouillons ont passé la barre des 24 h en file.** C'est **exactement le symptôme du 04-05/08** que le SKILL demande de surveiller depuis la remontée de cadence à 20 le 02/09 : « si un lot reste en brouillon plus de 24-48h, c'est le signal de repasser à 10, pas d'insister ». On est au bas de cette fenêtre, pas encore au-delà — **la cadence n'a donc pas été réduite unilatéralement ce run**, mais si le lot du 08/09 est toujours en file demain matin, le seuil de 48 h sera franchi et la question devra être tranchée. **La décision revient à David.**
+2. **🟠 File à 36 brouillons, seuil de frein à ~40.** Un lot de 20 de plus demain porterait la file à 56 sans envoi entre-temps, bien au-delà du seuil — le frein se déclencherait alors de lui-même et le run du 10/09 ne produirait aucun contact neuf. Lié au point 1 : c'est l'écoulement, pas la production, qui est le facteur limitant.
+3. **🟢 Objectif 20/20 atteint pour la première fois depuis le 02/09**, et **aucun plafond n'a été touché** — ni le plafond OMS (25, structurellement inatteignable sur un lot de 20, comme prévu par la décision du 08/09), ni le plafond générique de 4. La remontée du plafond OMS produit exactement l'effet attendu : le vivier AFRO, et non une règle de concentration, gouverne désormais le volume. **7 boîtes vérifiées sont en réserve** pour demain, plus ~20 pays AFRO non testés.
+4. **🟡 EMRO reste inexploré — le motif d'URL n'a pas été cherché ce run.** Le budget a été consacré à convertir le vivier AFRO en 20 contacts. `who.int/<pays>/about-us` rend 404 pour EMRO, et l'équivalent d'`afro.who.int/countries/` y reste inconnu. Piste à tester : `emro.who.int`, **avec un User-Agent navigateur** — sur ce domaine, 403 et 502 ont déjà été 6 fois un simple filtrage d'UA et non une panne.
+5. **⚖️ Déséquilibre de segments, 3e run consécutif : 20 gouvernement/OMS, 0 académique, 0 ONG.** Contrairement aux deux runs précédents, les pistes ont été **nommément réexaminées** cette fois (Makerere, Yale, IAVI, TEPHINET, SACIDS, Amref, KEMRI, ASLM, Ifakara, Pasteur Madagascar/Bangui) — voir section dédiée. Le constat est un épuisement vérifié, pas un défaut de recherche.
+6. **Aucun autre incident. Arbre de travail propre en début de run**, branche `master`, aucun fichier étranger modifié ; seul `marketing/institutional-prospects-log.md` est stagé et commité par cette routine.
