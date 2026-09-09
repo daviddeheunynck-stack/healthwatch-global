@@ -12,7 +12,42 @@ import PHLaunchBar from "@/components/PHLaunchBar";
 import SentryUserIdentifier from "@/components/SentryUserIdentifier";
 import TrialBannerLoader from "@/components/TrialBannerLoader";
 import UpgradeModalAutoTrigger from "@/components/UpgradeModalAutoTrigger";
+import { Activity } from "lucide-react";
 import "../globals.css";
+
+// HealthWatch Global shuts down 2026-09-12 (see SIGNUPS_CLOSED in
+// app/[locale]/signup/page.tsx, PILOT_CLOSED in app/[locale]/pilot/page.tsx,
+// SIGNUPS_CLOSED in app/auth/callback/route.ts and app/api/checkout/route.ts —
+// all of those only stop new customers ahead of time). This is the single
+// choke point every page under [locale] passes through, so flipping past
+// this date replaces the entire site with the notice below — every route,
+// every already-logged-in user, automatically, with nobody needing to be
+// in front of a keyboard to trigger it. No exceptions carved out here on
+// purpose: by this date there is nothing left to serve, including /admin.
+const SHUTDOWN_AT = "2026-09-12T00:00:00Z";
+
+const SHUTDOWN_MESSAGE: Record<string, { title: string; body: string }> = {
+  en: {
+    title: "HealthWatch Global has shut down",
+    body: "Thank you for using HealthWatch Global. The service is no longer operating. Questions? Write to contact@healthwatch-global.com.",
+  },
+  fr: {
+    title: "HealthWatch Global a fermé",
+    body: "Merci d'avoir utilisé HealthWatch Global. Le service n'est plus en activité. Des questions ? Écrivez à contact@healthwatch-global.com.",
+  },
+  es: {
+    title: "HealthWatch Global ha cerrado",
+    body: "Gracias por usar HealthWatch Global. El servicio ya no está en funcionamiento. ¿Preguntas? Escriba a contact@healthwatch-global.com.",
+  },
+  ar: {
+    title: "أغلقت HealthWatch Global",
+    body: "شكراً لاستخدامكم HealthWatch Global. لم تعد الخدمة تعمل. لأي استفسار، راسلونا على contact@healthwatch-global.com.",
+  },
+  id: {
+    title: "HealthWatch Global telah ditutup",
+    body: "Terima kasih telah menggunakan HealthWatch Global. Layanan ini tidak lagi beroperasi. Ada pertanyaan? Kirim email ke contact@healthwatch-global.com.",
+  },
+};
 
 const META: Record<string, { title: string; description: string }> = {
   en: {
@@ -111,8 +146,27 @@ export default async function LocaleLayout({
     notFound();
   }
 
-  const messages = await getMessages();
   const isRTL = locale === "ar";
+
+  if (Date.now() >= Date.parse(SHUTDOWN_AT)) {
+    const m = SHUTDOWN_MESSAGE[locale] ?? SHUTDOWN_MESSAGE.en;
+    return (
+      <html lang={locale} dir={isRTL ? "rtl" : "ltr"}>
+        <body className="bg-gray-950 text-gray-100 min-h-screen flex items-center justify-center px-4">
+          <div className="max-w-md text-center space-y-4">
+            <div className="flex items-center justify-center gap-2.5">
+              <Activity className="text-red-500 w-8 h-8 shrink-0" />
+              <span className="font-bold text-white text-2xl">HealthWatch Global</span>
+            </div>
+            <h1 className="text-white text-lg font-semibold">{m.title}</h1>
+            <p className="text-gray-400 text-sm leading-relaxed">{m.body}</p>
+          </div>
+        </body>
+      </html>
+    );
+  }
+
+  const messages = await getMessages();
 
   return (
     <html lang={locale} dir={isRTL ? "rtl" : "ltr"}>
