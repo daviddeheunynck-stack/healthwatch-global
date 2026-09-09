@@ -4,6 +4,7 @@ import { buildTrialEndingEmail } from "@/lib/trial-ending-email";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction, isLiveCronInvocation, claimEmailSend, releaseEmailSend, pingHeartbeatIfHealthy, failedRecipientsNote } from "@/lib/cron-monitor";
 import { getLocalizedDisease } from "@/lib/outbreaks";
+import { isShutDown } from "@/lib/shutdown";
 
 export const dynamic = "force-dynamic";
 
@@ -220,7 +221,7 @@ async function runTrialReminders(req: NextRequest, supabase: SupabaseClient) {
         organization: (profile.pilot_organization as string | null) ?? null,
       });
 
-      if (isRealProduction && isLive) {
+      if (isRealProduction && isLive && !isShutDown()) {
         // The query above OR-matches two disjoint windows (J-3, J-1) into one
         // list with no separate tag — derive which one this profile matched
         // so the two milestones claim independent dedup slots (a user must

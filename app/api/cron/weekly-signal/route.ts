@@ -6,6 +6,7 @@ import { getWeeklySuppressionSet } from "@/lib/mail-suppression";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { signUnsubscribeToken } from "@/lib/unsubscribe-token";
 import { sendBrevoEmail } from "@/lib/brevo-send";
+import { isShutDown } from "@/lib/shutdown";
 
 export const dynamic = "force-dynamic";
 
@@ -288,7 +289,7 @@ async function runWeeklySignal(_req: NextRequest, supabase: SupabaseClient) {
       `https://healthwatch-global.com/${locale}/pricing`,
     );
     try {
-      if (isRealProduction) {
+      if (isRealProduction && !isShutDown()) {
         const ok = await sendEmail(user.email, SUBJECTS[locale] ?? SUBJECTS.en, html, unsubUrl);
         if (ok) sent++;
         // Rien n'est parti : on rend les deux verrous poses juste au-dessus,

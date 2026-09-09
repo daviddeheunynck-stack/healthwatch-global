@@ -12,6 +12,7 @@ import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction, claimWeeklyEmailAddress, releaseWeeklyEmailAddress, currentWeekOf } from "@/lib/cron-monitor";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { getWeeklySuppressionSet } from "@/lib/mail-suppression";
+import { isShutDown } from "@/lib/shutdown";
 
 export const dynamic = "force-dynamic";
 
@@ -278,7 +279,7 @@ async function runSendSitrepEmails(_req: NextRequest, supabase: SupabaseClient) 
     const subject = SUBJECT[locale] ?? SUBJECT.en;
 
     try {
-      if (isRealProduction) {
+      if (isRealProduction && !isShutDown()) {
         const res = await fetch("https://api.brevo.com/v3/smtp/email", {
           method: "POST",
           signal: AbortSignal.timeout(10_000),

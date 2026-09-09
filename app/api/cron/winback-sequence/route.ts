@@ -9,6 +9,7 @@ import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction, isLiveCronInvocation, claimEmailSend } from "@/lib/cron-monitor";
 import { signUnsubscribeToken } from "@/lib/unsubscribe-token";
 import { sendBrevoEmail } from "@/lib/brevo-send";
+import { isShutDown } from "@/lib/shutdown";
 
 export const dynamic = "force-dynamic";
 
@@ -477,7 +478,7 @@ async function runWinbackSequence(req: NextRequest, supabase: SupabaseClient) {
     try {
       const locale = profile.locale ?? "en";
       const { subject, html, unsubUrl } = buildEmail(locale, profile.id);
-      if (isRealProduction && isLive) {
+      if (isRealProduction && isLive && !isShutDown()) {
         if (await claimEmailSend(supabase, profile.id, "winback-sequence", "j3")) {
           await sendBrevo(profile.email!, subject, html, unsubUrl);
           j3Sent++;
@@ -503,7 +504,7 @@ async function runWinbackSequence(req: NextRequest, supabase: SupabaseClient) {
     try {
       const locale = profile.locale ?? "en";
       const { subject, html, unsubUrl } = buildEmailJ7(locale, profile.id);
-      if (isRealProduction && isLive) {
+      if (isRealProduction && isLive && !isShutDown()) {
         if (await claimEmailSend(supabase, profile.id, "winback-sequence", "j7")) {
           await sendBrevo(profile.email!, subject, html, unsubUrl);
           j7Sent++;

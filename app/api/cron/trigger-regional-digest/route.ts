@@ -5,6 +5,7 @@ import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction, claimWeeklyEmailAddress, releaseWeeklyEmailAddress, currentWeekOf, failedRecipientsNote } from "@/lib/cron-monitor";
 import { getWeeklySuppressionSet } from "@/lib/mail-suppression";
 import { notifyMobile } from "@/lib/mobile-notify";
+import { isShutDown } from "@/lib/shutdown";
 
 export const dynamic    = "force-dynamic";
 export const maxDuration = 300;
@@ -263,7 +264,7 @@ async function runRegionalDigest(supabase: SupabaseClient) {
       // This insert is what the cooldown query above checks, so if sendEmail
       // throws, it must not be written — otherwise a failed send is
       // indistinguishable from a delivered one for the next COOLDOWN days.
-      if (isRealProduction) {
+      if (isRealProduction && !isShutDown()) {
         await sendEmail(user.email, subject, html);
       }
 

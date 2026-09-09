@@ -9,6 +9,7 @@ import { buildTrialExpiredEmail } from "@/lib/onboarding-emails";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction, isLiveCronInvocation, claimEmailSend, pingHeartbeatIfHealthy } from "@/lib/cron-monitor";
 import { sendBrevoEmail } from "@/lib/brevo-send";
+import { isShutDown } from "@/lib/shutdown";
 
 export const dynamic = "force-dynamic";
 
@@ -125,7 +126,7 @@ async function runExpireTrials(req: NextRequest, supabase: SupabaseClient) {
     if (user.email_blocked_at) continue;
     try {
       const { subject, html, unsubUrl } = buildTrialExpiredEmail(user.locale ?? "en", user.id);
-      if (isRealProduction && isLive) {
+      if (isRealProduction && isLive && !isShutDown()) {
         // Claim before send — closes the Vercel duplicate-delivery gap
         // isLiveCronInvocation alone can't (see lib/cron-monitor.ts).
         if (await claimEmailSend(supabase, user.id, "expire-trials", "trial_expired")) {

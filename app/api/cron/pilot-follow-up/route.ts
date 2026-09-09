@@ -15,6 +15,7 @@ import * as Sentry from "@sentry/nextjs";
 import { signUnsubscribeToken } from "@/lib/unsubscribe-token";
 import { isMailSuppressed } from "@/lib/mail-suppression";
 import { logCronRun, isRealProduction, claimEmailSend, failedRecipientsNote } from "@/lib/cron-monitor";
+import { isShutDown } from "@/lib/shutdown";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 
 export const dynamic = "force-dynamic";
@@ -373,7 +374,7 @@ async function runPilotFollowUp(_req: NextRequest, supabase: SupabaseClient) {
     const html    = buildHtml(outbreaks, locale, region ?? "all", dashUrl, unsubUrl);
 
     try {
-      if (isRealProduction) {
+      if (isRealProduction && !isShutDown()) {
         await sendEmail(pilot.email, subject, html, unsubUrl);
       }
       sent++;

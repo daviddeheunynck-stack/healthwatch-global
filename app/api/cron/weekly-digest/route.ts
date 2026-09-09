@@ -6,6 +6,7 @@ import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction, claimWeeklyDigestSend, claimWeeklyEmailAddress, releaseWeeklyDigestSend, releaseWeeklyEmailAddress, currentWeekOf, failedRecipientsNote } from "@/lib/cron-monitor";
 import { getWeeklySuppressionSet } from "@/lib/mail-suppression";
 import { sendBrevoEmail } from "@/lib/brevo-send";
+import { isShutDown } from "@/lib/shutdown";
 
 export const dynamic = "force-dynamic";
 
@@ -180,7 +181,7 @@ async function runWeeklyDigest(_req: NextRequest, supabase: SupabaseClient) {
       const topOutbreaks = regionOutbreaks.slice(0, 8);
 
       const { subject, html, unsubUrl } = buildDigestEmail(topOutbreaks, region, locale, sub.id);
-      if (isRealProduction) {
+      if (isRealProduction && !isShutDown()) {
         const ok = await sendEmail(sub.email, subject, html, unsubUrl);
         if (ok) sent++;
         // Cle Brevo absente : rien n'est parti, on rend les deux verrous

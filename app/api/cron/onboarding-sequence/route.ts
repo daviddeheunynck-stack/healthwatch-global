@@ -3,6 +3,7 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { buildJ1Email, buildJ3Email, buildPilotConversionEmail } from "@/lib/onboarding-emails";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction, isLiveCronInvocation, claimEmailSend, releaseEmailSend, pingHeartbeatIfHealthy } from "@/lib/cron-monitor";
+import { isShutDown } from "@/lib/shutdown";
 import { sendBrevoEmail } from "@/lib/brevo-send";
 
 export const dynamic = "force-dynamic";
@@ -246,7 +247,7 @@ async function runOnboardingSequence(req: NextRequest, supabase: SupabaseClient)
       // native one-click button offering it reflexively. J+3/J+7/J+32 keep
       // the header as before.
       const { subject, html } = buildJ1Email(locale, user.id);
-      if (isRealProduction && isLive) {
+      if (isRealProduction && isLive && !isShutDown()) {
         if (await claimAndSend(supabase, user.id, "j1", user.email, subject, html)) {
           j1Sent++;
         } else {
@@ -271,7 +272,7 @@ async function runOnboardingSequence(req: NextRequest, supabase: SupabaseClient)
     try {
       const locale = user.locale || "en";
       const { subject, html, unsubUrl } = buildJ3Email(locale, user.id);
-      if (isRealProduction && isLive) {
+      if (isRealProduction && isLive && !isShutDown()) {
         if (await claimAndSend(supabase, user.id, "j3", user.email, subject, html, unsubUrl)) {
           j3Sent++;
         } else {
@@ -296,7 +297,7 @@ async function runOnboardingSequence(req: NextRequest, supabase: SupabaseClient)
     try {
       const locale = user.locale || "en";
       const { subject, html, unsubUrl } = buildPilotConversionEmail(locale, user.id, (user.pilot_organization as string | null) ?? null);
-      if (isRealProduction && isLive) {
+      if (isRealProduction && isLive && !isShutDown()) {
         if (await claimAndSend(supabase, user.id, "j32", user.email, subject, html, unsubUrl)) {
           j32Sent++;
         } else {
