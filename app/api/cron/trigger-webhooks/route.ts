@@ -15,6 +15,7 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { createHmac } from "crypto";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { isShutDown } from "@/lib/shutdown";
 import { computeEpidemicMetrics } from "@/lib/epidemic-metrics";
 import { getCountryCoords } from "@/lib/country-coords";
 import { haversineKm } from "@/lib/haversine";
@@ -250,7 +251,7 @@ async function runTriggerWebhooks(_req: NextRequest, supabase: SupabaseClient) {
       const body = JSON.stringify(payload);
 
       try {
-        if (isRealProduction) {
+        if (isRealProduction && !isShutDown()) {
           const res = await fetch(webhook.url, {
             method: "POST",
             headers: {

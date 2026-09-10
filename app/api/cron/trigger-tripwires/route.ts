@@ -14,6 +14,7 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { isShutDown } from "@/lib/shutdown";
 import { notifyMobile } from "@/lib/mobile-notify";
 import { resolvedPlan } from "@/lib/resolved-plan";
 import { getBlockedEmailSet } from "@/lib/brevo-blocklist";
@@ -254,7 +255,7 @@ async function runTripwires(_req: NextRequest, supabase: SupabaseClient) {
 
       await notifyMobile(supabase, tw.user_id, { title: inAppTitle, body: inAppBody, outbreak_id: o.id });
 
-      if (isRealProduction) {
+      if (isRealProduction && !isShutDown()) {
         await sendEmail(tw.email, `[HealthWatch] Tripwire : ${disease} — ${country} (${casesStr})`, `
 <div dir="${isRtl ? "rtl" : "ltr"}" style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:24px;background:#0f172a;color:#e2e8f0;border-radius:12px;direction:${isRtl ? "rtl" : "ltr"};text-align:${isRtl ? "right" : "left"}">
   <p style="color:#f87171;font-size:18px;font-weight:700;margin:0 0 8px">${lc.emailTitle}</p>

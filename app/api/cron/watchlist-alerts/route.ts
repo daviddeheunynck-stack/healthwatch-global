@@ -25,6 +25,7 @@ import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { errorMessage } from "@/lib/error";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction, currentAlertDate, claimOutbreakAlertDaily, releaseOutbreakAlertDaily } from "@/lib/cron-monitor";
+import { isShutDown } from "@/lib/shutdown";
 import { notifyMobile } from "@/lib/mobile-notify";
 import { resolvedPlan } from "@/lib/resolved-plan";
 
@@ -229,7 +230,7 @@ async function runWatchlistAlerts(_req: NextRequest, supabase: SupabaseClient) {
       // regional-alerts/disease-alerts (2026-07-30) — this cron had the
       // identical log-before-send ordering.
       const { subject, html } = buildWatchlistAlertEmail(alertOutbreak, locale, entry.user_id);
-      if (isRealProduction) {
+      if (isRealProduction && !isShutDown()) {
         await sendEmail(profile.email, subject, html);
       }
 

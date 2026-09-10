@@ -57,6 +57,7 @@ import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
 import { isMailSuppressed } from "@/lib/mail-suppression";
 import { logCronRun, isRealProduction, currentAlertDate, claimOutbreakAlertDaily, releaseOutbreakAlertDaily, failedRecipientsNote } from "@/lib/cron-monitor";
+import { isShutDown } from "@/lib/shutdown";
 import { resolvedPlan } from "@/lib/resolved-plan";
 import { buildCoverageNote, type AlertRegion } from "@/lib/region-coverage";
 
@@ -485,7 +486,7 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
         ));
         digestEmailsSent++;
       }
-      if (isRealProduction) {
+      if (isRealProduction && !isShutDown()) {
         await sendEmail(profile.email, subject, html);
       }
 
@@ -585,7 +586,7 @@ async function runRegionalAlerts(_req: NextRequest, supabase: SupabaseClient) {
             { disease: firstAlert.disease, country: firstAlert.country, riskLevel: (firstAlert.risk_level ?? "medium") as "high" | "medium" | "low" },
             { isPilot: !!profile.is_pilot, organization: (profile.pilot_organization as string | null) ?? null }
           );
-          if (isRealProduction) {
+          if (isRealProduction && !isShutDown()) {
             await sendEmail(profile.email, nudgeSubject, nudgeHtml);
           }
           const nowIso = new Date().toISOString();

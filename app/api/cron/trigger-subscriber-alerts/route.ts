@@ -3,6 +3,7 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction, failedRecipientsNote } from "@/lib/cron-monitor";
+import { isShutDown } from "@/lib/shutdown";
 import { notifyMobile } from "@/lib/mobile-notify";
 import { resolvedPlan } from "@/lib/resolved-plan";
 import { getBlockedEmailSet } from "@/lib/brevo-blocklist";
@@ -191,7 +192,7 @@ async function runSubscriberAlerts(_req: NextRequest, supabase: SupabaseClient) 
       // regional-alerts/disease-alerts/trigger-category-alerts (2026-07-30).
       // If sendEmail throws, last_sent_at must stay untouched so this
       // subscriber isn't silently suppressed for the cooldown window.
-      if (isRealProduction) await sendEmail(deliverableEmails, subject, html);
+      if (isRealProduction && !isShutDown()) await sendEmail(deliverableEmails, subject, html);
 
       await supabase
         .from("outbreak_subscribers")

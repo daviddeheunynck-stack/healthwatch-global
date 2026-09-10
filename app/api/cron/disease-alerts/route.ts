@@ -21,6 +21,7 @@ import { diseaseToSlug } from "@/lib/disease-data";
 import { errorMessage } from "@/lib/error";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction, currentAlertDate, claimOutbreakAlertDaily, releaseOutbreakAlertDaily, failedRecipientsNote } from "@/lib/cron-monitor";
+import { isShutDown } from "@/lib/shutdown";
 import { sendBrevoEmail } from "@/lib/brevo-send";
 import { notifyMobile } from "@/lib/mobile-notify";
 import { resolvedPlan } from "@/lib/resolved-plan";
@@ -298,7 +299,7 @@ async function runDiseaseAlerts(_req: NextRequest, supabase: SupabaseClient) {
         ));
         digestEmailsSent++;
       }
-      if (isRealProduction) {
+      if (isRealProduction && !isShutDown()) {
         await sendEmail(profile.email, subject, html, unsubUrl);
       }
 

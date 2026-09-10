@@ -4,6 +4,7 @@ import { getDiseaseCategory, CATEGORY_LABELS } from "@/lib/disease-category";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { isShutDown } from "@/lib/shutdown";
 import { notifyMobile } from "@/lib/mobile-notify";
 import { resolvedPlan } from "@/lib/resolved-plan";
 import { getBlockedEmailSet } from "@/lib/brevo-blocklist";
@@ -235,7 +236,7 @@ async function runCategoryAlerts(_req: NextRequest, supabase: SupabaseClient) {
   </a>
   <p style="margin-top:20px;font-size:11px;color:#475569">${lc.footer(COOLDOWN_H)} · <a href="${unsubUrl}" style="color:#475569">${lc.unsub}</a></p>
 </div>`;
-      if (isRealProduction) await sendBrevoEmail({ to: alert.email, subject: lc.subject(catLabel, minStr), html: categoryHtml, apiKey: BREVO_KEY, unsubscribeUrl: unsubUrl });
+      if (isRealProduction && !isShutDown()) await sendBrevoEmail({ to: alert.email, subject: lc.subject(catLabel, minStr), html: categoryHtml, apiKey: BREVO_KEY, unsubscribeUrl: unsubUrl });
 
       await supabase
         .from("category_alerts")

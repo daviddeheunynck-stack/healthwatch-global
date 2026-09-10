@@ -3,6 +3,7 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction, failedRecipientsNote } from "@/lib/cron-monitor";
+import { isShutDown } from "@/lib/shutdown";
 import { notifyMobile } from "@/lib/mobile-notify";
 import { resolvedPlan } from "@/lib/resolved-plan";
 
@@ -283,7 +284,7 @@ async function runTriggerPheicAlerts(_req: NextRequest, supabase: SupabaseClient
         // forever marker, so if sendEmail throws after the insert, this user
         // never gets told about this PHEIC again, ever. Same fix as
         // regional-alerts/disease-alerts/watchlist-alerts (2026-07-30).
-        if (isRealProduction) await sendEmail(user.email, subject, html);
+        if (isRealProduction && !isShutDown()) await sendEmail(user.email, subject, html);
 
         const inAppBody = `${disease} · ${countries} · PHEIC`;
         const { error: insertErr } = await supabase.from("alert_notifications").insert({

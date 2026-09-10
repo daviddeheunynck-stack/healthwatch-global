@@ -5,6 +5,7 @@ import { getCountryCoords } from "@/lib/country-coords";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { isShutDown } from "@/lib/shutdown";
 import { notifyMobile } from "@/lib/mobile-notify";
 import { resolvedPlan } from "@/lib/resolved-plan";
 import { getBlockedEmailSet } from "@/lib/brevo-blocklist";
@@ -220,7 +221,7 @@ async function runGeofenceAlerts(_req: NextRequest, supabase: SupabaseClient) {
     ${footerText} · <a href="${unsubUrl}" style="color:#475569">${unsubStr}</a>
   </p>
 </div>`;
-      if (isRealProduction) await sendBrevoEmail({ to: alert.email, subject: emailSubject, html: geofenceHtml, apiKey: BREVO_KEY, unsubscribeUrl: unsubUrl });
+      if (isRealProduction && !isShutDown()) await sendBrevoEmail({ to: alert.email, subject: emailSubject, html: geofenceHtml, apiKey: BREVO_KEY, unsubscribeUrl: unsubUrl });
 
       await supabase
         .from("geofence_alerts")

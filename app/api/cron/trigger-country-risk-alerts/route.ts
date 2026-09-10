@@ -3,6 +3,7 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { isShutDown } from "@/lib/shutdown";
 import { notifyMobile } from "@/lib/mobile-notify";
 import { resolvedPlan } from "@/lib/resolved-plan";
 import { getBlockedEmailSet } from "@/lib/brevo-blocklist";
@@ -186,7 +187,7 @@ async function runCountryRiskAlerts(supabase: SupabaseClient) {
       // regional-alerts/disease-alerts/trigger-category-alerts (2026-07-30).
       // If sendBrevoEmail throws, last_fired_at must stay untouched so this
       // alert isn't silently suppressed for the cooldown window.
-      if (isRealProduction) await sendBrevoEmail({ to: alert.email, subject, html, apiKey: brevoKey, unsubscribeUrl: unsubUrl });
+      if (isRealProduction && !isShutDown()) await sendBrevoEmail({ to: alert.email, subject, html, apiKey: brevoKey, unsubscribeUrl: unsubUrl });
 
       await supabase
         .from("country_risk_alerts")

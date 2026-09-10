@@ -15,6 +15,7 @@ import { getLocalizedDisease, getLocalizedCountry } from "@/lib/outbreaks";
 import { errorMessage } from "@/lib/error";
 import * as Sentry from "@sentry/nextjs";
 import { logCronRun, isRealProduction } from "@/lib/cron-monitor";
+import { isShutDown } from "@/lib/shutdown";
 
 export const dynamic = "force-dynamic";
 
@@ -147,7 +148,7 @@ async function runPushAlerts(_req: NextRequest, supabase: SupabaseClient) {
       };
 
       try {
-        if (isRealProduction) {
+        if (isRealProduction && !isShutDown()) {
           const result = await sendPushToMany(group, payload);
           totalSent += result.sent;
           allExpiredIds.push(...result.expiredIds);
